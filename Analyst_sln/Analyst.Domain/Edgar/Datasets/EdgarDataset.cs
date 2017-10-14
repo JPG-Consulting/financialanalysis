@@ -25,5 +25,19 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public List<EdgarDatasetDimension> Dimensions { get; set; }
 
+        public int TotalSubmissions { get; set; }
+
+        public int ProcessedSubmissions
+        {
+            get
+            {
+                if (Submissions != null)
+                    return Submissions.Count;
+                else
+                    return 0;
+            }
+        }
+
+
     }
 }
