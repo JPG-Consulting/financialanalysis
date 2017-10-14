@@ -1,0 +1,4 @@
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\Debug\Analyst.DBAccess.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\Debug\Analyst.DBAccess.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\Debug\Analyst.DBAccess.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\Debug\Analyst.DBAccess.pdb

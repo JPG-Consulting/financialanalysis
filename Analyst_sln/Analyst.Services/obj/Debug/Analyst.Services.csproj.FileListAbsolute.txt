@@ -1,0 +1,4 @@
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services\bin\Debug\Analyst.Services.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services\bin\Debug\Analyst.Services.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services\obj\Debug\Analyst.Services.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services\obj\Debug\Analyst.Services.pdb

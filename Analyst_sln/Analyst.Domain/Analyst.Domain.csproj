@@ -40,9 +40,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="Edgar\EdgarDataset.cs" />
+    <Compile Include="Edgar\Company.cs" />
+    <Compile Include="Edgar\Datasets\EdgarDataset.cs" />
+    <Compile Include="Edgar\Datasets\EdgarDatasetDimension.cs" />
+    <Compile Include="Edgar\Datasets\EdgarDatasetNumbers.cs" />
+    <Compile Include="Edgar\Datasets\EdgarDatasetSubmissions.cs" />
+    <Compile Include="Edgar\Datasets\EdgarDatasetTag.cs" />
+    <Compile Include="Edgar\MutualFund.cs" />
+    <Compile Include="Edgar\Registrant.cs" />
+    <Compile Include="Edgar\SECForm.cs" />
+    <Compile Include="Edgar\SIC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Quarter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Edgar\Datasets\readme.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
