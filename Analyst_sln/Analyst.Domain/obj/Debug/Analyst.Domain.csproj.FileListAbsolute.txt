@@ -1,4 +1,0 @@
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Domain\bin\Debug\Analyst.Domain.dll
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Domain\bin\Debug\Analyst.Domain.pdb
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Domain\obj\Debug\Analyst.Domain.dll
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Domain\obj\Debug\Analyst.Domain.pdb
