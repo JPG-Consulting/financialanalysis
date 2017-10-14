@@ -8,5 +8,9 @@ namespace Analyst.Domain.Edgar.Datasets
 {
     public class EdgarDatasetNumbers
     {
+
+        public int Id { get; set; }
+
+        public string ADSH { get; set; }
     }
 }
