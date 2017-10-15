@@ -5,6 +5,8 @@ Analyst_sln/Analyst.Web/bin
 Analyst_sln/Analyst.Web/obj
 Analyst_sln/Analyst.Services/bin
 Analyst_sln/Analyst.Services/obj
+Analyst_sln/Analyst.Services.Tests/bin
+Analyst_sln/Analyst.Services.Tests/obj
 Analyst_sln/Analyst.Domain/bin
 Analyst_sln/Analyst.Domain/obj
 Analyst_sln/Analyst.DBAccess/bin
