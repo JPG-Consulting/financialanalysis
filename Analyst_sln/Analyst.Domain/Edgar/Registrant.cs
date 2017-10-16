@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +11,7 @@ namespace Analyst.Domain.Edgar
     [Serializable]
     public abstract class Registrant
     {
+        [Key]
         public int Id { get; set; }
 
         /// <summary>
@@ -16,8 +19,17 @@ namespace Analyst.Domain.Edgar
         /// Ten digit number assigned by the Commission 
         /// to each registrant that submits filings.
         /// </summary>
-        public string CIK { get; set; }
+        [Index(IsUnique = true)]
+        public int CIK { get; set; }
 
+        /*
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(10)]
+        [Index(IsUnique = true)]
+        public string CIK { get; set; }
+        */
+
+        [Required]
         public string Name { get; set; }
 
         
@@ -26,16 +38,19 @@ namespace Analyst.Domain.Edgar
         /// <summary>
         /// The ISO 3166-1 country of the registrant's business address.
         /// </summary>
+        [Required]
         public string CountryBA { get; set; }
 
         /// <summary>
         /// The city of the registrant's business address.
         /// </summary>
+        [Required]
         public string CityBA { get; set; }
 
         /// <summary>
         /// The country of incorporation for the registrant.
         /// </summary>
+        [Required]
         public string CountryInc { get; set; }
 
         /// <summary>
@@ -61,11 +76,13 @@ namespace Analyst.Domain.Edgar
         /// Well Known Seasoned Issuer (WKSI). 
         /// An issuer that meets specific Commission requirements at some point during a 60-day period preceding the date the issuer satisfies its obligation to update its shelf registration statement.
         /// </summary>
+        [Required]
         public bool WKSI { get; set; }
 
         /// <summary>
         /// Fiscal Year End Date
         /// </summary>
+        [Required]
         public DateTime FYE { get; set; }
 
 

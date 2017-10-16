@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Analyst.Domain.Edgar.SECForm>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SECForms</title>
+</head>
+<body>
+    <div> 
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th>PDF with explanation</th>
+                    <th>Last update</th>
+                    <th>SEC Number</th>
+                    <th>Topic</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Code)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+
+                    <td>
+                        <a href="@Html.DisplayFor(modelItem => item.LinkToPdf)">PDF</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastUpddate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SECNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Topic)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>

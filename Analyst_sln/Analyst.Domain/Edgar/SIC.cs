@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,8 +15,9 @@ namespace Analyst.Domain.Edgar
     /// </summary>
     public class SIC
     {
-        public short Id { get; set; }
+        [Key]
+        public short Code { get; set; }
 
-        public string Name { get; set; }
+        public string IndustryTitle { get; set; }
     }
 }

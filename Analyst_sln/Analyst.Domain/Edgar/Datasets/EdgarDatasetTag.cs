@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,11 +31,17 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// Tag used by the filer
         /// </summary>
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(256)]
+        [Index("IX_TagVersion",1,IsUnique=true)]
         public string Tag { get; set; }
 
         /// <summary>
         /// If a standard tag, the taxonomy of origin, otherwise equal to adsh.
         /// </summary>
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(20)]
+        [Index("IX_TagVersion", 2, IsUnique = true)]
         public string Version { get; set; }
 
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
 
 namespace Analyst.DBAccess.Contexts
@@ -12,6 +13,9 @@ namespace Analyst.DBAccess.Contexts
         List<EdgarDataset> GetDatasets();
         void AddDataset(EdgarDataset ds);
         int GetDatasetsCount();
+        void AddSECForm(SECForm sECForm);
+        int GetSECFormsCount();
+        List<SECForm> GetSECForms();
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -30,7 +34,6 @@ namespace Analyst.DBAccess.Contexts
         }
         public List<EdgarDataset> GetDatasets()
         {
-            Context = new AnalystContext();
             return Context.DataSets.ToList();
         }
 
@@ -43,6 +46,23 @@ namespace Analyst.DBAccess.Contexts
         {
             Context.DataSets.Add(ds);
             Context.SaveChanges();
+        }
+
+
+        public int GetSECFormsCount()
+        {
+            return Context.SECForms.Count();
+        }
+
+        public void AddSECForm(SECForm sf)
+        {
+            Context.SECForms.Add(sf);
+            Context.SaveChanges();
+        }
+
+        public List<SECForm> GetSECForms()
+        {
+            return Context.SECForms.ToList();
         }
     }
 }
