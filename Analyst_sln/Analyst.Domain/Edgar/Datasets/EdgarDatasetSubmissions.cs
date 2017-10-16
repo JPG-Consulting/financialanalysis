@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace Analyst.Domain.Edgar.Datasets
     {
         public const string FILE_NAME = "sub";
 
+        [Key]
         public int Id { get; set; }
         /// <summary>
         /// Accession Number, it's the Unique Key of each submission.
