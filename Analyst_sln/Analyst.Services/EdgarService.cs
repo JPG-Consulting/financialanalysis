@@ -15,6 +15,7 @@ namespace Analyst.Services
     {
         List<EdgarDataset> GetDatasets();
         List<SECForm> GetSECForms();
+        List<SIC> GetSICs();
     }
 
     public class EdgarService: IEdgarService
@@ -36,25 +37,23 @@ namespace Analyst.Services
 
         public List<EdgarDataset> GetDatasets()
         {
-            int dscount = Repository.GetDatasetsCount();
-            if (dscount == 0)
-            {
-                InitialLoader.LoadSECForms(Repository);
-                InitialLoader.LoadInitialDatasets(Repository);
-            }
+            InitialLoader.LoadInitialData(Repository);
             List<EdgarDataset> datasets = Repository.GetDatasets();
             return datasets;
         }
 
         public List<SECForm> GetSECForms()
         {
-            int formsCount = Repository.GetSECFormsCount();
-            if(formsCount == 0)
-            {
-                InitialLoader.LoadSECForms(Repository);
-            }
+            InitialLoader.LoadInitialData(Repository);
             List<SECForm> forms = Repository.GetSECForms();
             return forms;
+        }
+
+        public List<SIC> GetSICs()
+        {
+            InitialLoader.LoadInitialData(Repository);
+            List<SIC> sics = Repository.GetSICs();
+            return sics;
         }
 
     }

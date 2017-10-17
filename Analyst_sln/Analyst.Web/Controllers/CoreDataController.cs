@@ -43,5 +43,13 @@ namespace Analyst.Web.Controllers
             List<SECForm> forms = Service.GetSECForms();
             return View("SECForms", forms);
         }
+
+        [HttpGet]
+        [Route("sics")]
+        public ActionResult GetSICs()
+        {
+            List<SIC> sics = Service.GetSICs();
+            return View("SICs", sics);
+        }
     }
 }

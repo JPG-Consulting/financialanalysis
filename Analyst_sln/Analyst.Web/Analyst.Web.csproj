@@ -161,6 +161,7 @@
     </Content>
     <Content Include="Views\Coredata\Datasets.cshtml" />
     <Content Include="Views\Coredata\SECForms.cshtml" />
+    <Content Include="Views\Coredata\SICs.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

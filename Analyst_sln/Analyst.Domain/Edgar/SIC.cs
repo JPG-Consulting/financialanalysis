@@ -18,6 +18,8 @@ namespace Analyst.Domain.Edgar
         [Key]
         public short Code { get; set; }
 
+        public string ADOffice { get; set; }
+
         public string IndustryTitle { get; set; }
     }
 }

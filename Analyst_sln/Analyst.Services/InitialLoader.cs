@@ -16,34 +16,492 @@ namespace Analyst.Services
     /// </summary>
     public class InitialLoader
     {
-
-        internal static void LoadInitialDatasets(IAnalystRepository repository)
+        internal static void LoadInitialData(IAnalystRepository repository)
         {
-            string baseurl = "/files/dera/data/financial-statement-and-notes-data-sets";
-            List<EdgarDataset> datasets = new List<EdgarDataset>();
-            string genericPath = baseurl + "/{0}q{1}_notes.zip";
-            int thisYear = DateTime.Now.Year;
-            for (int i = 2009; i <= thisYear-1; i++)
-            {
-                for (int j = 1; j <= 4; j++)
-                {
-                    Quarter q = (Quarter)j;
-
-                    EdgarDataset ds = new EdgarDataset
-                    {
-                        RelativePath = String.Format(genericPath, i.ToString(), j),
-                        Year = i,
-                        Quarter = q
-                    };
-                    repository.AddDataset(ds);
-                }
-            }
-            repository.AddDataset(new EdgarDataset { RelativePath = baseurl + "/2017q1_notes.zip", Year = 2017, Quarter = Quarter.QTR1 });
-            repository.AddDataset(new EdgarDataset { RelativePath = baseurl + "/2017q2_notes.zip", Year = 2017, Quarter = Quarter.QTR2 });
-            repository.AddDataset(new EdgarDataset { RelativePath = baseurl + "/2017q3_notes.zip", Year = 2017, Quarter = Quarter.QTR3 });
+            LoadSECForms(repository);
+            LoadSICs(repository);
+            LoadInitialDatasets(repository);
         }
 
-        internal static void LoadSECForms(IAnalystRepository repository)
+        private static void LoadSICs(IAnalystRepository repository)
+        {
+            if(repository.GetSICCount() == 0)
+            {
+                repository.AddSIC(new SIC { Code = 100, ADOffice = "5", IndustryTitle = "AGRICULTURAL PRODUCTION-CROPS" });
+                repository.AddSIC(new SIC { Code = 200, ADOffice = "5", IndustryTitle = "AGRICULTURAL PROD-LIVESTOCK & ANIMAL SPECIALTIES" });
+                repository.AddSIC(new SIC { Code = 700, ADOffice = "5", IndustryTitle = "AGRICULTURAL SERVICES" });
+                repository.AddSIC(new SIC { Code = 800, ADOffice = "5", IndustryTitle = "FORESTRY" });
+                repository.AddSIC(new SIC { Code = 900, ADOffice = "5", IndustryTitle = "FISHING, HUNTING AND TRAPPING" });
+                repository.AddSIC(new SIC { Code = 1000, ADOffice = "9", IndustryTitle = "METAL MINING" });
+                repository.AddSIC(new SIC { Code = 1040, ADOffice = "9", IndustryTitle = "GOLD AND SILVER ORES" });
+                repository.AddSIC(new SIC { Code = 1090, ADOffice = "9", IndustryTitle = "MISCELLANEOUS METAL ORES" });
+                repository.AddSIC(new SIC { Code = 1220, ADOffice = "9", IndustryTitle = "BITUMINOUS COAL & LIGNITE MINING" });
+                repository.AddSIC(new SIC { Code = 1221, ADOffice = "9", IndustryTitle = "BITUMINOUS COAL & LIGNITE SURFACE MINING" });
+                repository.AddSIC(new SIC { Code = 1311, ADOffice = "4", IndustryTitle = "CRUDE PETROLEUM & NATURAL GAS" });
+                repository.AddSIC(new SIC { Code = 1381, ADOffice = "4", IndustryTitle = "DRILLING OIL & GAS WELLS" });
+                repository.AddSIC(new SIC { Code = 1382, ADOffice = "4", IndustryTitle = "OIL & GAS FIELD EXPLORATION SERVICES" });
+                repository.AddSIC(new SIC { Code = 1389, ADOffice = "4", IndustryTitle = "OIL & GAS FIELD SERVICES, NEC" });
+                repository.AddSIC(new SIC { Code = 1400, ADOffice = "9", IndustryTitle = "MINING & QUARRYING OF NONMETALLIC MINERALS (NO FUELS)" });
+                repository.AddSIC(new SIC { Code = 1520, ADOffice = "6", IndustryTitle = "GENERAL BLDG CONTRACTORS - RESIDENTIAL BLDGS" });
+                repository.AddSIC(new SIC { Code = 1531, ADOffice = "6", IndustryTitle = "OPERATIVE BUILDERS" });
+                repository.AddSIC(new SIC { Code = 1540, ADOffice = "6", IndustryTitle = "GENERAL BLDG CONTRACTORS - NONRESIDENTIAL BLDGS" });
+                repository.AddSIC(new SIC { Code = 1600, ADOffice = "6", IndustryTitle = "HEAVY CONSTRUCTION OTHER THAN BLDG CONST - CONTRACTORS" });
+                repository.AddSIC(new SIC { Code = 1623, ADOffice = "6", IndustryTitle = "WATER, SEWER, PIPELINE, COMM & POWER LINE CONSTRUCTION" });
+                repository.AddSIC(new SIC { Code = 1700, ADOffice = "6", IndustryTitle = "CONSTRUCTION - SPECIAL TRADE CONTRACTORS" });
+                repository.AddSIC(new SIC { Code = 1731, ADOffice = "6", IndustryTitle = "ELECTRICAL WORK" });
+                repository.AddSIC(new SIC { Code = 2000, ADOffice = "4", IndustryTitle = "FOOD AND KINDRED PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2011, ADOffice = "5", IndustryTitle = "MEAT PACKING PLANTS" });
+                repository.AddSIC(new SIC { Code = 2013, ADOffice = "5", IndustryTitle = "SAUSAGES & OTHER PREPARED MEAT PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2015, ADOffice = "5", IndustryTitle = "POULTRY SLAUGHTERING AND PROCESSING" });
+                repository.AddSIC(new SIC { Code = 2020, ADOffice = "4", IndustryTitle = "DAIRY PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2024, ADOffice = "4", IndustryTitle = "ICE CREAM & FROZEN DESSERTS" });
+                repository.AddSIC(new SIC { Code = 2030, ADOffice = "4", IndustryTitle = "CANNED, FROZEN & PRESERVD FRUIT, VEG & FOOD SPECIALTIES" });
+                repository.AddSIC(new SIC { Code = 2033, ADOffice = "4", IndustryTitle = "CANNED, FRUITS, VEG, PRESERVES, JAMS & JELLIES" });
+                repository.AddSIC(new SIC { Code = 2040, ADOffice = "4", IndustryTitle = "GRAIN MILL PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2050, ADOffice = "4", IndustryTitle = "BAKERY PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2052, ADOffice = "4", IndustryTitle = "COOKIES & CRACKERS" });
+                repository.AddSIC(new SIC { Code = 2060, ADOffice = "4", IndustryTitle = "SUGAR & CONFECTIONERY PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2070, ADOffice = "4", IndustryTitle = "FATS & OILS" });
+                repository.AddSIC(new SIC { Code = 2080, ADOffice = "9", IndustryTitle = "BEVERAGES" });
+                repository.AddSIC(new SIC { Code = 2082, ADOffice = "9", IndustryTitle = "MALT BEVERAGES" });
+                repository.AddSIC(new SIC { Code = 2086, ADOffice = "9", IndustryTitle = "BOTTLED & CANNED SOFT DRINKS & CARBONATED WATERS" });
+                repository.AddSIC(new SIC { Code = 2090, ADOffice = "4", IndustryTitle = "MISCELLANEOUS FOOD PREPARATIONS & KINDRED PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2092, ADOffice = "4", IndustryTitle = "PREPARED FRESH OR FROZEN FISH & SEAFOODS" });
+                repository.AddSIC(new SIC { Code = 2100, ADOffice = "5", IndustryTitle = "TOBACCO PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2111, ADOffice = "5", IndustryTitle = "CIGARETTES" });
+                repository.AddSIC(new SIC { Code = 2200, ADOffice = "2", IndustryTitle = "TEXTILE MILL PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2211, ADOffice = "2", IndustryTitle = "BROADWOVEN FABRIC MILLS, COTTON" });
+                repository.AddSIC(new SIC { Code = 2221, ADOffice = "2", IndustryTitle = "BROADWOVEN FABRIC MILLS, MAN MADE FIBER & SILK" });
+                repository.AddSIC(new SIC { Code = 2250, ADOffice = "2", IndustryTitle = "KNITTING MILLS" });
+                repository.AddSIC(new SIC { Code = 2253, ADOffice = "9", IndustryTitle = "KNIT OUTERWEAR MILLS" });
+                repository.AddSIC(new SIC { Code = 2273, ADOffice = "2", IndustryTitle = "CARPETS & RUGS" });
+                repository.AddSIC(new SIC { Code = 2300, ADOffice = "9", IndustryTitle = "APPAREL & OTHER FINISHD PRODS OF FABRICS & SIMILAR MATL" });
+                repository.AddSIC(new SIC { Code = 2320, ADOffice = "9", IndustryTitle = "MEN'S & BOYS' FURNISHGS, WORK CLOTHG, & ALLIED GARMENTS" });
+                repository.AddSIC(new SIC { Code = 2330, ADOffice = "9", IndustryTitle = "WOMEN'S, MISSES', AND JUNIORS OUTERWEAR" });
+                repository.AddSIC(new SIC { Code = 2340, ADOffice = "9", IndustryTitle = "WOMEN'S, MISSES', CHILDREN'S & INFANTS' UNDERGARMENTS" });
+                repository.AddSIC(new SIC { Code = 2390, ADOffice = "9", IndustryTitle = "MISCELLANEOUS FABRICATED TEXTILE PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2400, ADOffice = "6", IndustryTitle = "LUMBER & WOOD PRODUCTS (NO FURNITURE)" });
+                repository.AddSIC(new SIC { Code = 2421, ADOffice = "6", IndustryTitle = "SAWMILLS & PLANTING MILLS, GENERAL" });
+                repository.AddSIC(new SIC { Code = 2430, ADOffice = "6", IndustryTitle = "MILLWOOD, VENEER, PLYWOOD, & STRUCTURAL WOOD MEMBERS" });
+                repository.AddSIC(new SIC { Code = 2451, ADOffice = "6", IndustryTitle = "MOBILE HOMES" });
+                repository.AddSIC(new SIC { Code = 2452, ADOffice = "6", IndustryTitle = "PREFABRICATED WOOD BLDGS & COMPONENTS" });
+                repository.AddSIC(new SIC { Code = 2510, ADOffice = "6", IndustryTitle = "HOUSEHOLD FURNITURE" });
+                repository.AddSIC(new SIC { Code = 2511, ADOffice = "6", IndustryTitle = "WOOD HOUSEHOLD FURNITURE, (NO UPHOLSTERED)" });
+                repository.AddSIC(new SIC { Code = 2520, ADOffice = "6", IndustryTitle = "OFFICE FURNITURE" });
+                repository.AddSIC(new SIC { Code = 2522, ADOffice = "6", IndustryTitle = "OFFICE FURNITURE (NO WOOD)" });
+                repository.AddSIC(new SIC { Code = 2531, ADOffice = "6", IndustryTitle = "PUBLIC BLDG & RELATED FURNITURE" });
+                repository.AddSIC(new SIC { Code = 2540, ADOffice = "6", IndustryTitle = "PARTITIONS, SHELVG, LOCKERS, & OFFICE & STORE FIXTURES" });
+                repository.AddSIC(new SIC { Code = 2590, ADOffice = "6", IndustryTitle = "MISCELLANEOUS FURNITURE & FIXTURES" });
+                repository.AddSIC(new SIC { Code = 2600, ADOffice = "4", IndustryTitle = "PAPERS & ALLIED PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2611, ADOffice = "4", IndustryTitle = "PULP MILLS" });
+                repository.AddSIC(new SIC { Code = 2621, ADOffice = "4", IndustryTitle = "PAPER MILLS" });
+                repository.AddSIC(new SIC { Code = 2631, ADOffice = "4", IndustryTitle = "PAPERBOARD MILLS" });
+                repository.AddSIC(new SIC { Code = 2650, ADOffice = "4", IndustryTitle = "PAPERBOARD CONTAINERS & BOXES" });
+                repository.AddSIC(new SIC { Code = 2670, ADOffice = "4", IndustryTitle = "CONVERTED PAPER & PAPERBOARD PRODS (NO CONTANERS/BOXES)" });
+                repository.AddSIC(new SIC { Code = 2673, ADOffice = "6", IndustryTitle = "PLASTICS, FOIL & COATED PAPER BAGS" });
+                repository.AddSIC(new SIC { Code = 2711, ADOffice = "5", IndustryTitle = "NEWSPAPERS: PUBLISHING OR PUBLISHING & PRINTING" });
+                repository.AddSIC(new SIC { Code = 2721, ADOffice = "5", IndustryTitle = "PERIODICALS: PUBLISHING OR PUBLISHING & PRINTING" });
+                repository.AddSIC(new SIC { Code = 2731, ADOffice = "5", IndustryTitle = "BOOKS: PUBLISHING OR PUBLISHING & PRINTING" });
+                repository.AddSIC(new SIC { Code = 2732, ADOffice = "5", IndustryTitle = "BOOK PRINTING" });
+                repository.AddSIC(new SIC { Code = 2741, ADOffice = "5", IndustryTitle = "MISCELLANEOUS PUBLISHING" });
+                repository.AddSIC(new SIC { Code = 2750, ADOffice = "5", IndustryTitle = "COMMERCIAL PRINTING" });
+                repository.AddSIC(new SIC { Code = 2761, ADOffice = "5", IndustryTitle = "MANIFOLD BUSINESS FORMS" });
+                repository.AddSIC(new SIC { Code = 2771, ADOffice = "5", IndustryTitle = "GREETING CARDS" });
+                repository.AddSIC(new SIC { Code = 2780, ADOffice = "5", IndustryTitle = "BLANKBOOKS, LOOSELEAF BINDERS & BOOKBINDG & RELATD WORK" });
+                repository.AddSIC(new SIC { Code = 2790, ADOffice = "5", IndustryTitle = "SERVICE INDUSTRIES FOR THE PRINTING TRADE" });
+                repository.AddSIC(new SIC { Code = 2800, ADOffice = "6", IndustryTitle = "CHEMICALS & ALLIED PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2810, ADOffice = "6", IndustryTitle = "INDUSTRIAL INORGANIC CHEMICALS" });
+                repository.AddSIC(new SIC { Code = 2820, ADOffice = "6", IndustryTitle = "PLASTIC MATERIAL, SYNTH RESIN/RUBBER, CELLULOS (NO GLASS)" });
+                repository.AddSIC(new SIC { Code = 2821, ADOffice = "6", IndustryTitle = "PLASTIC MATERIALS, SYNTH RESINS & NONVULCAN ELASTOMERS" });
+                repository.AddSIC(new SIC { Code = 2833, ADOffice = "1", IndustryTitle = "MEDICINAL CHEMICALS & BOTANICAL PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2834, ADOffice = "1", IndustryTitle = "PHARMACEUTICAL PREPARATIONS" });
+                repository.AddSIC(new SIC { Code = 2835, ADOffice = "1", IndustryTitle = "IN VITRO & IN VIVO DIAGNOSTIC SUBSTANCES" });
+                repository.AddSIC(new SIC { Code = 2836, ADOffice = "1", IndustryTitle = "BIOLOGICAL PRODUCTS, (NO DISGNOSTIC SUBSTANCES)" });
+                repository.AddSIC(new SIC { Code = 2840, ADOffice = "6", IndustryTitle = "SOAP, DETERGENTS, CLEANG PREPARATIONS, PERFUMES, COSMETICS" });
+                repository.AddSIC(new SIC { Code = 2842, ADOffice = "6", IndustryTitle = "SPECIALTY CLEANING, POLISHING AND SANITATION PREPARATIONS" });
+                repository.AddSIC(new SIC { Code = 2844, ADOffice = "6", IndustryTitle = "PERFUMES, COSMETICS & OTHER TOILET PREPARATIONS" });
+                repository.AddSIC(new SIC { Code = 2851, ADOffice = "6", IndustryTitle = "PAINTS, VARNISHES, LACQUERS, ENAMELS & ALLIED PRODS" });
+                repository.AddSIC(new SIC { Code = 2860, ADOffice = "6", IndustryTitle = "INDUSTRIAL ORGANIC CHEMICALS" });
+                repository.AddSIC(new SIC { Code = 2870, ADOffice = "5", IndustryTitle = "AGRICULTURAL CHEMICALS" });
+                repository.AddSIC(new SIC { Code = 2890, ADOffice = "6", IndustryTitle = "MISCELLANEOUS CHEMICAL PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 2891, ADOffice = "6", IndustryTitle = "ADHESIVES & SEALANTS" });
+                repository.AddSIC(new SIC { Code = 2911, ADOffice = "4", IndustryTitle = "PETROLEUM REFINING" });
+                repository.AddSIC(new SIC { Code = 2950, ADOffice = "6", IndustryTitle = "ASPHALT PAVING & ROOFING MATERIALS" });
+                repository.AddSIC(new SIC { Code = 2990, ADOffice = "6", IndustryTitle = "MISCELLANEOUS PRODUCTS OF PETROLEUM & COAL" });
+                repository.AddSIC(new SIC { Code = 3011, ADOffice = "6", IndustryTitle = "TIRES & INNER TUBES" });
+                repository.AddSIC(new SIC { Code = 3021, ADOffice = "6", IndustryTitle = "RUBBER & PLASTICS FOOTWEAR" });
+                repository.AddSIC(new SIC { Code = 3050, ADOffice = "6", IndustryTitle = "GASKETS, PACKG & SEALG DEVICES & RUBBER & PLASTICS HOSE" });
+                repository.AddSIC(new SIC { Code = 3060, ADOffice = "6", IndustryTitle = "FABRICATED RUBBER PRODUCTS, NEC" });
+                repository.AddSIC(new SIC { Code = 3080, ADOffice = "6", IndustryTitle = "MISCELLANEOUS PLASTICS PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3081, ADOffice = "6", IndustryTitle = "UNSUPPORTED PLASTICS FILM & SHEET" });
+                repository.AddSIC(new SIC { Code = 3086, ADOffice = "6", IndustryTitle = "PLASTICS FOAM PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3089, ADOffice = "6", IndustryTitle = "PLASTICS PRODUCTS, NEC" });
+                repository.AddSIC(new SIC { Code = 3100, ADOffice = "9", IndustryTitle = "LEATHER & LEATHER PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3140, ADOffice = "9", IndustryTitle = "FOOTWEAR, (NO RUBBER)" });
+                repository.AddSIC(new SIC { Code = 3211, ADOffice = "6", IndustryTitle = "FLAT GLASS" });
+                repository.AddSIC(new SIC { Code = 3220, ADOffice = "6", IndustryTitle = "GLASS & GLASSWARE, PRESSED OR BLOWN" });
+                repository.AddSIC(new SIC { Code = 3221, ADOffice = "6", IndustryTitle = "GLASS CONTAINERS" });
+                repository.AddSIC(new SIC { Code = 3231, ADOffice = "6", IndustryTitle = "GLASS PRODUCTS, MADE OF PURCHASED GLASS" });
+                repository.AddSIC(new SIC { Code = 3241, ADOffice = "6", IndustryTitle = "CEMENT, HYDRAULIC" });
+                repository.AddSIC(new SIC { Code = 3250, ADOffice = "6", IndustryTitle = "STRUCTURAL CLAY PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3260, ADOffice = "6", IndustryTitle = "POTTERY & RELATED PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3270, ADOffice = "6", IndustryTitle = "CONCRETE, GYPSUM & PLASTER PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3272, ADOffice = "6", IndustryTitle = "CONCRETE PRODUCTS, EXCEPT BLOCK & BRICK" });
+                repository.AddSIC(new SIC { Code = 3281, ADOffice = "6", IndustryTitle = "CUT STONE & STONE PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3290, ADOffice = "6", IndustryTitle = "ABRASIVE, ASBESTOS & MISC NONMETALLIC MINERAL PRODS" });
+                repository.AddSIC(new SIC { Code = 3310, ADOffice = "6", IndustryTitle = "STEEL WORKS, BLAST FURNACES & ROLLING & FINISHING MILLS" });
+                repository.AddSIC(new SIC { Code = 3312, ADOffice = "6", IndustryTitle = "STEEL WORKS, BLAST FURNACES & ROLLING MILLS (COKE OVENS)" });
+                repository.AddSIC(new SIC { Code = 3317, ADOffice = "6", IndustryTitle = "STEEL PIPE & TUBES" });
+                repository.AddSIC(new SIC { Code = 3320, ADOffice = "6", IndustryTitle = "IRON & STEEL FOUNDRIES" });
+                repository.AddSIC(new SIC { Code = 3330, ADOffice = "9", IndustryTitle = "PRIMARY SMELTING & REFINING OF NONFERROUS METALS" });
+                repository.AddSIC(new SIC { Code = 3334, ADOffice = "9", IndustryTitle = "PRIMARY PRODUCTION OF ALUMINUM" });
+                repository.AddSIC(new SIC { Code = 3341, ADOffice = "6", IndustryTitle = "SECONDARY SMELTING & REFINING OF NONFERROUS METALS" });
+                repository.AddSIC(new SIC { Code = 3350, ADOffice = "6", IndustryTitle = "ROLLING DRAWING & EXTRUDING OF NONFERROUS METALS" });
+                repository.AddSIC(new SIC { Code = 3357, ADOffice = "6", IndustryTitle = "DRAWING & INSULATING OF NONFERROUS WIRE" });
+                repository.AddSIC(new SIC { Code = 3360, ADOffice = "6", IndustryTitle = "NONFERROUS FOUNDRIES (CASTINGS)" });
+                repository.AddSIC(new SIC { Code = 3390, ADOffice = "6", IndustryTitle = "MISCELLANEOUS PRIMARY METAL PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3411, ADOffice = "6", IndustryTitle = "METAL CANS" });
+                repository.AddSIC(new SIC { Code = 3412, ADOffice = "6", IndustryTitle = "METAL SHIPPING BARRELS, DRUMS, KEGS & PAILS" });
+                repository.AddSIC(new SIC { Code = 3420, ADOffice = "6", IndustryTitle = "CUTLERY, HANDTOOLS & GENERAL HARDWARE" });
+                repository.AddSIC(new SIC { Code = 3430, ADOffice = "6", IndustryTitle = "HEATING EQUIP, EXCEPT ELEC & WARM AIR; & PLUMBING FIXTURES" });
+                repository.AddSIC(new SIC { Code = 3433, ADOffice = "6", IndustryTitle = "HEATING EQUIPMENT, EXCEPT ELECTRIC & WARM AIR FURNACES" });
+                repository.AddSIC(new SIC { Code = 3440, ADOffice = "6", IndustryTitle = "FABRICATED STRUCTURAL METAL PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3442, ADOffice = "6", IndustryTitle = "METAL DOORS, SASH, FRAMES, MOLDINGS & TRIM" });
+                repository.AddSIC(new SIC { Code = 3443, ADOffice = "6", IndustryTitle = "FABRICATED PLATE WORK (BOILER SHOPS)" });
+                repository.AddSIC(new SIC { Code = 3444, ADOffice = "6", IndustryTitle = "SHEET METAL WORK" });
+                repository.AddSIC(new SIC { Code = 3448, ADOffice = "6", IndustryTitle = "PREFABRICATED METAL BUILDINGS & COMPONENTS" });
+                repository.AddSIC(new SIC { Code = 3451, ADOffice = "6", IndustryTitle = "SCREW MACHINE PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3452, ADOffice = "6", IndustryTitle = "BOLTS, NUTS, SCREWS, RIVETS & WASHERS" });
+                repository.AddSIC(new SIC { Code = 3460, ADOffice = "6", IndustryTitle = "METAL FORGINGS & STAMPINGS" });
+                repository.AddSIC(new SIC { Code = 3470, ADOffice = "6", IndustryTitle = "COATING, ENGRAVING & ALLIED SERVICES" });
+                repository.AddSIC(new SIC { Code = 3480, ADOffice = "6", IndustryTitle = "ORDNANCE & ACCESSORIES, (NO VEHICLES/GUIDED MISSILES)" });
+                repository.AddSIC(new SIC { Code = 3490, ADOffice = "6", IndustryTitle = "MISCELLANEOUS FABRICATED METAL PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 3510, ADOffice = "10", IndustryTitle = "ENGINES & TURBINES" });
+                repository.AddSIC(new SIC { Code = 3523, ADOffice = "10", IndustryTitle = "FARM MACHINERY & EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3524, ADOffice = "10", IndustryTitle = "LAWN & GARDEN TRACTORS & HOME LAWN & GARDENS EQUIP" });
+                repository.AddSIC(new SIC { Code = 3530, ADOffice = "10", IndustryTitle = "CONSTRUCTION, MINING & MATERIALS HANDLING MACHINERY & EQUIP" });
+                repository.AddSIC(new SIC { Code = 3531, ADOffice = "10", IndustryTitle = "CONSTRUCTION MACHINERY & EQUIP" });
+                repository.AddSIC(new SIC { Code = 3532, ADOffice = "10", IndustryTitle = "MINING MACHINERY & EQUIP (NO OIL & GAS FIELD MACH & EQUIP)" });
+                repository.AddSIC(new SIC { Code = 3533, ADOffice = "4", IndustryTitle = "OIL & GAS FIELD MACHINERY & EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3537, ADOffice = "10", IndustryTitle = "INDUSTRIAL TRUCKS, TRACTORS, TRAILORS & STACKERS" });
+                repository.AddSIC(new SIC { Code = 3540, ADOffice = "10", IndustryTitle = "METALWORKG MACHINERY & EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3541, ADOffice = "10", IndustryTitle = "MACHINE TOOLS, METAL CUTTING TYPES" });
+                repository.AddSIC(new SIC { Code = 3550, ADOffice = "10", IndustryTitle = "SPECIAL INDUSTRY MACHINERY (NO METALWORKING MACHINERY)" });
+                repository.AddSIC(new SIC { Code = 3555, ADOffice = "10", IndustryTitle = "PRINTING TRADES MACHINERY & EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3559, ADOffice = "10", IndustryTitle = "SPECIAL INDUSTRY MACHINERY, NEC" });
+                repository.AddSIC(new SIC { Code = 3560, ADOffice = "10", IndustryTitle = "GENERAL INDUSTRIAL MACHINERY & EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3561, ADOffice = "10", IndustryTitle = "PUMPS & PUMPING EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3562, ADOffice = "6", IndustryTitle = "BALL & ROLLER BEARINGS" });
+                repository.AddSIC(new SIC { Code = 3564, ADOffice = "6", IndustryTitle = "INDUSTRIAL & COMMERCIAL FANS & BLOWERS & AIR PURIFING EQUIP" });
+                repository.AddSIC(new SIC { Code = 3567, ADOffice = "6", IndustryTitle = "INDUSTRIAL PROCESS FURNACES & OVENS" });
+                repository.AddSIC(new SIC { Code = 3569, ADOffice = "6", IndustryTitle = "GENERAL INDUSTRIAL MACHINERY & EQUIPMENT, NEC" });
+                repository.AddSIC(new SIC { Code = 3570, ADOffice = "3", IndustryTitle = "COMPUTER & OFFICE EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3571, ADOffice = "3", IndustryTitle = "ELECTRONIC COMPUTERS" });
+                repository.AddSIC(new SIC { Code = 3572, ADOffice = "3", IndustryTitle = "COMPUTER STORAGE DEVICES" });
+                repository.AddSIC(new SIC { Code = 3575, ADOffice = "3", IndustryTitle = "COMPUTER TERMINALS" });
+                repository.AddSIC(new SIC { Code = 3576, ADOffice = "3", IndustryTitle = "COMPUTER COMMUNICATIONS EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3577, ADOffice = "3", IndustryTitle = "COMPUTER PERIPHERAL EQUIPMENT, NEC" });
+                repository.AddSIC(new SIC { Code = 3578, ADOffice = "3", IndustryTitle = "CALCULATING & ACCOUNTING MACHINES (NO ELECTRONIC COMPUTERS)" });
+                repository.AddSIC(new SIC { Code = 3579, ADOffice = "3", IndustryTitle = "OFFICE MACHINES, NEC" });
+                repository.AddSIC(new SIC { Code = 3580, ADOffice = "6", IndustryTitle = "REFRIGERATION & SERVICE INDUSTRY MACHINERY" });
+                repository.AddSIC(new SIC { Code = 3585, ADOffice = "6", IndustryTitle = "AIR-COND & WARM AIR HEATG EQUIP & COMM & INDL REFRIG EQUIP" });
+                repository.AddSIC(new SIC { Code = 3590, ADOffice = "6", IndustryTitle = "MISC INDUSTRIAL & COMMERCIAL MACHINERY & EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3600, ADOffice = "10", IndustryTitle = "ELECTRONIC & OTHER ELECTRICAL EQUIPMENT (NO COMPUTER EQUIP)" });
+                repository.AddSIC(new SIC { Code = 3612, ADOffice = "10", IndustryTitle = "POWER, DISTRIBUTION & SPECIALTY TRANSFORMERS" });
+                repository.AddSIC(new SIC { Code = 3613, ADOffice = "10", IndustryTitle = "SWITCHGEAR & SWITCHBOARD APPARATUS" });
+                repository.AddSIC(new SIC { Code = 3620, ADOffice = "10", IndustryTitle = "ELECTRICAL INDUSTRIAL APPARATUS" });
+                repository.AddSIC(new SIC { Code = 3621, ADOffice = "10", IndustryTitle = "MOTORS & GENERATORS" });
+                repository.AddSIC(new SIC { Code = 3630, ADOffice = "11", IndustryTitle = "HOUSEHOLD APPLIANCES" });
+                repository.AddSIC(new SIC { Code = 3634, ADOffice = "11", IndustryTitle = "ELECTRIC HOUSEWARES & FANS" });
+                repository.AddSIC(new SIC { Code = 3640, ADOffice = "11", IndustryTitle = "ELECTRIC LIGHTING & WIRING EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3651, ADOffice = "11", IndustryTitle = "HOUSEHOLD AUDIO & VIDEO EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3652, ADOffice = "11", IndustryTitle = "PHONOGRAPH RECORDS & PRERECORDED AUDIO TAPES & DISKS" });
+                repository.AddSIC(new SIC { Code = 3661, ADOffice = "11", IndustryTitle = "TELEPHONE & TELEGRAPH APPARATUS" });
+                repository.AddSIC(new SIC { Code = 3663, ADOffice = "11", IndustryTitle = "RADIO & TV BROADCASTING & COMMUNICATIONS EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3669, ADOffice = "11", IndustryTitle = "COMMUNICATIONS EQUIPMENT, NEC" });
+                repository.AddSIC(new SIC { Code = 3670, ADOffice = "10", IndustryTitle = "ELECTRONIC COMPONENTS & ACCESSORIES" });
+                repository.AddSIC(new SIC { Code = 3672, ADOffice = "3", IndustryTitle = "PRINTED CIRCUIT BOARDS" });
+                repository.AddSIC(new SIC { Code = 3674, ADOffice = "10", IndustryTitle = "SEMICONDUCTORS & RELATED DEVICES" });
+                repository.AddSIC(new SIC { Code = 3677, ADOffice = "10", IndustryTitle = "ELECTRONIC COILS, TRANSFORMERS & OTHER INDUCTORS" });
+                repository.AddSIC(new SIC { Code = 3678, ADOffice = "10", IndustryTitle = "ELECTRONIC CONNECTORS" });
+                repository.AddSIC(new SIC { Code = 3679, ADOffice = "10", IndustryTitle = "ELECTRONIC COMPONENTS, NEC" });
+                repository.AddSIC(new SIC { Code = 3690, ADOffice = "10", IndustryTitle = "MISCELLANEOUS ELECTRICAL MACHINERY, EQUIPMENT & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 3695, ADOffice = "11", IndustryTitle = "MAGNETIC & OPTICAL RECORDING MEDIA" });
+                repository.AddSIC(new SIC { Code = 3711, ADOffice = "5", IndustryTitle = "MOTOR VEHICLES & PASSENGER CAR BODIES" });
+                repository.AddSIC(new SIC { Code = 3713, ADOffice = "5", IndustryTitle = "TRUCK & BUS BODIES" });
+                repository.AddSIC(new SIC { Code = 3714, ADOffice = "5", IndustryTitle = "MOTOR VEHICLE PARTS & ACCESSORIES" });
+                repository.AddSIC(new SIC { Code = 3715, ADOffice = "5", IndustryTitle = "TRUCK TRAILERS" });
+                repository.AddSIC(new SIC { Code = 3716, ADOffice = "5", IndustryTitle = "MOTOR HOMES" });
+                repository.AddSIC(new SIC { Code = 3720, ADOffice = "5", IndustryTitle = "AIRCRAFT & PARTS" });
+                repository.AddSIC(new SIC { Code = 3721, ADOffice = "5", IndustryTitle = "AIRCRAFT" });
+                repository.AddSIC(new SIC { Code = 3724, ADOffice = "5", IndustryTitle = "AIRCRAFT ENGINES & ENGINE PARTS" });
+                repository.AddSIC(new SIC { Code = 3728, ADOffice = "5", IndustryTitle = "AIRCRAFT PARTS & AUXILIARY EQUIPMENT, NEC" });
+                repository.AddSIC(new SIC { Code = 3730, ADOffice = "5", IndustryTitle = "SHIP & BOAT BUILDING & REPAIRING" });
+                repository.AddSIC(new SIC { Code = 3743, ADOffice = "5", IndustryTitle = "RAILROAD EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3751, ADOffice = "5", IndustryTitle = "MOTORCYCLES, BICYCLES & PARTS" });
+                repository.AddSIC(new SIC { Code = 3760, ADOffice = "5", IndustryTitle = "GUIDED MISSILES & SPACE VEHICLES & PARTS" });
+                repository.AddSIC(new SIC { Code = 3790, ADOffice = "5", IndustryTitle = "MISCELLANEOUS TRANSPORTATION EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 3812, ADOffice = "5", IndustryTitle = "SEARCH, DETECTION, NAVAGATION, GUIDANCE, AERONAUTICAL SYS" });
+                repository.AddSIC(new SIC { Code = 3821, ADOffice = "10", IndustryTitle = "LABORATORY APPARATUS & FURNITURE" });
+                repository.AddSIC(new SIC { Code = 3822, ADOffice = "10", IndustryTitle = "AUTO CONTROLS FOR REGULATING RESIDENTIAL & COMML ENVIRONMENTS" });
+                repository.AddSIC(new SIC { Code = 3823, ADOffice = "10", IndustryTitle = "INDUSTRIAL INSTRUMENTS FOR MEASUREMENT, DISPLAY, AND CONTROL" });
+                repository.AddSIC(new SIC { Code = 3824, ADOffice = "10", IndustryTitle = "TOTALIZING FLUID METERS & COUNTING DEVICES" });
+                repository.AddSIC(new SIC { Code = 3825, ADOffice = "10", IndustryTitle = "INSTRUMENTS FOR MEAS & TESTING OF ELECTRICITY & ELEC SIGNALS" });
+                repository.AddSIC(new SIC { Code = 3826, ADOffice = "10", IndustryTitle = "LABORATORY ANALYTICAL INSTRUMENTS" });
+                repository.AddSIC(new SIC { Code = 3827, ADOffice = "10", IndustryTitle = "OPTICAL INSTRUMENTS & LENSES" });
+                repository.AddSIC(new SIC { Code = 3829, ADOffice = "10", IndustryTitle = "MEASURING & CONTROLLING DEVICES, NEC" });
+                repository.AddSIC(new SIC { Code = 3841, ADOffice = "10", IndustryTitle = "SURGICAL & MEDICAL INSTRUMENTS & APPARATUS" });
+                repository.AddSIC(new SIC { Code = 3842, ADOffice = "10", IndustryTitle = "ORTHOPEDIC, PROSTHETIC & SURGICAL APPLIANCES & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 3843, ADOffice = "10", IndustryTitle = "DENTAL EQUIPMENT & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 3844, ADOffice = "10", IndustryTitle = "X-RAY APPARATUS & TUBES & RELATED IRRADIATION APPARATUS" });
+                repository.AddSIC(new SIC { Code = 3845, ADOffice = "10", IndustryTitle = "ELECTROMEDICAL & ELECTROTHERAPEUTIC APPARATUS" });
+                repository.AddSIC(new SIC { Code = 3851, ADOffice = "10", IndustryTitle = "OPHTHALMIC GOODS" });
+                repository.AddSIC(new SIC { Code = 3861, ADOffice = "10", IndustryTitle = "PHOTOGRAPHIC EQUIPMENT & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 3873, ADOffice = "2", IndustryTitle = "WATCHES, CLOCKS, CLOCKWORK OPERATED DEVICES/PARTS" });
+                repository.AddSIC(new SIC { Code = 3910, ADOffice = "2", IndustryTitle = "JEWELRY, SILVERWARE & PLATED WARE" });
+                repository.AddSIC(new SIC { Code = 3911, ADOffice = "2", IndustryTitle = "JEWELRY, PRECIOUS METAL" });
+                repository.AddSIC(new SIC { Code = 3931, ADOffice = "5", IndustryTitle = "MUSICAL INSTRUMENTS" });
+                repository.AddSIC(new SIC { Code = 3942, ADOffice = "5", IndustryTitle = "DOLLS & STUFFED TOYS" });
+                repository.AddSIC(new SIC { Code = 3944, ADOffice = "5", IndustryTitle = "GAMES, TOYS & CHILDREN'S VEHICLES (NO DOLLS & BICYCLES)" });
+                repository.AddSIC(new SIC { Code = 3949, ADOffice = "5", IndustryTitle = "SPORTING & ATHLETIC GOODS, NEC" });
+                repository.AddSIC(new SIC { Code = 3950, ADOffice = "9", IndustryTitle = "PENS, PENCILS & OTHER ARTISTS' MATERIALS" });
+                repository.AddSIC(new SIC { Code = 3960, ADOffice = "6", IndustryTitle = "COSTUME JEWELRY & NOVELTIES" });
+                repository.AddSIC(new SIC { Code = 3990, ADOffice = "6", IndustryTitle = "MISCELLANEOUS MANUFACTURING INDUSTRIES" });
+                repository.AddSIC(new SIC { Code = 4011, ADOffice = "5", IndustryTitle = "RAILROADS, LINE-HAUL OPERATING" });
+                repository.AddSIC(new SIC { Code = 4013, ADOffice = "5", IndustryTitle = "RAILROAD SWITCHING & TERMINAL ESTABLISHMENTS" });
+                repository.AddSIC(new SIC { Code = 4100, ADOffice = "5", IndustryTitle = "LOCAL & SUBURBAN TRANSIT & INTERURBAN HWY PASSENGER TRANS" });
+                repository.AddSIC(new SIC { Code = 4210, ADOffice = "5", IndustryTitle = "TRUCKING & COURIER SERVICES (NO AIR)" });
+                repository.AddSIC(new SIC { Code = 4213, ADOffice = "5", IndustryTitle = "TRUCKING (NO LOCAL)" });
+                repository.AddSIC(new SIC { Code = 4220, ADOffice = "5", IndustryTitle = "PUBLIC WAREHOUSING & STORAGE" });
+                repository.AddSIC(new SIC { Code = 4231, ADOffice = "5", IndustryTitle = "TERMINAL MAINTENANCE FACILITIES FOR MOTOR FREIGHT TRANSPORT" });
+                repository.AddSIC(new SIC { Code = 4400, ADOffice = "5", IndustryTitle = "WATER TRANSPORTATION" });
+                repository.AddSIC(new SIC { Code = 4412, ADOffice = "5", IndustryTitle = "DEEP SEA FOREIGN TRANSPORTATION OF FREIGHT" });
+                repository.AddSIC(new SIC { Code = 4512, ADOffice = "5", IndustryTitle = "AIR TRANSPORTATION, SCHEDULED" });
+                repository.AddSIC(new SIC { Code = 4513, ADOffice = "5", IndustryTitle = "AIR COURIER SERVICES" });
+                repository.AddSIC(new SIC { Code = 4522, ADOffice = "5", IndustryTitle = "AIR TRANSPORTATION, NONSCHEDULED" });
+                repository.AddSIC(new SIC { Code = 4581, ADOffice = "5", IndustryTitle = "AIRPORTS, FLYING FIELDS & AIRPORT TERMINAL SERVICES" });
+                repository.AddSIC(new SIC { Code = 4610, ADOffice = "4", IndustryTitle = "PIPE LINES (NO NATURAL GAS)" });
+                repository.AddSIC(new SIC { Code = 4700, ADOffice = "5", IndustryTitle = "TRANSPORTATION SERVICES" });
+                repository.AddSIC(new SIC { Code = 4731, ADOffice = "5", IndustryTitle = "ARRANGEMENT OF TRANSPORTATION OF FREIGHT & CARGO" });
+                repository.AddSIC(new SIC { Code = 4812, ADOffice = "11", IndustryTitle = "RADIOTELEPHONE COMMUNICATIONS" });
+                repository.AddSIC(new SIC { Code = 4813, ADOffice = "11", IndustryTitle = "TELEPHONE COMMUNICATIONS (NO RADIOTELEPHONE)" });
+                repository.AddSIC(new SIC { Code = 4822, ADOffice = "11", IndustryTitle = "TELEGRAPH & OTHER MESSAGE COMMUNICATIONS" });
+                repository.AddSIC(new SIC { Code = 4832, ADOffice = "11", IndustryTitle = "RADIO BROADCASTING STATIONS" });
+                repository.AddSIC(new SIC { Code = 4833, ADOffice = "11", IndustryTitle = "TELEVISION BROADCASTING STATIONS" });
+                repository.AddSIC(new SIC { Code = 4841, ADOffice = "11", IndustryTitle = "CABLE & OTHER PAY TELEVISION SERVICES" });
+                repository.AddSIC(new SIC { Code = 4899, ADOffice = "11", IndustryTitle = "COMMUNICATIONS SERVICES, NEC" });
+                repository.AddSIC(new SIC { Code = 4900, ADOffice = "2", IndustryTitle = "ELECTRIC, GAS & SANITARY SERVICES" });
+                repository.AddSIC(new SIC { Code = 4911, ADOffice = "2", IndustryTitle = "ELECTRIC SERVICES" });
+                repository.AddSIC(new SIC { Code = 4922, ADOffice = "2", IndustryTitle = "NATURAL GAS TRANSMISSION" });
+                repository.AddSIC(new SIC { Code = 4923, ADOffice = "2", IndustryTitle = "NATURAL GAS TRANSMISISON & DISTRIBUTION" });
+                repository.AddSIC(new SIC { Code = 4924, ADOffice = "2", IndustryTitle = "NATURAL GAS DISTRIBUTION" });
+                repository.AddSIC(new SIC { Code = 4931, ADOffice = "2", IndustryTitle = "ELECTRIC & OTHER SERVICES COMBINED" });
+                repository.AddSIC(new SIC { Code = 4932, ADOffice = "2", IndustryTitle = "GAS & OTHER SERVICES COMBINED" });
+                repository.AddSIC(new SIC { Code = 4941, ADOffice = "2", IndustryTitle = "WATER SUPPLY" });
+                repository.AddSIC(new SIC { Code = 4950, ADOffice = "6", IndustryTitle = "SANITARY SERVICES" });
+                repository.AddSIC(new SIC { Code = 4953, ADOffice = "6", IndustryTitle = "REFUSE SYSTEMS" });
+                repository.AddSIC(new SIC { Code = 4955, ADOffice = "6", IndustryTitle = "HAZARDOUS WASTE MANAGEMENT" });
+                repository.AddSIC(new SIC { Code = 4961, ADOffice = "2", IndustryTitle = "STEAM & AIR-CONDITIONING SUPPLY" });
+                repository.AddSIC(new SIC { Code = 4991, ADOffice = "2", IndustryTitle = "COGENERATION SERVICES & SMALL POWER PRODUCERS" });
+                repository.AddSIC(new SIC { Code = 5000, ADOffice = "2", IndustryTitle = "WHOLESALE-DURABLE GOODS" });
+                repository.AddSIC(new SIC { Code = 5010, ADOffice = "5", IndustryTitle = "WHOLESALE-MOTOR VEHICLES & MOTOR VEHICLE PARTS & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 5013, ADOffice = "5", IndustryTitle = "WHOLESALE-MOTOR VEHICLE SUPPLIES & NEW PARTS" });
+                repository.AddSIC(new SIC { Code = 5020, ADOffice = "2", IndustryTitle = "WHOLESALE-FURNITURE & HOME FURNISHINGS" });
+                repository.AddSIC(new SIC { Code = 5030, ADOffice = "6", IndustryTitle = "WHOLESALE-LUMBER & OTHER CONSTRUCTION MATERIALS" });
+                repository.AddSIC(new SIC { Code = 5031, ADOffice = "6", IndustryTitle = "WHOLESALE-LUMBER, PLYWOOD, MILLWORK & WOOD PANELS" });
+                repository.AddSIC(new SIC { Code = 5040, ADOffice = "2", IndustryTitle = "WHOLESALE-PROFESSIONAL & COMMERCIAL EQUIPMENT & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 5045, ADOffice = "3", IndustryTitle = "WHOLESALE-COMPUTERS & PERIPHERAL EQUIPMENT & SOFTWARE" });
+                repository.AddSIC(new SIC { Code = 5047, ADOffice = "9", IndustryTitle = "WHOLESALE-MEDICAL, DENTAL & HOSPITAL EQUIPMENT & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 5050, ADOffice = "5", IndustryTitle = "WHOLESALE-METALS & MINERALS (NO PETROLEUM)" });
+                repository.AddSIC(new SIC { Code = 5051, ADOffice = "5", IndustryTitle = "WHOLESALE-METALS SERVICE CENTERS & OFFICES" });
+                repository.AddSIC(new SIC { Code = 5063, ADOffice = "10", IndustryTitle = "WHOLESALE-ELECTRICAL APPARATUS & EQUIPMENT, WIRING SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 5064, ADOffice = "10", IndustryTitle = "WHOLESALE-ELECTRICAL APPLIANCES, TV & RADIO SETS" });
+                repository.AddSIC(new SIC { Code = 5065, ADOffice = "10", IndustryTitle = "WHOLESALE-ELECTRONIC PARTS & EQUIPMENT, NEC" });
+                repository.AddSIC(new SIC { Code = 5070, ADOffice = "6", IndustryTitle = "WHOLESALE-HARDWARE & PLUMBING & HEATING EQUIPMENT & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 5072, ADOffice = "6", IndustryTitle = "WHOLESALE-HARDWARE" });
+                repository.AddSIC(new SIC { Code = 5080, ADOffice = "6", IndustryTitle = "WHOLESALE-MACHINERY, EQUIPMENT & SUPPLIES" });
+                repository.AddSIC(new SIC { Code = 5082, ADOffice = "6", IndustryTitle = "WHOLESALE-CONSTRUCTION & MINING (NO PETRO) MACHINERY & EQUIP" });
+                repository.AddSIC(new SIC { Code = 5084, ADOffice = "6", IndustryTitle = "WHOLESALE-INDUSTRIAL MACHINERY & EQUIPMENT" });
+                repository.AddSIC(new SIC { Code = 5090, ADOffice = "2", IndustryTitle = "WHOLESALE-MISC DURABLE GOODS" });
+                repository.AddSIC(new SIC { Code = 5094, ADOffice = "2", IndustryTitle = "WHOLESALE-JEWELRY, WATCHES, PRECIOUS STONES & METALS" });
+                repository.AddSIC(new SIC { Code = 5099, ADOffice = "2", IndustryTitle = "WHOLESALE-DURABLE GOODS, NEC" });
+                repository.AddSIC(new SIC { Code = 5110, ADOffice = "4", IndustryTitle = "WHOLESALE-PAPER & PAPER PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 5122, ADOffice = "9", IndustryTitle = "WHOLESALE-DRUGS, PROPRIETARIES & DRUGGISTS' SUNDRIES" });
+                repository.AddSIC(new SIC { Code = 5130, ADOffice = "9", IndustryTitle = "WHOLESALE-APPAREL, PIECE GOODS & NOTIONS" });
+                repository.AddSIC(new SIC { Code = 5140, ADOffice = "2", IndustryTitle = "WHOLESALE-GROCERIES & RELATED PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 5141, ADOffice = "2", IndustryTitle = "WHOLESALE-GROCERIES, GENERAL LINE" });
+                repository.AddSIC(new SIC { Code = 5150, ADOffice = "5", IndustryTitle = "WHOLESALE-FARM PRODUCT RAW MATERIALS" });
+                repository.AddSIC(new SIC { Code = 5160, ADOffice = "6", IndustryTitle = "WHOLESALE-CHEMICALS & ALLIED PRODUCTS" });
+                repository.AddSIC(new SIC { Code = 5171, ADOffice = "4", IndustryTitle = "WHOLESALE-PETROLEUM BULK STATIONS & TERMINALS" });
+                repository.AddSIC(new SIC { Code = 5172, ADOffice = "4", IndustryTitle = "WHOLESALE-PETROLEUM & PETROLEUM PRODUCTS (NO BULK STATIONS)" });
+                repository.AddSIC(new SIC { Code = 5180, ADOffice = "9", IndustryTitle = "WHOLESALE-BEER, WINE & DISTILLED ALCOHOLIC BEVERAGES" });
+                repository.AddSIC(new SIC { Code = 5190, ADOffice = "2", IndustryTitle = "WHOLESALE-MISCELLANEOUS NONDURABLE GOODS" });
+                repository.AddSIC(new SIC { Code = 5200, ADOffice = "6", IndustryTitle = "RETAIL-BUILDING MATERIALS, HARDWARE, GARDEN SUPPLY" });
+                repository.AddSIC(new SIC { Code = 5211, ADOffice = "6", IndustryTitle = "RETAIL-LUMBER & OTHER BUILDING MATERIALS DEALERS" });
+                repository.AddSIC(new SIC { Code = 5271, ADOffice = "2", IndustryTitle = "RETAIL-MOBILE HOME DEALERS" });
+                repository.AddSIC(new SIC { Code = 5311, ADOffice = "2", IndustryTitle = "RETAIL-DEPARTMENT STORES" });
+                repository.AddSIC(new SIC { Code = 5331, ADOffice = "2", IndustryTitle = "RETAIL-VARIETY STORES" });
+                repository.AddSIC(new SIC { Code = 5399, ADOffice = "2", IndustryTitle = "RETAIL-MISC GENERAL MERCHANDISE STORES" });
+                repository.AddSIC(new SIC { Code = 5400, ADOffice = "2", IndustryTitle = "RETAIL-FOOD STORES" });
+                repository.AddSIC(new SIC { Code = 5411, ADOffice = "2", IndustryTitle = "RETAIL-GROCERY STORES" });
+                repository.AddSIC(new SIC { Code = 5412, ADOffice = "2", IndustryTitle = "RETAIL-CONVENIENCE STORES" });
+                repository.AddSIC(new SIC { Code = 5500, ADOffice = "2", IndustryTitle = "RETAIL-AUTO DEALERS & GASOLINE STATIONS" });
+                repository.AddSIC(new SIC { Code = 5531, ADOffice = "2", IndustryTitle = "RETAIL-AUTO & HOME SUPPLY STORES" });
+                repository.AddSIC(new SIC { Code = 5600, ADOffice = "9", IndustryTitle = "RETAIL-APPAREL & ACCESSORY STORES" });
+                repository.AddSIC(new SIC { Code = 5621, ADOffice = "9", IndustryTitle = "RETAIL-WOMEN'S CLOTHING STORES" });
+                repository.AddSIC(new SIC { Code = 5651, ADOffice = "9", IndustryTitle = "RETAIL-FAMILY CLOTHING STORES" });
+                repository.AddSIC(new SIC { Code = 5661, ADOffice = "9", IndustryTitle = "RETAIL-SHOE STORES" });
+                repository.AddSIC(new SIC { Code = 5700, ADOffice = "2", IndustryTitle = "RETAIL-HOME FURNITURE, FURNISHINGS & EQUIPMENT STORES" });
+                repository.AddSIC(new SIC { Code = 5712, ADOffice = "2", IndustryTitle = "RETAIL-FURNITURE STORES" });
+                repository.AddSIC(new SIC { Code = 5731, ADOffice = "2", IndustryTitle = "RETAIL-RADIO, TV & CONSUMER ELECTRONICS STORES" });
+                repository.AddSIC(new SIC { Code = 5734, ADOffice = "2", IndustryTitle = "RETAIL-COMPUTER & COMPUTER SOFTWARE STORES" });
+                repository.AddSIC(new SIC { Code = 5735, ADOffice = "2", IndustryTitle = "RETAIL-RECORD & PRERECORDED TAPE STORES" });
+                repository.AddSIC(new SIC { Code = 5810, ADOffice = "5", IndustryTitle = "RETAIL-EATING & DRINKING PLACES" });
+                repository.AddSIC(new SIC { Code = 5812, ADOffice = "5", IndustryTitle = "RETAIL-EATING PLACES" });
+                repository.AddSIC(new SIC { Code = 5900, ADOffice = "2", IndustryTitle = "RETAIL-MISCELLANEOUS RETAIL" });
+                repository.AddSIC(new SIC { Code = 5912, ADOffice = "9", IndustryTitle = "RETAIL-DRUG STORES AND PROPRIETARY STORES" });
+                repository.AddSIC(new SIC { Code = 5940, ADOffice = "2", IndustryTitle = "RETAIL-MISCELLANEOUS SHOPPING GOODS STORES" });
+                repository.AddSIC(new SIC { Code = 5944, ADOffice = "2", IndustryTitle = "RETAIL-JEWELRY STORES" });
+                repository.AddSIC(new SIC { Code = 5945, ADOffice = "2", IndustryTitle = "RETAIL-HOBBY, TOY & GAME SHOPS" });
+                repository.AddSIC(new SIC { Code = 5960, ADOffice = "2", IndustryTitle = "RETAIL-NONSTORE RETAILERS" });
+                repository.AddSIC(new SIC { Code = 5961, ADOffice = "2", IndustryTitle = "RETAIL-CATALOG & MAIL-ORDER HOUSES" });
+                repository.AddSIC(new SIC { Code = 5990, ADOffice = "2", IndustryTitle = "RETAIL-RETAIL STORES, NEC" });
+                repository.AddSIC(new SIC { Code = 6021, ADOffice = "7", IndustryTitle = "NATIONAL COMMERCIAL BANKS" });
+                repository.AddSIC(new SIC { Code = 6022, ADOffice = "7", IndustryTitle = "STATE COMMERCIAL BANKS" });
+                repository.AddSIC(new SIC { Code = 6029, ADOffice = "7", IndustryTitle = "COMMERCIAL BANKS, NEC" });
+                repository.AddSIC(new SIC { Code = 6035, ADOffice = "7", IndustryTitle = "SAVINGS INSTITUTION, FEDERALLY CHARTERED" });
+                repository.AddSIC(new SIC { Code = 6036, ADOffice = "7", IndustryTitle = "SAVINGS INSTITUTIONS, NOT FEDERALLY CHARTERED" });
+                repository.AddSIC(new SIC { Code = 6099, ADOffice = "7", IndustryTitle = "FUNCTIONS RELATED TO DEPOSITORY BANKING, NEC" });
+                repository.AddSIC(new SIC { Code = 6111, ADOffice = "7", IndustryTitle = "FEDERAL & FEDERALLY-SPONSORED CREDIT AGENCIES" });
+                repository.AddSIC(new SIC { Code = 6141, ADOffice = "7", IndustryTitle = "PERSONAL CREDIT INSTITUTIONS" });
+                repository.AddSIC(new SIC { Code = 6153, ADOffice = "7", IndustryTitle = "SHORT-TERM BUSINESS CREDIT INSTITUTIONS" });
+                repository.AddSIC(new SIC { Code = 6159, ADOffice = "7", IndustryTitle = "MISCELLANEOUS BUSINESS CREDIT INSTITUTION" });
+                repository.AddSIC(new SIC { Code = 6162, ADOffice = "7", IndustryTitle = "MORTGAGE BANKERS & LOAN CORRESPONDENTS" });
+                repository.AddSIC(new SIC { Code = 6163, ADOffice = "7", IndustryTitle = "LOAN BROKERS" });
+                repository.AddSIC(new SIC { Code = 6172, ADOffice = "7", IndustryTitle = "FINANCE LESSORS" });
+                repository.AddSIC(new SIC { Code = 6189, ADOffice = "OSF", IndustryTitle = "ASSET-BACKED SECURITIES" });
+                repository.AddSIC(new SIC { Code = 6199, ADOffice = "7", IndustryTitle = "FINANCE SERVICES" });
+                repository.AddSIC(new SIC { Code = 6200, ADOffice = "7", IndustryTitle = "SECURITY & COMMODITY BROKERS, DEALERS, EXCHANGES & SERVICES" });
+                repository.AddSIC(new SIC { Code = 6211, ADOffice = "7", IndustryTitle = "SECURITY BROKERS, DEALERS & FLOTATION COMPANIES" });
+                repository.AddSIC(new SIC { Code = 6221, ADOffice = "8", IndustryTitle = "COMMODITY CONTRACTS BROKERS & DEALERS" });
+                repository.AddSIC(new SIC { Code = 6282, ADOffice = "7", IndustryTitle = "INVESTMENT ADVICE" });
+                repository.AddSIC(new SIC { Code = 6311, ADOffice = "1", IndustryTitle = "LIFE INSURANCE" });
+                repository.AddSIC(new SIC { Code = 6321, ADOffice = "1", IndustryTitle = "ACCIDENT & HEALTH INSURANCE" });
+                repository.AddSIC(new SIC { Code = 6324, ADOffice = "1", IndustryTitle = "HOSPITAL & MEDICAL SERVICE PLANS" });
+                repository.AddSIC(new SIC { Code = 6331, ADOffice = "1", IndustryTitle = "FIRE, MARINE & CASUALTY INSURANCE" });
+                repository.AddSIC(new SIC { Code = 6351, ADOffice = "1", IndustryTitle = "SURETY INSURANCE" });
+                repository.AddSIC(new SIC { Code = 6361, ADOffice = "1", IndustryTitle = "TITLE INSURANCE" });
+                repository.AddSIC(new SIC { Code = 6399, ADOffice = "1", IndustryTitle = "INSURANCE CARRIERS, NEC" });
+                repository.AddSIC(new SIC { Code = 6411, ADOffice = "1", IndustryTitle = "INSURANCE AGENTS, BROKERS & SERVICE" });
+                repository.AddSIC(new SIC { Code = 6500, ADOffice = "8", IndustryTitle = "REAL ESTATE" });
+                repository.AddSIC(new SIC { Code = 6510, ADOffice = "8", IndustryTitle = "REAL ESTATE OPERATORS (NO DEVELOPERS) & LESSORS" });
+                repository.AddSIC(new SIC { Code = 6512, ADOffice = "8", IndustryTitle = "OPERATORS OF NONRESIDENTIAL BUILDINGS" });
+                repository.AddSIC(new SIC { Code = 6513, ADOffice = "8", IndustryTitle = "OPERATORS OF APARTMENT BUILDINGS" });
+                repository.AddSIC(new SIC { Code = 6519, ADOffice = "8", IndustryTitle = "LESSORS OF REAL PROPERTY, NEC" });
+                repository.AddSIC(new SIC { Code = 6531, ADOffice = "8", IndustryTitle = "REAL ESTATE AGENTS & MANAGERS (FOR OTHERS)" });
+                repository.AddSIC(new SIC { Code = 6532, ADOffice = "8", IndustryTitle = "REAL ESTATE DEALERS (FOR THEIR OWN ACCOUNT)" });
+                repository.AddSIC(new SIC { Code = 6552, ADOffice = "8", IndustryTitle = "LAND SUBDIVIDERS & DEVELOPERS (NO CEMETERIES)" });
+                repository.AddSIC(new SIC { Code = 6770, ADOffice = "All", IndustryTitle = "BLANK CHECKS" });
+                repository.AddSIC(new SIC { Code = 6792, ADOffice = "4", IndustryTitle = "OIL ROYALTY TRADERS" });
+                repository.AddSIC(new SIC { Code = 6794, ADOffice = "3", IndustryTitle = "PATENT OWNERS & LESSORS" });
+                repository.AddSIC(new SIC { Code = 6795, ADOffice = "9", IndustryTitle = "MINERAL ROYALTY TRADERS" });
+                repository.AddSIC(new SIC { Code = 6798, ADOffice = "8", IndustryTitle = "REAL ESTATE INVESTMENT TRUSTS" });
+                repository.AddSIC(new SIC { Code = 6799, ADOffice = "8", IndustryTitle = "INVESTORS, NEC" });
+                repository.AddSIC(new SIC { Code = 7000, ADOffice = "8", IndustryTitle = "HOTELS, ROOMING HOUSES, CAMPS & OTHER LODGING PLACES" });
+                repository.AddSIC(new SIC { Code = 7011, ADOffice = "8", IndustryTitle = "HOTELS & MOTELS" });
+                repository.AddSIC(new SIC { Code = 7200, ADOffice = "11", IndustryTitle = "SERVICES-PERSONAL SERVICES" });
+                repository.AddSIC(new SIC { Code = 7310, ADOffice = "11", IndustryTitle = "SERVICES-ADVERTISING" });
+                repository.AddSIC(new SIC { Code = 7311, ADOffice = "11", IndustryTitle = "SERVICES-ADVERTISING AGENCIES" });
+                repository.AddSIC(new SIC { Code = 7320, ADOffice = "11", IndustryTitle = "SERVICES-CONSUMER CREDIT REPORTING, COLLECTION AGENCIES" });
+                repository.AddSIC(new SIC { Code = 7330, ADOffice = "11", IndustryTitle = "SERVICES-MAILING, REPRODUCTION, COMMERCIAL ART & PHOTOGRAPHY" });
+                repository.AddSIC(new SIC { Code = 7331, ADOffice = "11", IndustryTitle = "SERVICES-DIRECT MAIL ADVERTISING SERVICES" });
+                repository.AddSIC(new SIC { Code = 7340, ADOffice = "8", IndustryTitle = "SERVICES-TO DWELLINGS & OTHER BUILDINGS" });
+                repository.AddSIC(new SIC { Code = 7350, ADOffice = "6", IndustryTitle = "SERVICES-MISCELLANEOUS EQUIPMENT RENTAL & LEASING" });
+                repository.AddSIC(new SIC { Code = 7359, ADOffice = "6", IndustryTitle = "SERVICES-EQUIPMENT RENTAL & LEASING, NEC" });
+                repository.AddSIC(new SIC { Code = 7361, ADOffice = "8", IndustryTitle = "SERVICES-EMPLOYMENT AGENCIES" });
+                repository.AddSIC(new SIC { Code = 7363, ADOffice = "11", IndustryTitle = "SERVICES-HELP SUPPLY SERVICES" });
+                repository.AddSIC(new SIC { Code = 7370, ADOffice = "3", IndustryTitle = "SERVICES-COMPUTER PROGRAMMING, DATA PROCESSING, ETC." });
+                repository.AddSIC(new SIC { Code = 7371, ADOffice = "3", IndustryTitle = "SERVICES-COMPUTER PROGRAMMING SERVICES" });
+                repository.AddSIC(new SIC { Code = 7372, ADOffice = "3", IndustryTitle = "SERVICES-PREPACKAGED SOFTWARE" });
+                repository.AddSIC(new SIC { Code = 7373, ADOffice = "3", IndustryTitle = "SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN" });
+                repository.AddSIC(new SIC { Code = 7374, ADOffice = "3", IndustryTitle = "SERVICES-COMPUTER PROCESSING & DATA PREPARATION" });
+                repository.AddSIC(new SIC { Code = 7377, ADOffice = "3", IndustryTitle = "SERVICES-COMPUTER RENTAL & LEASING" });
+                repository.AddSIC(new SIC { Code = 7380, ADOffice = "11", IndustryTitle = "SERVICES-MISCELLANEOUS BUSINESS SERVICES" });
+                repository.AddSIC(new SIC { Code = 7381, ADOffice = "11", IndustryTitle = "SERVICES-DETECTIVE, GUARD & ARMORED CAR SERVICES" });
+                repository.AddSIC(new SIC { Code = 7384, ADOffice = "11", IndustryTitle = "SERVICES-PHOTOFINISHING LABORATORIES" });
+                repository.AddSIC(new SIC { Code = 7385, ADOffice = "11", IndustryTitle = "SERVICES-TELEPHONE INTERCONNECT SYSTEMS" });
+                repository.AddSIC(new SIC { Code = 7389, ADOffice = "2 & 3", IndustryTitle = "SERVICES-BUSINESS SERVICES, NEC" });
+                repository.AddSIC(new SIC { Code = 7500, ADOffice = "5", IndustryTitle = "SERVICES-AUTOMOTIVE REPAIR, SERVICES & PARKING" });
+                repository.AddSIC(new SIC { Code = 7510, ADOffice = "5", IndustryTitle = "SERVICES-AUTO RENTAL & LEASING (NO DRIVERS)" });
+                repository.AddSIC(new SIC { Code = 7600, ADOffice = "11", IndustryTitle = "SERVICES-MISCELLANEOUS REPAIR SERVICES" });
+                repository.AddSIC(new SIC { Code = 7812, ADOffice = "5", IndustryTitle = "SERVICES-MOTION PICTURE & VIDEO TAPE PRODUCTION" });
+                repository.AddSIC(new SIC { Code = 7819, ADOffice = "5", IndustryTitle = "SERVICES-ALLIED TO MOTION PICTURE PRODUCTION" });
+                repository.AddSIC(new SIC { Code = 7822, ADOffice = "5", IndustryTitle = "SERVICES-MOTION PICTURE & VIDEO TAPE DISTRIBUTION" });
+                repository.AddSIC(new SIC { Code = 7829, ADOffice = "5", IndustryTitle = "SERVICES-ALLIED TO MOTION PICTURE DISTRIBUTION" });
+                repository.AddSIC(new SIC { Code = 7830, ADOffice = "5", IndustryTitle = "SERVICES-MOTION PICTURE THEATERS" });
+                repository.AddSIC(new SIC { Code = 7841, ADOffice = "5", IndustryTitle = "SERVICES-VIDEO TAPE RENTAL" });
+                repository.AddSIC(new SIC { Code = 7900, ADOffice = "5", IndustryTitle = "SERVICES-AMUSEMENT & RECREATION SERVICES" });
+                repository.AddSIC(new SIC { Code = 7948, ADOffice = "5", IndustryTitle = "SERVICES-RACING, INCLUDING TRACK OPERATION" });
+                repository.AddSIC(new SIC { Code = 7990, ADOffice = "5", IndustryTitle = "SERVICES-MISCELLANEOUS AMUSEMENT & RECREATION" });
+                repository.AddSIC(new SIC { Code = 7997, ADOffice = "5", IndustryTitle = "SERVICES-MEMBERSHIP SPORTS & RECREATION CLUBS" });
+                repository.AddSIC(new SIC { Code = 8000, ADOffice = "9", IndustryTitle = "SERVICES-HEALTH SERVICES" });
+                repository.AddSIC(new SIC { Code = 8011, ADOffice = "11", IndustryTitle = "SERVICES-OFFICES & CLINICS OF DOCTORS OF MEDICINE" });
+                repository.AddSIC(new SIC { Code = 8050, ADOffice = "11", IndustryTitle = "SERVICES-NURSING & PERSONAL CARE FACILITIES" });
+                repository.AddSIC(new SIC { Code = 8051, ADOffice = "11", IndustryTitle = "SERVICES-SKILLED NURSING CARE FACILITIES" });
+                repository.AddSIC(new SIC { Code = 8060, ADOffice = "11", IndustryTitle = "SERVICES-HOSPITALS" });
+                repository.AddSIC(new SIC { Code = 8062, ADOffice = "11", IndustryTitle = "SERVICES-GENERAL MEDICAL & SURGICAL HOSPITALS, NEC" });
+                repository.AddSIC(new SIC { Code = 8071, ADOffice = "9", IndustryTitle = "SERVICES-MEDICAL LABORATORIES" });
+                repository.AddSIC(new SIC { Code = 8082, ADOffice = "9", IndustryTitle = "SERVICES-HOME HEALTH CARE SERVICES" });
+                repository.AddSIC(new SIC { Code = 8090, ADOffice = "9", IndustryTitle = "SERVICES-MISC HEALTH & ALLIED SERVICES, NEC" });
+                repository.AddSIC(new SIC { Code = 8093, ADOffice = "11", IndustryTitle = "SERVICES-SPECIALTY OUTPATIENT FACILITIES, NEC" });
+                repository.AddSIC(new SIC { Code = 8111, ADOffice = "11", IndustryTitle = "SERVICES-LEGAL SERVICES" });
+                repository.AddSIC(new SIC { Code = 8200, ADOffice = "11", IndustryTitle = "SERVICES-EDUCATIONAL SERVICES" });
+                repository.AddSIC(new SIC { Code = 8300, ADOffice = "9", IndustryTitle = "SERVICES-SOCIAL SERVICES" });
+                repository.AddSIC(new SIC { Code = 8351, ADOffice = "9", IndustryTitle = "SERVICES-CHILD DAY CARE SERVICES" });
+                repository.AddSIC(new SIC { Code = 8600, ADOffice = "5", IndustryTitle = "SERVICES-MEMBERSHIP ORGANIZATIONS" });
+                repository.AddSIC(new SIC { Code = 8700, ADOffice = "6", IndustryTitle = "SERVICES-ENGINEERING, ACCOUNTING, RESEARCH, MANAGEMENT" });
+                repository.AddSIC(new SIC { Code = 8711, ADOffice = "6", IndustryTitle = "SERVICES-ENGINEERING SERVICES" });
+                repository.AddSIC(new SIC { Code = 8731, ADOffice = "9", IndustryTitle = "SERVICES-COMMERCIAL PHYSICAL & BIOLOGICAL RESEARCH" });
+                repository.AddSIC(new SIC { Code = 8734, ADOffice = "9", IndustryTitle = "SERVICES-TESTING LABORATORIES" });
+                repository.AddSIC(new SIC { Code = 8741, ADOffice = "8", IndustryTitle = "SERVICES-MANAGEMENT SERVICES" });
+                repository.AddSIC(new SIC { Code = 8742, ADOffice = "8", IndustryTitle = "SERVICES-MANAGEMENT CONSULTING SERVICES" });
+                repository.AddSIC(new SIC { Code = 8744, ADOffice = "6", IndustryTitle = "SERVICES-FACILITIES SUPPORT MANAGEMENT SERVICES" });
+                repository.AddSIC(new SIC { Code = 8880, ADOffice = "99", IndustryTitle = "AMERICAN DEPOSITARY RECEIPTS" });
+                repository.AddSIC(new SIC { Code = 8888, ADOffice = "99", IndustryTitle = "FOREIGN GOVERNMENTS" });
+                repository.AddSIC(new SIC { Code = 8900, ADOffice = "11", IndustryTitle = "SERVICES-SERVICES, NEC" });
+                repository.AddSIC(new SIC { Code = 9721, ADOffice = "99", IndustryTitle = "INTERNATIONAL AFFAIRS" });
+                repository.AddSIC(new SIC { Code = 9995, ADOffice = "All", IndustryTitle = "NON-OPERATING ESTABLISHMENTS" });
+
+            }
+        }
+
+        private static void LoadInitialDatasets(IAnalystRepository repository)
+        {
+            if (repository.GetDatasetsCount() == 0)
+            {
+                string baseurl = "/files/dera/data/financial-statement-and-notes-data-sets";
+                List<EdgarDataset> datasets = new List<EdgarDataset>();
+                string genericPath = baseurl + "/{0}q{1}_notes.zip";
+                int thisYear = DateTime.Now.Year;
+                for (int i = 2009; i <= thisYear - 1; i++)
+                {
+                    for (int j = 1; j <= 4; j++)
+                    {
+                        Quarter q = (Quarter)j;
+
+                        EdgarDataset ds = new EdgarDataset
+                        {
+                            RelativePath = String.Format(genericPath, i.ToString(), j),
+                            Year = i,
+                            Quarter = q
+                        };
+                        repository.AddDataset(ds);
+                    }
+                }
+            }
+        }
+
+        private static void LoadSECForms(IAnalystRepository repository)
         {
             if (repository.GetSECFormsCount() == 0)
             {
@@ -189,10 +647,10 @@ namespace Analyst.Services
                 repository.AddSECForm(new SECForm { Code = "TH", Description = "Notification of Reliance on Temporary Hardship Exemption (PDF) ", LinkToPdf = "https://www.sec.gov/files/formth%2C0.pdf", LastUpddate = "July 2006", SECNumber = "SEC2348", Topic = "Securities Act of 1933, Securities Exchange Act of 1934, EDGAR Filers" });
                 repository.AddSECForm(new SECForm { Code = "WB-APP", Description = "Application for Award for Original Information Submitted Pursuant to Section 21F of the Securities Exchange Act of 1934 (PDF) ", LinkToPdf = "https://www.sec.gov/files/formwb-app.pdf", LastUpddate = "Aug. 2011", SECNumber = "SEC2851", Topic = "Tips Complaints and Referrals, Whistleblower" });
                 repository.AddSECForm(new SECForm { Code = "X-17A-5 Part I", Description = "FOCUS Report, Part I (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_1.pdf", LastUpddate = "April 2003", SECNumber = "SEC1705", Topic = "Broker-Dealers" });
-                repository.AddSECForm(new SECForm { Code = "X-17A-5 Part II", Description = "FOCUS Report, Part II Instructions (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_22.pdf", LastUpddate = "Feb. 2004", SECNumber = "SEC1695A", Topic = "Broker-Dealers" });
+                //repository.AddSECForm(new SECForm { Code = "X-17A-5 Part II", Description = "FOCUS Report, Part II Instructions (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_22.pdf", LastUpddate = "Feb. 2004", SECNumber = "SEC1695A", Topic = "Broker-Dealers" });
                 repository.AddSECForm(new SECForm { Code = "X-17A-5 Part II", Description = "FOCUS Report, Part II (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_2.pdf", LastUpddate = "July 2002", SECNumber = "SEC1695", Topic = "Broker-Dealers" });
                 repository.AddSECForm(new SECForm { Code = "X-17A-5 Part IIA", Description = "FOCUS Report Part IIa (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_2f.pdf", LastUpddate = "Feb. 2003", SECNumber = "SEC1696", Topic = "Broker-Dealers" });
-                repository.AddSECForm(new SECForm { Code = "X-17A-5 Part IIA", Description = "FOCUS Report Part IIa Instructions (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_2a.pdf", LastUpddate = "April 2002", SECNumber = "SEC1696A", Topic = "Broker-Dealers" });
+                //repository.AddSECForm(new SECForm { Code = "X-17A-5 Part IIA", Description = "FOCUS Report Part IIa Instructions (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_2a.pdf", LastUpddate = "April 2002", SECNumber = "SEC1696A", Topic = "Broker-Dealers" });
                 repository.AddSECForm(new SECForm { Code = "X-17A-5 Part IIB", Description = "FOCUS Report, Part IIb (OTC Derivatives Dealer) (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_2b.pdf", LastUpddate = "March 2012", SECNumber = "SEC2430", Topic = "Broker-Dealers" });
                 repository.AddSECForm(new SECForm { Code = "X-17A-5 Part III", Description = "FOCUS Report: Information Required of All Brokers and Dealers Pursuant to Rule 17a-5, Part III (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_3.pdf", LastUpddate = "41395", SECNumber = "SEC1410", Topic = "Broker-Dealers" });
                 repository.AddSECForm(new SECForm { Code = "X-17A-5 Schedule I", Description = "(Financial and Operational Combined Uniform Single) FOCUS Report: Information Required of All Brokers and Dealers Pursuant to Rule 17a-5 (PDF) ", LinkToPdf = "https://www.sec.gov/files/formx-17a-5_schedi.pdf", LastUpddate = "41395", SECNumber = "SEC1675", Topic = "Broker-Dealers" });

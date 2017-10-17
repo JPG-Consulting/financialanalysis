@@ -16,6 +16,9 @@ namespace Analyst.DBAccess.Contexts
         void AddSECForm(SECForm sECForm);
         int GetSECFormsCount();
         List<SECForm> GetSECForms();
+        List<SIC> GetSICs();
+        int GetSICCount();
+        void AddSIC(SIC sIC);
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -63,6 +66,22 @@ namespace Analyst.DBAccess.Contexts
         public List<SECForm> GetSECForms()
         {
             return Context.SECForms.ToList();
+        }
+
+        public List<SIC> GetSICs()
+        {
+            return Context.SICs.ToList();
+        }
+
+        public int GetSICCount()
+        {
+            return Context.SICs.Count();
+        }
+
+        public void AddSIC(SIC sic)
+        {
+            Context.SICs.Add(sic);
+            Context.SaveChanges();
         }
     }
 }

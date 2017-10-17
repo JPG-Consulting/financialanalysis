@@ -18,13 +18,10 @@ namespace Analyst.DBAccess.Contexts
         {
         }
 
-        
-
         public virtual DbSet<EdgarDataset> DataSets { get; set; }
 
         public virtual DbSet<SECForm> SECForms { get; set; }
 
-
-
+        public virtual DbSet<SIC> SICs { get;  set; }
     }
 }
