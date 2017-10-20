@@ -16,6 +16,9 @@ namespace Analyst.Domain.Edgar
     public class SIC
     {
         [Key]
+        public int Id { get; set; }
+
+        [Index(IsUnique =true)]
         public short Code { get; set; }
 
         public string ADOffice { get; set; }

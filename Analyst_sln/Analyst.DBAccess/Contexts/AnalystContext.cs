@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    internal class AnalystContext: DbContext
+    internal class AnalystContext : DbContext
     {
 
         public AnalystContext()
@@ -22,6 +22,11 @@ namespace Analyst.DBAccess.Contexts
 
         public virtual DbSet<SECForm> SECForms { get; set; }
 
-        public virtual DbSet<SIC> SICs { get;  set; }
+        public virtual DbSet<SIC> SICs { get; set; }
+
+        public virtual DbSet<Registrant> Registrants { get; set; }
+
+        public virtual DbSet<EdgarDatasetSubmissions> Submissions { get; set; }
+        
     }
 }

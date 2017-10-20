@@ -19,6 +19,8 @@
                     <th>Year</th>
                     <th>Quarter</th>
                     <th>Path</th>
+                    <th>Processed submission</th>
+                    <th>Total submissions</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -35,13 +37,21 @@
                         @Html.DisplayFor(modelItem => item.Quarter)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.ProcessedSubmissions)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalSubmissions)
+                    </td>
+                    <td>
                         <a href="https://www.sec.gov/@Html.DisplayFor(modelItem => item.RelativePath)">Original file</a>
                     </td>
                     
                     <td>
-                        
-                        @Html.ActionLink("Get details", "GetDetails", new { id = item.Id })  |
-                        @Html.ActionLink("Process", "Process", new { id = item.Id })
+                        <!--
+                        <%= Html.ActionLink("LinkText", "Action", "Controller", new { id=string.Empty }, null) %>    
+                        -->
+                        @Html.RouteLink("Get details of dataset", "dsdetails", new { id = item.Id })  |
+                        @Html.RouteLink("Process data set","processds", new { id = item.Id })
                     </td>
                 </tr>
             }

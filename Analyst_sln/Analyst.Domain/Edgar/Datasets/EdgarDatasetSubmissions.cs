@@ -64,6 +64,8 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public bool Detail { get; set; }
 
+        
+
         /// <summary>
         /// The name of the submitted XBRL Instance Document (EX-101.INS) type data file. The name often begins with the company ticker symbol.
         /// </summary>
@@ -85,12 +87,12 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// Public float, in USD, if provided in this submission.
         /// </summary>
-        public int PubFloatUSD { get; set; }
+        public float? PubFloatUSD { get; set; }
 
         /// <summary>
         /// Date on which the public float was measured by the filer.
         /// </summary>
-        public DateTime FloatDate { get; set; }
+        public DateTime? FloatDate { get; set; }
 
 
         /// <summary>
@@ -101,7 +103,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// If the public float was computed, the number of terms in the summation.
         /// </summary>
-        public int FloatMems { get; set; }
+        public int? FloatMems { get; set; }
 
     }
 }

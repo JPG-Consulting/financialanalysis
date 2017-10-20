@@ -10,8 +10,8 @@ using System.Web.Mvc;
 namespace Analyst.Web.Controllers
 { 
 
-    [RoutePrefix("coredata")]
-    public class CoreDataController : Controller
+    [RoutePrefix("edgar")]
+    public class EdgarController : Controller
     {
         public IEdgarService Service
         {
@@ -34,6 +34,20 @@ namespace Analyst.Web.Controllers
         public ActionResult GetReadme()
         {
             return View("readme");
+        }
+
+        [Route("datasets/process",Name = "processds")]
+        public ActionResult ProcessDataset(int id)
+        {
+            EdgarDataset ds = Service.ProcessDataset(id);
+            return View("Datasetstatus", ds);
+        }
+
+        [Route("datasets/getdetails",Name= "dsdetails")]
+        public ActionResult GetDatasetDetails(int id)
+        {
+            EdgarDataset ds = Service.GetDataset(id);
+            return View("DatasetDetail", id);
         }
 
         [HttpGet]

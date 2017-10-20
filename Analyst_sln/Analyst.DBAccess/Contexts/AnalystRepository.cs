@@ -19,6 +19,12 @@ namespace Analyst.DBAccess.Contexts
         List<SIC> GetSICs();
         int GetSICCount();
         void AddSIC(SIC sIC);
+        EdgarDataset GetDataset(int id);
+        Registrant GetRegistrant(string cik);
+        SECForm GetSECForm(string code);
+        void AddRegistrant(Registrant r);
+        SIC GetSIC(string code);
+        void Save(EdgarDataset ds, EdgarDatasetSubmissions sub);
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -37,7 +43,7 @@ namespace Analyst.DBAccess.Contexts
         }
         public List<EdgarDataset> GetDatasets()
         {
-            return Context.DataSets.ToList();
+            return Context.DataSets.OrderBy(x=> x.Year).ToList();
         }
 
         public int GetDatasetsCount()
@@ -81,6 +87,48 @@ namespace Analyst.DBAccess.Contexts
         public void AddSIC(SIC sic)
         {
             Context.SICs.Add(sic);
+            Context.SaveChanges();
+        }
+
+        public EdgarDataset GetDataset(int id)
+        {
+            return Context.DataSets.Single(x => x.Id == id);
+        }
+
+        public Registrant GetRegistrant(string cik)
+        {
+            int iCik = int.Parse(cik);
+            return Context.Registrants.Where(x => x.CIK == iCik).SingleOrDefault();
+        }
+
+        public SIC GetSIC(string code)
+        {
+            int iCode = short.Parse(code);
+            return Context.SICs.Where(x => x.Code == iCode).SingleOrDefault();
+        }
+
+        public SECForm GetSECForm(string code)
+        {
+            SECForm form = Context.SECForms.Where(x => x.Code == code).SingleOrDefault();
+            if (form == null)
+            {
+                form = new SECForm() { Code = code };
+                Context.SECForms.Add(form);
+                Context.SaveChanges();
+            }
+            return form;
+        }
+
+        public void AddRegistrant(Registrant r)
+        {
+            Context.Registrants.Add(r);
+            Context.SaveChanges();
+        }
+
+        public void Save(EdgarDataset ds, EdgarDatasetSubmissions sub)
+        {
+            ds.Submissions.Add(sub);
+            Context.Submissions.Add(sub);
             Context.SaveChanges();
         }
     }

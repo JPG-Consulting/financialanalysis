@@ -38,19 +38,16 @@ namespace Analyst.Domain.Edgar
         /// <summary>
         /// The ISO 3166-1 country of the registrant's business address.
         /// </summary>
-        [Required]
         public string CountryBA { get; set; }
 
         /// <summary>
         /// The city of the registrant's business address.
         /// </summary>
-        [Required]
         public string CityBA { get; set; }
 
         /// <summary>
         /// The country of incorporation for the registrant.
         /// </summary>
-        [Required]
         public string CountryInc { get; set; }
 
         /// <summary>
@@ -59,7 +56,7 @@ namespace Analyst.Domain.Edgar
         /// assigned by the Internal Revenue Service 
         /// to business entities operating in the United States.
         /// </summary>
-        public int EIN { get; set; }
+        public int? EIN { get; set; }
 
         /// <summary>
         /// Filer status with the Commission at the time of submission:
@@ -70,20 +67,19 @@ namespace Analyst.Domain.Edgar
         /// 5-SML=Smaller Reporting Filer,
         /// NULL=not assigned.
         /// </summary>
-        public short AFS { get; set; }
+        public string AFS { get; set; }
 
         /// <summary>
         /// Well Known Seasoned Issuer (WKSI). 
         /// An issuer that meets specific Commission requirements at some point during a 60-day period preceding the date the issuer satisfies its obligation to update its shelf registration statement.
         /// </summary>
-        [Required]
-        public bool WKSI { get; set; }
+        public bool? WKSI { get; set; }
 
         /// <summary>
         /// Fiscal Year End Date
+        /// ALPHANUMERIC (mmdd)
         /// </summary>
-        [Required]
-        public DateTime FYE { get; set; }
+        public string FYE { get; set; }
 
 
     }

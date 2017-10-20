@@ -139,15 +139,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <None Include="Views\Coredata\readme.cshtml" />
+    <None Include="Views\Edgar\readme.cshtml" />
     <Content Include="index.html" />
-    <Content Include="Views\Coredata\readme.css" />
+    <Content Include="Views\Edgar\readme.css" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\CoreDataController.cs" />
+    <Compile Include="Controllers\EdgarController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -159,9 +159,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Coredata\Datasets.cshtml" />
-    <Content Include="Views\Coredata\SECForms.cshtml" />
-    <Content Include="Views\Coredata\SICs.cshtml" />
+    <Content Include="Views\Edgar\Datasets.cshtml" />
+    <Content Include="Views\Edgar\SECForms.cshtml" />
+    <Content Include="Views\Edgar\SICs.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
