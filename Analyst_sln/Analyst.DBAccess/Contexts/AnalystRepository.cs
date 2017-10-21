@@ -25,6 +25,8 @@ namespace Analyst.DBAccess.Contexts
         void AddRegistrant(Registrant r);
         SIC GetSIC(string code);
         void Save(EdgarDataset ds, EdgarDatasetSubmissions sub);
+        void Save(EdgarDataset ds, EdgarDatasetTag tag);
+        EdgarDatasetTag GetTag(string tag, string version);
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -130,6 +132,17 @@ namespace Analyst.DBAccess.Contexts
             ds.Submissions.Add(sub);
             Context.Submissions.Add(sub);
             Context.SaveChanges();
+        }
+
+        public void Save(EdgarDataset ds, EdgarDatasetTag tag)
+        {
+            ds.Tags.Add(tag);
+            Context.Tags.Add(tag);
+            Context.SaveChanges();
+        }
+        public EdgarDatasetTag GetTag(string tag,string version)
+        {
+            return Context.Tags.Where(x => x.Tag == tag && x.Version==version).SingleOrDefault();
         }
     }
 }

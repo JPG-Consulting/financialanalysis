@@ -27,6 +27,6 @@ namespace Analyst.DBAccess.Contexts
         public virtual DbSet<Registrant> Registrants { get; set; }
 
         public virtual DbSet<EdgarDatasetSubmissions> Submissions { get; set; }
-        
+        public virtual DbSet<EdgarDatasetTag> Tags { get; set; }
     }
 }

@@ -74,7 +74,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// f abstract=1, then NULL; 
         /// otherwise, "I" if the value is a point in time, or "D" if the value is a duration.
         /// </summary>
-        public char Iord { get; set; }
+        public char? Iord { get; set; }
 
         /// <summary>
         /// If datatype = monetary, then the tag's natural accounting balance 
@@ -82,7 +82,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// or income statement (debit or credit); 
         /// if not defined, then NULL.
         /// </summary>
-        public char Crdr { get; set; }
+        public char? Crdr { get; set; }
 
 
         /// <summary>

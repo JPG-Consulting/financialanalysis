@@ -77,8 +77,20 @@ namespace Analyst.Services
 
         private void ProcessTags(EdgarDataset ds)
         {
-            throw new NotImplementedException();
+            string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
+            string filepath = cacheFolder + ds.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\tag.tsv";
+            StreamReader sr = File.OpenText(filepath);
+            string header = sr.ReadLine();//header
+            while (!sr.EndOfStream)
+            {
+                string line = sr.ReadLine();
+                EdgarDatasetTag tag = ParseTag(header, line);
+                Repository.Save(ds, tag);
+            }
+            sr.Close();
         }
+
+
 
         private void ProcessSubmissions(EdgarDataset ds)
         {
@@ -112,39 +124,42 @@ namespace Analyst.Services
 
             List<string> fieldNames = header.Split('\t').ToList();
             List<string> fields = line.Split('\t').ToList();
+
             sub.ADSH = fields[fieldNames.IndexOf("adsh")];
-            sub.Registrant = ProcessRegistrant(fields[fieldNames.IndexOf("cik")], fieldNames, fields);
+
+            sub.Registrant = ParseRegistrant(fields[fieldNames.IndexOf("cik")], fieldNames, fields);
+
             sub.Form =Repository.GetSECForm(fields[fieldNames.IndexOf("form")]);
+
             string period = fields[fieldNames.IndexOf("period")];
             sub.Period = new DateTime(int.Parse(period.Substring(0, 4)), int.Parse(period.Substring(4, 2)), int.Parse(period.Substring(6, 2)));
+
             sub.Detail = fields[fieldNames.IndexOf("period")] == "1";
+
             sub.XBRLInstance = fields[fieldNames.IndexOf("instance")];
+
             sub.NumberOfCIKs = int.Parse(fields[fieldNames.IndexOf("nciks")]);
+
             string value = fields[fieldNames.IndexOf("aciks")];
             sub.AdditionalCIKs = String.IsNullOrEmpty(value) ? null : value;
 
             value = fields[fieldNames.IndexOf("pubfloatusd")];
-            if (string.IsNullOrEmpty(value)) sub.PubFloatUSD = null;
-            else sub.PubFloatUSD = float.Parse(value);
+            sub.PubFloatUSD = string.IsNullOrEmpty(value) ? (float?) null :float.Parse(value);
 
             string floatdate = fields[fieldNames.IndexOf("floatdate")];
-            if (String.IsNullOrEmpty(floatdate))
-                sub.FloatDate = null;
-            else
-                sub.FloatDate = new DateTime(int.Parse(floatdate.Substring(0, 4)), int.Parse(floatdate.Substring(4, 2)), int.Parse(floatdate.Substring(6, 2)));
+            sub.FloatDate = String.IsNullOrEmpty(floatdate)? (DateTime?) null: new DateTime(int.Parse(floatdate.Substring(0, 4)), int.Parse(floatdate.Substring(4, 2)), int.Parse(floatdate.Substring(6, 2)));
 
             value = fields[fieldNames.IndexOf("floataxis")];
             sub.FloatAxis = String.IsNullOrEmpty(value) ? null : value;
 
             value = fields[fieldNames.IndexOf("floatmems")];
-            if (string.IsNullOrEmpty(value)) sub.FloatMems = null;
-            else sub.FloatMems = int.Parse(value);
+            sub.FloatMems = string.IsNullOrEmpty(value)? (int?)null : int.Parse(value);
 
             return sub;
         }
 
 
-        private Registrant ProcessRegistrant(string cik, List<string> fieldNames, List<string> fields)
+        private Registrant ParseRegistrant(string cik, List<string> fieldNames, List<string> fields)
         {
             Registrant r = Repository.GetRegistrant(cik);
             if(r==null)
@@ -153,10 +168,7 @@ namespace Analyst.Services
                 r. CIK = int.Parse(cik);
                 r.Name = fields[fieldNames.IndexOf("name")];
                 string value = fields[fieldNames.IndexOf("sic")];
-                if (string.IsNullOrEmpty(value))
-                    r.SIC = null;
-                else
-                    r.SIC = Repository.GetSIC(value);
+                r.SIC = string.IsNullOrEmpty(value) ? null : Repository.GetSIC(value);
                 value = fields[fieldNames.IndexOf("countryba")];
                 r.CountryBA = String.IsNullOrEmpty(value) ? null : value;
                 value = fields[fieldNames.IndexOf("cityba")];
@@ -164,10 +176,7 @@ namespace Analyst.Services
                 value = fields[fieldNames.IndexOf("countryinc")];
                 r.CountryInc = String.IsNullOrEmpty(value) ? null : value;
                 value = fields[fieldNames.IndexOf("ein")];
-                if (string.IsNullOrEmpty(value))
-                    r.EIN = null;
-                else
-                    r.EIN = int.Parse(value);
+                r.EIN = string.IsNullOrEmpty(value)? (int?)null: int.Parse(value);
                 r.AFS = fields[fieldNames.IndexOf("afs")];
                 r.WKSI = fields[fieldNames.IndexOf("wksi")] == "1";
                 value = fields[fieldNames.IndexOf("fye")];
@@ -175,6 +184,42 @@ namespace Analyst.Services
                 Repository.AddRegistrant(r);
             }
             return r;
+        }
+
+        private EdgarDatasetTag ParseTag(string header, string line)
+        {
+            /*
+            tag	version	custom	abstract	datatype	iord	crdr	tlabel	doc
+            AccountsPayableCurrent	us-gaap/2015	0	0	monetary	I	C	Accounts Payable, Current	Carrying value as of the balance sheet date of liabilities incurred (and for which invoices have typically been received) and payable to vendors for goods and services received that are used in an entity's business. Used to reflect the current portion of the liabilities (due within one year or within the normal operating cycle if longer).
+            AccountsPayableRelatedPartiesCurrent	us-gaap/2015	0	0	monetary	I	C	Accounts Payable, Related Parties, Current	Amount for accounts payable to related parties. Used to reflect the current portion of the liabilities (due within one year or within the normal operating cycle if longer).
+            */
+            List<string> fieldNames = header.Split('\t').ToList();
+            List<string> fields = line.Split('\t').ToList();
+
+            string strTag = fields[fieldNames.IndexOf("tag")];
+            string version = fields[fieldNames.IndexOf("version")];
+            EdgarDatasetTag tag = Repository.GetTag(strTag,version);
+            if(tag == null)
+            {
+                tag = new EdgarDatasetTag();
+                tag.Tag = strTag;
+                tag.Version = version;
+                string value = fields[fieldNames.IndexOf("custom")];
+                tag.Custom = value == "1" ? true: false;
+                value = fields[fieldNames.IndexOf("abstract")];
+                tag.Abstract = value == "1" ? true : false;
+                value = fields[fieldNames.IndexOf("datatype")];
+                tag.Datatype = string.IsNullOrEmpty(value) ? null : value;
+                value = fields[fieldNames.IndexOf("iord")];
+                tag.Iord = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+                value = fields[fieldNames.IndexOf("crdr")];
+                tag.Crdr = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+                value = fields[fieldNames.IndexOf("tlabel")];
+                tag.Tlabel = string.IsNullOrEmpty(value) ? null : value;
+                value = fields[fieldNames.IndexOf("doc")];
+                tag.Doc = string.IsNullOrEmpty(value) ? null : value;
+            }
+            return tag;
         }
     }
 }
