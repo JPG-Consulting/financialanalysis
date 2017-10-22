@@ -13,18 +13,19 @@ namespace Analyst.Web.Controllers
     [RoutePrefix("edgar")]
     public class EdgarController : Controller
     {
-        public IEdgarService Service
+        
+        private IEdgarService service;
+
+        public EdgarController(IEdgarService service)
         {
-            //TODO: implementar inyeccion de dependencias
-            get { return new EdgarService(); }
-            set { }
+            this.service = service;
         }
 
         [HttpGet]
         [Route("datasets/all")]
         public ActionResult GetAllDatasets()
         {
-            List<EdgarDataset> datasets = Service.GetDatasets();
+            List<EdgarDataset> datasets = service.GetDatasets();
             return View("Datasets", datasets);
 
         }
@@ -39,14 +40,14 @@ namespace Analyst.Web.Controllers
         [Route("datasets/process",Name = "processds")]
         public ActionResult ProcessDataset(int id)
         {
-            EdgarDataset ds = Service.ProcessDataset(id);
+            EdgarDataset ds = service.ProcessDataset(id);
             return View("Datasetstatus", ds);
         }
 
         [Route("datasets/getdetails",Name= "dsdetails")]
         public ActionResult GetDatasetDetails(int id)
         {
-            EdgarDataset ds = Service.GetDataset(id);
+            EdgarDataset ds = service.GetDataset(id);
             return View("DatasetDetail", id);
         }
 
@@ -54,7 +55,7 @@ namespace Analyst.Web.Controllers
         [Route("secforms")]
         public ActionResult GetSECForms()
         {
-            List<SECForm> forms = Service.GetSECForms();
+            List<SECForm> forms = service.GetSECForms();
             return View("SECForms", forms);
         }
 
@@ -62,7 +63,7 @@ namespace Analyst.Web.Controllers
         [Route("sics")]
         public ActionResult GetSICs()
         {
-            List<SIC> sics = Service.GetSICs();
+            List<SIC> sics = service.GetSICs();
             return View("SICs", sics);
         }
     }

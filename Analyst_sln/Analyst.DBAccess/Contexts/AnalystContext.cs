@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    internal class AnalystContext : DbContext
+ 
+    public class AnalystContext: DbContext
     {
 
-        public AnalystContext()
-            : base("name=Analyst")
+        public AnalystContext() : base("name=Analyst")
         {
         }
 

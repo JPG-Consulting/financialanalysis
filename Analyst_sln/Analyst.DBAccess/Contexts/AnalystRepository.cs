@@ -32,17 +32,13 @@ namespace Analyst.DBAccess.Contexts
     public class AnalystRepository: IAnalystRepository
     {
 
-        private AnalystContext _context;
-        internal AnalystContext Context
+        private AnalystContext Context;
+        
+        public AnalystRepository(AnalystContext context)
         {
-            //TODO: Implementar inyeccion de dependencias
-            get {
-                if(_context == null)
-                    _context = new AnalystContext();
-                return _context;
-            }
-            set { }
+            this.Context = context;
         }
+
         public List<EdgarDataset> GetDatasets()
         {
             return Context.DataSets.OrderBy(x=> x.Year).ToList();
