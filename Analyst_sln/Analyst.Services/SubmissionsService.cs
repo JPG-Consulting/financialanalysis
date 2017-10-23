@@ -8,12 +8,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Analyst.Services.EdgarService;
 
 namespace Analyst.Services
 {
     public interface ISubmissionService
     {
-        void ProcessSubmissions(EdgarDataset ds);
+        void ProcessSubmissions(EdgarTaskState ds);
         EdgarDatasetSubmissions ParseSub(string header, string line);
     }
     public class SubmissionsService: ISubmissionService
@@ -24,25 +25,27 @@ namespace Analyst.Services
             this.repository = repository;
         }
 
-        public void ProcessSubmissions(EdgarDataset ds)
+        public void ProcessSubmissions(EdgarTaskState state)
         {
             try
             {
                 string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
-                string filepath = cacheFolder + ds.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\sub.tsv";
+                string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\sub.tsv";
                 StreamReader sr = File.OpenText(filepath);
                 string header = sr.ReadLine();//header
                 while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();
                     EdgarDatasetSubmissions sub = ParseSub(header, line);
-                    repository.Save(ds, sub);
+                    repository.Save(state.Dataset, sub);
                 }
                 sr.Close();
+                state.Result = true;
             }
             catch (Exception ex)
             {
-                throw ex;
+                state.Result = false;
+                state.Exception= ex;
             }
         }
 

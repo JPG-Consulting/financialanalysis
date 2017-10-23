@@ -127,6 +127,7 @@ namespace Analyst.DBAccess.Contexts
         {
             ds.Submissions.Add(sub);
             Context.Submissions.Add(sub);
+            ds.SubmissionsProcessed++;//TODO: no funciona este contador
             Context.SaveChanges();
         }
 
@@ -134,11 +135,12 @@ namespace Analyst.DBAccess.Contexts
         {
             ds.Tags.Add(tag);
             Context.Tags.Add(tag);
+            ds.TagsProcessed++;
             Context.SaveChanges();
         }
         public EdgarDatasetTag GetTag(string tag,string version)
         {
-            return Context.Tags.Where(x => x.Tag == tag && x.Version==version).SingleOrDefault();
+            return Context.Tags.Where(x => x.Tag == tag && x.Version==version).Single();
         }
     }
 }

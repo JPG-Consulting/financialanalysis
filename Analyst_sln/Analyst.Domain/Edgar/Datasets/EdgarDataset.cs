@@ -44,6 +44,7 @@ namespace Analyst.Domain.Edgar.Datasets
             }
         }
 
-
+        public int TagsProcessed { get; set; }
+        public int SubmissionsProcessed { get; set; }
     }
 }

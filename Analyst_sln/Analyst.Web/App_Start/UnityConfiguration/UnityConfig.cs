@@ -53,11 +53,12 @@ namespace Analyst.Web.App_Start.UnityConfiguration
 
         private static void RegisterAnalystComponents(UnityContainer container)
         {
+            container.RegisterInstance<HttpConfiguration>(GlobalConfiguration.Configuration);
             container.RegisterType<IEdgarService, EdgarService>();
             container.RegisterType<IAnalystRepository, AnalystRepository>();
             container.RegisterType<AnalystContext, AnalystContext>();
             container.RegisterType<ISubmissionService, SubmissionsService>();
-            container.RegisterInstance<HttpConfiguration>(GlobalConfiguration.Configuration);
+            container.RegisterType<ITagService, TagService>();
         }
     }
 }

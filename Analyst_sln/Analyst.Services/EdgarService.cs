@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Analyst.Domain.Edgar;
 using System.Configuration;
 using System.IO;
+using System.Threading;
 
 namespace Analyst.Services
 {
@@ -22,16 +23,17 @@ namespace Analyst.Services
         EdgarDataset GetDataset(int id);
     }
 
-    public class EdgarService: IEdgarService
+    public class EdgarService : IEdgarService
     {
         private IAnalystRepository repository;
         private ISubmissionService submissionService;
+        private ITagService tagService;
 
-
-        public EdgarService(IAnalystRepository repository,ISubmissionService submissionService)
+        public EdgarService(IAnalystRepository repository, ISubmissionService submissionService, ITagService tagService)
         {
             this.repository = repository;
             this.submissionService = submissionService;
+            this.tagService = tagService;
         }
 
         public List<EdgarDataset> GetDatasets()
@@ -64,13 +66,35 @@ namespace Analyst.Services
 
         public EdgarDataset ProcessDataset(int id)
         {
+            //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming?view=netframework-4.5.2
+
             EdgarDataset ds = repository.GetDataset(id);
-            submissionService.ProcessSubmissions(ds);
-            (new TagService()).ProcessTags(ds);
+            int taskAmount = 2;
+            EdgarTaskState[] states = new EdgarTaskState[taskAmount];
+            for (int i = 0; i < states.Count(); i++)
+                states[i] = new EdgarTaskState(ds);
+            Task[] taskArray = new Task[taskAmount];
+            taskArray[0] = Task.Factory.StartNew(() => submissionService.ProcessSubmissions(states[0]));
+            taskArray[1] = Task.Factory.StartNew(() => tagService.ProcessTags(states[1]));
+
+            Task.WaitAll(taskArray);
             return ds;
         }
-
-
-        
     }
+
+    public class EdgarTaskState
+    {
+        public bool? Result { get; set; }
+        public string Message { get; set; }
+        public Exception Exception { get; set; }
+
+        private EdgarDataset ds;
+        public EdgarDataset Dataset { get { return ds; } }
+        public EdgarTaskState(EdgarDataset ds)
+        {
+            this.ds = ds;
+        }
+
+    }
+   
 }
