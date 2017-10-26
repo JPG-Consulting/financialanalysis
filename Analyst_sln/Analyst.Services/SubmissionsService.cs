@@ -15,15 +15,18 @@ namespace Analyst.Services
     public interface ISubmissionService
     {
         void ProcessSubmissions(EdgarTaskState ds);
-        EdgarDatasetSubmissions ParseSub(string header, string line);
+        //EdgarDatasetSubmissions ParseSub(string header, string line);
     }
     public class SubmissionsService: ISubmissionService
     {
+        /*
         private IAnalystRepository repository;
         public SubmissionsService(IAnalystRepository repository)
         {
             this.repository = repository;
         }
+        */
+
 
         public void ProcessSubmissions(EdgarTaskState state)
         {
@@ -33,10 +36,11 @@ namespace Analyst.Services
                 string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\sub.tsv";
                 StreamReader sr = File.OpenText(filepath);
                 string header = sr.ReadLine();//header
+                IAnalystRepository repository = new AnalystRepository(new AnalystContext());
                 while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();
-                    EdgarDatasetSubmissions sub = ParseSub(header, line);
+                    EdgarDatasetSubmissions sub = ParseSub(repository,header, line);
                     repository.Save(state.Dataset, sub);
                 }
                 sr.Close();
@@ -49,7 +53,7 @@ namespace Analyst.Services
             }
         }
 
-        public EdgarDatasetSubmissions ParseSub(string header, string line)
+        private EdgarDatasetSubmissions ParseSub(IAnalystRepository repository,string header, string line)
         {
             EdgarDatasetSubmissions sub = new EdgarDatasetSubmissions();
 
@@ -62,7 +66,7 @@ namespace Analyst.Services
 
             sub.ADSH = fields[fieldNames.IndexOf("adsh")];
 
-            sub.Registrant = ParseRegistrant(fields[fieldNames.IndexOf("cik")], fieldNames, fields);
+            sub.Registrant = ParseRegistrant(repository,fields[fieldNames.IndexOf("cik")], fieldNames, fields);
 
             sub.Form = repository.GetSECForm(fields[fieldNames.IndexOf("form")]);
 
@@ -94,7 +98,7 @@ namespace Analyst.Services
         }
 
 
-        private Registrant ParseRegistrant(string cik, List<string> fieldNames, List<string> fields)
+        private Registrant ParseRegistrant(IAnalystRepository repository,string cik, List<string> fieldNames, List<string> fields)
         {
             Registrant r = repository.GetRegistrant(cik);
             if (r == null)

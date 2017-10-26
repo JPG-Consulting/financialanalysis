@@ -1,4 +1,6 @@
 
+use [Analyst]
+
 --select count(1) from secforms; --son 144, mas los 7 duplicados son los 151 que deberian ser
 --select count(1) from sics;
 

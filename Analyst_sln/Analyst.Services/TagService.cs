@@ -33,22 +33,47 @@ namespace Analyst.Services
 
     public class TagService : ITagService
     {
+        public static bool PROCESS_IN_PARALLEL = false;
+
+        /*
         private IAnalystRepository repository;
         public TagService(IAnalystRepository repository)
         {
             this.repository = repository;
         }
+        */
 
         public void ProcessTags(EdgarTaskState state)
         {
             try
             {
-                string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
-                string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\tag.tsv";
-                string[] allLines = File.ReadAllLines(filepath);
-                string header = allLines[0];
+                ConcurrentBag<EdgarDatasetTag> tags = SaveTags(state);
+                RelateTagsToDataset(tags,state);
+            }
+            catch (Exception ex)
+            {
+                state.Exception = ex;
+            }
+        }
 
-                /*
+        private void RelateTagsToDataset(ConcurrentBag<EdgarDatasetTag> tags,EdgarTaskState state)
+        {
+            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
+            foreach (EdgarDatasetTag tag in tags)
+            {
+                repository.Save(state.Dataset, tag);
+            }
+        }
+
+        private ConcurrentBag<EdgarDatasetTag> SaveTags(EdgarTaskState state)
+        {
+            string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
+            string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\tag.tsv";
+            string[] allLines = File.ReadAllLines(filepath);
+            ConcurrentBag<EdgarDatasetTag> tags = new ConcurrentBag<EdgarDatasetTag>();
+            string header = allLines[0];
+            if (PROCESS_IN_PARALLEL)
+            {
                 //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
 
                 // Partition the entire source array.
@@ -57,29 +82,44 @@ namespace Analyst.Services
                 // Loop over the partitions in parallel.
                 Parallel.ForEach(rangePartitioner, (range, loopState) =>
                 {
+                    /*
+                    //EF no es thread safe y no permite parallel
+                    //https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
+                    //https://stackoverflow.com/questions/9099359/entity-framework-and-multi-threading
+                    //https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
+
+                    1era opcion: 1 solo contexto para toda la particion
+                    */
+
+                    IAnalystRepository partitionRepository = new AnalystRepository(new AnalystContext());
+
                     // Loop over each range element without a delegate invocation.
-                    for (int i = range.Item1; i < range.Item2; i++)
-                    {
-                        string line = allLines[i];
-                        EdgarDatasetTag tag = ParseTag(header, line);
-                        repository.Save(state.Dataset, tag);
-                    }
+                    ProcessRange(range, allLines, header, partitionRepository, tags);
                 });
-
-                //EF no es thread safe y no permite parallel
-                //https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
-                //https://stackoverflow.com/questions/9099359/entity-framework-and-multi-threading
-                //https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
-                */
-
             }
-            catch (Exception ex)
+            else
             {
-                state.Exception = ex;
+                ProcessRange(new Tuple<int, int>(1, allLines.Length), allLines, header, new AnalystRepository(new AnalystContext()), tags);
+            }
+            return tags;
+        }
+
+        private void ProcessRange(Tuple<int, int> range,string[] allLines,string header, IAnalystRepository repo, ConcurrentBag<EdgarDatasetTag> tags)
+        {
+            for (int i = range.Item1; i < range.Item2; i++)
+            {
+                string line = allLines[i];
+                bool? isNew = false;
+                EdgarDatasetTag tag = ParseTag(repo, header, line,out isNew);
+                if (isNew.HasValue && isNew.Value)
+                {
+                    repo.Save(tag);
+                }
+                tags.Add(tag);
             }
         }
 
-        private EdgarDatasetTag ParseTag(string header, string line)
+        private EdgarDatasetTag ParseTag(IAnalystRepository repository,string header, string line,out bool? isNew)
         {
             /*
             tag	version	custom	abstract	datatype	iord	crdr	tlabel	doc
@@ -111,6 +151,11 @@ namespace Analyst.Services
                 tag.Tlabel = string.IsNullOrEmpty(value) ? null : value;
                 value = fields[fieldNames.IndexOf("doc")];
                 tag.Doc = string.IsNullOrEmpty(value) ? null : value;
+                isNew = true;
+            }
+            else
+            {
+                isNew = false;
             }
             return tag;
 
