@@ -35,14 +35,6 @@ namespace Analyst.Services
     {
         public static bool PROCESS_IN_PARALLEL = false;
 
-        /*
-        private IAnalystRepository repository;
-        public TagService(IAnalystRepository repository)
-        {
-            this.repository = repository;
-        }
-        */
-
         public void ProcessTags(EdgarTaskState state)
         {
             try
@@ -83,18 +75,26 @@ namespace Analyst.Services
                 Parallel.ForEach(rangePartitioner, (range, loopState) =>
                 {
                     /*
-                    //EF no es thread safe y no permite parallel
-                    //https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
-                    //https://stackoverflow.com/questions/9099359/entity-framework-and-multi-threading
-                    //https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
-
-                    1era opcion: 1 solo contexto para toda la particion
+                    EF isn't thread safe and it doesn't allow parallel
+                    https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
+                    https://stackoverflow.com/questions/9099359/entity-framework-and-multi-threading
+                    https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
+                    solution: only 1 context for the entiry partition --> works
                     */
-
-                    IAnalystRepository partitionRepository = new AnalystRepository(new AnalystContext());
-
-                    // Loop over each range element without a delegate invocation.
-                    ProcessRange(range, allLines, header, partitionRepository, tags);
+                    using (IAnalystRepository partitionRepository = new AnalystRepository(new AnalystContext()))
+                    {
+                        //It improves performance
+                        //https://msdn.microsoft.com/en-us/library/jj556205(v=vs.113).aspx
+                        partitionRepository.ContextConfigurationAutoDetectChangesEnabled = false;
+                        try
+                        {
+                            ProcessRange(range, allLines, header, partitionRepository, tags);
+                        }
+                        finally
+                        {
+                            partitionRepository.ContextConfigurationAutoDetectChangesEnabled = true;
+                        }
+                    }
                 });
             }
             else
@@ -109,9 +109,8 @@ namespace Analyst.Services
             for (int i = range.Item1; i < range.Item2; i++)
             {
                 string line = allLines[i];
-                bool? isNew = false;
-                EdgarDatasetTag tag = ParseTag(repo, header, line,out isNew);
-                if (isNew.HasValue && isNew.Value)
+                EdgarDatasetTag tag = ParseTag(repo, header, line);
+                if (tag.Id == 0)
                 {
                     repo.Save(tag);
                 }
@@ -119,12 +118,14 @@ namespace Analyst.Services
             }
         }
 
-        private EdgarDatasetTag ParseTag(IAnalystRepository repository,string header, string line,out bool? isNew)
+        private EdgarDatasetTag ParseTag(IAnalystRepository repository,string header, string line)
         {
             /*
+            File content:
             tag	version	custom	abstract	datatype	iord	crdr	tlabel	doc
             AccountsPayableCurrent	us-gaap/2015	0	0	monetary	I	C	Accounts Payable, Current	Carrying value as of the balance sheet date of liabilities incurred (and for which invoices have typically been received) and payable to vendors for goods and services received that are used in an entity's business. Used to reflect the current portion of the liabilities (due within one year or within the normal operating cycle if longer).
             AccountsPayableRelatedPartiesCurrent	us-gaap/2015	0	0	monetary	I	C	Accounts Payable, Related Parties, Current	Amount for accounts payable to related parties. Used to reflect the current portion of the liabilities (due within one year or within the normal operating cycle if longer).
+            ...
             */
             List<string> fieldNames = header.Split('\t').ToList();
             List<string> fields = line.Split('\t').ToList();
@@ -151,11 +152,6 @@ namespace Analyst.Services
                 tag.Tlabel = string.IsNullOrEmpty(value) ? null : value;
                 value = fields[fieldNames.IndexOf("doc")];
                 tag.Doc = string.IsNullOrEmpty(value) ? null : value;
-                isNew = true;
-            }
-            else
-            {
-                isNew = false;
             }
             return tag;
 

@@ -15,18 +15,10 @@ namespace Analyst.Services
     public interface ISubmissionService
     {
         void ProcessSubmissions(EdgarTaskState ds);
-        //EdgarDatasetSubmissions ParseSub(string header, string line);
+
     }
     public class SubmissionsService: ISubmissionService
     {
-        /*
-        private IAnalystRepository repository;
-        public SubmissionsService(IAnalystRepository repository)
-        {
-            this.repository = repository;
-        }
-        */
-
 
         public void ProcessSubmissions(EdgarTaskState state)
         {
@@ -35,13 +27,15 @@ namespace Analyst.Services
                 string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
                 string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\sub.tsv";
                 StreamReader sr = File.OpenText(filepath);
-                string header = sr.ReadLine();//header
-                IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-                while (!sr.EndOfStream)
+                string header = sr.ReadLine();
+                using (IAnalystRepository repository = new AnalystRepository(new AnalystContext()))
                 {
-                    string line = sr.ReadLine();
-                    EdgarDatasetSubmissions sub = ParseSub(repository,header, line);
-                    repository.Save(state.Dataset, sub);
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        EdgarDatasetSubmissions sub = ParseSub(repository, header, line);
+                        repository.Save(state.Dataset, sub);
+                    }
                 }
                 sr.Close();
                 state.Result = true;
@@ -57,7 +51,7 @@ namespace Analyst.Services
         {
             EdgarDatasetSubmissions sub = new EdgarDatasetSubmissions();
 
-            //Ejemplo
+            //Example
             //adsh	cik	name	sic	countryba	stprba	cityba	zipba	bas1	bas2	baph	countryma	stprma	cityma	zipma	mas1	mas2	countryinc	stprinc	ein	former	changed	afs	wksi	fye	form	period	fy	fp	filed	accepted	prevrpt	detail	instance	nciks	aciks	pubfloatusd	floatdate	floataxis	floatmems
             //0000002178 - 16 - 000103    2178    ADAMS RESOURCES &ENERGY, INC.  5172    US TX  HOUSTON 77027   17 S.BRIAR HOLLOW LN.      7138813600  US TX  HOUSTON 77001   P O BOX 844     US DE  741753147   ADAMS RESOURCES &ENERGY INC    19920703    2 - ACC   0   1231    10 - Q    20160930    2016    Q3  20161109    2016 - 11 - 09 12:49:00.0   0   1   ae - 20160930.xml 1
 

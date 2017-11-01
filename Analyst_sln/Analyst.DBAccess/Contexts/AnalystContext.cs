@@ -4,20 +4,32 @@ using Analyst.Domain.Edgar.Datasets;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Annotations;
+using System.Data.Entity.Migrations;
+using System.Data.Entity.Migrations.Model;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
- 
     public class AnalystContext: DbContext
     {
 
-        public AnalystContext() : base("name=Analyst")
+        static AnalystContext()
         {
+            Database.SetInitializer<AnalystContext>(new AnalystContextInitializer());
         }
 
+        public AnalystContext() : base("name=Analyst")
+        {
+            
+        }
+
+        
+        
         public virtual DbSet<EdgarDataset> DataSets { get; set; }
 
         public virtual DbSet<SECForm> SECForms { get; set; }
@@ -28,5 +40,10 @@ namespace Analyst.DBAccess.Contexts
 
         public virtual DbSet<EdgarDatasetSubmissions> Submissions { get; set; }
         public virtual DbSet<EdgarDatasetTag> Tags { get; set; }
+
+
+
     }
+    
+
 }

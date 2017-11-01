@@ -52,8 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contexts\AnalystContext.cs" />
+    <Compile Include="Contexts\AnalystContextInitializer.cs" />
     <Compile Include="Contexts\AnalystRepository.cs" />
-    <Compile Include="Contexts\EdgarContext.cs" />
+    <Compile Include="Contexts\InitialLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

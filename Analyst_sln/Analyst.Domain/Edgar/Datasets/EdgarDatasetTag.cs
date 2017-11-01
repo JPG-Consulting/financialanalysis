@@ -8,6 +8,18 @@ using System.Threading.Tasks;
 
 namespace Analyst.Domain.Edgar.Datasets
 {
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    public class CaseSensitiveAttribute : Attribute
+    {
+        public CaseSensitiveAttribute()
+        {
+            IsEnabled = true;
+        }
+        public bool IsEnabled { get; set; }
+    }
+
+
     /// <summary>
     /// TAG is a data set of all tags used in the submissions, both standard and custom.
     /// The TAG data set contains all standard taxonomy tags, 
@@ -33,7 +45,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         [Column(TypeName = "VARCHAR")]
         [StringLength(256)]
-        [Index("IX_TagVersion",1,IsUnique=true)]
+        [Required]
         public string Tag { get; set; }
 
         /// <summary>
@@ -41,7 +53,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         [Column(TypeName = "VARCHAR")]
         [StringLength(20)]
-        [Index("IX_TagVersion", 2, IsUnique = true)]
+        [Required]
         public string Version { get; set; }
 
         /// <summary>

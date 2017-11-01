@@ -5,11 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 
 namespace Analyst.DBAccess.Contexts
 {
-    public interface IAnalystRepository
+    public interface IAnalystRepository:IDisposable
     {
+        bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
+
         List<EdgarDataset> GetDatasets();
         void AddDataset(EdgarDataset ds);
         int GetDatasetsCount();
@@ -39,6 +43,19 @@ namespace Analyst.DBAccess.Contexts
         {
             this.Context = context;
         }
+
+        public void Dispose()
+        {
+            if (this.Context != null)
+                this.Context.Dispose();
+        }
+
+        public bool ContextConfigurationAutoDetectChangesEnabled
+        {
+            get { return Context.Configuration.AutoDetectChangesEnabled; }
+            set { Context.Configuration.AutoDetectChangesEnabled = value; }
+        }
+
 
         public List<EdgarDataset> GetDatasets()
         {
@@ -128,7 +145,7 @@ namespace Analyst.DBAccess.Contexts
         {
             ds.Submissions.Add(sub);
             Context.Submissions.Add(sub);
-            ds.SubmissionsProcessed++;//TODO: no funciona este contador
+            ds.SubmissionsProcessed = ds.SubmissionsProcessed + 1;
             Context.SaveChanges();
         }
 
@@ -154,7 +171,17 @@ namespace Analyst.DBAccess.Contexts
 
         public EdgarDatasetTag GetTag(string tag,string version)
         {
-            return Context.Tags.Where(x => x.Tag.Equals(tag) && x.Version.Equals(version)).SingleOrDefault();
+            /*
+            string sql = "select * from [dbo].[EdgarDatasetTags] where " +
+                "tag = '" + tag + "' COLLATE SQL_Latin1_General_CP1_CS_AS " +
+                "AND version = '" + version + "' COLLATE SQL_Latin1_General_CP1_CS_AS ";
+            return Context.Tags.SqlQuery(sql).SingleOrDefault();
+            */
+            DbQuery<EdgarDatasetTag> q = (DbQuery<EdgarDatasetTag>) Context.Tags.Where(t => t.Tag == tag && t.Version == version);
+            return q.SingleOrDefault();
+
         }
+
+
     }
 }

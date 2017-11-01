@@ -38,7 +38,6 @@ namespace Analyst.Services
 
         public List<EdgarDataset> GetDatasets()
         {
-            InitialLoader.LoadInitialData(repository);
             List<EdgarDataset> datasets = repository.GetDatasets();
             return datasets;
         }
@@ -51,14 +50,12 @@ namespace Analyst.Services
 
         public List<SECForm> GetSECForms()
         {
-            InitialLoader.LoadInitialData(repository);
             List<SECForm> forms = repository.GetSECForms();
             return forms;
         }
 
         public List<SIC> GetSICs()
         {
-            InitialLoader.LoadInitialData(repository);
             List<SIC> sics = repository.GetSICs();
             return sics;
         }
@@ -74,10 +71,10 @@ namespace Analyst.Services
             for (int i = 0; i < states.Count(); i++)
                 states[i] = new EdgarTaskState(ds);
             Task[] taskArray = new Task[taskAmount];
-            taskArray[0] = Task.Factory.StartNew(() => submissionService.ProcessSubmissions(states[0]));
+            //taskArray[0] = Task.Factory.StartNew(() => submissionService.ProcessSubmissions(states[0]));
             taskArray[1] = Task.Factory.StartNew(() => tagService.ProcessTags(states[1]));
 
-            Task.WaitAll(taskArray);
+            //Task.WaitAll(taskArray);
             return ds;
         }
     }
