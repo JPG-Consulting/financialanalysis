@@ -20,7 +20,7 @@ select 'tags' tabla, count(1) cant from [dbo].[EdgarDatasetTags]
 --select * from EdgarDatasets where year =2016 and Quarter= 4;
 select * from [dbo].[EdgarDatasetTags];
 select * from [dbo].[EdgarDatasetTagEdgarDatasets];
-
+select * from [dbo].[EdgarDatasetSubmissions] where EdgarDataset_Id is not null;
 --check de duplicados
 --select name,count(1) cant from registrants group by name having count(1) > 1;
 
@@ -28,9 +28,9 @@ select * from [dbo].[EdgarDatasetTagEdgarDatasets];
 /*
 select * from secforms; 
 select * from sics;
+select * from registrants order by name;
 select * from [dbo].[EdgarDatasetTags] where tag ='EchoStarXVIMember';
 select * from [dbo].[EdgarDatasetTags] where tag+version like 'ARcountry/2013';
-select * from registrants order by name;
 select * from [dbo].[EdgarDatasetSubmissions];
 select * from [dbo].[EdgarDatasetSubmissions] where registrant_id = (select id from registrants where cik = 811222);
 */
@@ -38,7 +38,6 @@ select * from [dbo].[EdgarDatasetSubmissions] where registrant_id = (select id f
 /*
 --delete para reprocesamiento
 delete from [dbo].[EdgarDatasetSubmissions];
-delete from registrants;
 delete from [dbo].[EdgarDatasetTags];
 */
 

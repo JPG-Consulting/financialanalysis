@@ -34,7 +34,7 @@ namespace Analyst.Services
                     {
                         string line = sr.ReadLine();
                         EdgarDatasetSubmissions sub = ParseSub(repository, header, line);
-                        repository.Save(state.Dataset, sub);
+                        repository.SaveAssociation(state.Dataset, sub);
                     }
                 }
                 sr.Close();

@@ -7,6 +7,7 @@ using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 
 namespace Analyst.DBAccess.Contexts
 {
@@ -28,10 +29,10 @@ namespace Analyst.DBAccess.Contexts
         SECForm GetSECForm(string code);
         void AddRegistrant(Registrant r);
         SIC GetSIC(string code);
-        void Save(EdgarDataset ds, EdgarDatasetSubmissions sub);
-        void Save(EdgarDataset ds, EdgarDatasetTag tag);
+        void SaveAssociation(EdgarDataset ds, EdgarDatasetSubmissions sub);
+        void SaveAssociation(EdgarDataset ds, EdgarDatasetTag tag);
         EdgarDatasetTag GetTag(string tag, string version);
-        void Save(EdgarDatasetTag tag);
+        void Save(EdgarDataset dataset, EdgarDatasetTag tag);
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -108,7 +109,8 @@ namespace Analyst.DBAccess.Contexts
 
         public EdgarDataset GetDataset(int id)
         {
-            return Context.DataSets.Single(x => x.Id == id);
+            EdgarDataset ds = Context.DataSets.Single(x => x.Id == id);
+            return ds;
         }
 
         public Registrant GetRegistrant(string cik)
@@ -135,41 +137,7 @@ namespace Analyst.DBAccess.Contexts
             return form;
         }
 
-        public void AddRegistrant(Registrant r)
-        {
-            Context.Registrants.Add(r);
-            Context.SaveChanges();
-        }
-
-        public void Save(EdgarDataset ds, EdgarDatasetSubmissions sub)
-        {
-            ds.Submissions.Add(sub);
-            Context.Submissions.Add(sub);
-            ds.SubmissionsProcessed = ds.SubmissionsProcessed + 1;
-            Context.SaveChanges();
-        }
-
-        public void Save(EdgarDataset ds, EdgarDatasetTag tag)
-        {
-            ds.Tags.Add(tag);
-            ds.TagsProcessed = ds.TagsProcessed + 1;
-            Context.SaveChanges();
-        }
-
-        public void Save(EdgarDatasetTag tag)
-        {
-            try
-            {
-                Context.Tags.Add(tag);
-                Context.SaveChanges();
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public EdgarDatasetTag GetTag(string tag,string version)
+        public EdgarDatasetTag GetTag(string tag, string version)
         {
             /*
             string sql = "select * from [dbo].[EdgarDatasetTags] where " +
@@ -177,11 +145,66 @@ namespace Analyst.DBAccess.Contexts
                 "AND version = '" + version + "' COLLATE SQL_Latin1_General_CP1_CS_AS ";
             return Context.Tags.SqlQuery(sql).SingleOrDefault();
             */
-            DbQuery<EdgarDatasetTag> q = (DbQuery<EdgarDatasetTag>) Context.Tags.Where(t => t.Tag == tag && t.Version == version);
+            DbQuery<EdgarDatasetTag> q = (DbQuery<EdgarDatasetTag>)Context.Tags.Where(t => t.Tag == tag && t.Version == version);
             return q.SingleOrDefault();
 
         }
 
+        public void AddRegistrant(Registrant r)
+        {
+            Context.Registrants.Add(r);
+            Context.SaveChanges();
+        }
 
+        public void SaveAssociation(EdgarDataset dataset, EdgarDatasetSubmissions sub)
+        {
+
+            SqlParameter ADSH = new SqlParameter("@ADSH", sub.ADSH);
+            SqlParameter Period = new SqlParameter("@Period", sub.Period);
+            SqlParameter Detail = new SqlParameter("@Detail", sub.Detail);
+            SqlParameter XBRLInstance = new SqlParameter("@XBRLInstance", sub.XBRLInstance);
+            SqlParameter NumberOfCIKs = new SqlParameter("@NumberOfCIKs", sub.NumberOfCIKs);
+            SqlParameter AdditionalCIKs = new SqlParameter("@AdditionalCIKs", sub.AdditionalCIKs);
+            SqlParameter PubFloatUSD = new SqlParameter("@PubFloatUSD", sub.PubFloatUSD);
+            SqlParameter FloatDate = new SqlParameter("@FloatDate", sub.FloatDate);
+            SqlParameter FloatAxis = new SqlParameter("@FloatAxis", sub.FloatAxis);
+            SqlParameter FloatMems = new SqlParameter("@FloatMems", sub.FloatMems);
+            SqlParameter Form_Code = new SqlParameter("@Form_Code", sub.Form);
+            SqlParameter Registrant_Id = new SqlParameter("@Registrant_Id", sub.Registrant.Id);
+            SqlParameter EdgarDataset_Id = new SqlParameter("@EdgarDataset_Id", dataset.Id);
+
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASSUBMISSIONS_INSERT "+
+                "@ADSH, @Period, @Detail, @XBRLInstance, @NumberOfCIKs, @AdditionalCIKs, @PubFloatUSD, @FloatDate, @FloatAxis, @FloatMems, @Form_Code, @Registrant_Id, @EdgarDataset_Id",
+                ADSH, Period, Detail, XBRLInstance, NumberOfCIKs, AdditionalCIKs, PubFloatUSD, FloatDate, FloatAxis, FloatMems, Form_Code, Registrant_Id, EdgarDataset_Id);
+        }
+
+        public void Save(EdgarDataset dataset, EdgarDatasetTag tag)
+        {
+            //falta validar los null
+            /*
+            SqlParameter unitsParam = command.Parameters.AddWithValue("@units", units);
+            if (units == null)
+            {
+                unitsParam.Value = DBNull.Value;
+            }
+            */
+
+            SqlParameter dsid = new SqlParameter("@DataSetId",dataset.Id);
+            SqlParameter tagparam = new SqlParameter("@Tag",tag.Tag);
+            SqlParameter version = new SqlParameter("@Version",tag.Version);
+            SqlParameter custom = new SqlParameter("@Custom",tag.Custom);
+            SqlParameter abstracto = new SqlParameter("@Abstract",tag.Abstract);
+            SqlParameter datatype = new SqlParameter("@Datatype",tag.Datatype);
+            SqlParameter tlabel = new SqlParameter("@Tlabel",tag.Tlabel);
+            SqlParameter doc = new SqlParameter("@Doc",tag.Doc);
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_INSERT @DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc",dsid, tagparam, version, custom, abstracto, datatype, tlabel, doc);
+        }
+
+        public void SaveAssociation(EdgarDataset dataset, EdgarDatasetTag tag)
+        {
+            SqlParameter dsid = new SqlParameter("@DataSetId", dataset.Id);
+            SqlParameter tagid = new SqlParameter("@TagId", tag.Id);
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_RELATE @DataSetId, @TagId",dsid,tagid);
+        }
     }
 }

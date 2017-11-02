@@ -33,36 +33,13 @@ namespace Analyst.Services
 
     public class TagService : ITagService
     {
-        public static bool PROCESS_IN_PARALLEL = false;
+        public static bool PROCESS_IN_PARALLEL = true;//hiper hardcore
 
         public void ProcessTags(EdgarTaskState state)
-        {
-            try
-            {
-                ConcurrentBag<EdgarDatasetTag> tags = SaveTags(state);
-                RelateTagsToDataset(tags,state);
-            }
-            catch (Exception ex)
-            {
-                state.Exception = ex;
-            }
-        }
-
-        private void RelateTagsToDataset(ConcurrentBag<EdgarDatasetTag> tags,EdgarTaskState state)
-        {
-            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-            foreach (EdgarDatasetTag tag in tags)
-            {
-                repository.Save(state.Dataset, tag);
-            }
-        }
-
-        private ConcurrentBag<EdgarDatasetTag> SaveTags(EdgarTaskState state)
         {
             string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
             string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\tag.tsv";
             string[] allLines = File.ReadAllLines(filepath);
-            ConcurrentBag<EdgarDatasetTag> tags = new ConcurrentBag<EdgarDatasetTag>();
             string header = allLines[0];
             if (PROCESS_IN_PARALLEL)
             {
@@ -74,21 +51,21 @@ namespace Analyst.Services
                 // Loop over the partitions in parallel.
                 Parallel.ForEach(rangePartitioner, (range, loopState) =>
                 {
-                    /*
-                    EF isn't thread safe and it doesn't allow parallel
-                    https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
-                    https://stackoverflow.com/questions/9099359/entity-framework-and-multi-threading
-                    https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
-                    solution: only 1 context for the entiry partition --> works
-                    */
+                /*
+                EF isn't thread safe and it doesn't allow parallel
+                https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
+                https://stackoverflow.com/questions/9099359/entity-framework-and-multi-threading
+                https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
+                solution: only 1 context for the entiry partition --> works
+                */
                     using (IAnalystRepository partitionRepository = new AnalystRepository(new AnalystContext()))
                     {
-                        //It improves performance
-                        //https://msdn.microsoft.com/en-us/library/jj556205(v=vs.113).aspx
-                        partitionRepository.ContextConfigurationAutoDetectChangesEnabled = false;
+                    //It improves performance
+                    //https://msdn.microsoft.com/en-us/library/jj556205(v=vs.113).aspx
+                    partitionRepository.ContextConfigurationAutoDetectChangesEnabled = false;
                         try
                         {
-                            ProcessRange(range, allLines, header, partitionRepository, tags);
+                            ProcessRange(state, range, allLines, header, partitionRepository);
                         }
                         finally
                         {
@@ -99,12 +76,11 @@ namespace Analyst.Services
             }
             else
             {
-                ProcessRange(new Tuple<int, int>(1, allLines.Length), allLines, header, new AnalystRepository(new AnalystContext()), tags);
+                ProcessRange(state, new Tuple<int, int>(1,allLines.Length), allLines, header, new AnalystRepository(new AnalystContext()));
             }
-            return tags;
         }
 
-        private void ProcessRange(Tuple<int, int> range,string[] allLines,string header, IAnalystRepository repo, ConcurrentBag<EdgarDatasetTag> tags)
+        private void ProcessRange(EdgarTaskState state, Tuple<int, int> range,string[] allLines,string header, IAnalystRepository repo)
         {
             for (int i = range.Item1; i < range.Item2; i++)
             {
@@ -112,9 +88,12 @@ namespace Analyst.Services
                 EdgarDatasetTag tag = ParseTag(repo, header, line);
                 if (tag.Id == 0)
                 {
-                    repo.Save(tag);
+                    repo.Save(state.Dataset, tag);
                 }
-                tags.Add(tag);
+                else
+                {
+                    repo.SaveAssociation(state.Dataset, tag);
+                }
             }
         }
 

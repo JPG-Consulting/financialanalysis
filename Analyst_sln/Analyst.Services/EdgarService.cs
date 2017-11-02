@@ -71,10 +71,10 @@ namespace Analyst.Services
             for (int i = 0; i < states.Count(); i++)
                 states[i] = new EdgarTaskState(ds);
             Task[] taskArray = new Task[taskAmount];
-            //taskArray[0] = Task.Factory.StartNew(() => submissionService.ProcessSubmissions(states[0]));
+            taskArray[0] = Task.Factory.StartNew(() => submissionService.ProcessSubmissions(states[0]));
             taskArray[1] = Task.Factory.StartNew(() => tagService.ProcessTags(states[1]));
 
-            //Task.WaitAll(taskArray);
+            Task.WaitAll(taskArray);
             return ds;
         }
     }

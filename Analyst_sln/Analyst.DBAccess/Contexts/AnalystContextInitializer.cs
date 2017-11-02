@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    public class AnalystContextInitializer : CreateDatabaseIfNotExists<AnalystContext>
+    public class AnalystContextInitializer : DropCreateDatabaseIfModelChanges<AnalystContext>
     {
         protected override void Seed(AnalystContext context)
         {

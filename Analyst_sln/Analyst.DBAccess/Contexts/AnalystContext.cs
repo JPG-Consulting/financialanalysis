@@ -25,7 +25,6 @@ namespace Analyst.DBAccess.Contexts
 
         public AnalystContext() : base("name=Analyst")
         {
-            
         }
 
         
