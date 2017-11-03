@@ -163,13 +163,19 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter Period = new SqlParameter("@Period", sub.Period);
             SqlParameter Detail = new SqlParameter("@Detail", sub.Detail);
             SqlParameter XBRLInstance = new SqlParameter("@XBRLInstance", sub.XBRLInstance);
+            if (sub.XBRLInstance == null) XBRLInstance.Value = DBNull.Value;
             SqlParameter NumberOfCIKs = new SqlParameter("@NumberOfCIKs", sub.NumberOfCIKs);
             SqlParameter AdditionalCIKs = new SqlParameter("@AdditionalCIKs", sub.AdditionalCIKs);
+            if (sub.AdditionalCIKs == null) AdditionalCIKs.Value = DBNull.Value;
             SqlParameter PubFloatUSD = new SqlParameter("@PubFloatUSD", sub.PubFloatUSD);
+            if (sub.PubFloatUSD == null) PubFloatUSD.Value = DBNull.Value;
             SqlParameter FloatDate = new SqlParameter("@FloatDate", sub.FloatDate);
+            if (sub.FloatDate == null) FloatDate.Value = DBNull.Value;
             SqlParameter FloatAxis = new SqlParameter("@FloatAxis", sub.FloatAxis);
+            if (sub.FloatAxis == null) FloatAxis.Value = DBNull.Value;
             SqlParameter FloatMems = new SqlParameter("@FloatMems", sub.FloatMems);
-            SqlParameter Form_Code = new SqlParameter("@Form_Code", sub.Form);
+            if (sub.FloatMems == null) FloatMems.Value = DBNull.Value;
+            SqlParameter Form_Code = new SqlParameter("@Form_Code", sub.Form.Code);
             SqlParameter Registrant_Id = new SqlParameter("@Registrant_Id", sub.Registrant.Id);
             SqlParameter EdgarDataset_Id = new SqlParameter("@EdgarDataset_Id", dataset.Id);
 
@@ -180,23 +186,18 @@ namespace Analyst.DBAccess.Contexts
 
         public void Save(EdgarDataset dataset, EdgarDatasetTag tag)
         {
-            //falta validar los null
-            /*
-            SqlParameter unitsParam = command.Parameters.AddWithValue("@units", units);
-            if (units == null)
-            {
-                unitsParam.Value = DBNull.Value;
-            }
-            */
-
             SqlParameter dsid = new SqlParameter("@DataSetId",dataset.Id);
             SqlParameter tagparam = new SqlParameter("@Tag",tag.Tag);
             SqlParameter version = new SqlParameter("@Version",tag.Version);
-            SqlParameter custom = new SqlParameter("@Custom",tag.Custom);
+
+            SqlParameter custom = new SqlParameter("@Custom",tag.Custom); 
             SqlParameter abstracto = new SqlParameter("@Abstract",tag.Abstract);
             SqlParameter datatype = new SqlParameter("@Datatype",tag.Datatype);
+            if (tag.Datatype == null) datatype.Value = DBNull.Value;
             SqlParameter tlabel = new SqlParameter("@Tlabel",tag.Tlabel);
+            if (tag.Tlabel == null) tlabel.Value = DBNull.Value;
             SqlParameter doc = new SqlParameter("@Doc",tag.Doc);
+            if (tag.Doc == null) doc.Value = DBNull.Value;
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_INSERT @DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc",dsid, tagparam, version, custom, abstracto, datatype, tlabel, doc);
         }
 

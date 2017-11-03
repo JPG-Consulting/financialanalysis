@@ -36,6 +36,8 @@ namespace Analyst.DBAccess.Contexts
             context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Version VARCHAR(20) NOT NULL COLLATE SQL_Latin1_General_CP1_CS_AS");
             context.Database.ExecuteSqlCommand("CREATE UNIQUE INDEX IX_TagVersion ON EdgarDatasetTags (Tag, Version)");
 
+            //TODO: Llamar a los SP de la carpeta scripts
+
             InitialLoader.LoadInitialData(new AnalystRepository(context));
         }
     }

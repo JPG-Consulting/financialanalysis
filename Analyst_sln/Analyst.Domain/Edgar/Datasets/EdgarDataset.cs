@@ -33,18 +33,11 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public int TotalSubmissions { get; set; }
 
-        public int ProcessedSubmissions
-        {
-            get
-            {
-                if (Submissions != null)
-                    return Submissions.Count;
-                else
-                    return 0;
-            }
-        }
+        public int ProcessedSubmissions { get; set; }
+
+        public int TotalTags { get; set; }
 
         public int TagsProcessed { get; set; }
-        public int SubmissionsProcessed { get; set; }
+        
     }
 }

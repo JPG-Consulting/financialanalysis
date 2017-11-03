@@ -18,6 +18,9 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
+IF OBJECT_ID ( 'SP_EDGARDATASSUBMISSIONS_INSERT', 'P' ) IS NOT NULL   
+    DROP PROCEDURE SP_EDGARDATASSUBMISSIONS_INSERT;  
+GO  
 CREATE PROCEDURE dbo.SP_EDGARDATASSUBMISSIONS_INSERT
 	@ADSH nvarchar(max)
 	,@Period datetime
@@ -63,6 +66,9 @@ BEGIN
 				,@Form_Code
 				,@Registrant_Id
 				,@EdgarDataset_Id);
+		
+		UPDATE DBO.EdgarDatasets SET SubmissionsProcessed = SubmissionsProcessed+ 1 WHERE ID= @EdgarDataset_Id
+		
 		Commit transaction;
 END
 GO

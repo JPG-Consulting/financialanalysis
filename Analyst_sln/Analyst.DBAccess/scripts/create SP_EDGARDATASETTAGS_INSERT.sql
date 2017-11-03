@@ -18,6 +18,9 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
+IF OBJECT_ID ( 'SP_EDGARDATASETTAGS_INSERT', 'P' ) IS NOT NULL   
+    DROP PROCEDURE SP_EDGARDATASETTAGS_INSERT;  
+GO  
 CREATE PROCEDURE dbo.SP_EDGARDATASETTAGS_INSERT
 	@DataSetId int
 	,@Tag varchar(256)
@@ -41,11 +44,7 @@ BEGIN
 	
 	set @tagid = (SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY]);
 
-	INSERT INTO [dbo].[EdgarDatasetTagEdgarDatasets]
-           ([EdgarDatasetTag_Id],[EdgarDataset_Id])
-     VALUES
-           (@tagId,@DataSetId)
-		   ;
+	exec [dbo].[SP_EDGARDATASETTAGS_RELATE] @DataSetId,@tagId;
 	COMMIT TRANSACTION;
 END
 GO

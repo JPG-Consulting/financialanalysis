@@ -18,18 +18,31 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
+IF OBJECT_ID ( 'SP_EDGARDATASETTAGS_RELATE', 'P' ) IS NOT NULL   
+    DROP PROCEDURE SP_EDGARDATASETTAGS_RELATE;  
+GO  
 CREATE PROCEDURE dbo.SP_EDGARDATASETTAGS_RELATE
 	@DataSetId int
 	,@TagId varchar(256)
 AS
 BEGIN
-	
-	Begin transaction;
-	INSERT INTO [dbo].[EdgarDatasetTagEdgarDatasets]
-           ([EdgarDatasetTag_Id],[EdgarDataset_Id])
-     VALUES
-           (@tagId,@DataSetId)
-		   ;
-	COMMIT TRANSACTION;
+	if(
+		not exists(
+			select 1
+			from [dbo].[EdgarDatasetTagEdgarDatasets] 
+			where [EdgarDatasetTag_Id] = @tagId and [EdgarDataset_Id] =@DataSetId
+		)
+	) 
+		Begin transaction;
+			INSERT INTO [dbo].[EdgarDatasetTagEdgarDatasets]
+				   ([EdgarDatasetTag_Id],[EdgarDataset_Id])
+			 VALUES
+				   (@tagId,@DataSetId)
+				   ;
+			UPDATE DBO.EdgarDatasets 
+			SET TagsProcessed = TagsProcessed + 1 
+			WHERE ID= @DataSetId
+		COMMIT TRANSACTION;
+	;
 END
 GO
