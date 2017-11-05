@@ -1,9 +1,0 @@
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Debug\Analyst.Windows.exe.config
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Debug\Analyst.Windows.exe
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Debug\Analyst.Windows.pdb
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Debug\Analyst.Windows.csprojResolveAssemblyReference.cache
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Debug\Analyst.Windows.Form1.resources
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Debug\Analyst.Windows.Properties.Resources.resources
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Debug\Analyst.Windows.csproj.GenerateResource.Cache
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Debug\Analyst.Windows.exe
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Debug\Analyst.Windows.pdb

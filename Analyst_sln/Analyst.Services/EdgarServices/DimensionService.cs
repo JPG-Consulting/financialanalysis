@@ -32,6 +32,7 @@ namespace Analyst.Services.EdgarServices
         {
             try
             {
+                //TODO: Esto hay que particionarlo
                 string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
                 string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\dim.tsv";
                 StreamReader sr = File.OpenText(filepath);
