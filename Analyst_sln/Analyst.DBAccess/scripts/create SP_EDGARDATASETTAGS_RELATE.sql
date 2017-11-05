@@ -38,17 +38,19 @@ BEGIN
 				where [EdgarDatasetTag_Id] = @tagId and [EdgarDataset_Id] =@DataSetId
 			)
 		) 
+		BEGIN
+			INSERT INTO [dbo].[EdgarDatasetTagEdgarDatasets]
+					([EdgarDatasetTag_Id],[EdgarDataset_Id])
+				VALUES
+					(@tagId,@DataSetId)
+					;
+				
+			UPDATE DBO.EdgarDatasets 
+			SET ProcessedTags = ProcessedTags + 1 
+			WHERE ID= @DataSetId
+			;
+		END	
 		
-				INSERT INTO [dbo].[EdgarDatasetTagEdgarDatasets]
-					   ([EdgarDatasetTag_Id],[EdgarDataset_Id])
-				 VALUES
-					   (@tagId,@DataSetId)
-					   ;
-				UPDATE DBO.EdgarDatasets 
-				SET ProcessedTags = ProcessedTags + 1 
-				WHERE ID= @DataSetId
-			
-		;
 	COMMIT TRANSACTION;
 END
 --GO

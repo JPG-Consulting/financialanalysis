@@ -8,6 +8,7 @@ using Analyst.Domain.Edgar.Datasets;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
 
 namespace Analyst.DBAccess.Contexts
 {
@@ -42,7 +43,7 @@ namespace Analyst.DBAccess.Contexts
         
         void AddNumber(EdgarDataset dataset, EdgarDatasetNumber number);
         void AddDimension(EdgarDataset dataset, EdgarDatasetDimension dim);
-        
+        void UpdateEdgarDataset(EdgarDataset dataset, string v);
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -284,6 +285,12 @@ namespace Analyst.DBAccess.Contexts
         {
             if (this.Context != null)
                 this.Context.Dispose();
+        }
+
+        public void UpdateEdgarDataset(EdgarDataset dataset, string property)
+        {
+            Context.Entry<EdgarDataset>(dataset).Property(property).IsModified = true;
+            Context.SaveChanges();
         }
     }
 }

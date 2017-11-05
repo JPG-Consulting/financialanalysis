@@ -42,6 +42,9 @@ namespace Analyst.Services.EdgarServices
             string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\tag.tsv";
             string[] allLines = File.ReadAllLines(filepath);
             string header = allLines[0];
+            state.Dataset.TotalTags = allLines.Length-1;
+            state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, "TotalTags");
+
             if (PROCESS_IN_PARALLEL)
             {
                 //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
@@ -52,18 +55,18 @@ namespace Analyst.Services.EdgarServices
                 // Loop over the partitions in parallel.
                 Parallel.ForEach(rangePartitioner, (range, loopState) =>
                 {
-                /*
-                EF isn't thread safe and it doesn't allow parallel
-                https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
-                https://stackoverflow.com/questions/9099359/entity-framework-and-multi-threading
-                https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
-                solution: only 1 context for the entiry partition --> works
-                */
+                    /*
+                    EF isn't thread safe and it doesn't allow parallel
+                    https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
+                    https://stackoverflow.com/questions/9099359/entity-framework-and-multi-threading
+                    https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
+                    solution: only 1 context for the entiry partition --> works
+                    */
                     using (IAnalystRepository partitionRepository = new AnalystRepository(new AnalystContext()))
                     {
-                    //It improves performance
-                    //https://msdn.microsoft.com/en-us/library/jj556205(v=vs.113).aspx
-                    partitionRepository.ContextConfigurationAutoDetectChangesEnabled = false;
+                        //It improves performance
+                        //https://msdn.microsoft.com/en-us/library/jj556205(v=vs.113).aspx
+                        partitionRepository.ContextConfigurationAutoDetectChangesEnabled = false;
                         try
                         {
                             ProcessRange(state, range, allLines, header, partitionRepository);

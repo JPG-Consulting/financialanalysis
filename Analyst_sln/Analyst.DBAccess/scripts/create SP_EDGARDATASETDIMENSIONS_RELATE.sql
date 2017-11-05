@@ -54,6 +54,7 @@ BEGIN
 				where [EdgarDatasetDimension_Id] = @DimId and [EdgarDataset_Id] =@DataSetId
 			)
 		) 
+		begin
 			INSERT INTO [dbo].[EdgarDatasetDimensionEdgarDatasets]
 				   ([EdgarDatasetDimension_Id]
 				   ,[EdgarDataset_Id])
@@ -64,8 +65,9 @@ BEGIN
 
 			UPDATE DBO.EdgarDatasets 
 				SET ProcessedDimensions = ProcessedDimensions + 1 
-				WHERE ID= @DataSetId
-		;
+				WHERE ID= @DataSetId;
+		end
+
 	COMMIT TRANSACTION;
 
 END

@@ -26,18 +26,19 @@ namespace Analyst.Services.EdgarServices
             {
                 string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
                 string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\sub.tsv";
-                StreamReader sr = File.OpenText(filepath);
-                string header = sr.ReadLine();
+                string[] allLines = File.ReadAllLines(filepath);
+                string header = allLines[0];
+                state.Dataset.TotalSubmissions = allLines.Length-1;
+                state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, "TotalSubmissions");
+
                 using (IAnalystRepository repository = new AnalystRepository(new AnalystContext()))
                 {
-                    while (!sr.EndOfStream)
+                    for(int i=1;i<allLines.Length;i++)
                     {
-                        string line = sr.ReadLine();
-                        EdgarDatasetSubmissions sub = ParseSub(repository, header, line);
+                        EdgarDatasetSubmissions sub = ParseSub(repository, header, allLines[i]);
                         repository.AddSubmission(state.Dataset, sub);
                     }
                 }
-                sr.Close();
                 state.Result = true;
             }
             catch (Exception ex)

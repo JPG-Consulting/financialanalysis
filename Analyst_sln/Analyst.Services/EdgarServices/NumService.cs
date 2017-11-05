@@ -24,6 +24,8 @@ namespace Analyst.Services.EdgarServices
             string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\num.tsv";
             string[] allLines = File.ReadAllLines(filepath);
             string header = allLines[0];
+            state.Dataset.TotalNumbers = allLines.Length-1;
+            state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, "TotalNumbers");
             IAnalystRepository repo = new AnalystRepository(new AnalystContext());
             ProcessRange(state,subs,tags,dims, new Tuple<int,int>(1, allLines.Length), allLines, header, repo);
         }

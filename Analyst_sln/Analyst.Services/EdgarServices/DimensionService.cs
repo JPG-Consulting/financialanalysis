@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Analyst.Services.EdgarServices
 {
@@ -32,27 +33,45 @@ namespace Analyst.Services.EdgarServices
         {
             try
             {
-                //TODO: Esto hay que particionarlo
                 string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
                 string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\dim.tsv";
-                StreamReader sr = File.OpenText(filepath);
-                string header = sr.ReadLine();
-                using (IAnalystRepository repository = new AnalystRepository(new AnalystContext()))
+                string[] allLines = File.ReadAllLines(filepath);
+                string header = allLines[0];
+                state.Dataset.TotalDimensions = allLines.Length-1;
+                state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, "TotalDimensions");
+
+                OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(1, allLines.Length);
+                Parallel.ForEach(rangePartitioner, (range, loopState) =>
                 {
-                    while (!sr.EndOfStream)
+                    using (IAnalystRepository partitionRepository = new AnalystRepository(new AnalystContext()))
                     {
-                        string line = sr.ReadLine();
-                        EdgarDatasetDimension dim = ParseDim(repository, header, line);
-                        repository.AddDimension(state.Dataset, dim);
+                        partitionRepository.ContextConfigurationAutoDetectChangesEnabled = false;
+                        try
+                        {
+                            ProcessRange(state, range, allLines, header, partitionRepository);
+                        }
+                        finally
+                        {
+                            partitionRepository.ContextConfigurationAutoDetectChangesEnabled = true;
+                        }
                     }
-                }
-                sr.Close();
+                });
                 state.Result = true;
             }
             catch (Exception ex)
             {
                 state.Result = false;
                 state.Exception = ex;
+            }
+        }
+
+        private void ProcessRange(EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, IAnalystRepository partitionRepository)
+        {
+            for (int i = range.Item1; i < range.Item2; i++)
+            {
+                string line = allLines[i];
+                EdgarDatasetDimension dim = ParseDim(partitionRepository, header, line);
+                partitionRepository.AddDimension(state.Dataset, dim);
             }
         }
 

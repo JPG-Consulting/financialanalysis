@@ -34,23 +34,23 @@ BEGIN
            ,[Submission_Id]
            ,[Tag_Id]
 		   ,[EdgarDataset_Id])
-     VALUES
-     (
-		@DDate
-		,@CountOfNumberOfQuarters
-		,@IPRX
-		,@Value
-		,@FootNote
-		,@FootLength
-		,@NumberOfDimensions
-		,@CoRegistrant
-		,@durp
-		,@datp
-		,@Decimals
-		,@Dimension_Id
-		,@Submission_Id
-		,@Tag_Id
-		,@EdgarDataset_Id);
+		 VALUES
+		 (
+			@DDate
+			,@CountOfNumberOfQuarters
+			,@IPRX
+			,@Value
+			,@FootNote
+			,@FootLength
+			,@NumberOfDimensions
+			,@CoRegistrant
+			,@durp
+			,@datp
+			,@Decimals
+			,@Dimension_Id
+			,@Submission_Id
+			,@Tag_Id
+			,@EdgarDataset_Id);
 
 		update DBO.EdgarDatasets SET ProcessedNumbers = ProcessedNumbers + 1 where id = @EdgarDataset_Id;
 	commit transaction;

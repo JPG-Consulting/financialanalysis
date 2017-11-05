@@ -42,7 +42,7 @@ CREATE PROCEDURE dbo.SP_EDGARDATASSUBMISSIONS_INSERT
 AS
 BEGIN
 	Begin transaction;
-	INSERT INTO [dbo].[EdgarDatasetSubmissions]
+		INSERT INTO [dbo].[EdgarDatasetSubmissions]
 			   ([ADSH]
 			   ,[Period]
 			   ,[Detail]
@@ -73,7 +73,7 @@ BEGIN
 		
 		UPDATE DBO.EdgarDatasets SET ProcessedSubmissions = ProcessedSubmissions+ 1 WHERE ID= @EdgarDataset_Id
 		
-		Commit transaction;
+	Commit transaction;
 END
 --GO
 

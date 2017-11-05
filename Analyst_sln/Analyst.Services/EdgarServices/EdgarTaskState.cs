@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Analyst.DBAccess.Contexts;
 
 namespace Analyst.Services.EdgarServices
 {
@@ -15,9 +16,14 @@ namespace Analyst.Services.EdgarServices
 
         private EdgarDataset ds;
         public EdgarDataset Dataset { get { return ds; } }
-        public EdgarTaskState(EdgarDataset ds)
+
+        private IAnalystRepository dsRepo;
+        public IAnalystRepository DatasetSharedRepo { get { return dsRepo; } }
+
+        public EdgarTaskState(EdgarDataset ds,IAnalystRepository dsRepo)
         {
             this.ds = ds;
+            this.dsRepo = dsRepo;
         }
 
     }
