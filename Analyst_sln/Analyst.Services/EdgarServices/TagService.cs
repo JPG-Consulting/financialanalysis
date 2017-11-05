@@ -11,7 +11,7 @@ using System.Threading;
 using System.Web.Hosting;
 using System.Collections.Concurrent;
 
-namespace Analyst.Services
+namespace Analyst.Services.EdgarServices
 {
     public static class ListMethods
     {
@@ -29,6 +29,7 @@ namespace Analyst.Services
     public interface ITagService
     {
         void ProcessTags(EdgarTaskState ds);
+        ConcurrentDictionary<string, EdgarDatasetTag> GetTags();
     }
 
     public class TagService : ITagService
@@ -88,11 +89,11 @@ namespace Analyst.Services
                 EdgarDatasetTag tag = ParseTag(repo, header, line);
                 if (tag.Id == 0)
                 {
-                    repo.Save(state.Dataset, tag);
+                    repo.AddTag(state.Dataset, tag);
                 }
                 else
                 {
-                    repo.SaveAssociation(state.Dataset, tag);
+                    repo.AddTagAssociacion(state.Dataset, tag);
                 }
             }
         }
@@ -137,6 +138,17 @@ namespace Analyst.Services
         }
 
 
+        public ConcurrentDictionary<string, EdgarDatasetTag> GetTags()
+        {
+            ConcurrentDictionary<string, EdgarDatasetTag> ret = new ConcurrentDictionary<string, EdgarDatasetTag>();
+            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
+            IList<EdgarDatasetTag> tags = repository.GetTags();
+            foreach (EdgarDatasetTag tag in tags)
+            {
+                ret.TryAdd(tag.CompoundKey, tag);
+            }
+            return ret;
+        }
 
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
 using Analyst.Services;
+using Analyst.Services.EdgarServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,18 +15,20 @@ namespace Analyst.Web.Controllers
     public class EdgarController : Controller
     {
         
-        private IEdgarService service;
+        private IEdgarService edgarService;
+        private IEdgarDatasetService datasetService;
 
-        public EdgarController(IEdgarService service)
+        public EdgarController(IEdgarService edgarService,IEdgarDatasetService datasetService)
         {
-            this.service = service;
+            this.edgarService = edgarService;
+            this.datasetService = datasetService;
         }
 
         [HttpGet]
         [Route("datasets/all")]
         public ActionResult GetAllDatasets()
         {
-            List<EdgarDataset> datasets = service.GetDatasets();
+            List<EdgarDataset> datasets = datasetService.GetDatasets();
             return View("Datasets", datasets);
 
         }
@@ -40,14 +43,14 @@ namespace Analyst.Web.Controllers
         [Route("datasets/process",Name = "processds")]
         public ActionResult ProcessDataset(int id)
         {
-            EdgarDataset ds = service.ProcessDataset(id);
+            EdgarDataset ds = datasetService.ProcessDataset(id);
             return View("Datasetstatus", ds);
         }
 
         [Route("datasets/getdetails",Name= "dsdetails")]
         public ActionResult GetDatasetDetails(int id)
         {
-            EdgarDataset ds = service.GetDataset(id);
+            EdgarDataset ds = datasetService.GetDataset(id);
             return View("DatasetDetail", id);
         }
 
@@ -55,7 +58,7 @@ namespace Analyst.Web.Controllers
         [Route("secforms")]
         public ActionResult GetSECForms()
         {
-            List<SECForm> forms = service.GetSECForms();
+            List<SECForm> forms = edgarService.GetSECForms();
             return View("SECForms", forms);
         }
 
@@ -63,7 +66,7 @@ namespace Analyst.Web.Controllers
         [Route("sics")]
         public ActionResult GetSICs()
         {
-            List<SIC> sics = service.GetSICs();
+            List<SIC> sics = edgarService.GetSICs();
             return View("SICs", sics);
         }
     }

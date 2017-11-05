@@ -489,12 +489,11 @@ namespace Analyst.DBAccess.Contexts
                     {
                         Quarter q = (Quarter)j;
 
-                        EdgarDataset ds = new EdgarDataset
-                        {
-                            RelativePath = String.Format(genericPath, i.ToString(), j),
-                            Year = i,
-                            Quarter = q
-                        };
+                        EdgarDataset ds = new EdgarDataset();
+                        ds.Id = i * 100 + (int)q;
+                        ds.RelativePath = String.Format(genericPath, i.ToString(), j);
+                        ds.Year = i;
+                        ds.Quarter = q;
                         repository.AddDataset(ds);
                     }
                 }

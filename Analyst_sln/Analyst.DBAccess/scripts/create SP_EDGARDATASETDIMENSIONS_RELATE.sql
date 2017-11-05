@@ -1,3 +1,15 @@
+/*
+USE [Analyst]
+GO
+*/
+/****** Object:  StoredProcedure [dbo].[SP_EDGARDATASETDIMENSIONS_RELATE]*/
+/*
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+*/
 -- ================================================
 -- Template generated from Template Explorer using:
 -- Create Procedure (New Menu).SQL
@@ -21,34 +33,40 @@ GO
 -- Description:	<Description,,>
 -- =============================================
 /*
-IF OBJECT_ID ( 'SP_EDGARDATASETTAGS_RELATE', 'P' ) IS NOT NULL   
-    DROP PROCEDURE SP_EDGARDATASETTAGS_RELATE;  
+IF OBJECT_ID ( 'SP_EDGARDATASETDIMENSIONS_RELATE', 'P' ) IS NOT NULL   
+    DROP PROCEDURE SP_EDGARDATASETDIMENSIONS_RELATE;  
 GO
-*/
-CREATE PROCEDURE dbo.SP_EDGARDATASETTAGS_RELATE
+*/  
+CREATE PROCEDURE [dbo].[SP_EDGARDATASETDIMENSIONS_RELATE]
 	@DataSetId int
-	,@TagId int
+	,@DimId int
+	
 AS
+
 BEGIN
-	Begin transaction;
+	
+    BEGIN TRANSACTION;
+
 		if(
 			not exists(
 				select 1
-				from [dbo].[EdgarDatasetTagEdgarDatasets] 
-				where [EdgarDatasetTag_Id] = @tagId and [EdgarDataset_Id] =@DataSetId
+				from [dbo].[EdgarDatasetDimensionEdgarDatasets] 
+				where [EdgarDatasetDimension_Id] = @DimId and [EdgarDataset_Id] =@DataSetId
 			)
 		) 
-		
-				INSERT INTO [dbo].[EdgarDatasetTagEdgarDatasets]
-					   ([EdgarDatasetTag_Id],[EdgarDataset_Id])
-				 VALUES
-					   (@tagId,@DataSetId)
-					   ;
-				UPDATE DBO.EdgarDatasets 
-				SET ProcessedTags = ProcessedTags + 1 
+			INSERT INTO [dbo].[EdgarDatasetDimensionEdgarDatasets]
+				   ([EdgarDatasetDimension_Id]
+				   ,[EdgarDataset_Id])
+			 VALUES
+				   (@DimId
+				   ,@DataSetId)
+			;
+
+			UPDATE DBO.EdgarDatasets 
+				SET ProcessedDimensions = ProcessedDimensions + 1 
 				WHERE ID= @DataSetId
-			
 		;
 	COMMIT TRANSACTION;
+
 END
 --GO

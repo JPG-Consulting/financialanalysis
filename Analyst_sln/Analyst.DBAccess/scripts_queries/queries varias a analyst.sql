@@ -16,11 +16,13 @@ union
 select 'submissions' tabla, count(1) cant from [dbo].[EdgarDatasetSubmissions]
 union
 select 'tags' tabla, count(1) cant from [dbo].[EdgarDatasetTags]
+union 
+select 'dimensions' tabla, count(1) cant from [dbo].[EdgarDatasetDimensions];
 ;
 
 select * from EdgarDatasets where year =2016 and Quarter= 4;
 
-
+select * from [dbo].[EdgarDatasetNumbers];
 
 
 --check de duplicados
@@ -40,6 +42,7 @@ select * from [dbo].[EdgarDatasetTags] where tag+version like 'ARcountry/2013';
 select * from [dbo].[EdgarDatasetTagEdgarDatasets];
 select * from [dbo].[EdgarDatasetSubmissions];
 select * from [dbo].[EdgarDatasetSubmissions] where registrant_id = (select id from registrants where cik = 811222);
+select * from [dbo].[EdgarDatasetDimensions];
 */
 
 /*
@@ -47,5 +50,16 @@ select * from [dbo].[EdgarDatasetSubmissions] where registrant_id = (select id f
 delete from [dbo].[EdgarDatasetSubmissions];
 delete from [dbo].[EdgarDatasetTags];
 delete from [dbo].[EdgarDatasetTagEdgarDatasets];
+delete from [dbo].[EdgarDatasetDimensions];
+update EdgarDatasets set 
+	  [TotalSubmissions] = 0
+      ,[ProcessedSubmissions] = 0
+      ,[TotalTags] = 0
+      ,[ProcessedTags] = 0
+      ,[TotalNumbers] = 0
+      ,[ProcessedNumbers] = 0
+      ,[ProcessedDimensions] = 0
+      ,[TotalDimensions] = 0
+	where year =2016 and Quarter= 4;
 */
 

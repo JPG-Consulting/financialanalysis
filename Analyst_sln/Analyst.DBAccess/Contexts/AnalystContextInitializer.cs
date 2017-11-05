@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,13 +34,29 @@ namespace Analyst.DBAccess.Contexts
             //Solution
             //http://www.entityframeworktutorial.net/code-first/database-initialization-strategy-in-code-first.aspx
 
-            context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Tag VARCHAR(256) NOT NULL COLLATE SQL_Latin1_General_CP1_CS_AS");
-            context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Version VARCHAR(20) NOT NULL COLLATE SQL_Latin1_General_CP1_CS_AS");
+            context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Tag VARCHAR(256) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
+            context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Version VARCHAR(20) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
             context.Database.ExecuteSqlCommand("CREATE UNIQUE INDEX IX_TagVersion ON EdgarDatasetTags (Tag, Version)");
 
-            //TODO: Llamar a los SP de la carpeta scripts
-
+            List<string> scripts = new List<string>();
+            scripts.Add(GetTextScript("create SP_EDGARDATASETDIMENSIONS_INSERT.sql"));
+            scripts.Add(GetTextScript("create SP_EDGARDATASETDIMENSIONS_RELATE.sql"));
+            scripts.Add(GetTextScript("create SP_EDGARDATASETNUMBER_INSERT.sql"));
+            scripts.Add(GetTextScript("create SP_EDGARDATASETTAGS_INSERT.sql"));
+            scripts.Add(GetTextScript("create SP_EDGARDATASETTAGS_RELATE.sql"));
+            scripts.Add(GetTextScript("create SP_EDGARDATASSUBMISSIONS_INSERT.sql"));
+            foreach(string s in scripts)
+                context.Database.ExecuteSqlCommand(s);
+            
             InitialLoader.LoadInitialData(new AnalystRepository(context));
+        }
+
+        private string GetTextScript(string scriptFileName)
+        {
+            StreamReader sr = File.OpenText(ConfigurationManager.AppSettings["scripts_folder"] + "\\" + scriptFileName);
+            string text = sr.ReadToEnd();
+            sr.Close();
+            return text;
         }
     }
 }

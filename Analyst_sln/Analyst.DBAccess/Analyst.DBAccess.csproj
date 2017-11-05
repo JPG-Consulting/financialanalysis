@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -68,11 +69,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="scripts\queries varias a analyst.sql" />
-    <Content Include="scripts\recreation_script.sql" />
-    <Content Include="scripts\create SP_EDGARDATASETTAGS_INSERT.sql" />
-    <Content Include="scripts\create SP_EDGARDATASETTAGS_RELATE.sql" />
-    <Content Include="scripts\create SP_EDGARDATASSUBMISSIONS_INSERT.sql" />
+    <Content Include="scripts\create SP_EDGARDATASETDIMENSIONS_INSERT.sql" />
+    <Content Include="scripts\create SP_EDGARDATASETDIMENSIONS_RELATE.sql" />
+    <Content Include="scripts\create SP_EDGARDATASETNUMBER_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts_queries\queries varias a analyst.sql" />
+    <Content Include="scripts_queries\recreation_script.sql" />
+    <Content Include="scripts\create SP_EDGARDATASETTAGS_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\create SP_EDGARDATASETTAGS_RELATE.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="scripts\create SP_EDGARDATASSUBMISSIONS_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

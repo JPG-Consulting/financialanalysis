@@ -12,16 +12,16 @@ use [master];
 create database Analyst
 ON   
 	( NAME = Analyst_dat,  
-		FILENAME = 'D:\Importante\Desarrollo\_Bases de datos\Analyst\Analyst_dat.mdf',  
-		SIZE = 10,  
-		MAXSIZE = 50,  
-		FILEGROWTH = 5 )  
+		FILENAME = 'E:\_analyst_db\Analyst_dat.mdf',  
+		SIZE = 20,  
+		--MAXSIZE = 50,  
+		FILEGROWTH = 10 )  
 	LOG ON  
 	( NAME = Analyst_log,  
-		FILENAME = 'D:\Importante\Desarrollo\_Bases de datos\Analyst\Analyst_log.ldf',  
-		SIZE = 5MB,  
-		MAXSIZE = 25MB,  
-		FILEGROWTH = 5MB ) ; 
+		FILENAME = 'E:\_analyst_db\Analyst_log.ldf',  
+		SIZE = 20MB,  
+		--MAXSIZE = 25MB,  
+		FILEGROWTH = 10MB ) ; 
 go
 
 --[]

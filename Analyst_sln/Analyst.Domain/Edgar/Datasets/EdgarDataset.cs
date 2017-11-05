@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace Analyst.Domain.Edgar.Datasets
     public class EdgarDataset
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         [Required]
@@ -27,9 +29,12 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public virtual IList<EdgarDatasetTag> Tags { get; set; }
 
+        //[ForeignKey("EdgarDataset_Id")]
         public virtual IList<EdgarDatasetSubmissions> Submissions { get; set; }
 
         public virtual IList<EdgarDatasetDimension> Dimensions { get; set; }
+
+        public virtual IList<EdgarDatasetNumber> Numbers { get; set; }
 
         public int TotalSubmissions { get; set; }
 
@@ -37,7 +42,14 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public int TotalTags { get; set; }
 
-        public int TagsProcessed { get; set; }
+        public int ProcessedTags { get; set; }
+
+        public int TotalNumbers { get; set; }
+        public int ProcessedNumbers { get; set; }
+        
+
+        public int ProcessedDimensions { get; set; }
+        public int TotalDimensions { get; set; }
         
     }
 }

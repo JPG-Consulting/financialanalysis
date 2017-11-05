@@ -40,8 +40,8 @@ namespace Analyst.DBAccess.Contexts
         public virtual DbSet<EdgarDatasetSubmissions> Submissions { get; set; }
         public virtual DbSet<EdgarDatasetTag> Tags { get; set; }
 
-
-
+        public virtual DbSet<EdgarDatasetNumber> Numbers { get; set; }
+        public virtual DbSet<EdgarDatasetDimension> Dimensions { get; set; }
     }
     
 

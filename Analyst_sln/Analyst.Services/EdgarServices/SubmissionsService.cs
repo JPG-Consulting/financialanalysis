@@ -8,14 +8,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Analyst.Services.EdgarService;
+using System.Collections.Concurrent;
 
-namespace Analyst.Services
+namespace Analyst.Services.EdgarServices
 {
     public interface ISubmissionService
     {
         void ProcessSubmissions(EdgarTaskState ds);
-
+        ConcurrentDictionary<string, EdgarDatasetSubmissions> GetSubmissions();
     }
     public class SubmissionsService: ISubmissionService
     {
@@ -34,7 +34,7 @@ namespace Analyst.Services
                     {
                         string line = sr.ReadLine();
                         EdgarDatasetSubmissions sub = ParseSub(repository, header, line);
-                        repository.SaveAssociation(state.Dataset, sub);
+                        repository.AddSubmission(state.Dataset, sub);
                     }
                 }
                 sr.Close();
@@ -119,6 +119,16 @@ namespace Analyst.Services
             return r;
         }
 
-
+        public ConcurrentDictionary<string, EdgarDatasetSubmissions> GetSubmissions()
+        {
+            ConcurrentDictionary<string, EdgarDatasetSubmissions> ret = new ConcurrentDictionary<string, EdgarDatasetSubmissions>();
+            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
+            IList<EdgarDatasetSubmissions> subs = repository.GetSubmissions();
+            foreach(EdgarDatasetSubmissions sub in subs)
+            {
+                ret.TryAdd(sub.ADSH, sub);
+            }
+            return ret;
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public string ADSH { get; set; }
 
-        //[Required]//Todo: antes tendria que cargar todos los datos del registrante
+        [Required]
         public Registrant Registrant { get; set; }
 
         [Required]
