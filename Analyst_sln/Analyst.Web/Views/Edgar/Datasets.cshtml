@@ -12,16 +12,21 @@
 </head>
 <body>
     <div> 
+        <a href="https://www.sec.gov/dera/data/financial-statement-and-notes-data-set.html">Financial Statement and Notes Data Sets</a>
         <table border="1" cellpadding="10" cellspacing="0">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Year</th>
-                    <th>Quarter</th>
-                    <th>Path</th>
-                    <th>Processed submission</th>
-                    <th>Total submissions</th>
-                    <th>Actions</th>
+                    <th rowspan="2">Id</th>
+                    <th rowspan="2">Year</th>
+                    <th rowspan="2">Quarter</th>
+                    <th colspan="4">Process status</th>
+                    <th rowspan="2">Actions</th>
+                </tr>
+                <tr>
+                    <th>Submission</th>
+                    <th>Tags</th>
+                    <th>Dimensions</th>
+                    <th>Numbers</th>
                 </tr>
             </thead>
             @foreach (var item in Model)
@@ -38,14 +43,24 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ProcessedSubmissions)
-                    </td>
-                    <td>
+                        /
                         @Html.DisplayFor(modelItem => item.TotalSubmissions)
                     </td>
                     <td>
-                        <a href="https://www.sec.gov/@Html.DisplayFor(modelItem => item.RelativePath)">Original file</a>
+                        @Html.DisplayFor(modelItem => item.ProcessedTags)
+                        /
+                        @Html.DisplayFor(modelItem => item.TotalTags)
                     </td>
-                    
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProcessedDimensions)
+                        /
+                        @Html.DisplayFor(modelItem => item.TotalDimensions)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ProcessedNumbers)
+                        /
+                        @Html.DisplayFor(modelItem => item.TotalNumbers)
+                    </td>
                     <td>
                         <!--
                         <%= Html.ActionLink("LinkText", "Action", "Controller", new { id=string.Empty }, null) %>    

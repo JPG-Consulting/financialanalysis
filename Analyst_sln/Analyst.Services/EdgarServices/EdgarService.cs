@@ -17,8 +17,8 @@ namespace Analyst.Services.EdgarServices
 {
     public interface IEdgarService
     {
-        List<SECForm> GetSECForms();
-        List<SIC> GetSICs();
+        IList<SECForm> GetSECForms();
+        IList<SIC> GetSICs();
     }
 
     public class EdgarService : IEdgarService
@@ -31,15 +31,15 @@ namespace Analyst.Services.EdgarServices
         }
 
 
-        public List<SECForm> GetSECForms()
+        public IList<SECForm> GetSECForms()
         {
-            List<SECForm> forms = repository.GetSECForms();
+            IList<SECForm> forms = repository.Get<SECForm>();
             return forms;
         }
 
-        public List<SIC> GetSICs()
+        public IList<SIC> GetSICs()
         {
-            List<SIC> sics = repository.GetSICs();
+            IList<SIC> sics = repository.Get<SIC>();
             return sics;
         }
 

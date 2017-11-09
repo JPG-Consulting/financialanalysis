@@ -74,15 +74,14 @@
     <Content Include="scripts\create SP_EDGARDATASETNUMBER_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="scripts\create SP_EDGARDATASETNUMBER_SELECT.sql" />
+    <Content Include="scripts\create SP_EDGARDATASETSUBMISSIONS_INSERT.sql" />
     <Content Include="scripts_queries\queries varias a analyst.sql" />
     <Content Include="scripts_queries\recreation_script.sql" />
     <Content Include="scripts\create SP_EDGARDATASETTAGS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\create SP_EDGARDATASETTAGS_RELATE.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\create SP_EDGARDATASSUBMISSIONS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

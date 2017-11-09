@@ -12,7 +12,7 @@ namespace Analyst.Domain.Edgar.Datasets
     /// https://www.sec.gov/dera/data/financial-statement-and-notes-data-set.html
     /// </summary>
     [Serializable]
-    public class EdgarDataset
+    public class EdgarDataset:IEdgarDatasetFile
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -50,6 +50,13 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public int ProcessedDimensions { get; set; }
         public int TotalDimensions { get; set; }
-        
+
+        public string Key
+        {
+            get
+            {
+                return Id.ToString();
+            }
+        }
     }
 }

@@ -16,20 +16,29 @@ union
 select 'submissions' tabla, count(1) cant from [dbo].[EdgarDatasetSubmissions]
 union
 select 'tags' tabla, count(1) cant from [dbo].[EdgarDatasetTags]
+union
+select 'tags related' tabla, count(1) cant from [dbo].[EdgarDatasetTagEdgarDatasets] where edgardataset_id=201604
 union 
-select 'dimensions' tabla, count(1) cant from [dbo].[EdgarDatasetDimensions];
+select 'dimensions' tabla, count(1) cant from [dbo].[EdgarDatasetDimensions]
+union
+select 'dimensions related' tabla, count(1) from [dbo].[EdgarDatasetDimensionEdgarDatasets] where edgardataset_id=201604
+UNION
+SELECT 'numbers' tabla, count(1) from dbo.EdgarDatasetNumbers where EdgarDataset_Id = 201604
 ;
-
+;
 select * from EdgarDatasets where year =2016 and Quarter= 4;
+--select * from [dbo].[EdgarDatasetNumbers];
 
-select * from [dbo].[EdgarDatasetNumbers];
-
+/*
+--CHECKS
 
 --check de duplicados
---select name,count(1) cant from registrants group by name having count(1) > 1;
+select name,count(1) cant from [dbo].[registrants] group by name having count(1) > 1;
+select DimensionH,count(1) cant from [dbo].[EdgarDatasetDimensions]  group by DimensionH having count(1) > 1;
 
 --check de subs sin relacion --> poner constraint FK
---select * from [dbo].[EdgarDatasetSubmissions] where EdgarDataset_Id is null;
+select * from [dbo].[EdgarDatasetSubmissions] where EdgarDataset_Id is null;
+*/
 
 /*
 --tablas individuales

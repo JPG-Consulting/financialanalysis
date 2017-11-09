@@ -10,7 +10,7 @@ namespace Analyst.Services.EdgarServices
 {
     public class EdgarTaskState
     {
-        public bool? Result { get; set; }
+        public bool? ResultOk { get; set; }
         public string Message { get; set; }
         public Exception Exception { get; set; }
 

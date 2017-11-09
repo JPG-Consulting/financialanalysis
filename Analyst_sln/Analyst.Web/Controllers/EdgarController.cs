@@ -28,7 +28,7 @@ namespace Analyst.Web.Controllers
         [Route("datasets/all")]
         public ActionResult GetAllDatasets()
         {
-            List<EdgarDataset> datasets = datasetService.GetDatasets();
+            IList<EdgarDataset> datasets = datasetService.GetDatasets();
             return View("Datasets", datasets);
 
         }
@@ -43,8 +43,9 @@ namespace Analyst.Web.Controllers
         [Route("datasets/process",Name = "processds")]
         public ActionResult ProcessDataset(int id)
         {
-            EdgarDataset ds = datasetService.ProcessDataset(id);
-            return View("Datasetstatus", ds);
+            datasetService.ProcessDataset(id);
+            IList<EdgarDataset> datasets = datasetService.GetDatasets();
+            return View("Datasets", datasets);
         }
 
         [Route("datasets/getdetails",Name= "dsdetails")]
@@ -58,7 +59,7 @@ namespace Analyst.Web.Controllers
         [Route("secforms")]
         public ActionResult GetSECForms()
         {
-            List<SECForm> forms = edgarService.GetSECForms();
+            IList<SECForm> forms = edgarService.GetSECForms();
             return View("SECForms", forms);
         }
 
@@ -66,7 +67,7 @@ namespace Analyst.Web.Controllers
         [Route("sics")]
         public ActionResult GetSICs()
         {
-            List<SIC> sics = edgarService.GetSICs();
+            IList<SIC> sics = edgarService.GetSICs();
             return View("SICs", sics);
         }
     }

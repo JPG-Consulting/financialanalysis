@@ -13,6 +13,7 @@
     ,@Dimension_Id int
     ,@Submission_Id int
     ,@Tag_Id int
+	,@LineNumber int
 	,@EdgarDataset_Id int
 AS
 BEGIN
@@ -33,6 +34,7 @@ BEGIN
            ,[Dimension_Id]
            ,[Submission_Id]
            ,[Tag_Id]
+		   ,[LineNumber]
 		   ,[EdgarDataset_Id])
 		 VALUES
 		 (
@@ -50,6 +52,7 @@ BEGIN
 			,@Dimension_Id
 			,@Submission_Id
 			,@Tag_Id
+			,@LineNumber
 			,@EdgarDataset_Id);
 
 		update DBO.EdgarDatasets SET ProcessedNumbers = ProcessedNumbers + 1 where id = @EdgarDataset_Id;

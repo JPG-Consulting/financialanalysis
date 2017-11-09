@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdgarServices\DimensionService.cs" />
+    <Compile Include="EdgarServices\EdgarFileService.cs" />
     <Compile Include="EdgarServices\EdgarService.cs" />
     <Compile Include="EdgarServices\EdgarDatasetService.cs" />
     <Compile Include="EdgarServices\EdgarTaskState.cs" />

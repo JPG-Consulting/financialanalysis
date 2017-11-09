@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Analyst.Domain.Edgar.Datasets;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,7 +14,7 @@ namespace Analyst.Domain.Edgar
     /// Four digit code assigned by the Commission as of the filing date, 
     /// indicating the registrant's type of business.
     /// </summary>
-    public class SIC
+    public class SIC:IEdgarDatasetFile
     {
         [Key]
         public int Id { get; set; }
@@ -24,5 +25,13 @@ namespace Analyst.Domain.Edgar
         public string ADOffice { get; set; }
 
         public string IndustryTitle { get; set; }
+
+        public string Key
+        {
+            get
+            {
+                return Code.ToString();
+            }
+        }
     }
 }

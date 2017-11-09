@@ -157,5 +157,8 @@ namespace Analyst.Domain.Edgar.Datasets
         public string DimensionStr { get; set; }
 
         #endregion
+
+        [Required]
+        public int LineNumber { get; set; }
     }
 }

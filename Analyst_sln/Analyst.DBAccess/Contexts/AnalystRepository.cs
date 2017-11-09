@@ -9,6 +9,8 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Data;
 
 namespace Analyst.DBAccess.Contexts
 {
@@ -16,22 +18,24 @@ namespace Analyst.DBAccess.Contexts
     {
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
 
-        List<EdgarDataset> GetDatasets();
+        IList<T> Get<T>() where T:IEdgarDatasetFile;
+        //List<EdgarDataset> GetDatasets();
         
         int GetDatasetsCount();
         int GetSECFormsCount();
-        List<SECForm> GetSECForms();
-        List<SIC> GetSICs();
+        //List<SECForm> GetSECForms();
+        //List<SIC> GetSICs();
         int GetSICCount();
         EdgarDataset GetDataset(int id);
         Registrant GetRegistrant(string cik);
         SECForm GetSECForm(string code);
         SIC GetSIC(string code);
-        IList<EdgarDatasetSubmissions> GetSubmissions();
-        IList<EdgarDatasetDimension> GetDimensions();
-        IList<EdgarDatasetTag> GetTags();
+        //IList<EdgarDatasetSubmissions> GetSubmissions();
+        //IList<EdgarDatasetDimension> GetDimensions();
+        //IList<EdgarDatasetTag> GetTags();
         EdgarDatasetTag GetTag(string tag, string version);
         EdgarDatasetDimension GetDimension(string dimhash);
+        EdgarDatasetNumber GetNumber(int datasetID, int lineNumber);
         void AddSECForm(SECForm sECForm);
         void AddSIC(SIC sic);
         void AddRegistrant(Registrant r);
@@ -44,6 +48,7 @@ namespace Analyst.DBAccess.Contexts
         void AddNumber(EdgarDataset dataset, EdgarDatasetNumber number);
         void AddDimension(EdgarDataset dataset, EdgarDatasetDimension dim);
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
+        
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -65,10 +70,10 @@ namespace Analyst.DBAccess.Contexts
         }
 
         #region Get methods
-        public List<EdgarDataset> GetDatasets()
-        {
-            return Context.DataSets.OrderBy(x=> x.Year).ToList();
-        }
+        //public List<EdgarDataset> GetDatasets()
+        //{
+        //    return Context.DataSets.OrderBy(x=> x.Year).ToList();
+        //}
 
         public int GetDatasetsCount()
         {
@@ -80,15 +85,15 @@ namespace Analyst.DBAccess.Contexts
             return Context.SECForms.Count();
         }
 
-        public List<SECForm> GetSECForms()
-        {
-            return Context.SECForms.ToList();
-        }
+        //public List<SECForm> GetSECForms()
+        //{
+        //    return Context.SECForms.ToList();
+        //}
 
-        public List<SIC> GetSICs()
-        {
-            return Context.SICs.ToList();
-        }
+        //public List<SIC> GetSICs()
+        //{
+        //    return Context.SICs.ToList();
+        //}
 
         public int GetSICCount()
         {
@@ -125,10 +130,10 @@ namespace Analyst.DBAccess.Contexts
             }
             return form;
         }
-        public IList<EdgarDatasetSubmissions> GetSubmissions()
-        {
-            return Context.Submissions.ToList();
-        }
+        //public IList<EdgarDatasetSubmissions> GetSubmissions()
+        //{
+        //    return Context.Submissions.ToList();
+        //}
 
         public IList<EdgarDatasetDimension> GetDimensions()
         {
@@ -136,15 +141,18 @@ namespace Analyst.DBAccess.Contexts
         }
 
 
-        public IList<EdgarDatasetTag> GetTags()
-        {
-            return Context.Tags.ToList();
-        }
+        //public IList<EdgarDatasetTag> GetTags()
+        //{
+        //    return Context.Tags.ToList();
+        //}
 
 
         public EdgarDatasetDimension GetDimension(string dimhash)
         {
-            return Context.Dimensions.Where(x => x.DimensionH == dimhash).SingleOrDefault();
+            //return Context.Dimensions.Where(x => x.DimensionH == dimhash).SingleOrDefault();
+            IQueryable<EdgarDatasetDimension> q = Context.Dimensions.Where(x => x.DimensionH == dimhash);
+            string sql = q.ToString();
+            return q.SingleOrDefault();
         }
 
         public EdgarDatasetTag GetTag(string tag, string version)
@@ -159,8 +167,32 @@ namespace Analyst.DBAccess.Contexts
             return q.SingleOrDefault();
 
         }
+
+        public EdgarDatasetNumber GetNumber(int datasetID, int lineNumber)
+        {
+            SqlParameter dsId = new SqlParameter("@dataSetID", datasetID);
+            SqlParameter line = new SqlParameter("@lineNumber", lineNumber);
+            return Context.Database.SqlQuery<EdgarDatasetNumber>("exec SP_EDGARDATASETNUMBER_SELECT @dataSetID,@lineNumber", dsId, line).SingleOrDefault();
+        }
+
+
+        public IList<TEntity> Get<TEntity>() where TEntity : IEdgarDatasetFile
+        {
+            string key = typeof(TEntity).Name;
+            IObjectContextAdapter adapter = (IObjectContextAdapter)Context;
+            ObjectContext objectContext = adapter.ObjectContext;
+            // 1. we need the container for the conceptual model
+            EntityContainer container = objectContext.MetadataWorkspace.GetEntityContainer(
+                objectContext.DefaultContainerName, System.Data.Entity.Core.Metadata.Edm.DataSpace.CSpace);
+            // 2. we need the name given to the element set in that conceptual model
+            string name = container.BaseEntitySets.Where((s) => s.ElementType.Name.Equals(key)).FirstOrDefault().Name;
+            // 3. finally, we can create a basic query for this set
+            ObjectQuery<TEntity> query = objectContext.CreateQuery<TEntity>("[" + name + "]");
+            return query.ToList<TEntity>();
+        }
+
         #endregion
-        
+
         #region Add methods
         public void AddDataset(EdgarDataset ds)
         {
@@ -255,18 +287,21 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter dimensionId = new SqlParameter("@Dimension_Id", number.Dimension.Id);
             SqlParameter submissionId = new SqlParameter("@Submission_Id", number.Submission.Id);
             SqlParameter tagId = new SqlParameter("@Tag_Id", number.Tag.Id);
+            SqlParameter lineNumber = new SqlParameter("@LineNumber", number.LineNumber);
             SqlParameter edgarDatasetId = new SqlParameter("@EdgarDataset_Id", dataset.Id);
-            
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETNUMBER_INSERT "+
-                "@DDate, @CountOfNumberOfQuarters, @IPRX, @Value, @FootNote, @FootLength, @NumberOfDimensions, @CoRegistrant, @durp, @datp, @Decimals, @Dimension_Id, @Submission_Id, @Tag_Id, @EdgarDataset_Id",
-                ddate, countOfNumberOfQuarters, iprx, value, footNote, footLength, numberOfDimensions, coRegistrant, durp, datp, decimals, dimensionId, submissionId, tagId, edgarDatasetId
+                "@DDate, @CountOfNumberOfQuarters, @IPRX, @Value, @FootNote, @FootLength, @NumberOfDimensions, @CoRegistrant, @durp, @datp, @Decimals, @Dimension_Id, @Submission_Id, @Tag_Id,@LineNumber, @EdgarDataset_Id",
+                ddate, countOfNumberOfQuarters, iprx, value, footNote, footLength, numberOfDimensions, coRegistrant, durp, datp, decimals, dimensionId, submissionId, tagId,lineNumber, edgarDatasetId
                 );
             
         }
         
         public void AddDimension(EdgarDataset dataset, EdgarDatasetDimension dim)
         {
-            SqlParameter DimensionH = new SqlParameter("@DimensionH", dim.DimensionH);
+            //TODO: HAY QUE FIXEAR ESTO: A TODOS LOS TRUNCA A 32 CUANDO LOS INSERTA CUANDO SON 34 CARACTERES
+
+            SqlParameter DimensionH = new SqlParameter("@DimensionH",SqlDbType.NVarChar ,EdgarDatasetDimension.LENGHT_FIELD_DIMENSIONH);
+            DimensionH.Value = dim.DimensionH;
             SqlParameter Segments = new SqlParameter("@Segments", dim.Segments);
             if (string.IsNullOrEmpty(dim.Segments))
                 Segments.Value = DBNull.Value;
@@ -292,5 +327,7 @@ namespace Analyst.DBAccess.Contexts
             Context.Entry<EdgarDataset>(dataset).Property(property).IsModified = true;
             Context.SaveChanges();
         }
+
+       
     }
 }

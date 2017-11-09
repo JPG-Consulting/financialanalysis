@@ -29,10 +29,10 @@ namespace Analyst.Services.EdgarServices
     public interface ITagService
     {
         void ProcessTags(EdgarTaskState ds);
-        ConcurrentDictionary<string, EdgarDatasetTag> GetTags();
+        ConcurrentDictionary<string, EdgarDatasetTag> GetAsConcurrent();
     }
 
-    public class TagService : ITagService
+    public class TagService : EdgarFileService<EdgarDatasetTag>, ITagService
     {
         public static bool PROCESS_IN_PARALLEL = true;//hiper hardcore
 
@@ -141,17 +141,7 @@ namespace Analyst.Services.EdgarServices
         }
 
 
-        public ConcurrentDictionary<string, EdgarDatasetTag> GetTags()
-        {
-            ConcurrentDictionary<string, EdgarDatasetTag> ret = new ConcurrentDictionary<string, EdgarDatasetTag>();
-            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-            IList<EdgarDatasetTag> tags = repository.GetTags();
-            foreach (EdgarDatasetTag tag in tags)
-            {
-                ret.TryAdd(tag.CompoundKey, tag);
-            }
-            return ret;
-        }
+        
 
     }
 }

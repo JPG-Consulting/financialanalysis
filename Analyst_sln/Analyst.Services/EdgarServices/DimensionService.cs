@@ -10,24 +10,12 @@ using System.Threading.Tasks;
 
 namespace Analyst.Services.EdgarServices
 {
-    public interface IDimensionService
+    public interface IDimensionService:IEdgarFileService<EdgarDatasetDimension>
     {
-        ConcurrentDictionary<string, EdgarDatasetDimension> GetDimensions();
         void ProcessDimensions(EdgarTaskState edgarTaskState);
     }
-    public class DimensionService : IDimensionService
+    public class DimensionService : EdgarFileService<EdgarDatasetDimension>, IDimensionService
     {
-        public ConcurrentDictionary<string, EdgarDatasetDimension> GetDimensions()
-        {
-            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-            ConcurrentDictionary<string, EdgarDatasetDimension> ret = new ConcurrentDictionary<string, EdgarDatasetDimension>();
-            IList<EdgarDatasetDimension> dims = repository.GetDimensions();
-            foreach (EdgarDatasetDimension dim in dims)
-            {
-                ret.TryAdd(dim.DimensionH, dim);
-            }
-            return ret;
-        }
 
         public void ProcessDimensions(EdgarTaskState state)
         {
@@ -39,28 +27,45 @@ namespace Analyst.Services.EdgarServices
                 string header = allLines[0];
                 state.Dataset.TotalDimensions = allLines.Length-1;
                 state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, "TotalDimensions");
-
-                OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(1, allLines.Length);
-                Parallel.ForEach(rangePartitioner, (range, loopState) =>
+                if (false)//for debug purposes
+                {
+                    OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(1, allLines.Length);
+                    Parallel.ForEach(rangePartitioner, (range, loopState) =>
+                    {
+                        using (IAnalystRepository partitionRepository = new AnalystRepository(new AnalystContext()))
+                        {
+                            partitionRepository.ContextConfigurationAutoDetectChangesEnabled = false;
+                            try
+                            {
+                                ProcessRange(state, range, allLines, header, partitionRepository);
+                            }
+                            finally
+                            {
+                                partitionRepository.ContextConfigurationAutoDetectChangesEnabled = true;
+                            }
+                        }
+                    });
+                }
+                else
                 {
                     using (IAnalystRepository partitionRepository = new AnalystRepository(new AnalystContext()))
                     {
                         partitionRepository.ContextConfigurationAutoDetectChangesEnabled = false;
                         try
                         {
-                            ProcessRange(state, range, allLines, header, partitionRepository);
+                            ProcessRange(state, new Tuple<int, int>(1,allLines.Length), allLines, header, partitionRepository);
                         }
                         finally
                         {
                             partitionRepository.ContextConfigurationAutoDetectChangesEnabled = true;
                         }
                     }
-                });
-                state.Result = true;
+                }
+                state.ResultOk = true;
             }
             catch (Exception ex)
             {
-                state.Result = false;
+                state.ResultOk = false;
                 state.Exception = ex;
             }
         }
@@ -71,7 +76,8 @@ namespace Analyst.Services.EdgarServices
             {
                 string line = allLines[i];
                 EdgarDatasetDimension dim = ParseDim(partitionRepository, header, line);
-                partitionRepository.AddDimension(state.Dataset, dim);
+                if(dim.Id == 0)
+                    partitionRepository.AddDimension(state.Dataset, dim);
             }
         }
 

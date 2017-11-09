@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Analyst.Domain.Edgar.Datasets
     /// subido por las registrants (compañias, mutual funds, etc)
     /// </summary>
     [Serializable]
-    public class EdgarDatasetSubmissions
+    public class EdgarDatasetSubmissions:IEdgarDatasetFile
     {
         public const string FILE_NAME = "sub";
 
@@ -43,6 +44,8 @@ namespace Analyst.Domain.Edgar.Datasets
         /// The 20-character string formed 
         /// from the 18-digit number assigned by the Commission to each EDGAR submission.
         /// </summary>
+        [Column(TypeName = "VARCHAR")]
+        [Index(IsUnique = true)]
         [Required]
         public string ADSH { get; set; }
 
@@ -105,5 +108,12 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         public int? FloatMems { get; set; }
 
+        public string Key
+        {
+            get
+            {
+                return ADSH;
+            }
+        }
     }
 }

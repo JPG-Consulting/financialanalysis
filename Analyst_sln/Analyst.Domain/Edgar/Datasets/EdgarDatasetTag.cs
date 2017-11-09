@@ -35,7 +35,7 @@ namespace Analyst.Domain.Edgar.Datasets
     /// Listando los tags correctos en el orden correcto, 
     /// se podría armar los estados contables
     /// </summary>
-    public class EdgarDatasetTag
+    public class EdgarDatasetTag: IEdgarDatasetFile
     {
         [Key]
         public int Id { get; set; }
@@ -56,12 +56,17 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public string Version { get; set; }
 
+
         /// <summary>
         /// Compund Key = ADSH and Version
         /// </summary>
-        public string CompoundKey
+        string IEdgarDatasetFile.Key
         {
-            get { return Tag + Version; }
+            get
+            {
+                return Tag + Version;
+            }
+
         }
 
         /// <summary>
@@ -115,5 +120,7 @@ namespace Analyst.Domain.Edgar.Datasets
 
 
         public List<EdgarDataset> Datasets { get; set; }
+
+        
     }
 }

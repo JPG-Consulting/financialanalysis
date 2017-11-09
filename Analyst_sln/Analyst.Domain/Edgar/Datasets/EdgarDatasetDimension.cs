@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Analyst.Domain.Edgar.Datasets
 {
-    public class EdgarDatasetDimension
+    public class EdgarDatasetDimension:IEdgarDatasetFile
     {
+        public static readonly int LENGHT_FIELD_DIMENSIONH = 34;
+
         [Key]
         public int Id { get; set; }
 
@@ -17,7 +20,8 @@ namespace Analyst.Domain.Edgar.Datasets
         /// Although MD5 is unsuitable for cryptographic use, 
         /// it is used here merely to limit the size of the primary key.
         /// </summary>
-        [StringLength(32)]
+        [Index(IsUnique = true)]
+        [StringLength(34)]//32 hexa + "0x"
         public string DimensionH { get; set; }
 
         /// <summary>
@@ -36,5 +40,13 @@ namespace Analyst.Domain.Edgar.Datasets
         public bool SegmentTruncated { get; set; }
 
         public virtual IList<EdgarDataset> Datasets { get; set; }
+
+        public string Key
+        {
+            get
+            {
+                return DimensionH;
+            }
+        }
     }
 }

@@ -39,11 +39,11 @@ namespace Analyst.Services.EdgarServices
                         repository.AddSubmission(state.Dataset, sub);
                     }
                 }
-                state.ResultOk = true;
+                state.Result = true;
             }
             catch (Exception ex)
             {
-                state.ResultOk = false;
+                state.Result = false;
                 state.Exception= ex;
             }
         }
@@ -124,7 +124,7 @@ namespace Analyst.Services.EdgarServices
         {
             ConcurrentDictionary<string, EdgarDatasetSubmissions> ret = new ConcurrentDictionary<string, EdgarDatasetSubmissions>();
             IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-            IList<EdgarDatasetSubmissions> subs = repository.Get<EdgarDatasetSubmissions>();
+            IList<EdgarDatasetSubmissions> subs = repository.GetSubmissions();
             foreach(EdgarDatasetSubmissions sub in subs)
             {
                 ret.TryAdd(sub.ADSH, sub);

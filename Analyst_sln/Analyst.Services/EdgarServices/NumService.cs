@@ -35,16 +35,21 @@ namespace Analyst.Services.EdgarServices
             for (int i = range.Item1; i < range.Item2; i++)
             {
                 string line = allLines[i];
-                EdgarDatasetNumber number = ParseNum(repo, header, line);
-                number.Submission = subs[number.ADSH];
-                number.Tag = tags[number.TagCompoundKey];
-                number.Dimension = dims[number.DimensionStr];
-                repo.AddNumber(state.Dataset, number);
 
+
+                EdgarDatasetNumber number = repo.GetNumber(state.Dataset.Id, i);
+                if (number == null)
+                {
+                    number = ParseNum(repo, header, line, i);
+                    number.Submission = subs[number.ADSH];
+                    number.Tag = tags[number.TagCompoundKey];
+                    number.Dimension = dims[number.DimensionStr];
+                    repo.AddNumber(state.Dataset, number);
+                }
             }
         }
 
-        private EdgarDatasetNumber ParseNum(IAnalystRepository repo, string header, string line)
+        private EdgarDatasetNumber ParseNum(IAnalystRepository repo, string header, string line,int linenumber)
         {
             /*
             Ejemplo
@@ -56,6 +61,7 @@ namespace Analyst.Services.EdgarServices
             List<string> fieldNames = header.Split('\t').ToList();
             List<string> fields = line.Split('\t').ToList();
             String value = "";
+            number.LineNumber = linenumber;
             number.ADSH = fields[fieldNames.IndexOf("adsh")];
             number.TagStr = fields[fieldNames.IndexOf("tag")];
             number.Version = fields[fieldNames.IndexOf("version")];
