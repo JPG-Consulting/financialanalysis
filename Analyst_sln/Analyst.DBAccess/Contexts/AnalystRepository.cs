@@ -277,6 +277,8 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter countOfNumberOfQuarters = new SqlParameter("@CountOfNumberOfQuarters", number.CountOfNumberOfQuarters);
             SqlParameter iprx = new SqlParameter("@IPRX", number.IPRX);
             SqlParameter value = new SqlParameter("@Value", number.Value);
+            if (!number.Value.HasValue)
+                value.Value = DBNull.Value;
             SqlParameter footNote = new SqlParameter("@FootNote", number.FootNote);
             SqlParameter footLength = new SqlParameter("@FootLength", number.FootLength);
             SqlParameter numberOfDimensions = new SqlParameter("@NumberOfDimensions", number.NumberOfDimensions);
@@ -298,8 +300,6 @@ namespace Analyst.DBAccess.Contexts
         
         public void AddDimension(EdgarDataset dataset, EdgarDatasetDimension dim)
         {
-            //TODO: HAY QUE FIXEAR ESTO: A TODOS LOS TRUNCA A 32 CUANDO LOS INSERTA CUANDO SON 34 CARACTERES
-
             SqlParameter DimensionH = new SqlParameter("@DimensionH",SqlDbType.NVarChar ,EdgarDatasetDimension.LENGHT_FIELD_DIMENSIONH);
             DimensionH.Value = dim.DimensionH;
             SqlParameter Segments = new SqlParameter("@Segments", dim.Segments);

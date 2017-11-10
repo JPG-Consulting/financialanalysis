@@ -38,7 +38,7 @@ IF OBJECT_ID ( 'SP_EDGARDATASETDIMENSIONS_INSERT', 'P' ) IS NOT NULL
 GO
 */
 CREATE PROCEDURE [dbo].[SP_EDGARDATASETDIMENSIONS_INSERT]
-	@DimensionH nvarchar(32)
+	@DimensionH nvarchar(34)
 	,@Segments nvarchar(1024)
 	,@SegmentTruncated bit
 	,@DataSetId int
