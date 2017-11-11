@@ -11,6 +11,7 @@ namespace Analyst.Domain.Edgar.Datasets
     public class EdgarDatasetDimension:IEdgarDatasetFile
     {
         public static readonly int LENGHT_FIELD_DIMENSIONH = 34;
+        public const string FILE_NAME = "dim.tsv";
 
         [Key]
         public int Id { get; set; }

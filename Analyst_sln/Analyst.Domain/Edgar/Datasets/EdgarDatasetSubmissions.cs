@@ -33,7 +33,7 @@ namespace Analyst.Domain.Edgar.Datasets
     [Serializable]
     public class EdgarDatasetSubmissions:IEdgarDatasetFile
     {
-        public const string FILE_NAME = "sub";
+        public const string FILE_NAME = "sub.tsv";
 
         [Key]
         public int Id { get; set; }
@@ -107,6 +107,8 @@ namespace Analyst.Domain.Edgar.Datasets
         /// If the public float was computed, the number of terms in the summation.
         /// </summary>
         public int? FloatMems { get; set; }
+
+        public int LineNumber { get; set; }
 
         public string Key
         {

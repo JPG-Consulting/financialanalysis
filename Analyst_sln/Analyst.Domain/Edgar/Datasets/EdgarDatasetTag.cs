@@ -37,6 +37,9 @@ namespace Analyst.Domain.Edgar.Datasets
     /// </summary>
     public class EdgarDatasetTag: IEdgarDatasetFile
     {
+
+        public const string FILE_NAME = "tag.tsv";
+
         [Key]
         public int Id { get; set; }
 
@@ -60,7 +63,8 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// Compund Key = ADSH and Version
         /// </summary>
-        string IEdgarDatasetFile.Key
+        [NotMapped]
+        public string Key
         {
             get
             {

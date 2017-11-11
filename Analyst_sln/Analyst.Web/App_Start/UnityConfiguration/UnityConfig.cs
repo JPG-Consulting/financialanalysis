@@ -1,5 +1,6 @@
 ﻿using Analyst.DBAccess.Contexts;
 using Analyst.Services;
+using Analyst.Services.EdgarDatasetServices;
 using Analyst.Services.EdgarServices;
 using Microsoft.Practices.Unity;
 using System;
@@ -59,10 +60,10 @@ namespace Analyst.Web.App_Start.UnityConfiguration
             container.RegisterType<IEdgarDatasetService, EdgarDatasetService>();
             container.RegisterType<IAnalystRepository, AnalystRepository>();
             container.RegisterType<AnalystContext, AnalystContext>();
-            container.RegisterType<ISubmissionService, SubmissionsService>();
-            container.RegisterType<ITagService, TagService>();
-            container.RegisterType<INumService, NumService>();
-            container.RegisterType<IDimensionService, DimensionService>();
+            container.RegisterType<IEdgarDatasetSubmissionsService, EdgarDatasetSubmissionsService>();
+            container.RegisterType<IEdgarDatasetTagService, EdgarDatasetTagService>();
+            container.RegisterType<IEdgarDatasetNumService, EdgarDatasetNumService>();
+            container.RegisterType<IEdgarDatasetDimensionService, EdgarDatasetDimensionService>();
         }
     }
 }

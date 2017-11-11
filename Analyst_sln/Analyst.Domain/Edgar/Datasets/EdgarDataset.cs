@@ -12,8 +12,9 @@ namespace Analyst.Domain.Edgar.Datasets
     /// https://www.sec.gov/dera/data/financial-statement-and-notes-data-set.html
     /// </summary>
     [Serializable]
-    public class EdgarDataset:IEdgarDatasetFile
+    public class EdgarDataset:IEdgarEntity
     {
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }

@@ -14,7 +14,7 @@ namespace Analyst.Domain.Edgar
     /// Four digit code assigned by the Commission as of the filing date, 
     /// indicating the registrant's type of business.
     /// </summary>
-    public class SIC:IEdgarDatasetFile
+    public class SIC:IEdgarEntity
     {
         [Key]
         public int Id { get; set; }

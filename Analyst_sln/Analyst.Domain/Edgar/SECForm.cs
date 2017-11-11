@@ -10,9 +10,13 @@ using System.Threading.Tasks;
 namespace Analyst.Domain.Edgar
 {
     [Serializable]
-    public class SECForm:IEdgarDatasetFile
+    public class SECForm: IEdgarEntity
     {
         [Key]
+        public int Id { get; set; }
+
+        [Column(TypeName = "VARCHAR")]
+        [StringLength(20)]
         [Index(IsUnique =true)]
         public String Code { get; set; }
 

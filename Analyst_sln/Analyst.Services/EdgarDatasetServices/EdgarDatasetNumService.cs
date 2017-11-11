@@ -10,46 +10,31 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Globalization;
 
-namespace Analyst.Services.EdgarServices
+namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface INumService
+    public interface IEdgarDatasetNumService : IEdgarFileService<EdgarDatasetNumber>
     {
-        void ProcessNums(EdgarTaskState state, ConcurrentDictionary<string, EdgarDatasetSubmissions> subs, ConcurrentDictionary<string, EdgarDatasetTag> tags, ConcurrentDictionary<string, EdgarDatasetDimension> dims);
+        ConcurrentDictionary<string, EdgarDatasetDimension> Dimensions { get; set; }
+        ConcurrentDictionary<string, EdgarDatasetSubmissions> Submissions { get; set; }
+        ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
     }
-    public class NumService:INumService
+    public class EdgarDatasetNumService:EdgarFileService<EdgarDatasetNumber>, IEdgarDatasetNumService
     {
-        public void ProcessNums(EdgarTaskState state, ConcurrentDictionary<string, EdgarDatasetSubmissions> subs, ConcurrentDictionary<string, EdgarDatasetTag> tags, ConcurrentDictionary<string, EdgarDatasetDimension> dims)
+        
+        public ConcurrentDictionary<string, EdgarDatasetSubmissions> Submissions { get; set; }
+        public ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+        public ConcurrentDictionary<string, EdgarDatasetDimension> Dimensions { get; set; }
+
+        
+        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetNumber file)
         {
-            string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
-            string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\num.tsv";
-            string[] allLines = File.ReadAllLines(filepath);
-            string header = allLines[0];
-            state.Dataset.TotalNumbers = allLines.Length-1;
-            state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, "TotalNumbers");
-            IAnalystRepository repo = new AnalystRepository(new AnalystContext());
-            ProcessRange(state,subs,tags,dims, new Tuple<int,int>(1, allLines.Length), allLines, header, repo);
+            file.Submission = Submissions[file.ADSH];
+            file.Tag = Tags[file.TagCompoundKey];
+            file.Dimension = Dimensions[file.DimensionStr];
+            repo.AddNumber(dataset, file);
         }
 
-        private void ProcessRange(EdgarTaskState state, ConcurrentDictionary<string, EdgarDatasetSubmissions> subs, ConcurrentDictionary<string, EdgarDatasetTag> tags,ConcurrentDictionary<string,EdgarDatasetDimension> dims, Tuple<int, int> range, string[] allLines, string header, IAnalystRepository repo)
-        {
-            for (int i = range.Item1; i < range.Item2; i++)
-            {
-                string line = allLines[i];
-
-
-                EdgarDatasetNumber number = repo.GetNumber(state.Dataset.Id, i);
-                if (number == null)
-                {
-                    number = ParseNum(repo, header, line, i);
-                    number.Submission = subs[number.ADSH];
-                    number.Tag = tags[number.TagCompoundKey];
-                    number.Dimension = dims[number.DimensionStr];
-                    repo.AddNumber(state.Dataset, number);
-                }
-            }
-        }
-
-        private EdgarDatasetNumber ParseNum(IAnalystRepository repo, string header, string line,int linenumber)
+        public override EdgarDatasetNumber Parse(IAnalystRepository repo, string header, string line,int linenumber)
         {
             /*
             Ejemplo

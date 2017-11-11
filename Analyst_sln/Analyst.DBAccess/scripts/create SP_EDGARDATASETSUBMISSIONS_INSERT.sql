@@ -36,7 +36,8 @@ CREATE PROCEDURE dbo.SP_EDGARDATASSUBMISSIONS_INSERT
 	,@FloatDate datetime
 	,@FloatAxis nvarchar(max)
 	,@FloatMems int
-	,@Form_Code nvarchar(128)
+	,@LineNumber int
+	,@Form_id int
 	,@Registrant_Id int
 	,@EdgarDataset_Id int
 AS
@@ -53,7 +54,8 @@ BEGIN
 			   ,[FloatDate]
 			   ,[FloatAxis]
 			   ,[FloatMems]
-			   ,[Form_Code]
+			   ,[LineNumber]
+			   ,[Form_id]
 			   ,[Registrant_Id]
 			   ,[EdgarDataset_Id])
 		 VALUES
@@ -67,7 +69,8 @@ BEGIN
 				,@FloatDate
 				,@FloatAxis
 				,@FloatMems
-				,@Form_Code
+				,@LineNumber
+				,@Form_id
 				,@Registrant_Id
 				,@EdgarDataset_Id);
 		

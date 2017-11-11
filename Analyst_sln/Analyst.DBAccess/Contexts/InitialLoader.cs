@@ -483,7 +483,7 @@ namespace Analyst.DBAccess.Contexts
                 List<EdgarDataset> datasets = new List<EdgarDataset>();
                 string genericPath = baseurl + "/{0}q{1}_notes.zip";
                 int thisYear = DateTime.Now.Year;
-                for (int i = 2009; i <= thisYear - 1; i++)
+                for (int i = 2009; i <= thisYear; i++)
                 {
                     for (int j = 1; j <= 4; j++)
                     {

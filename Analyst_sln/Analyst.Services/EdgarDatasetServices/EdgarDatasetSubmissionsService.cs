@@ -10,45 +10,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 
-namespace Analyst.Services.EdgarServices
+namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface ISubmissionService:IEdgarFileService<EdgarDatasetSubmissions>
+    public interface IEdgarDatasetSubmissionsService : IEdgarFileService<EdgarDatasetSubmissions>
     {
-        void ProcessSubmissions(EdgarTaskState ds);
-        ConcurrentDictionary<string, EdgarDatasetSubmissions> GetSubmissions();
+
     }
-    public class SubmissionsService: EdgarFileService<EdgarDatasetSubmissions>, ISubmissionService
+    public class EdgarDatasetSubmissionsService: EdgarFileService<EdgarDatasetSubmissions>, IEdgarDatasetSubmissionsService
     {
 
-        public void ProcessSubmissions(EdgarTaskState state)
+        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetSubmissions file)
         {
-            try
-            {
-                string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
-                string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\sub.tsv";
-                string[] allLines = File.ReadAllLines(filepath);
-                string header = allLines[0];
-                state.Dataset.TotalSubmissions = allLines.Length-1;
-                state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, "TotalSubmissions");
-
-                using (IAnalystRepository repository = new AnalystRepository(new AnalystContext()))
-                {
-                    for(int i=1;i<allLines.Length;i++)
-                    {
-                        EdgarDatasetSubmissions sub = ParseSub(repository, header, allLines[i]);
-                        repository.AddSubmission(state.Dataset, sub);
-                    }
-                }
-                state.ResultOk = true;
-            }
-            catch (Exception ex)
-            {
-                state.ResultOk = false;
-                state.Exception= ex;
-            }
+            repo.AddSubmission(dataset, file);
         }
 
-        private EdgarDatasetSubmissions ParseSub(IAnalystRepository repository,string header, string line)
+        public override EdgarDatasetSubmissions Parse(IAnalystRepository repository,string header, string line, int linenumber)
         {
             EdgarDatasetSubmissions sub = new EdgarDatasetSubmissions();
 
@@ -89,6 +65,8 @@ namespace Analyst.Services.EdgarServices
             value = fields[fieldNames.IndexOf("floatmems")];
             sub.FloatMems = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
 
+            sub.LineNumber = linenumber;
+
             return sub;
         }
 
@@ -119,17 +97,7 @@ namespace Analyst.Services.EdgarServices
             }
             return r;
         }
+       
 
-        public ConcurrentDictionary<string, EdgarDatasetSubmissions> GetSubmissions()
-        {
-            ConcurrentDictionary<string, EdgarDatasetSubmissions> ret = new ConcurrentDictionary<string, EdgarDatasetSubmissions>();
-            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-            IList<EdgarDatasetSubmissions> subs = repository.Get<EdgarDatasetSubmissions>();
-            foreach(EdgarDatasetSubmissions sub in subs)
-            {
-                ret.TryAdd(sub.ADSH, sub);
-            }
-            return ret;
-        }
     }
 }

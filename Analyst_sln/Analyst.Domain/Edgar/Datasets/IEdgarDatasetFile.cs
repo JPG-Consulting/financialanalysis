@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Analyst.Domain.Edgar.Datasets
 {
-    public interface IEdgarDatasetFile
+    public interface IEdgarEntity
     {
+        int Id { get; set; }
         string Key { get; }
+    }
+
+    public interface IEdgarDatasetFile:IEdgarEntity
+    {
+
     }
 }

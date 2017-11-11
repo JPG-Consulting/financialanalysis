@@ -13,8 +13,10 @@ namespace Analyst.Domain.Edgar.Datasets
     /// one row per data point in the financial statements. 
     /// The source for the table is the "as filed" XBRL filer submissions.
     /// </summary>
-    public class EdgarDatasetNumber
+    public class EdgarDatasetNumber:IEdgarDatasetFile
     {
+        public const string FILE_NAME = "num.tsv";
+
         [Key]
         public int Id { get; set; }
 
@@ -160,5 +162,13 @@ namespace Analyst.Domain.Edgar.Datasets
 
         [Required]
         public int LineNumber { get; set; }
+
+        public string Key
+        {
+            get
+            {
+                return Id.ToString();//todo: pending to implement to right compound key
+            }
+        }
     }
 }

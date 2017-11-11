@@ -52,6 +52,7 @@
     <Compile Include="Edgar\Company.cs" />
     <Compile Include="Edgar\Datasets\EdgarDataset.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetDimension.cs" />
+    <Compile Include="Edgar\Datasets\EdgarDatasetException.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetNumber.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetSubmissions.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetTag.cs" />

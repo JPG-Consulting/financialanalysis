@@ -18,21 +18,15 @@ namespace Analyst.DBAccess.Contexts
     {
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
 
-        IList<T> Get<T>() where T:IEdgarDatasetFile;
-        //List<EdgarDataset> GetDatasets();
-        
+        IList<T> Get<T>() where T:IEdgarEntity;
+        int GetCount<T>() where T : IEdgarEntity;
         int GetDatasetsCount();
         int GetSECFormsCount();
-        //List<SECForm> GetSECForms();
-        //List<SIC> GetSICs();
         int GetSICCount();
         EdgarDataset GetDataset(int id);
         Registrant GetRegistrant(string cik);
         SECForm GetSECForm(string code);
         SIC GetSIC(string code);
-        //IList<EdgarDatasetSubmissions> GetSubmissions();
-        //IList<EdgarDatasetDimension> GetDimensions();
-        //IList<EdgarDatasetTag> GetTags();
         EdgarDatasetTag GetTag(string tag, string version);
         EdgarDatasetDimension GetDimension(string dimhash);
         EdgarDatasetNumber GetNumber(int datasetID, int lineNumber);
@@ -70,11 +64,6 @@ namespace Analyst.DBAccess.Contexts
         }
 
         #region Get methods
-        //public List<EdgarDataset> GetDatasets()
-        //{
-        //    return Context.DataSets.OrderBy(x=> x.Year).ToList();
-        //}
-
         public int GetDatasetsCount()
         {
             return Context.DataSets.Count();
@@ -84,16 +73,6 @@ namespace Analyst.DBAccess.Contexts
         {
             return Context.SECForms.Count();
         }
-
-        //public List<SECForm> GetSECForms()
-        //{
-        //    return Context.SECForms.ToList();
-        //}
-
-        //public List<SIC> GetSICs()
-        //{
-        //    return Context.SICs.ToList();
-        //}
 
         public int GetSICCount()
         {
@@ -130,22 +109,11 @@ namespace Analyst.DBAccess.Contexts
             }
             return form;
         }
-        //public IList<EdgarDatasetSubmissions> GetSubmissions()
-        //{
-        //    return Context.Submissions.ToList();
-        //}
 
         public IList<EdgarDatasetDimension> GetDimensions()
         {
             return Context.Dimensions.ToList();
         }
-
-
-        //public IList<EdgarDatasetTag> GetTags()
-        //{
-        //    return Context.Tags.ToList();
-        //}
-
 
         public EdgarDatasetDimension GetDimension(string dimhash)
         {
@@ -175,8 +143,16 @@ namespace Analyst.DBAccess.Contexts
             return Context.Database.SqlQuery<EdgarDatasetNumber>("exec SP_EDGARDATASETNUMBER_SELECT @dataSetID,@lineNumber", dsId, line).SingleOrDefault();
         }
 
+        public IList<TEntity> Get<TEntity>() where TEntity:IEdgarEntity
+        {
+            return GetQuery<TEntity>().ToList<TEntity>();
+        }
+        public int GetCount<TEntity>() where TEntity : IEdgarEntity
+        {
+            return GetQuery<TEntity>().Count();
+        }
 
-        public IList<TEntity> Get<TEntity>() where TEntity : IEdgarDatasetFile
+        private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
         {
             string key = typeof(TEntity).Name;
             IObjectContextAdapter adapter = (IObjectContextAdapter)Context;
@@ -188,8 +164,10 @@ namespace Analyst.DBAccess.Contexts
             string name = container.BaseEntitySets.Where((s) => s.ElementType.Name.Equals(key)).FirstOrDefault().Name;
             // 3. finally, we can create a basic query for this set
             ObjectQuery<TEntity> query = objectContext.CreateQuery<TEntity>("[" + name + "]");
-            return query.ToList<TEntity>();
+            return query;
         }
+
+        
 
         #endregion
 
@@ -238,13 +216,15 @@ namespace Analyst.DBAccess.Contexts
             if (sub.FloatAxis == null) FloatAxis.Value = DBNull.Value;
             SqlParameter FloatMems = new SqlParameter("@FloatMems", sub.FloatMems);
             if (sub.FloatMems == null) FloatMems.Value = DBNull.Value;
-            SqlParameter Form_Code = new SqlParameter("@Form_Code", sub.Form.Code);
+            SqlParameter lineNumber = new SqlParameter("@LineNumber", sub.LineNumber);
+            SqlParameter FormId = new SqlParameter("@Form_id", sub.Form.Id);
             SqlParameter Registrant_Id = new SqlParameter("@Registrant_Id", sub.Registrant.Id);
             SqlParameter EdgarDataset_Id = new SqlParameter("@EdgarDataset_Id", dataset.Id);
+            
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASSUBMISSIONS_INSERT "+
-                "@ADSH, @Period, @Detail, @XBRLInstance, @NumberOfCIKs, @AdditionalCIKs, @PubFloatUSD, @FloatDate, @FloatAxis, @FloatMems, @Form_Code, @Registrant_Id, @EdgarDataset_Id",
-                ADSH, Period, Detail, XBRLInstance, NumberOfCIKs, AdditionalCIKs, PubFloatUSD, FloatDate, FloatAxis, FloatMems, Form_Code, Registrant_Id, EdgarDataset_Id);
+                "@ADSH, @Period, @Detail, @XBRLInstance, @NumberOfCIKs, @AdditionalCIKs, @PubFloatUSD, @FloatDate, @FloatAxis, @FloatMems,@LineNumber, @Form_Id, @Registrant_Id, @EdgarDataset_Id",
+                ADSH, Period, Detail, XBRLInstance, NumberOfCIKs, AdditionalCIKs, PubFloatUSD, FloatDate, FloatAxis, FloatMems,lineNumber, FormId, Registrant_Id, EdgarDataset_Id);
         }
 
         public void AddTag(EdgarDataset dataset, EdgarDatasetTag tag)

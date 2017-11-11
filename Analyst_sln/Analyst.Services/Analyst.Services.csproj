@@ -42,15 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EdgarServices\DimensionService.cs" />
-    <Compile Include="EdgarServices\EdgarFileService.cs" />
+    <Compile Include="EdgarDatasetServices\EdgarDatasetDimensionService.cs" />
+    <Compile Include="EdgarDatasetServices\EdgarFileService.cs" />
     <Compile Include="EdgarServices\EdgarService.cs" />
-    <Compile Include="EdgarServices\EdgarDatasetService.cs" />
-    <Compile Include="EdgarServices\EdgarTaskState.cs" />
-    <Compile Include="EdgarServices\NumService.cs" />
+    <Compile Include="EdgarDatasetServices\EdgarDatasetService.cs" />
+    <Compile Include="EdgarDatasetServices\EdgarTaskState.cs" />
+    <Compile Include="EdgarDatasetServices\EdgarDatasetNumService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EdgarServices\SubmissionsService.cs" />
-    <Compile Include="EdgarServices\TagService.cs" />
+    <Compile Include="EdgarDatasetServices\EdgarDatasetSubmissionsService.cs" />
+    <Compile Include="EdgarDatasetServices\EdgarDatasetTagService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Analyst.DBAccess\Analyst.DBAccess.csproj">

@@ -1,6 +1,7 @@
 ﻿using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
 using Analyst.Services;
+using Analyst.Services.EdgarDatasetServices;
 using Analyst.Services.EdgarServices;
 using System;
 using System.Collections.Generic;

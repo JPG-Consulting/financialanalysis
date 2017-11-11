@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Analyst.DBAccess.Contexts;
 
-namespace Analyst.Services.EdgarServices
+namespace Analyst.Services.EdgarDatasetServices
 {
     public class EdgarTaskState
     {
