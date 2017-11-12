@@ -31,7 +31,7 @@ namespace Analyst.Domain.Edgar.Datasets
     /// subido por las registrants (compañias, mutual funds, etc)
     /// </summary>
     [Serializable]
-    public class EdgarDatasetSubmissions:IEdgarDatasetFile
+    public class EdgarDatasetSubmission:IEdgarDatasetFile
     {
         public const string FILE_NAME = "sub.tsv";
 
@@ -117,5 +117,9 @@ namespace Analyst.Domain.Edgar.Datasets
                 return ADSH;
             }
         }
+
+        public IList<EdgarDatasetNumber> Numbers { get; set; }
+
+        public IList<EdgarDatasetRendering> Renders { get; set; }
     }
 }

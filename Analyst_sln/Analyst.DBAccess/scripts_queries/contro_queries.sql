@@ -27,7 +27,7 @@ SELECT 'numbers' tabla, count(1) from dbo.EdgarDatasetNumbers where EdgarDataset
 ;
 ;
 select * from EdgarDatasets where year =2016 and Quarter= 4;
---select * from [dbo].[EdgarDatasetNumbers];
+--select * from [dbo].[EdgarDatasetNumbers] order by linenumber;
 
 /*
 --CHECKS

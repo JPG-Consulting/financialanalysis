@@ -31,7 +31,7 @@ namespace Analyst.Domain.Edgar.Datasets
         public virtual IList<EdgarDatasetTag> Tags { get; set; }
 
         //[ForeignKey("EdgarDataset_Id")]
-        public virtual IList<EdgarDatasetSubmissions> Submissions { get; set; }
+        public virtual IList<EdgarDatasetSubmission> Submissions { get; set; }
 
         public virtual IList<EdgarDatasetDimension> Dimensions { get; set; }
 
@@ -51,6 +51,12 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public int ProcessedDimensions { get; set; }
         public int TotalDimensions { get; set; }
+
+        public int ProcessedRenders { get; set; }
+        public int TotalRenders { get; set; }
+
+        public int ProcessedPresentations { get; set; }
+        public int TotalPresentations { get; set; }
 
         public string Key
         {

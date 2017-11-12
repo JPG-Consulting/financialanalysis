@@ -34,7 +34,7 @@ namespace Analyst.Services.EdgarDatasetServices
     public class EdgarDatasetTagService : EdgarFileService<EdgarDatasetTag>, IEdgarDatasetTagService
     {
         
-        public override EdgarDatasetTag Parse(IAnalystRepository repository,string header, string line, int linenumber)
+        public override EdgarDatasetTag Parse(IAnalystRepository repository,List<string> fieldNames, List<string> fields, int linenumber)
         {
             /*
             File content:
@@ -43,8 +43,7 @@ namespace Analyst.Services.EdgarDatasetServices
             AccountsPayableRelatedPartiesCurrent	us-gaap/2015	0	0	monetary	I	C	Accounts Payable, Related Parties, Current	Amount for accounts payable to related parties. Used to reflect the current portion of the liabilities (due within one year or within the normal operating cycle if longer).
             ...
             */
-            List<string> fieldNames = header.Split('\t').ToList();
-            List<string> fields = line.Split('\t').ToList();
+            
 
             string strTag = fields[fieldNames.IndexOf("tag")];
             string version = fields[fieldNames.IndexOf("version")];

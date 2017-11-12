@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    public class AnalystContext: DbContext
+    public class AnalystContext : DbContext
     {
 
         static AnalystContext()
@@ -27,8 +27,8 @@ namespace Analyst.DBAccess.Contexts
         {
         }
 
-        
-        
+
+
         public virtual DbSet<EdgarDataset> DataSets { get; set; }
 
         public virtual DbSet<SECForm> SECForms { get; set; }
@@ -37,11 +37,15 @@ namespace Analyst.DBAccess.Contexts
 
         public virtual DbSet<Registrant> Registrants { get; set; }
 
-        public virtual DbSet<EdgarDatasetSubmissions> Submissions { get; set; }
+        public virtual DbSet<EdgarDatasetSubmission> Submissions { get; set; }
         public virtual DbSet<EdgarDatasetTag> Tags { get; set; }
 
         public virtual DbSet<EdgarDatasetNumber> Numbers { get; set; }
         public virtual DbSet<EdgarDatasetDimension> Dimensions { get; set; }
+
+        public virtual DbSet<EdgarDatasetRendering> Renders { get; set; }
+    
+        public virtual DbSet<EdgarDatasetPresentation> Presentations { get; set; }
     }
     
 

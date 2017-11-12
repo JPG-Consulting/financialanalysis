@@ -20,13 +20,11 @@ namespace Analyst.Services.EdgarDatasetServices
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetDimension file)
         {
             if (file.Id == 0)
-                repo.AddDimension(dataset, file);
+                repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetDimension Parse(IAnalystRepository repository, string header, string line, int linenumber)
+        public override EdgarDatasetDimension Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
-            List<string> fieldNames = header.Split('\t').ToList();
-            List<string> fields = line.Split('\t').ToList();
             string dimhash = fields[fieldNames.IndexOf("dimhash")];
             EdgarDatasetDimension dim = repository.GetDimension(dimhash);
             if(dim == null)

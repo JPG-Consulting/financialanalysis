@@ -12,28 +12,25 @@ using System.Collections.Concurrent;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetSubmissionsService : IEdgarFileService<EdgarDatasetSubmissions>
+    public interface IEdgarDatasetSubmissionsService : IEdgarFileService<EdgarDatasetSubmission>
     {
 
     }
-    public class EdgarDatasetSubmissionsService: EdgarFileService<EdgarDatasetSubmissions>, IEdgarDatasetSubmissionsService
+    public class EdgarDatasetSubmissionsService: EdgarFileService<EdgarDatasetSubmission>, IEdgarDatasetSubmissionsService
     {
 
-        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetSubmissions file)
+        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetSubmission file)
         {
-            repo.AddSubmission(dataset, file);
+            repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetSubmissions Parse(IAnalystRepository repository,string header, string line, int linenumber)
+        public override EdgarDatasetSubmission Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
-            EdgarDatasetSubmissions sub = new EdgarDatasetSubmissions();
+            EdgarDatasetSubmission sub = new EdgarDatasetSubmission();
 
             //Example
             //adsh	cik	name	sic	countryba	stprba	cityba	zipba	bas1	bas2	baph	countryma	stprma	cityma	zipma	mas1	mas2	countryinc	stprinc	ein	former	changed	afs	wksi	fye	form	period	fy	fp	filed	accepted	prevrpt	detail	instance	nciks	aciks	pubfloatusd	floatdate	floataxis	floatmems
             //0000002178 - 16 - 000103    2178    ADAMS RESOURCES &ENERGY, INC.  5172    US TX  HOUSTON 77027   17 S.BRIAR HOLLOW LN.      7138813600  US TX  HOUSTON 77001   P O BOX 844     US DE  741753147   ADAMS RESOURCES &ENERGY INC    19920703    2 - ACC   0   1231    10 - Q    20160930    2016    Q3  20161109    2016 - 11 - 09 12:49:00.0   0   1   ae - 20160930.xml 1
-
-            List<string> fieldNames = header.Split('\t').ToList();
-            List<string> fields = line.Split('\t').ToList();
 
             sub.ADSH = fields[fieldNames.IndexOf("adsh")];
 
@@ -65,7 +62,7 @@ namespace Analyst.Services.EdgarDatasetServices
             value = fields[fieldNames.IndexOf("floatmems")];
             sub.FloatMems = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
 
-            sub.LineNumber = linenumber;
+            sub.LineNumber = lineNumber;
 
             return sub;
         }
@@ -93,7 +90,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 r.WKSI = fields[fieldNames.IndexOf("wksi")] == "1";
                 value = fields[fieldNames.IndexOf("fye")];
                 r.FYE = string.IsNullOrEmpty(value) ? null : value;
-                repository.AddRegistrant(r);
+                repository.Add(r);
             }
             return r;
         }

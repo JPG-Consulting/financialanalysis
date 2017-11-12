@@ -15,13 +15,13 @@ namespace Analyst.Services.EdgarDatasetServices
     public interface IEdgarDatasetNumService : IEdgarFileService<EdgarDatasetNumber>
     {
         ConcurrentDictionary<string, EdgarDatasetDimension> Dimensions { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetSubmissions> Submissions { get; set; }
+        ConcurrentDictionary<string, EdgarDatasetSubmission> Submissions { get; set; }
         ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
     }
     public class EdgarDatasetNumService:EdgarFileService<EdgarDatasetNumber>, IEdgarDatasetNumService
     {
         
-        public ConcurrentDictionary<string, EdgarDatasetSubmissions> Submissions { get; set; }
+        public ConcurrentDictionary<string, EdgarDatasetSubmission> Submissions { get; set; }
         public ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
         public ConcurrentDictionary<string, EdgarDatasetDimension> Dimensions { get; set; }
 
@@ -31,10 +31,10 @@ namespace Analyst.Services.EdgarDatasetServices
             file.Submission = Submissions[file.ADSH];
             file.Tag = Tags[file.TagCompoundKey];
             file.Dimension = Dimensions[file.DimensionStr];
-            repo.AddNumber(dataset, file);
+            repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetNumber Parse(IAnalystRepository repo, string header, string line,int linenumber)
+        public override EdgarDatasetNumber Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             /*
             Ejemplo
@@ -43,10 +43,8 @@ namespace Analyst.Services.EdgarDatasetServices
             0000846913-16-000146	WeightedAverageNumberOfSharesRestrictedStock	us-gaap/2015	20150930	1	shares	0x00000000	0	0.0000		0	0		0.0027400255	0.0	-3
             */
             EdgarDatasetNumber number = new EdgarDatasetNumber();
-            List<string> fieldNames = header.Split('\t').ToList();
-            List<string> fields = line.Split('\t').ToList();
             String value = "";
-            number.LineNumber = linenumber;
+            number.LineNumber = lineNumber;
             number.ADSH = fields[fieldNames.IndexOf("adsh")];
             number.TagStr = fields[fieldNames.IndexOf("tag")];
             number.Version = fields[fieldNames.IndexOf("version")];

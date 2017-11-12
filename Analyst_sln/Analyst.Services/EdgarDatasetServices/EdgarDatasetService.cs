@@ -25,13 +25,17 @@ namespace Analyst.Services.EdgarDatasetServices
         private IEdgarDatasetTagService tagService;
         private IEdgarDatasetNumService numService;
         private IEdgarDatasetDimensionService dimensionService;
-        public EdgarDatasetService(IAnalystRepository repository, IEdgarDatasetSubmissionsService submissionService, IEdgarDatasetTagService tagService, IEdgarDatasetNumService numService, IEdgarDatasetDimensionService dimensionService)
+        private IEdgarDatasetRenderingService renderingService;
+        private IEdgarDatasetPresentationService presentationService;
+        public EdgarDatasetService(IAnalystRepository repository, IEdgarDatasetSubmissionsService submissionService, IEdgarDatasetTagService tagService, IEdgarDatasetNumService numService, IEdgarDatasetDimensionService dimensionService, IEdgarDatasetRenderingService renderingService,IEdgarDatasetPresentationService presentationService)
         {
             this.repository = repository;
             this.submissionService = submissionService;
             this.tagService = tagService;
             this.numService = numService;
             this.dimensionService = dimensionService;
+            this.renderingService = renderingService;
+            this.presentationService = presentationService;
         }
 
         public IList<EdgarDataset> GetDatasets()
@@ -64,25 +68,73 @@ namespace Analyst.Services.EdgarDatasetServices
             Task t = new Task(() =>
             {
                 EdgarDataset ds = repository.GetDataset(id);
-                EdgarTaskState[] states = LoadNumRelatedData(ds, repository);
+                EdgarTaskState[] states = LoadCoreData(ds, repository);
                 ManageErrors(states);
-                LoadNums(ds, repository);
+                ConcurrentDictionary<string, EdgarDatasetTag> tags = tagService.GetAsConcurrent();
+                ConcurrentDictionary<string, EdgarDatasetSubmission> subs = submissionService.GetAsConcurrent();
+                states = LoadData(ds, repository,subs,tags);
+                ManageErrors(states);
+
+                //TODO: pending to process txt.tsv file (Plain Text)
+                //TODO: pending to process cal.tsv (Calculations)
             });
             t.Start();
             datasetsInProcess.TryAdd(id, t);
         }
-        private EdgarTaskState[] LoadNumRelatedData(EdgarDataset ds, IAnalystRepository repo)
+                
+        private EdgarTaskState[] LoadCoreData(EdgarDataset ds, IAnalystRepository repo)
         {
-            Dictionary<int, EdgarTaskState> states = new Dictionary<int, EdgarTaskState>();
-            states.Add(0, new EdgarTaskState(ds, repo));
-            states.Add(1, new EdgarTaskState(ds, repo));
-            states.Add(2, new EdgarTaskState(ds, repo));
-            Dictionary<int, Task> tasks = new Dictionary<int, Task>();
-            tasks.Add(0, Task.Factory.StartNew(() => submissionService.Process(states[0], false, EdgarDatasetSubmissions.FILE_NAME, "Submissions")));
-            tasks.Add(1,Task.Factory.StartNew(() => tagService.Process(states[1],true,EdgarDatasetTag.FILE_NAME,"Tags")));
-            tasks.Add(2,Task.Factory.StartNew(() => dimensionService.Process(states[2],true,EdgarDatasetDimension.FILE_NAME,"Dimensions")));
-            Task.WaitAll(tasks.Values.ToArray());
-            return states.Values.ToArray();
+            List<EdgarTaskState> states = new List<EdgarTaskState>();
+            EdgarTaskState stateSubs, stateTag, stateDim;
+            stateSubs = new EdgarTaskState(ds, repo);
+            stateTag = new EdgarTaskState(ds, repo);
+            stateDim = new EdgarTaskState(ds, repo);
+            states.Add(stateSubs);
+            states.Add(stateTag);
+            states.Add(stateDim);
+            IList<Task> tasks = new List<Task>();
+            tasks.Add(Task.Factory.StartNew(() => submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")));
+            //tasks.Add(Task.Factory.StartNew(() => tagService.Process(stateTag,true,EdgarDatasetTag.FILE_NAME,"Tags")));
+            //tasks.Add(Task.Factory.StartNew(() => dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")));
+            Task.WaitAll(tasks.ToArray());
+            return states.ToArray();
+        }
+
+        
+
+        private EdgarTaskState[] LoadData(EdgarDataset ds,IAnalystRepository repo,ConcurrentDictionary<string,EdgarDatasetSubmission> subs,ConcurrentDictionary<string,EdgarDatasetTag> tags)
+        {
+            List<EdgarTaskState> states = new List<EdgarTaskState>();
+            List<Task> tasks = new List<Task>();
+
+            //Process presentation file
+            EdgarTaskState statePre = new EdgarTaskState(ds, repo);
+            states.Add(statePre);
+            EdgarTaskState stateRen = new EdgarTaskState(ds, repo);
+            states.Add(stateRen);
+            tasks.Add(
+                Task.Factory.StartNew(
+                    () =>
+                        {
+                            renderingService.Subs = subs;
+                            renderingService.Process(stateRen, false, EdgarDatasetRendering.FILE_NAME, "Renders");
+                            presentationService.Subs = subs;
+                            presentationService.Tags = tags;
+                            presentationService.Renders = renderingService.GetAsConcurrent();
+                            presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");
+                        }
+            ));
+            /*
+            //Process num file
+            EdgarTaskState stateNum = new EdgarTaskState(ds, repo);
+            states.Add(stateNum);
+            numService.Submissions = subs;
+            numService.Tags = tags;
+            numService.Dimensions = dimensionService.GetAsConcurrent();
+            tasks.Add(Task.Factory.StartNew(() => numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers")));
+            */
+            Task.WaitAll(tasks.ToArray());
+            return states.ToArray();
         }
 
 
@@ -105,17 +157,6 @@ namespace Analyst.Services.EdgarDatasetServices
                 repository = new AnalystRepository(new AnalystContext());
                 throw edex;
             }
-        }
-
-        
-        private void LoadNums(EdgarDataset ds,IAnalystRepository repo)
-        {
-            EdgarTaskState state = new EdgarTaskState(ds, repo);
-            numService.Submissions = submissionService.GetAsConcurrent();
-            numService.Tags = tagService.GetAsConcurrent();
-            numService.Dimensions = dimensionService.GetAsConcurrent();
-
-            numService.Process(state,true,EdgarDatasetNumber.FILE_NAME,"Numbers");
         }
 
         public void Dispose()

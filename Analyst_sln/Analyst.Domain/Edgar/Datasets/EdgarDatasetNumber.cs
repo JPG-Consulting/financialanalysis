@@ -20,8 +20,9 @@ namespace Analyst.Domain.Edgar.Datasets
         [Key]
         public int Id { get; set; }
 
+        //TODO: Fix this relationship, it should be a collection of numbers in EdgarDatasetSubmissions
         [Required]
-        public EdgarDatasetSubmissions Submission { get; set; }
+        public EdgarDatasetSubmission Submission { get; set; }
 
         [Required]
         public EdgarDatasetTag Tag { get; set; }

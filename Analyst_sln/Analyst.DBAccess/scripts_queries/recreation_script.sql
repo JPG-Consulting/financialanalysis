@@ -4,8 +4,8 @@ SET @dbname = N'Analyr'
 
 use [master];
 IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = @dbname OR name = @dbname)))
-	PRINT 'Droping Analyst'
-	drop database Analyst
+	PRINT 'Droping Analyst';
+	drop database Analyst;
 go
 
 use [master];

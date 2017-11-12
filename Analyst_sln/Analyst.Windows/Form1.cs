@@ -26,13 +26,17 @@ namespace Analyst.Windows
             string pathSource = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes--original";
             string pathDestination = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes";
 
-            ProcessFile(pathSource, pathDestination,"sub", new string[] { strCIK },"adsh");
-            ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016" }, "version");
-            ProcessFile(pathSource, pathDestination, "num", new string[] { strCIK }, "adsh");
+            ProcessFile(pathSource, pathDestination, "dim", null);
+            ProcessFile(pathSource, pathDestination, "sub", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016", "invest/2013" }); //field version
+            ProcessFile(pathSource, pathDestination, "num", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "ren", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "pre", new string[] { strCIK }); //field adsh
+
             MessageBox.Show("Fin ok");
         }
 
-        private void ProcessFile(string pathSource, string pathDestination,string filename, string[] codesToFilter,string fieldReturn)
+        private void ProcessFile(string pathSource, string pathDestination,string filename, string[] codesToFilter)
         {
             string sourceFile = pathSource + "\\" + filename + ".tsv";
             string targetFile = pathDestination + "\\" + filename + ".tsv";
@@ -40,16 +44,18 @@ namespace Analyst.Windows
             StreamWriter srT = new StreamWriter(targetFile);
             string header = srS.ReadLine();
             srT.WriteLine(header);
-            List<String> filters = new List<string>(codesToFilter);
             while(!srS.EndOfStream)
             {
                 string line = srS.ReadLine();
-                for(int i =0;i<codesToFilter.Length;i++)
+                if (codesToFilter != null)
                 {
-                    if (line.Contains(codesToFilter[i]))
+                    for (int i = 0; i < codesToFilter.Length; i++)
                     {
-                        srT.WriteLine(line);
-                        break;
+                        if (line.Contains(codesToFilter[i]))
+                        {
+                            srT.WriteLine(line);
+                            break;
+                        }
                     }
                 }
                     

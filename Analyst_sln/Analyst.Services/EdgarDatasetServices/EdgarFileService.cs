@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Analyst.Services.EdgarDatasetServices
@@ -72,11 +73,13 @@ namespace Analyst.Services.EdgarDatasetServices
 
         private bool IsAlreadyProcessed(EdgarDataset ds, string fieldToUpdate)
         {
-            IAnalystRepository repo = new AnalystRepository(new AnalystContext());
-            int savedInDb = repo.GetCount<T>();
-            int processed = (int)ds.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(ds);
-            int total = (int)ds.GetType().GetProperty("Total" + fieldToUpdate).GetValue(ds);
-            return savedInDb == processed && processed == total && total != 0;
+            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            {
+                int savedInDb = repo.GetCount<T>();
+                int processed = (int)ds.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(ds);
+                int total = (int)ds.GetType().GetProperty("Total" + fieldToUpdate).GetValue(ds);
+                return savedInDb == processed && processed == total && total != 0;
+            }
         }
 
         protected void ProcessRange(EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header)
@@ -95,10 +98,12 @@ namespace Analyst.Services.EdgarDatasetServices
                 repo.ContextConfigurationAutoDetectChangesEnabled = false;
                 try
                 {
+                    List<string> fieldNames = header.Split('\t').ToList();
                     for (int i = range.Item1; i < range.Item2; i++)
                     {
                         string line = allLines[i];
-                        T file = Parse(repo, header, line, i);
+                        List<string> fields = line.Split('\t').ToList();
+                        T file = Parse(repo, fieldNames,fields, i);
                         Add(repo, state.Dataset, file);
                     }
                 }
@@ -110,7 +115,7 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public abstract void Add(IAnalystRepository repo, EdgarDataset dataset, T file);
-        public abstract T Parse(IAnalystRepository repository, string header, string line,int lineNumber);
+        public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber);
         
     }
 }

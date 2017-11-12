@@ -30,17 +30,17 @@ namespace Analyst.DBAccess.Contexts
         EdgarDatasetTag GetTag(string tag, string version);
         EdgarDatasetDimension GetDimension(string dimhash);
         EdgarDatasetNumber GetNumber(int datasetID, int lineNumber);
-        void AddSECForm(SECForm sECForm);
-        void AddSIC(SIC sic);
-        void AddRegistrant(Registrant r);
-        void AddDataset(EdgarDataset ds);
-        void AddSubmission(EdgarDataset ds, EdgarDatasetSubmissions sub);
+        void Add(SECForm sECForm);
+        void Add(SIC sic);
+        void Add(Registrant r);
+        void Add(EdgarDataset ds);
+        void Add(EdgarDataset ds, EdgarDatasetSubmission sub);
         void AddTag(EdgarDataset ds, EdgarDatasetTag tag);
-        
         void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag);
-        
-        void AddNumber(EdgarDataset dataset, EdgarDatasetNumber number);
-        void AddDimension(EdgarDataset dataset, EdgarDatasetDimension dim);
+        void Add(EdgarDataset dataset, EdgarDatasetNumber number);
+        void Add(EdgarDataset dataset, EdgarDatasetDimension dim);
+        void Add(EdgarDatasetRendering ren);
+        void Add(EdgarDatasetPresentation pre);
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
         
     }
@@ -172,32 +172,32 @@ namespace Analyst.DBAccess.Contexts
         #endregion
 
         #region Add methods
-        public void AddDataset(EdgarDataset ds)
+        public void Add(EdgarDataset ds)
         {
             Context.DataSets.Add(ds);
             Context.SaveChanges();
         }
 
-        public void AddSECForm(SECForm sf)
+        public void Add(SECForm sf)
         {
             Context.SECForms.Add(sf);
             Context.SaveChanges();
         }
 
-        public void AddSIC(SIC sic)
+        public void Add(SIC sic)
         {
             Context.SICs.Add(sic);
             Context.SaveChanges();
         }
 
 
-        public void AddRegistrant(Registrant r)
+        public void Add(Registrant r)
         {
             Context.Registrants.Add(r);
             Context.SaveChanges();
         }
 
-        public void AddSubmission(EdgarDataset dataset, EdgarDatasetSubmissions sub)
+        public void Add(EdgarDataset dataset, EdgarDatasetSubmission sub)
         {
 
             SqlParameter ADSH = new SqlParameter("@ADSH", sub.ADSH);
@@ -251,7 +251,7 @@ namespace Analyst.DBAccess.Contexts
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_RELATE @DataSetId, @TagId",dsid,tagid);
         }
 
-        public void AddNumber(EdgarDataset dataset, EdgarDatasetNumber number)
+        public void Add(EdgarDataset dataset, EdgarDatasetNumber number)
         {
             SqlParameter ddate = new SqlParameter("@DDate", number.DDate);
             SqlParameter countOfNumberOfQuarters = new SqlParameter("@CountOfNumberOfQuarters", number.CountOfNumberOfQuarters);
@@ -278,7 +278,7 @@ namespace Analyst.DBAccess.Contexts
             
         }
         
-        public void AddDimension(EdgarDataset dataset, EdgarDatasetDimension dim)
+        public void Add(EdgarDataset dataset, EdgarDatasetDimension dim)
         {
             SqlParameter DimensionH = new SqlParameter("@DimensionH",SqlDbType.NVarChar ,EdgarDatasetDimension.LENGHT_FIELD_DIMENSIONH);
             DimensionH.Value = dim.DimensionH;
@@ -294,6 +294,18 @@ namespace Analyst.DBAccess.Contexts
                 ;
 
         }
+
+        public void Add(EdgarDatasetRendering ren)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(EdgarDatasetPresentation pre)
+        {
+            throw new NotImplementedException();
+        }
+
+
         #endregion
 
         public void Dispose()
