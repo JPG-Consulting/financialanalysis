@@ -18,24 +18,6 @@ namespace Analyst.Windows
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string strCIK = "0001163302";
-            //int cik = 1163302;//UNITED STATES STEEL CORP
-            //string version = "0001163302-16-000148";
-            string pathSource = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes--original";
-            string pathDestination = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes";
-
-            ProcessFile(pathSource, pathDestination, "dim", null);
-            ProcessFile(pathSource, pathDestination, "sub", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016", "invest/2013" }); //field version
-            ProcessFile(pathSource, pathDestination, "num", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "ren", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "pre", new string[] { strCIK }); //field adsh
-
-            MessageBox.Show("Fin ok");
-        }
-
         private void ProcessFile(string pathSource, string pathDestination,string filename, string[] codesToFilter)
         {
             string sourceFile = pathSource + "\\" + filename + ".tsv";
@@ -58,6 +40,8 @@ namespace Analyst.Windows
                         }
                     }
                 }
+                else
+                    srT.WriteLine(line);
                     
             }
             srS.Close();
@@ -65,6 +49,22 @@ namespace Analyst.Windows
 
         }
 
-        
+        private void btnMockFiles_Click(object sender, EventArgs e)
+        {
+            string strCIK = "0001163302";
+            //int cik = 1163302;//UNITED STATES STEEL CORP
+            //string version = "0001163302-16-000148";
+            string pathSource = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes--original";
+            string pathDestination = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes";
+
+            ProcessFile(pathSource, pathDestination, "dim", null);
+            ProcessFile(pathSource, pathDestination, "sub", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016", "invest/2013" }); //field version
+            ProcessFile(pathSource, pathDestination, "num", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "ren", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "pre", new string[] { strCIK }); //field adsh
+
+            MessageBox.Show("Fin ok");
+        }
     }
 }

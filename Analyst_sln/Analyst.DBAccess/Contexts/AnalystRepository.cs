@@ -248,6 +248,7 @@ namespace Analyst.DBAccess.Contexts
             if (tag.Tlabel == null) tlabel.Value = DBNull.Value;
             SqlParameter doc = new SqlParameter("@Doc",tag.Doc);
             if (tag.Doc == null) doc.Value = DBNull.Value;
+
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_INSERT @DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc",dsid, tagparam, version, custom, abstracto, datatype, tlabel, doc);
         }
 

@@ -59,6 +59,7 @@
     <Compile Include="Edgar\Datasets\EdgarDatasetSubmission.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetTag.cs" />
     <Compile Include="Edgar\Datasets\IEdgarDatasetFile.cs" />
+    <Compile Include="Edgar\EdgarException.cs" />
     <Compile Include="Edgar\MutualFund.cs" />
     <Compile Include="Edgar\Registrant.cs" />
     <Compile Include="Edgar\SECForm.cs" />

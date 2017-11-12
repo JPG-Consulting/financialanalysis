@@ -42,7 +42,7 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public virtual IList<EdgarDataset> Datasets { get; set; }
 
-
+        [NotMapped]
         public int LineNumber { get; set; }
 
         public string Key

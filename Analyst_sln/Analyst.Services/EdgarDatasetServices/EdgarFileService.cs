@@ -59,7 +59,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 string field = "Total" + fieldToUpdate;
                 state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset,allLines.Length - 1);
                 state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset,field);
-                if (processInParallel)
+                if (processInParallel && allLines.Length > 1)
                 {
                     //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
 
@@ -82,7 +82,7 @@ namespace Analyst.Services.EdgarDatasetServices
             catch (Exception ex)
             {
                 state.ResultOk = false;
-                state.Exception = ex;
+                state.Exception = new EdgarDatasetException(fileToProcess,ex);
             }
         }
 

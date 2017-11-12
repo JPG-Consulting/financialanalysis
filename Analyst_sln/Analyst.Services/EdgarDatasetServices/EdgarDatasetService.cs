@@ -1,4 +1,5 @@
 ﻿using Analyst.DBAccess.Contexts;
+using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
 using System;
 using System.Collections.Concurrent;
@@ -95,7 +96,8 @@ namespace Analyst.Services.EdgarDatasetServices
             IList<Task> tasks = new List<Task>();
             tasks.Add(Task.Factory.StartNew(() => submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")));
             tasks.Add(Task.Factory.StartNew(() => tagService.Process(stateTag,true,EdgarDatasetTag.FILE_NAME,"Tags")));
-            tasks.Add(Task.Factory.StartNew(() => dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")));
+            tasks.Add(Task.Factory.StartNew(() => dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")
+            ));
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
@@ -140,13 +142,13 @@ namespace Analyst.Services.EdgarDatasetServices
 
         private void ManageErrors(EdgarTaskState[] states)
         {
-            EdgarDatasetException edex = null;
+            EdgarException edex = null;
             for (int i = 0; i < states.Length; i++)
             {
                 if (states[i].ResultOk.HasValue && !states[i].ResultOk.Value)
                 {
                     if (edex == null)
-                        edex = new EdgarDatasetException();
+                        edex = new EdgarException();
                     edex.AddInnerException(states[i].Exception);
                 }
             }

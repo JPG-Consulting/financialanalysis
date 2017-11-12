@@ -12,7 +12,7 @@ namespace Analyst.Services.EdgarDatasetServices
     {
         public bool? ResultOk { get; set; }
         public string Message { get; set; }
-        public Exception Exception { get; set; }
+        public EdgarDatasetException Exception { get; set; }
 
         private EdgarDataset ds;
         public EdgarDataset Dataset { get { return ds; } }

@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace Analyst.Domain.Edgar.Datasets
 {
-    public class EdgarDatasetException:ApplicationException
+    public class EdgarDatasetException:EdgarException
     {
-        private List<Exception> innerExceptions = new List<Exception>();
-        public List<Exception> InnerExceptions
+        private string file;
+        public string File { get; }
+        public EdgarDatasetException(string file,Exception ex):base("Process file '" + file + "' failed: " + ex.Message,ex)
         {
-            get { return innerExceptions; }
+            this.file = file;
         }
-        public void AddInnerException(Exception ex)
-        {
-            innerExceptions.Add(ex);
-        }
+        
 
     }
 }
