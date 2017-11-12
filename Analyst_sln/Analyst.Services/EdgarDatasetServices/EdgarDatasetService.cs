@@ -94,8 +94,8 @@ namespace Analyst.Services.EdgarDatasetServices
             states.Add(stateDim);
             IList<Task> tasks = new List<Task>();
             tasks.Add(Task.Factory.StartNew(() => submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")));
-            //tasks.Add(Task.Factory.StartNew(() => tagService.Process(stateTag,true,EdgarDatasetTag.FILE_NAME,"Tags")));
-            //tasks.Add(Task.Factory.StartNew(() => dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")));
+            tasks.Add(Task.Factory.StartNew(() => tagService.Process(stateTag,true,EdgarDatasetTag.FILE_NAME,"Tags")));
+            tasks.Add(Task.Factory.StartNew(() => dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")));
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
@@ -120,7 +120,7 @@ namespace Analyst.Services.EdgarDatasetServices
                             renderingService.Process(stateRen, false, EdgarDatasetRendering.FILE_NAME, "Renders");
                             presentationService.Subs = subs;
                             presentationService.Tags = tags;
-                            presentationService.Renders = renderingService.GetAsConcurrent();
+                            presentationService.Renders = renderingService.GetAsConcurrent("Submission");
                             presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");
                         }
             ));

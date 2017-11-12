@@ -10,7 +10,7 @@ namespace Analyst.Domain.Edgar.Datasets
 {
     public class EdgarDatasetPresentation : IEdgarDatasetFile
     {
-        public static readonly string FILE_NAME = "ren.tsv";
+        public static readonly string FILE_NAME = "pre.tsv";
 
         [Key]
         public int Id { get; set; }
@@ -83,5 +83,9 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public bool Negating { get; set; }
         public char RenderFile { get; set; }
+
+        [Required]
+        public EdgarDataset Dataset { get; set; }
+        public int LineNumber { get; set; }
     }
 }

@@ -84,6 +84,10 @@ namespace Analyst.Domain.Edgar.Datasets
 
         [Required]
         public EdgarDatasetSubmission Submission { get; set; }
+        [Required]
+        public virtual EdgarDataset Dataset { get; set; }
+
+        public int LineNumber { get; set; }
 
         public string Key
         {
@@ -92,5 +96,6 @@ namespace Analyst.Domain.Edgar.Datasets
                 return Submission.ADSH + Report.ToString();
             }
         }
+        
     }
 }

@@ -43,6 +43,8 @@ namespace Analyst.DBAccess.Contexts
             scripts.Add(GetTextScript("create SP_EDGARDATASETDIMENSIONS_RELATE.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETNUMBER_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETNUMBER_SELECT.sql"));
+            scripts.Add(GetTextScript("create SP_EDGARDATASETPRESENTATIONS_INSERT.sql"));
+            scripts.Add(GetTextScript("create SP_EDGARDATASETRENDERINGS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETSUBMISSIONS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETTAGS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETTAGS_RELATE.sql"));

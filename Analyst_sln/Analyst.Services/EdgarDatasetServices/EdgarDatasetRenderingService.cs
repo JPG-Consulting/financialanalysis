@@ -18,7 +18,7 @@ namespace Analyst.Services.EdgarDatasetServices
         public ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetRendering file)
         {
-            repo.Add(file);
+            repo.Add(dataset,file);
         }
 
         public override EdgarDatasetRendering Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
@@ -45,6 +45,7 @@ namespace Analyst.Services.EdgarDatasetServices
             value = fields[fieldNames.IndexOf("ultparentrpt")];
             if (!string.IsNullOrEmpty(value))
                 ren.UltimateParentReport = Convert.ToInt32(value);
+            ren.LineNumber = lineNumber;
             return ren;
         }
     }

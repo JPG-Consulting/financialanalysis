@@ -13,6 +13,7 @@ namespace Analyst.Services.EdgarDatasetServices
     public interface IEdgarFileService<T> where T : IEdgarDatasetFile
     {
         ConcurrentDictionary<string, T> GetAsConcurrent();
+        ConcurrentDictionary<string, T> GetAsConcurrent(string include);
         void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate);
     }
 
@@ -23,7 +24,21 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             ConcurrentDictionary<string, T> ret = new ConcurrentDictionary<string, T>();
             IAnalystRepository repository = new AnalystRepository(new AnalystContext());
+            
             IList<T> xs = repository.Get<T>();
+            foreach (T x in xs)
+            {
+                ret.TryAdd(x.Key, x);
+            }
+            return ret;
+        }
+
+        public ConcurrentDictionary<string, T> GetAsConcurrent(string include)
+        {
+            ConcurrentDictionary<string, T> ret = new ConcurrentDictionary<string, T>();
+            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
+
+            IList<T> xs = repository.Get<T>(include);
             foreach (T x in xs)
             {
                 ret.TryAdd(x.Key, x);

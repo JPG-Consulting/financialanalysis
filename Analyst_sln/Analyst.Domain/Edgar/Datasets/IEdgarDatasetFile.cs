@@ -14,6 +14,6 @@ namespace Analyst.Domain.Edgar.Datasets
 
     public interface IEdgarDatasetFile:IEdgarEntity
     {
-
+        int LineNumber { get; set; }
     }
 }

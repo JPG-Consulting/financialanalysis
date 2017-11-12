@@ -19,6 +19,7 @@ namespace Analyst.DBAccess.Contexts
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
 
         IList<T> Get<T>() where T:IEdgarEntity;
+        IList<T> Get<T>(string include) where T : IEdgarEntity;
         int GetCount<T>() where T : IEdgarEntity;
         int GetDatasetsCount();
         int GetSECFormsCount();
@@ -37,10 +38,11 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset ds, EdgarDatasetSubmission sub);
         void AddTag(EdgarDataset ds, EdgarDatasetTag tag);
         void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag);
+        
         void Add(EdgarDataset dataset, EdgarDatasetNumber number);
         void Add(EdgarDataset dataset, EdgarDatasetDimension dim);
-        void Add(EdgarDatasetRendering ren);
-        void Add(EdgarDatasetPresentation pre);
+        void Add(EdgarDataset dataset,EdgarDatasetRendering ren);
+        void Add(EdgarDataset ds, EdgarDatasetPresentation pre);
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
         
     }
@@ -150,6 +152,11 @@ namespace Analyst.DBAccess.Contexts
         public int GetCount<TEntity>() where TEntity : IEdgarEntity
         {
             return GetQuery<TEntity>().Count();
+        }
+
+        public IList<T> Get<T>(string include) where T : IEdgarEntity
+        {
+            return GetQuery<T>().Include(include).ToList();
         }
 
         private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
@@ -295,14 +302,46 @@ namespace Analyst.DBAccess.Contexts
 
         }
 
-        public void Add(EdgarDatasetRendering ren)
+        public void Add(EdgarDataset ds,EdgarDatasetRendering ren)
         {
-            throw new NotImplementedException();
+            SqlParameter Report = new SqlParameter("@Report", ren.Report);
+            SqlParameter MenuCategory = new SqlParameter("@MenuCategory", ren.MenuCategory);
+            SqlParameter ShortName = new SqlParameter("@ShortName", ren.ShortName);
+            SqlParameter LongName = new SqlParameter("@LongName", ren.LongName);
+            SqlParameter Roleuri = new SqlParameter("@Roleuri", ren.Roleuri);
+            SqlParameter ParentRoleuri = new SqlParameter("@ParentRoleuri", ren.ParentRoleuri);
+            SqlParameter ParentReport = new SqlParameter("@ParentReport", ren.ParentReport);
+            if (ren.ParentReport == null)
+                ParentReport.Value = DBNull.Value;
+            SqlParameter UltimateParentReport = new SqlParameter("@UltimateParentReport", ren.UltimateParentReport);
+            if (ren.UltimateParentReport == null)
+                UltimateParentReport.Value = DBNull.Value;
+            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", ren.Submission.Id);
+            SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
+            SqlParameter lineNumber = new SqlParameter("@LineNumber", ren.LineNumber);
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETRENDERINGS_INSERT " +
+                "@Report, @MenuCategory, @ShortName, @LongName, @Roleuri, @ParentRoleuri, @ParentReport, @UltimateParentReport, @Submission_Id, @DataSetId, @LineNumber",
+                Report, MenuCategory, ShortName, LongName, Roleuri, ParentRoleuri, ParentReport, UltimateParentReport, Submission_Id, DataSetId, lineNumber
+                );
         }
 
-        public void Add(EdgarDatasetPresentation pre)
+        public void Add(EdgarDataset ds,EdgarDatasetPresentation pre)
         {
-            throw new NotImplementedException();
+            SqlParameter ReportNumber = new SqlParameter("@ReportNumber", pre.ReportNumber);
+            SqlParameter Line = new SqlParameter("@Line", pre.Line);
+            SqlParameter FinancialStatement = new SqlParameter("@FinancialStatement", pre.FinancialStatement);
+            SqlParameter Inpth = new SqlParameter("@Inpth", pre.Inpth);
+            SqlParameter prole = new SqlParameter("@prole", pre.prole);
+            SqlParameter PreferredLabel = new SqlParameter("@PreferredLabel", pre.PreferredLabel);
+            SqlParameter Negating = new SqlParameter("@Negating", pre.Negating);
+            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", pre.Submission.Id);
+            SqlParameter Tag_Id = new SqlParameter("@Tag_Id", pre.Tag.Id);
+            SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
+            SqlParameter LineNumber = new SqlParameter("@LineNumber", pre.LineNumber);
+
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
+                "@ReportNumber, @Line, @FinancialStatement, @Inpth, @prole, @PreferredLabel, @Negating, @Submission_Id, @Tag_Id, @DataSetId, @LineNumber",
+                ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, Submission_Id, Tag_Id, DataSetId, LineNumber);
         }
 
 

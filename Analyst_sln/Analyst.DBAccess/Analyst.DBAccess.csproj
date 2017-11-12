@@ -75,9 +75,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\create SP_EDGARDATASETNUMBER_SELECT.sql" />
+    <Content Include="scripts\create SP_EDGARDATASETPRESENTATIONS_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="scripts\create SP_EDGARDATASETSUBMISSIONS_INSERT.sql" />
+    <Content Include="scripts\create SP_EDGARDATASETRENDERINGS_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="scripts_queries\01st approach to balance.sql" />
-    <Content Include="scripts_queries\contro_queries.sql" />
+    <Content Include="scripts_queries\control_queries.sql" />
     <Content Include="scripts_queries\recreation_script.sql" />
     <Content Include="scripts\create SP_EDGARDATASETTAGS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -87,6 +93,9 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(ProjectDir)\scripts\*.sql E:\_analyst_db\scripts</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
