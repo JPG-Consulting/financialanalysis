@@ -27,6 +27,25 @@ namespace Analyst.DBAccess.Contexts
         {
         }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+
+            //https://stackoverflow.com/questions/5559043/entity-framework-code-first-two-foreign-keys-from-same-table
+            modelBuilder.Entity<EdgarDatasetCalculation>()
+                .HasRequired(calc => calc.ParentTag)
+                .WithMany(tag => tag.ParentCalculations)
+                .HasForeignKey(calc => calc.ParentTagId)
+                .WillCascadeOnDelete(false)
+                ;
+
+            modelBuilder.Entity<EdgarDatasetCalculation>()
+                .HasRequired(calc => calc.ChildTag)
+                .WithMany(tag => tag.ChildCalculations)
+                .HasForeignKey(calc => calc.ChildTagId)
+                .WillCascadeOnDelete(false);
+        }
 
 
         public virtual DbSet<EdgarDataset> DataSets { get; set; }
@@ -46,6 +65,10 @@ namespace Analyst.DBAccess.Contexts
         public virtual DbSet<EdgarDatasetRendering> Renders { get; set; }
     
         public virtual DbSet<EdgarDatasetPresentation> Presentations { get; set; }
+
+        public virtual DbSet<EdgarDatasetCalculation> Calculations { get; set; }
+
+        public virtual DbSet<EdgarDatasetText> Texts { get; set; }
     }
     
 

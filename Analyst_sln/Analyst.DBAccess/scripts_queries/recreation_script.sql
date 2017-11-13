@@ -1,14 +1,20 @@
 
 DECLARE @dbname nvarchar(128)
-SET @dbname = N'Analyr'
+SET @dbname = N'Analyst'
 
 use [master];
 IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = @dbname OR name = @dbname)))
-	PRINT 'Droping Analyst';
-	drop database Analyst;
-go
+	begin
+		PRINT 'Droping Analyst';
+		drop database Analyst;
+	end
+else
+	begin
+		print 'analyst does not exist';
+	end
 
 use [master];
+print 'Creating analyst'
 create database Analyst
 ON   
 	( NAME = Analyst_dat,  
@@ -37,22 +43,12 @@ go
 
 use [Analyst];
 go
+print 'creating user in DB Analyst'
 create user analyst_usr for login analyst_usr;
 go
 
 use [Analyst];
+print 'assigning db_owner to analyst_usr'
 EXEC sp_addrolemember N'db_owner', N'analyst_usr'
 
-----------------------------------------------------------------------
-/*
---no funciona porque tiene el indice
-use [Analyst];
-ALTER TABLE [dbo].[EdgarDatasetTags] ALTER COLUMN [Tag] VARCHAR(256) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL
-*/
-----------------------------------------------------------------------
-
-/*
-select count(1) from secforms; --son 144, mas los 7 duplicados son los 151 que deberian ser
-select count(1) from sics;
-
-*/
+print 'end'

@@ -127,6 +127,10 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public List<EdgarDataset> Datasets { get; set; }
 
-        
+
+        public virtual IList<EdgarDatasetCalculation> ParentCalculations { get; set; }
+
+        public virtual IList<EdgarDatasetCalculation> ChildCalculations { get; set; }
+
     }
 }

@@ -29,6 +29,7 @@ namespace Analyst.DBAccess.Contexts
         SECForm GetSECForm(string code);
         SIC GetSIC(string code);
         EdgarDatasetTag GetTag(string tag, string version);
+        
         EdgarDatasetDimension GetDimension(string dimhash);
         EdgarDatasetNumber GetNumber(int datasetID, int lineNumber);
         void Add(SECForm sECForm);
@@ -38,11 +39,11 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset ds, EdgarDatasetSubmission sub);
         void AddTag(EdgarDataset ds, EdgarDatasetTag tag);
         void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag);
-        
         void Add(EdgarDataset dataset, EdgarDatasetNumber number);
         void Add(EdgarDataset dataset, EdgarDatasetDimension dim);
         void Add(EdgarDataset dataset,EdgarDatasetRendering ren);
         void Add(EdgarDataset ds, EdgarDatasetPresentation pre);
+        void Add(EdgarDataset dataset, EdgarDatasetCalculation file);
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
         
     }
@@ -345,6 +346,10 @@ namespace Analyst.DBAccess.Contexts
                 ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, Submission_Id, Tag_Id, DataSetId, LineNumber);
         }
 
+        public void Add(EdgarDataset dataset, EdgarDatasetCalculation file)
+        {
+
+        }
 
         #endregion
 
