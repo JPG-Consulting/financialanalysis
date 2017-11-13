@@ -13,4 +13,5 @@ where cik = 1163302
 ;
 
 
-select * from EdgarDatasetNumbers ;
+select * from EdgarDatasetPresentations;
+select * from EdgarDatasetRenderings;

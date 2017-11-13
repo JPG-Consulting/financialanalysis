@@ -58,6 +58,7 @@ namespace Analyst.Services.EdgarDatasetServices
             if (datasetsInProcess.ContainsKey(id))
             {
                 Task t = datasetsInProcess[id];
+                //TODO: how to control that task finished ok and there is no need to rerun?
                 if (t.Status != TaskStatus.Running)
                 {
                     t.Dispose();
@@ -131,7 +132,7 @@ namespace Analyst.Services.EdgarDatasetServices
                             presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");
                         }
             ));
-            /*
+            
             //Process num file
             EdgarTaskState stateNum = new EdgarTaskState(ds, repo);
             states.Add(stateNum);
@@ -139,7 +140,7 @@ namespace Analyst.Services.EdgarDatasetServices
             numService.Tags = tags;
             numService.Dimensions = dimensionService.GetAsConcurrent();
             tasks.Add(Task.Factory.StartNew(() => numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers")));
-            */
+
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }

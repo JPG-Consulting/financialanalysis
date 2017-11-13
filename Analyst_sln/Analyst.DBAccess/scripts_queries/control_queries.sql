@@ -38,6 +38,8 @@ select id,
 	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '%' pre
 	,cast(iif(totalnumbers != 0 ,cast(processednumbers as float)/cast(totalnumbers as float) *100,0)as nvarchar) + '%' nums
 from EdgarDatasets where year =2016 and Quarter= 4;
+
+
 --select * from [dbo].[EdgarDatasetNumbers] order by linenumber;
 
 /*
