@@ -10,6 +10,7 @@ select * from secforms where code ='10-Q/A';
 select * from secforms where code like '10%';
 */
 
+/*
 --estado de la ejecucion
 select 'registrants' tabla, count(1) cant from registrants
 union
@@ -25,8 +26,18 @@ select 'dimensions related' tabla, count(1) from [dbo].[EdgarDatasetDimensionEdg
 UNION
 SELECT 'numbers' tabla, count(1) from dbo.EdgarDatasetNumbers where EdgarDataset_Id = 201604
 ;
-;
-select * from EdgarDatasets where year =2016 and Quarter= 4;
+*/
+
+--select * from EdgarDatasets where year =2016 and Quarter= 4;
+
+select id,
+	cast(iif(totalsubmissions != 0, cast(processedsubmissions as float)/cast(totalsubmissions as float) *100,0) as nvarchar) + '%' subs
+	,cast(iif(TotalTags != 0, cast(ProcessedTags as float)/cast(TotalTags as float)*100,0) as nvarchar) + '%' tags
+	,cast(iif(TotalDimensions != 0 ,cast(ProcessedDimensions as float)/cast(TotalDimensions as float) *100,0)as nvarchar) + '%' dims
+	,cast(iif(totalrenders != 0 ,cast(processedrenders as float)/cast(totalrenders as float) *100,0)as nvarchar) + '%' ren
+	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '%' pre
+	,cast(iif(totalnumbers != 0 ,cast(processednumbers as float)/cast(totalnumbers as float) *100,0)as nvarchar) + '%' nums
+from EdgarDatasets where year =2016 and Quarter= 4;
 --select * from [dbo].[EdgarDatasetNumbers] order by linenumber;
 
 /*
@@ -72,5 +83,8 @@ update EdgarDatasets set
       ,[ProcessedDimensions] = 0
       ,[TotalDimensions] = 0
 	where year =2016 and Quarter= 4;
+
+update EdgarDatasets set [TotalTags] = 557638 where year =2016 and Quarter= 4;
+
 */
 

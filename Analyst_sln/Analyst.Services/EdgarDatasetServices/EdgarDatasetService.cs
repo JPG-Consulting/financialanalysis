@@ -59,9 +59,14 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 Task t = datasetsInProcess[id];
                 if (t.Status != TaskStatus.Running)
+                {
                     t.Dispose();
+                    datasetsInProcess[id] = null;
+                    Run(id);
+                }
             }
-            Run(id);
+            else
+                Run(id);
         }
 
         private void Run(int id)

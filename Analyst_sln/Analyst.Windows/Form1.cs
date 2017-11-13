@@ -59,7 +59,8 @@ namespace Analyst.Windows
 
             ProcessFile(pathSource, pathDestination, "dim", null);
             ProcessFile(pathSource, pathDestination, "sub", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016", "invest/2013" }); //field version
+            //ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016", "invest/2013" }); //field version
+            ProcessFile(pathSource, pathDestination, "tag", null);
             ProcessFile(pathSource, pathDestination, "num", new string[] { strCIK }); //field adsh
             ProcessFile(pathSource, pathDestination, "ren", new string[] { strCIK }); //field adsh
             ProcessFile(pathSource, pathDestination, "pre", new string[] { strCIK }); //field adsh
