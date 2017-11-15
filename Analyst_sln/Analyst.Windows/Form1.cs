@@ -57,15 +57,24 @@ namespace Analyst.Windows
             string pathSource = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes--original";
             string pathDestination = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes";
 
+            ProcessFile(pathSource, pathDestination, "cal", new string[] { strCIK }); //field adsh
             ProcessFile(pathSource, pathDestination, "dim", null);
+            ProcessFile(pathSource, pathDestination, "num", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "pre", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "ren", new string[] { strCIK }); //field adsh
             ProcessFile(pathSource, pathDestination, "sub", new string[] { strCIK }); //field adsh
             //ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016", "invest/2013" }); //field version
             ProcessFile(pathSource, pathDestination, "tag", null);
-            ProcessFile(pathSource, pathDestination, "num", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "ren", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "pre", new string[] { strCIK }); //field adsh
+            ProcessFile(pathSource, pathDestination, "txt", new string[] { strCIK });
+
+
 
             MessageBox.Show("Fin ok");
+        }
+
+        private void btnLoadDataset_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

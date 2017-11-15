@@ -45,16 +45,17 @@ AS
 
 BEGIN
 	
-    BEGIN TRANSACTION;
+    
 
-		if(
-			not exists(
-				select 1
-				from [dbo].[EdgarDatasetDimensionEdgarDatasets] 
-				where [EdgarDatasetDimension_Id] = @DimId and [EdgarDataset_Id] =@DataSetId
-			)
-		) 
-		begin
+	if(
+		not exists(
+			select 1
+			from [dbo].[EdgarDatasetDimensionEdgarDatasets] 
+			where [EdgarDatasetDimension_Id] = @DimId and [EdgarDataset_Id] =@DataSetId
+		)
+	) 
+	begin
+		BEGIN TRANSACTION;
 			INSERT INTO [dbo].[EdgarDatasetDimensionEdgarDatasets]
 				   ([EdgarDatasetDimension_Id]
 				   ,[EdgarDataset_Id])
@@ -66,9 +67,8 @@ BEGIN
 			UPDATE DBO.EdgarDatasets 
 				SET ProcessedDimensions = ProcessedDimensions + 1 
 				WHERE ID= @DataSetId;
-		end
-
-	COMMIT TRANSACTION;
+		COMMIT TRANSACTION;
+	end
 
 END
 --GO

@@ -12,6 +12,8 @@ namespace Analyst.Domain.Edgar.Datasets
     /// </summary>
     public class EdgarDatasetText : IEdgarDatasetFile
     {
+        public static readonly string FILE_NAME = "txt.tsv";
+
         public int Id { get; set; }
 
         public string Key
@@ -39,6 +41,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         [Required]
         public int Qtrs { get; set; }
+
         /// <summary>
         /// A positive integer to distinguish different reported facts that otherwise would have the same primary key.  For most purposes, data with iprx greater than 1 are not needed.  The priority for the fact based on higher precision, closeness of the end date to a month end, and closeness of the duration to a multiple of three months. See fields dcml, durp and datp below.
         /// </summary>
@@ -124,5 +127,8 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         [StringLength(2048)]
         public string Value { get; set; }
+
+        [Required]
+        public EdgarDataset Dataset { get; set; }
     }
 }

@@ -39,18 +39,19 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETRENDERINGS_INSERT
 	,@LineNumber int
 AS
 BEGIN
-	Begin transaction;
-		if(
-			not exists(
-				select 1
-				from [dbo].[EdgarDatasetRenderings] 
-				where 
-					[Dataset_Id] =@DataSetId 
-					and report = @report
-					and linenumber = @linenumber
-			)
-		) 
-		BEGIN
+	
+	if(
+		not exists(
+			select 1
+			from [dbo].[EdgarDatasetRenderings] 
+			where 
+				[Dataset_Id] =@DataSetId 
+				and report = @report
+				and linenumber = @linenumber
+		)
+	) 
+	BEGIN
+		Begin transaction;
 			INSERT INTO [dbo].[EdgarDatasetRenderings]
 				   ([Report]
 				   ,[MenuCategory]
@@ -83,8 +84,7 @@ BEGIN
 			SET ProcessedRenders = ProcessedRenders + 1 
 			WHERE ID= @DataSetId
 			;
-		END	
-		
-	COMMIT TRANSACTION;
+		COMMIT TRANSACTION;
+	END	
 END
 --GO

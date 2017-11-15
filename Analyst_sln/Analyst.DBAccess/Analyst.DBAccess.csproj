@@ -69,12 +69,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\create SP_EDGARDATASETCALC_INSERT.sql" />
     <Content Include="scripts\create SP_EDGARDATASETDIMENSIONS_INSERT.sql" />
     <Content Include="scripts\create SP_EDGARDATASETDIMENSIONS_RELATE.sql" />
+    <Content Include="scripts\create SP_EDGARDATASETTEXT_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="scripts\create SP_EDGARDATASETNUMBER_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="scripts\create SP_EDGARDATASETNUMBER_SELECT.sql" />
     <Content Include="scripts\create SP_EDGARDATASETPRESENTATIONS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

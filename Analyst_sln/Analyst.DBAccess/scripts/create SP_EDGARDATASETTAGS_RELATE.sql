@@ -30,16 +30,19 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETTAGS_RELATE
 	,@TagId int
 AS
 BEGIN
-	Begin transaction;
-		if(
-			not exists(
-				select 1
-				from [dbo].[EdgarDatasetTagEdgarDatasets] 
-				where [EdgarDatasetTag_Id] = @tagId and [EdgarDataset_Id] =@DataSetId
-			)
-		) 
-		BEGIN
-			INSERT INTO [dbo].[EdgarDatasetTagEdgarDatasets]
+	if(
+		not exists(
+			select 1
+			--from [dbo].[EdgarDatasetTagEdgarDatasets] 
+			from [dbo].[EdgarDatasetEdgarDatasetTags]
+			where [EdgarDatasetTag_Id] = @tagId and [EdgarDataset_Id] =@DataSetId
+		)
+	) 
+	BEGIN
+		Begin transaction;
+		
+			--INSERT INTO [dbo].[EdgarDatasetTagEdgarDatasets]
+			INSERT INTO [dbo].[EdgarDatasetEdgarDatasetTags]
 					([EdgarDatasetTag_Id],[EdgarDataset_Id])
 				VALUES
 					(@tagId,@DataSetId)
@@ -49,8 +52,7 @@ BEGIN
 			SET ProcessedTags = ProcessedTags + 1 
 			WHERE ID= @DataSetId
 			;
-		END	
-		
-	COMMIT TRANSACTION;
+		COMMIT TRANSACTION;
+	END	
 END
 --GO

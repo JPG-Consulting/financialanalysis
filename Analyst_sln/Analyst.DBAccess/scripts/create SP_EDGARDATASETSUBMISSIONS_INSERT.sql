@@ -42,6 +42,7 @@ CREATE PROCEDURE dbo.SP_EDGARDATASSUBMISSIONS_INSERT
 	,@EdgarDataset_Id int
 AS
 BEGIN
+
 	Begin transaction;
 		INSERT INTO [dbo].[EdgarDatasetSubmissions]
 			   ([ADSH]

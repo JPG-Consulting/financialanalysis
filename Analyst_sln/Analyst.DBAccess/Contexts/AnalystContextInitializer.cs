@@ -39,15 +39,17 @@ namespace Analyst.DBAccess.Contexts
             context.Database.ExecuteSqlCommand("CREATE UNIQUE INDEX IX_TagVersion ON EdgarDatasetTags (Tag, Version)");
 
             List<string> scripts = new List<string>();
+            scripts.Add(GetTextScript("create SP_EDGARDATASETCALC_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETDIMENSIONS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETDIMENSIONS_RELATE.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETNUMBER_INSERT.sql"));
-            scripts.Add(GetTextScript("create SP_EDGARDATASETNUMBER_SELECT.sql"));
+            //scripts.Add(GetTextScript("create SP_EDGARDATASETNUMBER_SELECT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETPRESENTATIONS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETRENDERINGS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETSUBMISSIONS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETTAGS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETTAGS_RELATE.sql"));
+            scripts.Add(GetTextScript("create SP_EDGARDATASETTEXT_INSERT.sql"));
             foreach(string s in scripts)
                 context.Database.ExecuteSqlCommand(s);
             

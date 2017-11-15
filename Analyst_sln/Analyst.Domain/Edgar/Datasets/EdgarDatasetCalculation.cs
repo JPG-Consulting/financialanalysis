@@ -9,6 +9,8 @@ namespace Analyst.Domain.Edgar.Datasets
 {
     public class EdgarDatasetCalculation : IEdgarDatasetFile
     {
+        public static readonly string FILE_NAME = "cal.tsv";
+
         public int Id { get; set; }
         
         public int LineNumber { get; set; }

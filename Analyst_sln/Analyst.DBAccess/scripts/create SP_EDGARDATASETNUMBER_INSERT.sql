@@ -18,43 +18,55 @@
 AS
 BEGIN
 
-	Begin transaction;
-		INSERT INTO [dbo].[EdgarDatasetNumbers]
-           ([DDate]
-           ,[CountOfNumberOfQuarters]
-           ,[IPRX]
-           ,[Value]
-           ,[FootNote]
-           ,[FootLength]
-           ,[NumberOfDimensions]
-           ,[CoRegistrant]
-           ,[durp]
-           ,[datp]
-           ,[Decimals]
-           ,[Dimension_Id]
-           ,[Submission_Id]
-           ,[Tag_Id]
-		   ,[LineNumber]
-		   ,[EdgarDataset_Id])
-		 VALUES
-		 (
-			@DDate
-			,@CountOfNumberOfQuarters
-			,@IPRX
-			,@Value
-			,@FootNote
-			,@FootLength
-			,@NumberOfDimensions
-			,@CoRegistrant
-			,@durp
-			,@datp
-			,@Decimals
-			,@Dimension_Id
-			,@Submission_Id
-			,@Tag_Id
-			,@LineNumber
-			,@EdgarDataset_Id);
+	if(
+		not exists(
+			select 1
+			from [dbo].[EdgarDatasetNumbers] 
+			where [Dimension_Id] = @Dimension_Id
+			   and [Submission_Id]= @Submission_Id
+			   and [Tag_Id]=@Tag_Id
+			   and [EdgarDataset_Id]=@EdgarDataset_Id
+		)
+	) 
+	begin
+		Begin transaction;
+			INSERT INTO [dbo].[EdgarDatasetNumbers]
+			   ([DDate]
+			   ,[CountOfNumberOfQuarters]
+			   ,[IPRX]
+			   ,[Value]
+			   ,[FootNote]
+			   ,[FootLength]
+			   ,[NumberOfDimensions]
+			   ,[CoRegistrant]
+			   ,[durp]
+			   ,[datp]
+			   ,[Decimals]
+			   ,[Dimension_Id]
+			   ,[Submission_Id]
+			   ,[Tag_Id]
+			   ,[LineNumber]
+			   ,[EdgarDataset_Id])
+			 VALUES
+			 (
+				@DDate
+				,@CountOfNumberOfQuarters
+				,@IPRX
+				,@Value
+				,@FootNote
+				,@FootLength
+				,@NumberOfDimensions
+				,@CoRegistrant
+				,@durp
+				,@datp
+				,@Decimals
+				,@Dimension_Id
+				,@Submission_Id
+				,@Tag_Id
+				,@LineNumber
+				,@EdgarDataset_Id);
 
-		update DBO.EdgarDatasets SET ProcessedNumbers = ProcessedNumbers + 1 where id = @EdgarDataset_Id;
-	commit transaction;
+			update DBO.EdgarDatasets SET ProcessedNumbers = ProcessedNumbers + 1 where id = @EdgarDataset_Id;
+		commit transaction;
+	end
 END

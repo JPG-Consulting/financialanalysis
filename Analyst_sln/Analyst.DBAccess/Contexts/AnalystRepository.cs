@@ -31,7 +31,8 @@ namespace Analyst.DBAccess.Contexts
         EdgarDatasetTag GetTag(string tag, string version);
         
         EdgarDatasetDimension GetDimension(string dimhash);
-        EdgarDatasetNumber GetNumber(int datasetID, int lineNumber);
+        //EdgarDatasetNumber GetNumber(int datasetID, int lineNumber);
+        
         void Add(SECForm sECForm);
         void Add(SIC sic);
         void Add(Registrant r);
@@ -44,6 +45,7 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset dataset,EdgarDatasetRendering ren);
         void Add(EdgarDataset ds, EdgarDatasetPresentation pre);
         void Add(EdgarDataset dataset, EdgarDatasetCalculation file);
+        void Add(EdgarDataset dataset, EdgarDatasetText file);
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
         
     }
@@ -138,13 +140,14 @@ namespace Analyst.DBAccess.Contexts
             return q.SingleOrDefault();
 
         }
-
+        /*
         public EdgarDatasetNumber GetNumber(int datasetID, int lineNumber)
         {
             SqlParameter dsId = new SqlParameter("@dataSetID", datasetID);
             SqlParameter line = new SqlParameter("@lineNumber", lineNumber);
             return Context.Database.SqlQuery<EdgarDatasetNumber>("exec SP_EDGARDATASETNUMBER_SELECT @dataSetID,@lineNumber", dsId, line).SingleOrDefault();
         }
+        */
 
         public IList<TEntity> Get<TEntity>() where TEntity:IEdgarEntity
         {
@@ -348,8 +351,54 @@ namespace Analyst.DBAccess.Contexts
 
         public void Add(EdgarDataset dataset, EdgarDatasetCalculation file)
         {
+            SqlParameter LineNumber = new SqlParameter("@LineNumber", file.LineNumber);
+            SqlParameter SequentialNumberForGrouping = new SqlParameter("@SequentialNumberForGrouping", file.SequentialNumberForGrouping);
+            SqlParameter SequentialNumberForArc = new SqlParameter("@SequentialNumberForArc", file.SequentialNumberForArc);
+            SqlParameter Negative = new SqlParameter("@Negative", file.Negative);
+            SqlParameter ParentTagId = new SqlParameter("@ParentTagId", file.ParentTag.Id);
+            SqlParameter ChildTagId = new SqlParameter("@ChildTagId", file.ChildTag.Id);
+            SqlParameter Dataset_Id = new SqlParameter("@Dataset_Id", dataset.Id);
+            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", file.Submission.Id);
 
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETCALC_INSERT " +
+                "@LineNumber, @SequentialNumberForGrouping, @SequentialNumberForArc, @Negative, @ParentTagId, @ChildTagId, @Dataset_Id, @Submission_Id",
+                LineNumber, SequentialNumberForGrouping, SequentialNumberForArc, Negative, ParentTagId, ChildTagId, Dataset_Id, Submission_Id);
         }
+
+        public void Add(EdgarDataset dataset, EdgarDatasetText file)
+        {
+            SqlParameter LineNumber = new SqlParameter("@LineNumber", file.LineNumber);
+            SqlParameter DDate = new SqlParameter("@DDate", file.DDate);
+            SqlParameter Qtrs = new SqlParameter("@Qtrs", file.Qtrs);
+            SqlParameter Iprx = new SqlParameter("@Iprx", file.Iprx);
+            SqlParameter Language = new SqlParameter("@Language", file.Language);
+            SqlParameter Dcml = new SqlParameter("@Dcml", file.Dcml);
+            SqlParameter Durp = new SqlParameter("@Durp", file.Durp);
+            SqlParameter Datp = new SqlParameter("@Datp", file.Datp);
+            SqlParameter DimN = new SqlParameter("@DimN", file.DimN);
+            if (!file.DimN.HasValue)
+                DimN.Value = DBNull.Value;
+            SqlParameter Coreg = new SqlParameter("@Coreg", file.Coreg);
+            if (!file.Coreg.HasValue)
+                Coreg.Value = DBNull.Value;
+            SqlParameter Escaped = new SqlParameter("@Escaped", file.Escaped);
+            SqlParameter SrcLen = new SqlParameter("@SrcLen", file.SrcLen);
+            SqlParameter TxtLen = new SqlParameter("@TxtLen", file.TxtLen);
+            SqlParameter FootNote = new SqlParameter("@FootNote", file.FootNote);
+            SqlParameter FootLen = new SqlParameter("@FootLen", file.FootLen);
+            if (!file.FootLen.HasValue)
+                FootLen.Value = DBNull.Value;
+            SqlParameter paramContext = new SqlParameter("@Context", file.Context);
+            SqlParameter Value = new SqlParameter("@Value", file.Value);
+            SqlParameter Dimension_Id = new SqlParameter("@Dimension_Id", file.Dimension.Id);
+            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", file.Submission.Id);
+            SqlParameter Tag_Id = new SqlParameter("@Tag_Id", file.Tag.Id);
+            SqlParameter DatasetId = new SqlParameter("@DatasetId", dataset.Id);
+
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTEXT_INSERT " +
+                "@LineNumber, @DDate, @Qtrs, @Iprx, @Language, @Dcml, @Durp, @Datp, @DimN, @Coreg, @Escaped, @SrcLen, @TxtLen, @FootNote, @FootLen, @Context, @Value, @Dimension_Id, @Submission_Id, @Tag_Id, @DatasetId",
+                LineNumber, DDate, Qtrs, Iprx, Language, Dcml, Durp, Datp, DimN, Coreg, Escaped, SrcLen, TxtLen, FootNote, FootLen, paramContext, Value, Dimension_Id, Submission_Id, Tag_Id, DatasetId);
+       }
 
         #endregion
 

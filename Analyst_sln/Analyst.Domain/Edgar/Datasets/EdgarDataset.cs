@@ -12,7 +12,7 @@ namespace Analyst.Domain.Edgar.Datasets
     /// https://www.sec.gov/dera/data/financial-statement-and-notes-data-set.html
     /// </summary>
     [Serializable]
-    public class EdgarDataset:IEdgarEntity
+    public class EdgarDataset : IEdgarEntity
     {
 
         [Key]
@@ -21,21 +21,26 @@ namespace Analyst.Domain.Edgar.Datasets
 
         [Required]
         public string RelativePath { get; set; }
-        
+
         [Required]
         public int Year { get; set; }
 
         [Required]
         public Quarter Quarter { get; set; }
 
-        public virtual IList<EdgarDatasetTag> Tags { get; set; }
+        public virtual IList<EdgarDatasetCalculation> Calculations { get; set; }
+
+        public virtual IList<EdgarDatasetDimension> Dimensions { get; set; }
+        public virtual IList<EdgarDatasetNumber> Numbers { get; set; }
+        public virtual IList<EdgarDatasetPresentation> Presentations { get; set; }
+
+        public virtual IList<EdgarDatasetRendering> Renders { get; set; }
 
         //[ForeignKey("EdgarDataset_Id")]
         public virtual IList<EdgarDatasetSubmission> Submissions { get; set; }
 
-        public virtual IList<EdgarDatasetDimension> Dimensions { get; set; }
-
-        public virtual IList<EdgarDatasetNumber> Numbers { get; set; }
+        public virtual IList<EdgarDatasetTag> Tags { get; set; }
+        public virtual IList<EdgarDatasetText> Text { get; set; }
 
         public int TotalSubmissions { get; set; }
 
@@ -47,7 +52,7 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public int TotalNumbers { get; set; }
         public int ProcessedNumbers { get; set; }
-        
+
 
         public int ProcessedDimensions { get; set; }
         public int TotalDimensions { get; set; }
@@ -57,6 +62,12 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public int ProcessedPresentations { get; set; }
         public int TotalPresentations { get; set; }
+
+        public int ProcessedCalculations { get; set; }
+        public int TotalCalculations { get; set; }
+
+        public int ProcessedTexts { get; set; }
+        public int TotalTexts { get; set; }
 
         public string Key
         {
