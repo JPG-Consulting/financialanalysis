@@ -15,14 +15,15 @@ namespace Analyst.Web
     {
         void Application_Start(object sender, EventArgs e)
         {
+            // Code that runs on application startup
 
-            // Código que se ejecuta al iniciar la aplicación
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             UnityConfig.RegisterComponents();
 
+            log4net.Config.XmlConfigurator.Configure();
         }
     }
 }

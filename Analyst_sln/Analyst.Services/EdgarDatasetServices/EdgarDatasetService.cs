@@ -20,6 +20,7 @@ namespace Analyst.Services.EdgarDatasetServices
     public class EdgarDatasetService: IEdgarDatasetService, IDisposable
     {
         private static ConcurrentDictionary<int, Task> datasetsInProcess = new ConcurrentDictionary<int,Task>();
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private IAnalystRepository repository;
         private IEdgarDatasetSubmissionsService submissionService;
@@ -57,8 +58,10 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public void ProcessDataset(int id)
         {
-            //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming?view=netframework-4.5.2
+            //https://stackify.com/log4net-guide-dotnet-logging/
+            log.Info("Dataset " + id.ToString() + " requested");
 
+            /*
             if (datasetsInProcess.ContainsKey(id))
             {
                 Task t = datasetsInProcess[id];
@@ -72,10 +75,12 @@ namespace Analyst.Services.EdgarDatasetServices
             }
             else
                 Run(id);
+                */
         }
 
         private void Run(int id)
         {
+            //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming?view=netframework-4.5.2
             Task t = new Task(() =>
             {
                 EdgarDataset ds = repository.GetDataset(id);
