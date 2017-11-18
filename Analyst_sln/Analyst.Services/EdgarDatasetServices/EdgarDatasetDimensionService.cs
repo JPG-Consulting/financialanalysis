@@ -7,6 +7,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using log4net;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -16,7 +17,18 @@ namespace Analyst.Services.EdgarDatasetServices
     }
     public class EdgarDatasetDimensionService : EdgarFileService<EdgarDatasetDimension>, IEdgarDatasetDimensionService
     {
-
+        private readonly ILog log;
+        protected override ILog Log
+        {
+            get
+            {
+                return log;
+            }
+        }
+        public EdgarDatasetDimensionService()
+        {
+            log = log4net.LogManager.GetLogger(this.GetType().Name);
+        }
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetDimension file)
         {
             if (file.Id == 0)

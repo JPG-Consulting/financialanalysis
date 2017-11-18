@@ -4,6 +4,7 @@ using Analyst.Domain.Edgar.Datasets;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,6 +82,8 @@ namespace Analyst.Services.EdgarDatasetServices
             //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming?view=netframework-4.5.2
             Task t = new Task(() =>
             {
+                Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+                log.Debug("Begin dataset process id=" + id.ToString());
                 EdgarDataset ds = repository.GetDataset(id);
                 EdgarTaskState[] states = LoadCoreData(ds, repository);
                 ManageErrors(states);
@@ -89,6 +92,9 @@ namespace Analyst.Services.EdgarDatasetServices
                 ConcurrentDictionary<string,EdgarDatasetDimension> dims = dimensionService.GetAsConcurrent();
                 states = LoadData(ds, repository,subs,tags,dims);
                 ManageErrors(states);
+                watch.Stop();
+                long elapsedMs = watch.ElapsedMilliseconds;
+                log.Debug("End dataset process id=" + id.ToString() + " - time: " + new TimeSpan(elapsedMs).ToString());
             });
             t.Start();
             datasetsInProcess.TryAdd(id, t);

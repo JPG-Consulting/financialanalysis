@@ -41,6 +41,11 @@ select id,
 	,cast(iif(TotalTexts != 0 ,cast(ProcessedTexts as float)/cast(TotalTexts as float) *100,0)as nvarchar) + '%' texts
 from EdgarDatasets where year =2016 and Quarter= 4;
 
+select top 10 * from [dbo].[Log] 
+where 1=1
+	--and logger <> 'EdgarDatasetTagService'
+order by Date desc;
+--delete from [dbo].[Log];
 
 --select * from [dbo].[EdgarDatasetNumbers] order by linenumber;
 
@@ -73,6 +78,7 @@ select * from [dbo].[EdgarDatasetPresentations]
 
 /*
 --delete para reprocesamiento
+delete from [dbo].[Log];
 delete from [dbo].[EdgarDatasetSubmissions];
 delete from [dbo].[EdgarDatasetTags];
 delete from [dbo].[EdgarDatasetTagEdgarDatasets];

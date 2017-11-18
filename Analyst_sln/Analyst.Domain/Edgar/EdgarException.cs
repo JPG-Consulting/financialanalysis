@@ -9,6 +9,7 @@ namespace Analyst.Domain.Edgar
 {
     public class EdgarException : ApplicationException
     {
+        private List<Exception> innerExceptions;
         public EdgarException()
         {
 
@@ -16,16 +17,18 @@ namespace Analyst.Domain.Edgar
 
         public EdgarException(string message, Exception inner):base(message,inner)
         {
-
+            innerExceptions = new List<Exception>();
         }
-        private List<Exception> innerExceptions = new List<Exception>();
+
         public List<Exception> InnerExceptions
         {
             get { return innerExceptions; }
+            protected set { innerExceptions = value; }
         }
         public void AddInnerException(Exception ex)
         {
             innerExceptions.Add(ex);
         }
+
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Analyst.DBAccess.Contexts;
 using System.Collections.Concurrent;
+using log4net;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -16,6 +17,19 @@ namespace Analyst.Services.EdgarDatasetServices
     public class EdgarDatasetRenderingService : EdgarFileService<EdgarDatasetRendering>, IEdgarDatasetRenderingService
     {
         public ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
+
+        private readonly ILog log;
+        protected override ILog Log
+        {
+            get
+            {
+                return log;
+            }
+        }
+        public EdgarDatasetRenderingService()
+        {
+            log = log4net.LogManager.GetLogger(this.GetType().Name);
+        }
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetRendering file)
         {
             repo.Add(dataset,file);

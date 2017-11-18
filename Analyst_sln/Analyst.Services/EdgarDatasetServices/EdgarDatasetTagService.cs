@@ -10,6 +10,7 @@ using Analyst.DBAccess.Contexts;
 using System.Threading;
 using System.Web.Hosting;
 using System.Collections.Concurrent;
+using log4net;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -33,7 +34,18 @@ namespace Analyst.Services.EdgarDatasetServices
 
     public class EdgarDatasetTagService : EdgarFileService<EdgarDatasetTag>, IEdgarDatasetTagService
     {
-        
+        private readonly ILog log;
+        protected override ILog Log
+        {
+            get
+            {
+                return log;
+            }
+        }
+        public EdgarDatasetTagService()
+        {
+            log = log4net.LogManager.GetLogger(this.GetType().Name);
+        }
         public override EdgarDatasetTag Parse(IAnalystRepository repository,List<string> fieldNames, List<string> fields, int linenumber)
         {
             /*

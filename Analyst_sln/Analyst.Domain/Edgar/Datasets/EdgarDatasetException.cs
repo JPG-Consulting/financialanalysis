@@ -14,7 +14,11 @@ namespace Analyst.Domain.Edgar.Datasets
         {
             this.file = file;
         }
-        
 
+        public EdgarDatasetException(string file, List<Exception> exceptions)
+        {
+            this.file = file;           
+            this.InnerExceptions = exceptions;
+        }
     }
 }

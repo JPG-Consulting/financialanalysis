@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using log4net;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -18,7 +19,18 @@ namespace Analyst.Services.EdgarDatasetServices
     }
     public class EdgarDatasetSubmissionsService: EdgarFileService<EdgarDatasetSubmission>, IEdgarDatasetSubmissionsService
     {
-
+        private readonly ILog log;
+        protected override ILog Log
+        {
+            get
+            {
+                return log;
+            }
+        }
+        public EdgarDatasetSubmissionsService()
+        {
+            log = log4net.LogManager.GetLogger(this.GetType().Name);
+        }
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetSubmission file)
         {
             repo.Add(dataset, file);

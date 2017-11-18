@@ -19,6 +19,22 @@ namespace Analyst.Services.EdgarDatasetServices
 
     public abstract class EdgarFileService<T>:IEdgarFileService<T> where T:IEdgarDatasetFile
     {
+        private const int DEFAULT_MAX_ERRORS_ALLOWED = 10;
+        // private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        protected abstract log4net.ILog Log { get; }
+
+        protected int MaxErrorsAllowed
+        {
+            get
+            {
+                string strValue = ConfigurationManager.AppSettings["maxerrorsallowed"];
+                int iValue;
+                if (int.TryParse(strValue, out iValue))
+                    return iValue;
+                else
+                    return DEFAULT_MAX_ERRORS_ALLOWED;
+            }
+        }
 
         public ConcurrentDictionary<string, T> GetAsConcurrent()
         {
@@ -69,12 +85,12 @@ namespace Analyst.Services.EdgarDatasetServices
                     // Loop over the partitions in parallel.
                     Parallel.ForEach(rangePartitioner, (range, loopState) =>
                     {
-                        ProcessRange(state, range, allLines, header);
+                        ProcessRange(fileToProcess, state, range, allLines, header);
                     });
                 }
                 else
                 {
-                    ProcessRange(state, new Tuple<int, int>(1, allLines.Length), allLines, header);
+                    ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header);
                 }
 
                 state.ResultOk = true;
@@ -97,7 +113,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        protected void ProcessRange(EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header)
+        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header)
         {
             /*
             EF isn't thread safe and it doesn't allow parallel
@@ -114,12 +130,29 @@ namespace Analyst.Services.EdgarDatasetServices
                 try
                 {
                     List<string> fieldNames = header.Split('\t').ToList();
+                    List<Exception> exceptions = new List<Exception>();
                     for (int i = range.Item1; i < range.Item2; i++)
                     {
-                        string line = allLines[i];
-                        List<string> fields = line.Split('\t').ToList();
-                        T file = Parse(repo, fieldNames,fields, i);
-                        Add(repo, state.Dataset, file);
+                        try
+                        {
+                            Log.Debug(fileName + ": parsing line: " + i.ToString());
+                            string line = allLines[i];
+                            List<string> fields = line.Split('\t').ToList();
+
+                            T file = Parse(repo, fieldNames, fields, i);
+                            Add(repo, state.Dataset, file);
+                        }
+                        catch(Exception ex)
+                        {
+                            exceptions.Add(ex);
+                            Log.Error(fileName + ": " + ex.Message, ex);
+                            if (exceptions.Count > MaxErrorsAllowed)
+                            {
+                                Log.Fatal(fileName + ": max errors allowed reached", ex);
+                                throw new EdgarDatasetException(fileName, exceptions);
+                            }
+                            
+                        }
                     }
                 }
                 finally
