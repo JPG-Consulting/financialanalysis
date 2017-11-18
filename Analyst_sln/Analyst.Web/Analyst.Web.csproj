@@ -184,6 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="config\log4net\debug.config" />
     <None Include="Views\Edgar\readme.cshtml" />
     <Content Include="index.html" />
     <Content Include="Views\Edgar\readme.css" />

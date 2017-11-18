@@ -85,6 +85,7 @@
     <Content Include="scripts\create SP_EDGARDATASETRENDERINGS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="scripts\create table LOG.sql" />
     <Content Include="scripts_queries\01st approach to balance.sql" />
     <Content Include="scripts_queries\control_queries.sql" />
     <Content Include="scripts_queries\recreation_script.sql" />

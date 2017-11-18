@@ -37,6 +37,7 @@ namespace Analyst.DBAccess.Contexts
             context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Tag VARCHAR(256) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
             context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Version VARCHAR(20) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
             context.Database.ExecuteSqlCommand("CREATE UNIQUE INDEX IX_TagVersion ON EdgarDatasetTags (Tag, Version)");
+            
 
             List<string> scripts = new List<string>();
             scripts.Add(GetTextScript("create SP_EDGARDATASETCALC_INSERT.sql"));
@@ -50,6 +51,7 @@ namespace Analyst.DBAccess.Contexts
             scripts.Add(GetTextScript("create SP_EDGARDATASETTAGS_INSERT.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETTAGS_RELATE.sql"));
             scripts.Add(GetTextScript("create SP_EDGARDATASETTEXT_INSERT.sql"));
+            scripts.Add(GetTextScript("create table LOG.sql"));
             foreach(string s in scripts)
                 context.Database.ExecuteSqlCommand(s);
             

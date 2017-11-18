@@ -61,7 +61,6 @@ namespace Analyst.Services.EdgarDatasetServices
             //https://stackify.com/log4net-guide-dotnet-logging/
             log.Info("Dataset " + id.ToString() + " requested");
 
-            /*
             if (datasetsInProcess.ContainsKey(id))
             {
                 Task t = datasetsInProcess[id];
@@ -75,7 +74,6 @@ namespace Analyst.Services.EdgarDatasetServices
             }
             else
                 Run(id);
-                */
         }
 
         private void Run(int id)
