@@ -25,13 +25,26 @@ BEGIN
 
 	if(
 		not exists(
+			/*complete compund key
+			5.    TXT is a data set that contains the plain (no HTML) text of each non-numeric XBRL fact.  These fields comprise a unique compound key:
+				1)    adsh - EDGAR accession number
+				2)    tag – tag used by the filer
+				3)    version – if a standard tag, the taxonomy of origin, otherwise equal to adsh
+				4)    ddate - period end date
+				5)    qtrs - duration in number of quarters
+				6)    dimh - dimension hash value
+				7)    iprx - a sequential integer used to distinguish otherwise identical facts
+			*/
 			select 1
 			from [dbo].[EdgarDatasetTexts] 
 			where 
 				[Dataset_Id] =@DataSetId 
-				AND [Dimension_Id] =@Dimension_Id
 				AND [Submission_Id] =@Submission_Id
 				AND [Tag_Id] =@Tag_Id
+				AND [DDate]=@DDate
+				AND [Qtrs]=@Qtrs
+				AND [Dimension_Id] =@Dimension_Id
+				AND [Iprx]=@Iprx
 		)
 	) 
 	BEGIN

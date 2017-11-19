@@ -20,10 +20,14 @@ namespace Analyst.Services.EdgarDatasetServices
         private IAnalystRepository dsRepo;
         public IAnalystRepository DatasetSharedRepo { get { return dsRepo; } }
 
-        public EdgarTaskState(EdgarDataset ds,IAnalystRepository dsRepo)
+        private string processName;
+        public string ProcessName { get { return processName; } }
+
+        public EdgarTaskState(string processName ,EdgarDataset ds,IAnalystRepository dsRepo)
         {
             this.ds = ds;
             this.dsRepo = dsRepo;
+            this.processName = processName;
         }
 
     }

@@ -37,6 +37,7 @@ namespace Analyst.Domain.Edgar.Datasets
         public DateTime DDate { get; set; }
 
         /// <summary>
+        /// QTRS
         /// The count of the number of quarters represented by the data value, 
         /// rounded to the nearest whole number. 
         /// "0" indicates it is a point-in-time value.
@@ -48,12 +49,14 @@ namespace Analyst.Domain.Edgar.Datasets
 
 
         /// <summary>
+        /// UOM
         /// The unit of measure for the value.
         /// ALPHANUMERIC 20
         /// </summary>
         //[Key]
         [Required]
-        public object UnitOfMeasure { get; set; }
+        [StringLength(20)]
+        public string UnitOfMeasure { get; set; }
 
         /// <summary>
         /// The 32-byte hexadecimal key for the dimensional information in the DIM data set.  

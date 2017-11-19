@@ -1,6 +1,7 @@
 ﻿CREATE PROCEDURE dbo.SP_EDGARDATASETNUMBER_INSERT
 	@DDate datetime
     ,@CountOfNumberOfQuarters int
+	,@UnitOfMeasure nvarchar(20)
     ,@IPRX smallint
     ,@Value float
     ,@FootNote nvarchar(512)
@@ -20,12 +21,30 @@ BEGIN
 
 	if(
 		not exists(
+			/* complete compund key:
+			4.    NUM is a data set of all numeric XBRL facts presented on the primary financial statements. These fields comprise a unique compound key:
+			1)    adsh - EDGAR accession number
+			2)    tag - tag used by the filer
+			3)    version – if a standard tag, the taxonomy of origin, otherwise equal to adsh.
+			4)    ddate - period end date
+			5)    qtrs - duration in number of quarters
+			6)    uom - unit of measure
+			7)    dimh - 16-byte dimensional qualifier
+			8)    iprx - a sequential integer used to distinguish otherwise identical facts
+			*/
 			select 1
 			from [dbo].[EdgarDatasetNumbers] 
-			where [Dimension_Id] = @Dimension_Id
-			   and [Submission_Id]= @Submission_Id
-			   and [Tag_Id]=@Tag_Id
-			   and [EdgarDataset_Id]=@EdgarDataset_Id
+			where [EdgarDataset_Id]=@EdgarDataset_Id
+				and [Submission_Id]= @Submission_Id
+				and [Tag_Id]=@Tag_Id
+				and cast([DDate] as date)=cast(@DDate as date)
+				and [CountOfNumberOfQuarters]=@CountOfNumberOfQuarters
+				and [UnitOfMeasure]=@UnitOfMeasure
+				and [Dimension_Id] = @Dimension_Id
+				and [IPRX] =@IPRX
+			   
+			   
+			   
 		)
 	) 
 	begin

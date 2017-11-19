@@ -41,21 +41,30 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public override EdgarDatasetCalculation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
-            EdgarDatasetCalculation calc = new EdgarDatasetCalculation();
-            string adsh = fields[fieldNames.IndexOf("adsh")];
-            calc.Submission = Submissions[adsh];
+            try
+            {
+                EdgarDatasetCalculation calc = new EdgarDatasetCalculation();
+                string adsh = fields[fieldNames.IndexOf("adsh")];
+                calc.Submission = Submissions[adsh];
 
-            calc.SequentialNumberForGrouping = Convert.ToInt16(fields[fieldNames.IndexOf("grp")]);
-            calc.SequentialNumberForArc = Convert.ToInt16(fields[fieldNames.IndexOf("arc")]);
+                calc.SequentialNumberForGrouping = Convert.ToInt16(fields[fieldNames.IndexOf("grp")]);
+                calc.SequentialNumberForArc = Convert.ToInt16(fields[fieldNames.IndexOf("arc")]);
 
-            string pTag = fields[fieldNames.IndexOf("tag")];
-            string pVersion = fields[fieldNames.IndexOf("version")];
-            calc.ParentTag = Tags[pTag + pVersion];
+                string pTag = fields[fieldNames.IndexOf("ptag")];
+                string pVersion = fields[fieldNames.IndexOf("pversion")];
+                calc.ParentTag = Tags[pTag + pVersion];
 
-            string cTag = fields[fieldNames.IndexOf("tag")];
-            string cVersion = fields[fieldNames.IndexOf("version")];
-            calc.ChildTag = Tags[cTag + cVersion];
-            return calc;
+                string cTag = fields[fieldNames.IndexOf("ctag")];
+                string cVersion = fields[fieldNames.IndexOf("cversion")];
+                calc.ChildTag = Tags[cTag + cVersion];
+
+                calc.LineNumber= lineNumber;
+                return calc;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

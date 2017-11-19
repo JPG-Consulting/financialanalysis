@@ -79,6 +79,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 tag.Tlabel = string.IsNullOrEmpty(value) ? null : value;
                 value = fields[fieldNames.IndexOf("doc")];
                 tag.Doc = string.IsNullOrEmpty(value) ? null : value;
+                tag.LineNumber = linenumber;
             }
             return tag;
 

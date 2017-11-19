@@ -139,7 +139,7 @@ namespace Analyst.Services.EdgarDatasetServices
                             string line = allLines[i];
                             List<string> fields = line.Split('\t').ToList();
 
-                            T file = Parse(repo, fieldNames, fields, i);
+                            T file = Parse(repo, fieldNames, fields, i+1);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
                             Add(repo, state.Dataset, file);
                         }
                         catch(Exception ex)

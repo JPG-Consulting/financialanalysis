@@ -25,6 +25,9 @@ namespace Analyst.DBAccess.Contexts
 
         public AnalystContext() : base("name=Analyst")
         {
+            //http://www.entityframeworktutorial.net/EntityFramework4.3/lazy-loading-with-dbcontext.aspx
+            //this.Configuration.LazyLoadingEnabled = true;
+            //this.Configuration.ProxyCreationEnabled = false;
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

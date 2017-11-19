@@ -12,7 +12,7 @@ namespace Analyst.Domain.Edgar
         private List<Exception> innerExceptions;
         public EdgarException()
         {
-
+            innerExceptions = new List<Exception>();
         }
 
         public EdgarException(string message, Exception inner):base(message,inner)

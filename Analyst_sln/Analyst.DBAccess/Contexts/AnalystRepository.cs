@@ -267,6 +267,7 @@ namespace Analyst.DBAccess.Contexts
         {
             SqlParameter ddate = new SqlParameter("@DDate", number.DDate);
             SqlParameter countOfNumberOfQuarters = new SqlParameter("@CountOfNumberOfQuarters", number.CountOfNumberOfQuarters);
+            SqlParameter UnitOfMeasure = new SqlParameter("@UnitOfMeasure", number.UnitOfMeasure);
             SqlParameter iprx = new SqlParameter("@IPRX", number.IPRX);
             SqlParameter value = new SqlParameter("@Value", number.Value);
             if (!number.Value.HasValue)
@@ -284,8 +285,8 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter lineNumber = new SqlParameter("@LineNumber", number.LineNumber);
             SqlParameter edgarDatasetId = new SqlParameter("@EdgarDataset_Id", dataset.Id);
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETNUMBER_INSERT "+
-                "@DDate, @CountOfNumberOfQuarters, @IPRX, @Value, @FootNote, @FootLength, @NumberOfDimensions, @CoRegistrant, @durp, @datp, @Decimals, @Dimension_Id, @Submission_Id, @Tag_Id,@LineNumber, @EdgarDataset_Id",
-                ddate, countOfNumberOfQuarters, iprx, value, footNote, footLength, numberOfDimensions, coRegistrant, durp, datp, decimals, dimensionId, submissionId, tagId,lineNumber, edgarDatasetId
+                "@DDate, @CountOfNumberOfQuarters,@UnitOfMeasure, @IPRX, @Value, @FootNote, @FootLength, @NumberOfDimensions, @CoRegistrant, @durp, @datp, @Decimals, @Dimension_Id, @Submission_Id, @Tag_Id,@LineNumber, @EdgarDataset_Id",
+                ddate, countOfNumberOfQuarters,UnitOfMeasure, iprx, value, footNote, footLength, numberOfDimensions, coRegistrant, durp, datp, decimals, dimensionId, submissionId, tagId,lineNumber, edgarDatasetId
                 );
             
         }

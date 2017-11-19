@@ -85,6 +85,9 @@ namespace Analyst.Services.EdgarDatasetServices
             number.datp = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
             value = fields[fieldNames.IndexOf("dcml")];
             number.Decimals = Convert.ToInt32(value);
+
+            number.LineNumber = lineNumber;
+
             return number;
         }
     }

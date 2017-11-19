@@ -88,6 +88,8 @@
     <Content Include="scripts\create table LOG.sql" />
     <Content Include="scripts_queries\01st approach to balance.sql" />
     <Content Include="scripts_queries\control_queries.sql" />
+    <Content Include="scripts_queries\create numbers table.sql" />
+    <Content Include="scripts_queries\duplicated analys txt record.sql" />
     <Content Include="scripts_queries\recreation_script.sql" />
     <Content Include="scripts\create SP_EDGARDATASETTAGS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

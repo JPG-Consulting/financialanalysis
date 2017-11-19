@@ -13,7 +13,10 @@ BEGIN
 		not exists(
 			select 1
 			from [dbo].[EdgarDatasetCalculations] 
-			where [Submission_Id] = @Submission_Id
+			where 1=1
+				AND [SequentialNumberForGrouping] = @SequentialNumberForGrouping
+				AND [SequentialNumberForArc] = @SequentialNumberForArc
+				AND [Submission_Id] = @Submission_Id
 				AND [ParentTagId] = @ParentTagId
 				AND [ChildTagId] = @ChildTagId
 				AND [Dataset_Id] = @Dataset_Id

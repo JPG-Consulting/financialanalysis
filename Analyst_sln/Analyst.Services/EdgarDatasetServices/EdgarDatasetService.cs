@@ -66,12 +66,17 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 Task t = datasetsInProcess[id];
                 //TODO: how to control that task finished ok and there is no need to rerun?
-                if (t.Status != TaskStatus.Running)
+                if (t != null)
                 {
-                    t.Dispose();
-                    datasetsInProcess[id] = null;
-                    Run(id);
+                    if (t.Status != TaskStatus.Running)
+                    {
+                        t.Dispose();
+                        datasetsInProcess[id] = null;
+                        Run(id);
+                    }
                 }
+                else
+                    Run(id);
             }
             else
                 Run(id);
@@ -83,7 +88,7 @@ namespace Analyst.Services.EdgarDatasetServices
             Task t = new Task(() =>
             {
                 Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                log.Debug("Begin dataset process id=" + id.ToString());
+                log.Info("Begin dataset process id=" + id.ToString());
                 EdgarDataset ds = repository.GetDataset(id);
                 EdgarTaskState[] states = LoadCoreData(ds, repository);
                 ManageErrors(states);
@@ -94,7 +99,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 ManageErrors(states);
                 watch.Stop();
                 long elapsedMs = watch.ElapsedMilliseconds;
-                log.Debug("End dataset process id=" + id.ToString() + " - time: " + new TimeSpan(elapsedMs).ToString());
+                log.Info("End dataset process id=" + id.ToString() + " - time: " + new TimeSpan(elapsedMs).ToString());
             });
             t.Start();
             datasetsInProcess.TryAdd(id, t);
@@ -104,9 +109,9 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             List<EdgarTaskState> states = new List<EdgarTaskState>();
             EdgarTaskState stateSubs, stateTag, stateDim;
-            stateSubs = new EdgarTaskState(ds, repo);
-            stateTag = new EdgarTaskState(ds, repo);
-            stateDim = new EdgarTaskState(ds, repo);
+            stateSubs = new EdgarTaskState(EdgarDatasetSubmission.FILE_NAME, ds, repo);
+            stateTag = new EdgarTaskState(EdgarDatasetTag.FILE_NAME, ds, repo);
+            stateDim = new EdgarTaskState(EdgarDatasetDimension.FILE_NAME, ds, repo);
             states.Add(stateSubs);
             states.Add(stateTag);
             states.Add(stateDim);
@@ -125,9 +130,9 @@ namespace Analyst.Services.EdgarDatasetServices
             List<Task> tasks = new List<Task>();
 
             //Process presentation file
-            EdgarTaskState statePre = new EdgarTaskState(ds, repo);
+            EdgarTaskState statePre = new EdgarTaskState(EdgarDatasetPresentation.FILE_NAME,ds, repo);
             states.Add(statePre);
-            EdgarTaskState stateRen = new EdgarTaskState(ds, repo);
+            EdgarTaskState stateRen = new EdgarTaskState(EdgarDatasetRendering.FILE_NAME, ds, repo);
             states.Add(stateRen);
             tasks.Add(
                 Task.Factory.StartNew(
@@ -141,30 +146,36 @@ namespace Analyst.Services.EdgarDatasetServices
                             presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");
                         }
             ));
-
+            
             //process calc file
-            EdgarTaskState stateCalc = new EdgarTaskState(ds, repo);
+            EdgarTaskState stateCalc = new EdgarTaskState(EdgarDatasetCalculation.FILE_NAME, ds, repo);
             states.Add(stateCalc);
             calcService.Submissions = subs;
             calcService.Tags = tags;
-            tasks.Add(Task.Factory.StartNew(() => calcService.Process(stateCalc, true, EdgarDatasetCalculation.FILE_NAME, "Calculations")));
-
+            tasks.Add(Task.Factory.StartNew(() => 
+                calcService.Process(stateCalc, true, EdgarDatasetCalculation.FILE_NAME, "Calculations"))
+            );
+            
             //process text file
-            EdgarTaskState stateText = new EdgarTaskState(ds, repo);
+            EdgarTaskState stateText = new EdgarTaskState(EdgarDatasetText.FILE_NAME, ds, repo);
             states.Add(stateText);
             textService.Dimensions = dims;
             textService.Submissions = subs;
             textService.Tags = tags;
-            tasks.Add(Task.Factory.StartNew(() => textService.Process(stateText, true, EdgarDatasetText.FILE_NAME, "Texts")));
-
+            tasks.Add(Task.Factory.StartNew(() => 
+                textService.Process(stateText, true, EdgarDatasetText.FILE_NAME, "Texts"))
+            );
+            
             //Process num file
-            EdgarTaskState stateNum = new EdgarTaskState(ds, repo);
+            EdgarTaskState stateNum = new EdgarTaskState(EdgarDatasetNumber.FILE_NAME, ds, repo);
             states.Add(stateNum);
             numService.Submissions = subs;
             numService.Tags = tags;
             numService.Dimensions = dims;
-            tasks.Add(Task.Factory.StartNew(() => numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers")));
-
+            tasks.Add(Task.Factory.StartNew(() => 
+                numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers"))
+            );
+            
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
@@ -180,6 +191,7 @@ namespace Analyst.Services.EdgarDatasetServices
                     if (edex == null)
                         edex = new EdgarException();
                     edex.AddInnerException(states[i].Exception);
+                    log.Error(states[i].ProcessName, states[i].Exception);
                 }
             }
             if (edex != null)

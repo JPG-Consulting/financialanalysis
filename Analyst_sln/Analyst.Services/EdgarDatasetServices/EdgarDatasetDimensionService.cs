@@ -45,6 +45,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 dim.DimensionH = dimhash;
                 dim.Segments = fields[fieldNames.IndexOf("segments")];
                 dim.SegmentTruncated = !(fields[fieldNames.IndexOf("segt")] == "0");
+                dim.LineNumber = lineNumber;
             }
             return dim;
         }
