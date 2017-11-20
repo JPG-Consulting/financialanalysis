@@ -16,21 +16,7 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public int Id { get; set; }
 
-        public string Key
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
 
-        public int LineNumber { get; set; }
-
-        [Required]
-        public EdgarDatasetSubmission Submission { get; set; }
-
-        [Required]
-        public EdgarDatasetTag Tag { get; set; }
         /// <summary>
         /// The end date for the data value, rounded to the nearest month end.
         /// </summary>
@@ -73,8 +59,7 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public float Datp { get; set; }
 
-        [Required]
-        public EdgarDatasetDimension Dimension { get; set; }
+        
 
         /// <summary>
         /// Small integer representing the number of dimensions, useful for sorting.Note that this value is function of the dimension segments.
@@ -128,7 +113,32 @@ namespace Analyst.Domain.Edgar.Datasets
         [StringLength(2048)]
         public string Value { get; set; }
 
+
+
+        public string Key
+        {
+            get
+            {
+                return Submission.ADSH + Tag.Tag + Tag.Version;
+            }
+        }
+
+        public int LineNumber { get; set; }
+
+
         [Required]
         public EdgarDataset Dataset { get; set; }
+
+        [Required]
+        public EdgarDatasetSubmission Submission { get; set; }
+
+        [Required]
+        public EdgarDatasetTag Tag { get; set; }
+
+        [Required]
+        public EdgarDatasetDimension Dimension { get; set; }
+
+        public virtual ICollection<EdgarDatasetPresentation> Presentations { get; set; }
+
     }
 }

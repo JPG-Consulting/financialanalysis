@@ -38,17 +38,22 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETTAGS_INSERT
 AS
 
 BEGIN
-	declare @tagId int;
+	--declare @tagId int;
 	
     BEGIN TRANSACTION;
 		INSERT INTO [dbo].[EdgarDatasetTags]
-			   ([Tag],[Version],[Custom],[Abstract],[Datatype],[Tlabel],[Doc])
+			   ([Tag],[Version],[Custom],[Abstract],[Datatype],[Tlabel],[Doc],[Dataset_Id])
 		 VALUES
-			   (@tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc);
+			   (@tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc,@DataSetId);
 	
-		set @tagid = (SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY]);
+		--set @tagid = (SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY]);
 
-		exec [dbo].[SP_EDGARDATASETTAGS_RELATE] @DataSetId,@tagId;
+		--exec [dbo].[SP_EDGARDATASETTAGS_RELATE] @DataSetId,@tagId;
+
+		UPDATE DBO.EdgarDatasets 
+			SET ProcessedTags = ProcessedTags + 1 
+			WHERE ID= @DataSetId
+			;
 	COMMIT TRANSACTION;
 END
 --GO

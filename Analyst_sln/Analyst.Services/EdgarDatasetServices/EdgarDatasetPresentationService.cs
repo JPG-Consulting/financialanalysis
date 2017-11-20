@@ -12,15 +12,20 @@ namespace Analyst.Services.EdgarDatasetServices
 {
     public interface IEdgarDatasetPresentationService : IEdgarFileService<EdgarDatasetPresentation>
     {
-        ConcurrentDictionary<string, EdgarDatasetRendering> Renders { get; set; }
+        ConcurrentDictionary<string, EdgarDatasetNumber> Nums { get; set; }
+        ConcurrentDictionary<string, EdgarDatasetRender> Renders { get; set; }
         ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
         ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+        ConcurrentDictionary<string, EdgarDatasetText> Texts { get; set; }
     }
     public class EdgarDatasetPresentationService : EdgarFileService<EdgarDatasetPresentation>, IEdgarDatasetPresentationService
     {
-        public ConcurrentDictionary<string, EdgarDatasetRendering> Renders { get; set; }
+        public ConcurrentDictionary<string, EdgarDatasetRender> Renders { get; set; }
         public ConcurrentDictionary<string,EdgarDatasetSubmission> Subs { get; set; }
         public ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+
+        public ConcurrentDictionary<string, EdgarDatasetNumber> Nums { get; set; }
+        public ConcurrentDictionary<string, EdgarDatasetText> Texts { get; set; }
 
         private readonly ILog log;
         protected override ILog Log
@@ -53,7 +58,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 string adsh = fields[fieldNames.IndexOf("adsh")];
                 pre.Submission = Subs[adsh];
                 string report = fields[fieldNames.IndexOf("report")];
-                pre.Report = Renders[adsh + report];
+                pre.Render = Renders[adsh + report];
                 pre.Line = Convert.ToInt32(fields[fieldNames.IndexOf("line")]);
                 pre.FinancialStatement = fields[fieldNames.IndexOf("stmt")];
                 pre.Inpth = fields[fieldNames.IndexOf("inpth")] == "1";
@@ -65,6 +70,10 @@ namespace Analyst.Services.EdgarDatasetServices
                 pre.PreferredLabel = fields[fieldNames.IndexOf("plabel")];
                 pre.Negating = !(fields[fieldNames.IndexOf("negating")] == "0");
                 pre.LineNumber = lineNumber;
+
+                pre.Number = Nums[adsh + tag + version];
+                pre.Text = Texts[adsh + tag + version];
+
                 return pre;
             }
             catch(Exception ex)

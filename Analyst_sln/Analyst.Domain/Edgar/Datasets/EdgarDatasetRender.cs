@@ -18,7 +18,7 @@ namespace Analyst.Domain.Edgar.Datasets
     /// for example, if the data for the 1st quarter of 2010 is not published on the Commission web site until 2016, 
     /// the rendering will be the EDGAR Renderer version current in 2016.
     /// </summary>
-    public class EdgarDatasetRendering:IEdgarDatasetFile
+    public class EdgarDatasetRender:IEdgarDatasetFile
     {
         public static readonly string FILE_NAME = "ren.tsv";
 
@@ -82,10 +82,6 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         public int? UltimateParentReport { get; set; }
 
-        [Required]
-        public EdgarDatasetSubmission Submission { get; set; }
-        [Required]
-        public virtual EdgarDataset Dataset { get; set; }
 
         public int LineNumber { get; set; }
 
@@ -96,6 +92,14 @@ namespace Analyst.Domain.Edgar.Datasets
                 return Submission.ADSH + Report.ToString();
             }
         }
-        
+
+
+        [Required]
+        public EdgarDatasetSubmission Submission { get; set; }
+
+        [Required]
+        public virtual EdgarDataset Dataset { get; set; }
+
+        public ICollection<EdgarDatasetPresentation> Presentations { get; set; }
     }
 }

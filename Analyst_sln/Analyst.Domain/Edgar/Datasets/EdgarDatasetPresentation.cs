@@ -21,29 +21,20 @@ namespace Analyst.Domain.Edgar.Datasets
         /// Note that in some situations the numbers skip.
         /// </summary>
         [Required]
-        [Index("IX_ReportLine", 1, IsUnique = true)]
         public int ReportNumber { get; set; }
 
-        public EdgarDatasetRendering Report { get; set; }
+
 
         /// <summary>
         /// Represents the tag's presentation line order for a given report. 
         /// Together with the statement and report field, presentation location, order and grouping can be derived.
         /// </summary>
         [Required]
-        [Index("IX_ReportLine", 2, IsUnique = true)]
         public int Line { get; set; }
 
-        [Required]
-        public EdgarDatasetSubmission Submission { get; set; }
 
-        public string Key
-        {
-            get
-            {
-                return Submission.ADSH + Report.ToString() + Line.ToString();
-            }
-        }
+
+
 
         /// <summary>
         /// The financial statement location to which the value of the "report" field pertains.
@@ -59,8 +50,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         public bool Inpth { get; set; }
 
-        [Required]
-        public EdgarDatasetTag Tag { get; set; }
+
 
         /// <summary>
         /// The XBRL link "role" of the preferred label, using only the portion of the role URI after the last "/".
@@ -82,10 +72,36 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         [Required]
         public bool Negating { get; set; }
+
         public char RenderFile { get; set; }
+
+
+        public string Key
+        {
+            get
+            {
+                return Submission.ADSH + Render.ToString() + Line.ToString();
+            }
+        }
+
+        public int LineNumber { get; set; }
+
 
         [Required]
         public EdgarDataset Dataset { get; set; }
-        public int LineNumber { get; set; }
+
+        [Required]
+        public EdgarDatasetSubmission Submission { get; set; }
+
+        [Required]
+        public EdgarDatasetTag Tag { get; set; }
+
+        public EdgarDatasetNumber Number { get; set; } //NUM: adsh, tag, version
+
+        public EdgarDatasetText Text { get; set; } //TEXT: adsh, tag, version
+
+        [Required]
+        public EdgarDatasetRender Render { get; set; } //REN: adsh, report
+        public int RenderId { get; set; }
     }
 }

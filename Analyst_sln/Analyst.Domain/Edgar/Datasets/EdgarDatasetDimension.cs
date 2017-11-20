@@ -40,7 +40,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         public bool SegmentTruncated { get; set; }
 
-        public virtual IList<EdgarDataset> Datasets { get; set; }
+        
 
         [NotMapped]
         public int LineNumber { get; set; }
@@ -52,5 +52,14 @@ namespace Analyst.Domain.Edgar.Datasets
                 return DimensionH;
             }
         }
+
+
+        public virtual EdgarDataset Dataset { get; set; } 
+
+        public virtual ICollection<EdgarDatasetNumber> Numbers { get; set; }
+
+        public virtual ICollection<EdgarDatasetText> Texts { get; set; }
+
+
     }
 }

@@ -91,10 +91,10 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 repo.AddTag(dataset, file);
             }
-            else
-            {
-                repo.AddTagAssociacion(dataset, file);
-            }
+            //else
+            //{
+            //    repo.AddTagAssociacion(dataset, file);
+            //}
         }
 
     }

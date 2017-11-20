@@ -59,20 +59,6 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public string Version { get; set; }
 
-
-        /// <summary>
-        /// Compund Key = ADSH and Version
-        /// </summary>
-        [NotMapped]
-        public string Key
-        {
-            get
-            {
-                return Tag + Version;
-            }
-
-        }
-
         /// <summary>
         /// 1 if tag is custom (version=adsh), 
         /// 0 if it is standard. 
@@ -122,11 +108,30 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         public string Doc { get; set; }
 
-        [NotMapped]//TODO: This field should
+        [NotMapped]//TODO: This field should be
         public int LineNumber { get; set; }
 
-        public List<EdgarDataset> Datasets { get; set; }
+        /// <summary>
+        /// Compund Key = ADSH and Version
+        /// </summary>
+        [NotMapped]
+        public string Key
+        {
+            get
+            {
+                return Tag + Version;
+            }
 
+        }
+
+        public EdgarDataset Dataset { get; set; }
+
+
+        public virtual ICollection<EdgarDatasetNumber> Numbers { get; set; }
+
+        public virtual ICollection<EdgarDatasetText> Texts { get; set; }
+
+        public virtual ICollection<EdgarDatasetText> Presentations { get; set; }
 
         public virtual IList<EdgarDatasetCalculation> ParentCalculations { get; set; }
 

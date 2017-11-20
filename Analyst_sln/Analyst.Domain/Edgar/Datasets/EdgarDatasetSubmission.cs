@@ -118,8 +118,14 @@ namespace Analyst.Domain.Edgar.Datasets
             }
         }
 
-        public IList<EdgarDatasetNumber> Numbers { get; set; }
+        public virtual ICollection<EdgarDatasetRender> Renders { get; set; }
 
-        public IList<EdgarDatasetRendering> Renders { get; set; }
+        public virtual ICollection<EdgarDatasetNumber> Numbers { get; set; }
+
+        public virtual ICollection<EdgarDatasetText> Texts { get; set; } 
+
+        public virtual ICollection<EdgarDatasetPresentation> Presentations { get; set; }
+
+        public virtual ICollection<EdgarDatasetCalculation> Calculations { get; set; }
     }
 }

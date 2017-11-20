@@ -71,7 +71,6 @@
   <ItemGroup>
     <Content Include="scripts\create SP_EDGARDATASETCALC_INSERT.sql" />
     <Content Include="scripts\create SP_EDGARDATASETDIMENSIONS_INSERT.sql" />
-    <Content Include="scripts\create SP_EDGARDATASETDIMENSIONS_RELATE.sql" />
     <Content Include="scripts\create SP_EDGARDATASETTEXT_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -92,9 +91,6 @@
     <Content Include="scripts_queries\duplicated analys txt record.sql" />
     <Content Include="scripts_queries\recreation_script.sql" />
     <Content Include="scripts\create SP_EDGARDATASETTAGS_INSERT.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="scripts\create SP_EDGARDATASETTAGS_RELATE.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

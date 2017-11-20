@@ -10,11 +10,11 @@ using log4net;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetRenderingService : IEdgarFileService<EdgarDatasetRendering>
+    public interface IEdgarDatasetRenderingService : IEdgarFileService<EdgarDatasetRender>
     {
         ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
     }
-    public class EdgarDatasetRenderingService : EdgarFileService<EdgarDatasetRendering>, IEdgarDatasetRenderingService
+    public class EdgarDatasetRenderingService : EdgarFileService<EdgarDatasetRender>, IEdgarDatasetRenderingService
     {
         public ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
 
@@ -30,19 +30,19 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetRendering file)
+        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetRender file)
         {
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetRendering Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetRender Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             /*
             adsh	report	rfile	menucat	shortname	longname	roleuri	parentroleuri	parentreport	ultparentrpt
             0001163302-16-000148	1	H	Cover	Document and Entity Information	0001000 - Document - Document and Entity Information	http://www.ussteel.com/role/DocumentAndEntityInformation			
             0001163302-16-000148	2	H	Statements	Consolidated Statement Of Operations	1001000 - Statement - Consolidated Statement Of Operations	http://www.ussteel.com/role/ConsolidatedStatementOfOperations			
             */
-            EdgarDatasetRendering ren = new EdgarDatasetRendering();
+            EdgarDatasetRender ren = new EdgarDatasetRender();
             string adsh = fields[fieldNames.IndexOf("adsh")];
             ren.Submission = Subs[adsh];
             ren.Report = Convert.ToInt32(fields[fieldNames.IndexOf("report")]);

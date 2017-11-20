@@ -1,47 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDataset">
-    <Position X="3.25" Y="1.25" Width="1.5" />
+    <Position X="4" Y="12.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAiAAAABAAAAAAAAAAAAAIAAAFAAEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAmAEAQBACAQEQgAABBAgJBAFFIAEgAKAAAGAAAAAA=</HashCode>
       <FileName>Edgar\Datasets\EdgarDataset.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
+      <Property Name="Dimensions" />
       <Property Name="Submissions" />
       <Property Name="Tags" />
-      <Property Name="Dimensions" />
     </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
   </Class>
-  <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetSubmissions">
-    <Position X="6.25" Y="0.5" Width="1.5" />
+  <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetSubmission">
+    <Position X="8.5" Y="6.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AIACAAAAAEAAAAAAAAIAAAgCAAAAAAAAAAABAAkADAI=</HashCode>
-      <FileName>Edgar\Datasets\EdgarDatasetSubmissions.cs</FileName>
+      <HashCode>AIACAAAAAFIAAAQgAAIIAggCAAAAAAAAAAABAAkADAI=</HashCode>
+      <FileName>Edgar\Datasets\EdgarDatasetSubmission.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Registrant" />
       <Property Name="Form" />
     </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetTag">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="0.75" Y="11.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IAACAAAhAAAgAAIAgAAgAQAACACAAAAEAAAAAAAAAAA=</HashCode>
+      <HashCode>IAACAAAhACAgAAYAgAAIAQBACACAAAAEAAAAAAgAAAA=</HashCode>
       <FileName>Edgar\Datasets\EdgarDatasetTag.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
       <Property Name="Datasets" />
     </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Analyst.Domain.Edgar.Company">
-    <Position X="9.25" Y="4.25" Width="1.5" />
+    <Position X="10.5" Y="11.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Edgar\Company.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Analyst.Domain.Edgar.Registrant">
-    <Position X="9.25" Y="0.75" Width="1.5" />
+    <Position X="11.75" Y="8.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAACAAAAAAAAAAAICgAIAAQAAAgAAAIAAAAAAABAAEA=</HashCode>
       <FileName>Edgar\Registrant.cs</FileName>
@@ -51,32 +54,113 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Analyst.Domain.Edgar.SECForm">
-    <Position X="6.5" Y="4.75" Width="1.5" />
+    <Position X="5.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAgAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAACAAAAAAAgAAQAAAAgAAAAAAAAAAAgAABAQCAAAAA=</HashCode>
       <FileName>Edgar\SECForm.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Analyst.Domain.Edgar.SIC">
-    <Position X="12.25" Y="1.25" Width="1.5" />
+    <Position X="11.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAACAAAAAAAAAAUAAAAgAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Edgar\SIC.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="Analyst.Domain.Edgar.MutualFund">
-    <Position X="11.25" Y="4.25" Width="1.5" />
+    <Position X="12.75" Y="11.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Edgar\MutualFund.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetDimension">
-    <Position X="3.25" Y="5" Width="1.5" />
+    <Position X="9.25" Y="14" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAACAAAEAAAAAAQAAAAIBQAAACAAAAAAIAAAAAgAAAA=</HashCode>
       <FileName>Edgar\Datasets\EdgarDatasetDimension.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
+  <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetCalculation" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>IAECAAAAAgIAAAQBAAQoAAAABAAAAAAAAAAAAAiAAAA=</HashCode>
+      <FileName>Edgar\Datasets\EdgarDatasetCalculation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Dataset" />
+      <Property Name="Submission" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetNumber" BaseTypeListCollapsed="true">
+    <Position X="5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>IIACKQAARAAgAASASAQIAEAAAAAQQCAAAAAgICgCAAA=</HashCode>
+      <FileName>Edgar\Datasets\EdgarDatasetNumber.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Submission" />
+      <Property Name="Tag" />
+      <Property Name="Dimension" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetPresentation" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACACAAAAACIgAAQABAQIAIAEAAAAAAAAABAgAAgRAAA=</HashCode>
+      <FileName>Edgar\Datasets\EdgarDatasetPresentation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Dataset" />
+      <Property Name="Render" />
+      <Property Name="Submission" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetRender" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACQBAAAAMAAAQAAAQIQAAEAAAAAMAAAAAAAAgQBAA=</HashCode>
+      <FileName>Edgar\Datasets\EdgarDatasetRender.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Dataset" />
+      <Property Name="Submission" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Analyst.Domain.Edgar.Datasets.EdgarDatasetText" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCIQAQChIgAAQAAAQogBgAAAAAQAAAIAggAAgCAAA=</HashCode>
+      <FileName>Edgar\Datasets\EdgarDatasetText.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Dataset" />
+      <Property Name="Tag" />
+      <Property Name="Submission" />
+      <Property Name="Dimension" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="Analyst.Domain.Edgar.Datasets.IEdgarEntity" Collapsed="true">
+    <Position X="14.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Edgar\Datasets\IEdgarDatasetFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Analyst.Domain.Edgar.Datasets.IEdgarDatasetFile" Collapsed="true">
+    <Position X="14.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Edgar\Datasets\IEdgarDatasetFile.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

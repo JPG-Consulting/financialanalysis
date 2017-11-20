@@ -38,15 +38,15 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset ds);
         void Add(EdgarDataset ds, EdgarDatasetSubmission sub);
         void AddTag(EdgarDataset ds, EdgarDatasetTag tag);
-        void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag);
+        
         void Add(EdgarDataset dataset, EdgarDatasetNumber number);
         void Add(EdgarDataset dataset, EdgarDatasetDimension dim);
-        void Add(EdgarDataset dataset,EdgarDatasetRendering ren);
+        void Add(EdgarDataset dataset,EdgarDatasetRender ren);
         void Add(EdgarDataset ds, EdgarDatasetPresentation pre);
         void Add(EdgarDataset dataset, EdgarDatasetCalculation file);
         void Add(EdgarDataset dataset, EdgarDatasetText file);
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
-        
+        //void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag);
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -246,12 +246,7 @@ namespace Analyst.DBAccess.Contexts
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_INSERT @DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc",dsid, tagparam, version, custom, abstracto, datatype, tlabel, doc);
         }
 
-        public void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag)
-        {
-            SqlParameter dsid = new SqlParameter("@DataSetId", dataset.Id);
-            SqlParameter tagid = new SqlParameter("@TagId", tag.Id);
-            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_RELATE @DataSetId, @TagId",dsid,tagid);
-        }
+        
 
         public void Add(EdgarDataset dataset, EdgarDatasetNumber number)
         {
@@ -298,13 +293,15 @@ namespace Analyst.DBAccess.Contexts
 
         }
 
-        public void Add(EdgarDataset ds,EdgarDatasetRendering ren)
+        public void Add(EdgarDataset ds,EdgarDatasetRender ren)
         {
             SqlParameter Report = new SqlParameter("@Report", ren.Report);
             SqlParameter MenuCategory = new SqlParameter("@MenuCategory", ren.MenuCategory);
             SqlParameter ShortName = new SqlParameter("@ShortName", ren.ShortName);
             SqlParameter LongName = new SqlParameter("@LongName", ren.LongName);
             SqlParameter Roleuri = new SqlParameter("@Roleuri", ren.Roleuri);
+            if (string.IsNullOrEmpty(ren.Roleuri))
+                Roleuri.Value = DBNull.Value;
             SqlParameter ParentRoleuri = new SqlParameter("@ParentRoleuri", ren.ParentRoleuri);
             SqlParameter ParentReport = new SqlParameter("@ParentReport", ren.ParentReport);
             if (ren.ParentReport == null)
@@ -405,6 +402,13 @@ namespace Analyst.DBAccess.Contexts
             Context.SaveChanges();
         }
 
-       
+        /*
+        public void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag)
+        {
+            SqlParameter dsid = new SqlParameter("@DataSetId", dataset.Id);
+            SqlParameter tagid = new SqlParameter("@TagId", tag.Id);
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_RELATE @DataSetId, @TagId", dsid, tagid);
+        }
+        */
     }
 }

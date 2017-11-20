@@ -19,9 +19,9 @@ create database Analyst
 ON   
 	( NAME = Analyst_dat,  
 		FILENAME = 'E:\_analyst_db\Analyst_dat.mdf',  
-		SIZE = 20,  
+		SIZE = 2000MB,  
 		--MAXSIZE = 50,  
-		FILEGROWTH = 10 )  
+		FILEGROWTH = 1000MB )  
 	LOG ON  
 	( NAME = Analyst_log,  
 		FILENAME = 'E:\_analyst_db\Analyst_log.ldf',  

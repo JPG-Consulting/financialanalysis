@@ -46,23 +46,30 @@ CREATE PROCEDURE [dbo].[SP_EDGARDATASETDIMENSIONS_INSERT]
 AS
 
 BEGIN
-	declare @DIMID int;
+	--declare @DIMID int;
 	
     BEGIN TRANSACTION;
 
 		INSERT INTO [dbo].[EdgarDatasetDimensions]
 			   ([DimensionH]
 			   ,[Segments]
-			   ,[SegmentTruncated])
+			   ,[SegmentTruncated]
+			   ,[Dataset_id])
 		 VALUES
 			   (@DimensionH
 				,@Segments
-				,@SegmentTruncated)
+				,@SegmentTruncated
+				,@DataSetId)
 			;
 
-		set @DIMID = (SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY]);
+		--set @DIMID = (SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY]);
 
-		exec [dbo].[SP_EDGARDATASETDIMENSIONS_RELATE] @DataSetId,@DIMID;
+		--exec [dbo].[SP_EDGARDATASETDIMENSIONS_RELATE] @DataSetId,@DIMID;
+		
+		UPDATE DBO.EdgarDatasets 
+		SET ProcessedDimensions = ProcessedDimensions + 1 
+		WHERE ID= @DataSetId;
+
 	COMMIT TRANSACTION;
 END
 --GO

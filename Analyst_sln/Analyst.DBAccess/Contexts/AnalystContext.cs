@@ -48,6 +48,12 @@ namespace Analyst.DBAccess.Contexts
                 .WithMany(tag => tag.ChildCalculations)
                 .HasForeignKey(calc => calc.ChildTagId)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<EdgarDatasetPresentation>()
+                .HasRequired(pre => pre.Render)
+                .WithMany(ren => ren.Presentations)
+                .HasForeignKey(pre => pre.RenderId)
+                .WillCascadeOnDelete(false);
         }
 
 
@@ -65,7 +71,7 @@ namespace Analyst.DBAccess.Contexts
         public virtual DbSet<EdgarDatasetNumber> Numbers { get; set; }
         public virtual DbSet<EdgarDatasetDimension> Dimensions { get; set; }
 
-        public virtual DbSet<EdgarDatasetRendering> Renders { get; set; }
+        public virtual DbSet<EdgarDatasetRender> Renders { get; set; }
     
         public virtual DbSet<EdgarDatasetPresentation> Presentations { get; set; }
 

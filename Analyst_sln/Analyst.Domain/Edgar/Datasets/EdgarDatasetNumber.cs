@@ -20,12 +20,7 @@ namespace Analyst.Domain.Edgar.Datasets
         [Key]
         public int Id { get; set; }
 
-        //TODO: Fix this relationship, it should be a collection of numbers in EdgarDatasetSubmissions
-        [Required]
-        public EdgarDatasetSubmission Submission { get; set; }
 
-        [Required]
-        public EdgarDatasetTag Tag { get; set; }
 
         
         /// <summary>
@@ -58,13 +53,7 @@ namespace Analyst.Domain.Edgar.Datasets
         [StringLength(20)]
         public string UnitOfMeasure { get; set; }
 
-        /// <summary>
-        /// The 32-byte hexadecimal key for the dimensional information in the DIM data set.  
-        /// ALPHANUMERIC 32
-        /// </summary>
-        //[Key]
-        //[Required]
-        public EdgarDatasetDimension Dimension { get; set; }
+       
 
         /// <summary>
         /// A positive integer to distinguish different reported facts 
@@ -171,8 +160,21 @@ namespace Analyst.Domain.Edgar.Datasets
         {
             get
             {
-                return Id.ToString();//todo: pending to implement to right compound key
+                return Submission.ADSH + Tag.Tag + Tag.Version;
             }
         }
+
+        [Required]
+        public EdgarDatasetSubmission Submission { get; set; }
+
+        [Required]
+        public EdgarDatasetTag Tag { get; set; }
+
+        [Required]
+        public EdgarDatasetDimension Dimension { get; set; }
+
+        public virtual ICollection<EdgarDatasetPresentation> Presentations { get; set; }
+
+        
     }
 }
