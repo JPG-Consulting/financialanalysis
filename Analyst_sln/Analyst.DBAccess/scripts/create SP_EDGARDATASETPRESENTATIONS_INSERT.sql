@@ -37,6 +37,8 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETPRESENTATIONS_INSERT
 	,@Tag_Id int
 	,@DataSetId int
 	,@LineNumber int
+	,@Number_Id int
+	,@Text_Id int
 AS
 BEGIN
 	Begin transaction;
@@ -45,7 +47,7 @@ BEGIN
 				select 1
 				from [dbo].[EdgarDatasetPresentations] 
 				where 
-					[Dataset_Id] =@DataSetId 
+					[DatasetId] =@DataSetId 
 					and reportnumber = @ReportNumber
 					and line =@line
 					and linenumber = @linenumber
@@ -60,10 +62,12 @@ BEGIN
 				   ,[prole]
 				   ,[PreferredLabel]
 				   ,[Negating]
-				   ,[Submission_Id]
-				   ,[Tag_Id]
-				   ,[Dataset_ID]
-				   ,[LineNumber])
+				   ,[SubmissionId]
+				   ,[TagId]
+				   ,[DatasetId]
+				   ,[LineNumber]
+				   ,[NumberId]
+				   ,[TextId])
 			 VALUES
 				   (@ReportNumber
 					,@Line
@@ -75,7 +79,9 @@ BEGIN
 					,@Submission_Id
 					,@Tag_Id 
 					,@DataSetId
-					,@LineNumber)
+					,@LineNumber
+					,@Number_Id
+				   ,@Text_Id)
 			;
 
 			UPDATE DBO.EdgarDatasets 

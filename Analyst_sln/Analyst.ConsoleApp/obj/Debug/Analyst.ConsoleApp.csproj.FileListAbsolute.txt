@@ -1,6 +1,0 @@
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\bin\Debug\Analyst.ConsoleApp.exe.config
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\obj\Debug\Analyst.ConsoleApp.csprojResolveAssemblyReference.cache
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\bin\Debug\Analyst.ConsoleApp.exe
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\bin\Debug\Analyst.ConsoleApp.pdb
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\obj\Debug\Analyst.ConsoleApp.exe
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\obj\Debug\Analyst.ConsoleApp.pdb

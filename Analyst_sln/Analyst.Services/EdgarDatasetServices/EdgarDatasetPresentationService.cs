@@ -44,7 +44,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetPresentation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetPresentation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetPresentation> existing)
         {
             /*
             adsh	report	line	stmt	inpth	rfile	tag	version	prole	plabel	negating

@@ -45,7 +45,7 @@ BEGIN
 			select 1
 			from [dbo].[EdgarDatasetRenderings] 
 			where 
-				[Dataset_Id] =@DataSetId 
+				[DatasetId] =@DataSetId 
 				and report = @report
 				and linenumber = @linenumber
 		)
@@ -61,8 +61,8 @@ BEGIN
 				   ,[ParentRoleuri]
 				   ,[ParentReport]
 				   ,[UltimateParentReport]
-				   ,[Submission_Id]
-				   ,[Dataset_Id]
+				   ,[SubmissionId]
+				   ,[DatasetId]
 				   ,[LineNumber])
 			 VALUES
 				   (

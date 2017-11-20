@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,16 +14,8 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public int Id { get; set; }
         
-        public int LineNumber { get; set; }
-
-        public string Key
-        {
-            get
-            {
-                return Submission.ADSH + SequentialNumberForGrouping.ToString() + SequentialNumberForArc.ToString();
-            }
-        }
-
+        
+        public int SubmissionId { get; set; }
         [Required]
         public EdgarDatasetSubmission Submission { get; set; }
 
@@ -59,6 +52,18 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         [Required]
         public EdgarDatasetTag ChildTag { get; set; }
+
+        public int LineNumber { get; set; }
+
+        public string Key
+        {
+            get
+            {
+                return Submission.ADSH + SequentialNumberForGrouping.ToString() + SequentialNumberForArc.ToString();
+            }
+        }
+
+        public int DatasetId { get; set; }
 
         [Required]
         public EdgarDataset Dataset { get; set; }

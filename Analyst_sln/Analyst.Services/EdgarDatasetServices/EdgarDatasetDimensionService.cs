@@ -35,11 +35,13 @@ namespace Analyst.Services.EdgarDatasetServices
                 repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetDimension Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetDimension Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber,ConcurrentDictionary<string,EdgarDatasetDimension> existing)
         {
             string dimhash = fields[fieldNames.IndexOf("dimhash")];
-            EdgarDatasetDimension dim = repository.GetDimension(dimhash);
-            if(dim == null)
+            EdgarDatasetDimension dim;
+            if (existing.ContainsKey(dimhash))
+                dim = repository.GetDimension(dimhash);
+            else
             {
                 dim = new EdgarDatasetDimension();
                 dim.DimensionH = dimhash;

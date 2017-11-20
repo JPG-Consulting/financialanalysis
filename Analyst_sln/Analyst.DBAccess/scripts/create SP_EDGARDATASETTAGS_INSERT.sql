@@ -42,7 +42,7 @@ BEGIN
 	
     BEGIN TRANSACTION;
 		INSERT INTO [dbo].[EdgarDatasetTags]
-			   ([Tag],[Version],[Custom],[Abstract],[Datatype],[Tlabel],[Doc],[Dataset_Id])
+			   ([Tag],[Version],[Custom],[Abstract],[Datatype],[Tlabel],[Doc],[DatasetId])
 		 VALUES
 			   (@tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc,@DataSetId);
 	

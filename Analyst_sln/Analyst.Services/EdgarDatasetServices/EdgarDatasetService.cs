@@ -119,15 +119,15 @@ namespace Analyst.Services.EdgarDatasetServices
 
                 //Retrieve all tags, submissions and dimensions to fill the relationship
                 //Load Calculations, Texts and Numbers
-                ConcurrentDictionary<string, EdgarDatasetTag> tags = tagService.GetAsConcurrent();
-                ConcurrentDictionary<string, EdgarDatasetSubmission> subs = submissionService.GetAsConcurrent();
-                ConcurrentDictionary<string,EdgarDatasetDimension> dims = dimensionService.GetAsConcurrent();
+                ConcurrentDictionary<string, EdgarDatasetTag> tags = tagService.GetAsConcurrent(id);
+                ConcurrentDictionary<string, EdgarDatasetSubmission> subs = submissionService.GetAsConcurrent(id);
+                ConcurrentDictionary<string,EdgarDatasetDimension> dims = dimensionService.GetAsConcurrent(id);
                 states = LoadCalTxtNum(ds, repository,subs,tags,dims);
                 ManageErrors(states);
 
                 //Load Presentations and Numbers
-                ConcurrentDictionary<string, EdgarDatasetNumber> nums = numService.GetAsConcurrent();
-                ConcurrentDictionary<string, EdgarDatasetText> txts = textService.GetAsConcurrent();
+                ConcurrentDictionary<string, EdgarDatasetNumber> nums = numService.GetAsConcurrent(id);
+                ConcurrentDictionary<string, EdgarDatasetText> txts = textService.GetAsConcurrent(id);
                 states = LoadRenPre(ds, repository, subs, tags, nums, txts);
                 ManageErrors(states);
 
@@ -157,12 +157,15 @@ namespace Analyst.Services.EdgarDatasetServices
             tasks.Add(Task.Factory.StartNew(() => 
                 submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")
             ));
+            
             tasks.Add(Task.Factory.StartNew(() => 
                 tagService.Process(stateTag,true,EdgarDatasetTag.FILE_NAME,"Tags")
             ));
+
             tasks.Add(Task.Factory.StartNew(() => 
                 dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")
             ));
+            
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }

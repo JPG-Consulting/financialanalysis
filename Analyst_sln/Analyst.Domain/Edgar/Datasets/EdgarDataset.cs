@@ -36,7 +36,6 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public virtual IList<EdgarDatasetRender> Renders { get; set; }
 
-        //[ForeignKey("EdgarDataset_Id")]
         public virtual IList<EdgarDatasetSubmission> Submissions { get; set; }
 
         public virtual IList<EdgarDatasetTag> Tags { get; set; }

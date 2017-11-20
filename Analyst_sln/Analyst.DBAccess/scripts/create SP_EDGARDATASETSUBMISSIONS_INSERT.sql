@@ -56,9 +56,9 @@ BEGIN
 			   ,[FloatAxis]
 			   ,[FloatMems]
 			   ,[LineNumber]
-			   ,[Form_id]
-			   ,[Registrant_Id]
-			   ,[EdgarDataset_Id])
+			   ,[SECFormId]
+			   ,[RegistrantId]
+			   ,[DatasetId])
 		 VALUES
 			   (@ADSH
 				,@Period

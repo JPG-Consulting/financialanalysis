@@ -43,7 +43,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetText Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetText Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetText> existing)
         {
             /*
             adsh	tag	version	ddate	qtrs	iprx	lang	dcml	durp	datp	dimh	dimn	coreg	escaped	srclen	txtlen	footnote	footlen	context	value

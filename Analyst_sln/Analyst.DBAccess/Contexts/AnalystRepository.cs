@@ -21,6 +21,8 @@ namespace Analyst.DBAccess.Contexts
         IList<T> Get<T>() where T:IEdgarEntity;
         IList<T> Get<T>(string include) where T : IEdgarEntity;
         int GetCount<T>() where T : IEdgarEntity;
+        IList<T> GetByDatasetId<T>(int datasetId) where T : class, IEdgarDatasetFile;
+
         int GetDatasetsCount();
         int GetSECFormsCount();
         int GetSICCount();
@@ -31,7 +33,8 @@ namespace Analyst.DBAccess.Contexts
         EdgarDatasetTag GetTag(string tag, string version);
         
         EdgarDatasetDimension GetDimension(string dimhash);
-        
+        EdgarDatasetSubmission GetSubmission(string adsh);
+
         void Add(SECForm sECForm);
         void Add(SIC sic);
         void Add(Registrant r);
@@ -45,8 +48,10 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset ds, EdgarDatasetPresentation pre);
         void Add(EdgarDataset dataset, EdgarDatasetCalculation file);
         void Add(EdgarDataset dataset, EdgarDatasetText file);
+        
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
-        //void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag);
+        
+        
     }
 
     public class AnalystRepository: IAnalystRepository
@@ -153,6 +158,12 @@ namespace Analyst.DBAccess.Contexts
             return GetQuery<T>().Include(include).ToList();
         }
 
+        public IList<T> GetByDatasetId<T>(int datasetId) where T : class,IEdgarDatasetFile
+        {
+            return GetQuery<T>().Where(t => t.DatasetId == datasetId).ToList();
+
+
+        }
         private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
         {
             string key = typeof(TEntity).Name;
@@ -168,7 +179,10 @@ namespace Analyst.DBAccess.Contexts
             return query;
         }
 
-        
+        public EdgarDatasetSubmission GetSubmission(string adsh)
+        {
+            return GetQuery<EdgarDatasetSubmission>().Where(sub => sub.ADSH == adsh).SingleOrDefault();
+        }
 
         #endregion
 
@@ -331,10 +345,12 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter Tag_Id = new SqlParameter("@Tag_Id", pre.Tag.Id);
             SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
             SqlParameter LineNumber = new SqlParameter("@LineNumber", pre.LineNumber);
+            SqlParameter Number_Id = new SqlParameter("@Number_Id", pre.NumberId);
+            SqlParameter Text_Id = new SqlParameter("@Text_Id", pre.TextId);
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
-                "@ReportNumber, @Line, @FinancialStatement, @Inpth, @prole, @PreferredLabel, @Negating, @Submission_Id, @Tag_Id, @DataSetId, @LineNumber",
-                ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, Submission_Id, Tag_Id, DataSetId, LineNumber);
+                "@ReportNumber, @Line, @FinancialStatement, @Inpth, @prole, @PreferredLabel, @Negating, @Submission_Id, @Tag_Id, @DataSetId, @LineNumber,@Number_Id, @Text_Id",
+                ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, Submission_Id, Tag_Id, DataSetId, LineNumber, Number_Id, Text_Id);
         }
 
         public void Add(EdgarDataset dataset, EdgarDatasetCalculation file)

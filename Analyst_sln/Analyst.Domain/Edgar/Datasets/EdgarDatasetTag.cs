@@ -124,6 +124,8 @@ namespace Analyst.Domain.Edgar.Datasets
 
         }
 
+        public int DatasetId { get; set; }
+
         public EdgarDataset Dataset { get; set; }
 
 
@@ -131,7 +133,7 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public virtual ICollection<EdgarDatasetText> Texts { get; set; }
 
-        public virtual ICollection<EdgarDatasetText> Presentations { get; set; }
+        public virtual ICollection<EdgarDatasetPresentation> Presentations { get; set; }
 
         public virtual IList<EdgarDatasetCalculation> ParentCalculations { get; set; }
 

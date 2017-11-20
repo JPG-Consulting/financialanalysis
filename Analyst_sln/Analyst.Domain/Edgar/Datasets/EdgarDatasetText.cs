@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -124,17 +125,20 @@ namespace Analyst.Domain.Edgar.Datasets
         }
 
         public int LineNumber { get; set; }
-
-
+        
+        public int DatasetId { get; set; }
         [Required]
         public EdgarDataset Dataset { get; set; }
 
+        public int SubmissionId { get; set; }
         [Required]
         public EdgarDatasetSubmission Submission { get; set; }
 
+        public int TagId { get; set; }
         [Required]
         public EdgarDatasetTag Tag { get; set; }
 
+        public int DimensionId { get; set; }
         [Required]
         public EdgarDatasetDimension Dimension { get; set; }
 

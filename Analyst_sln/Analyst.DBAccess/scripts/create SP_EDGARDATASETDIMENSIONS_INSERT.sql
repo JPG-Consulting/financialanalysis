@@ -54,7 +54,7 @@ BEGIN
 			   ([DimensionH]
 			   ,[Segments]
 			   ,[SegmentTruncated]
-			   ,[Dataset_id])
+			   ,[Datasetid])
 		 VALUES
 			   (@DimensionH
 				,@Segments

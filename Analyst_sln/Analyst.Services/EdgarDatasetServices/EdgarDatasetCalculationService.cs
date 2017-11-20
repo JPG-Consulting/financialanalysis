@@ -39,7 +39,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetCalculation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetCalculation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetCalculation> existing)
         {
             try
             {

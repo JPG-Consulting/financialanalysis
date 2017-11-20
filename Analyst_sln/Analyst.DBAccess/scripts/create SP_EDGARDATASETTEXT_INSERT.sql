@@ -38,12 +38,12 @@ BEGIN
 			select 1
 			from [dbo].[EdgarDatasetTexts] 
 			where 
-				[Dataset_Id] =@DataSetId 
-				AND [Submission_Id] =@Submission_Id
-				AND [Tag_Id] =@Tag_Id
+				[DatasetId] =@DataSetId 
+				AND [SubmissionId] =@Submission_Id
+				AND [TagId] =@Tag_Id
 				AND [DDate]=@DDate
 				AND [Qtrs]=@Qtrs
-				AND [Dimension_Id] =@Dimension_Id
+				AND [DimensionId] =@Dimension_Id
 				AND [Iprx]=@Iprx
 		)
 	) 
@@ -67,10 +67,10 @@ BEGIN
 			   ,[FootLen]
 			   ,[Context]
 			   ,[Value]
-			   ,[Dimension_Id]
-			   ,[Submission_Id]
-			   ,[Tag_Id]
-			   ,[Dataset_Id])
+			   ,[DimensionId]
+			   ,[SubmissionId]
+			   ,[TagId]
+			   ,[DatasetId])
 		 VALUES
 			   (@LineNumber 
 				,@DDate

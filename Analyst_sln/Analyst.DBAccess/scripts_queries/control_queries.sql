@@ -27,7 +27,7 @@ select
 from [dbo].[Log] 
 where 1=1
 	--and logger <> 'EdgarDatasetTagService'
-	and Level <> 'DEBUG'
+	--and Level <> 'DEBUG'
 order by Date desc;
 
 --delete from [dbo].[Log] where level='DEBUG';

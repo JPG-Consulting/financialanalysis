@@ -35,7 +35,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetRender Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetRender Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetRender> existing)
         {
             /*
             adsh	report	rfile	menucat	shortname	longname	roleuri	parentroleuri	parentreport	ultparentrpt

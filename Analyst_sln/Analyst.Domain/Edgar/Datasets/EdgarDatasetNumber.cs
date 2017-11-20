@@ -164,17 +164,23 @@ namespace Analyst.Domain.Edgar.Datasets
             }
         }
 
+        public int DatasetId { get; set; }
+
+        [Required]
+        public EdgarDataset Dataset { get; set; }
+        public int SubmissionId { get; set; }
         [Required]
         public EdgarDatasetSubmission Submission { get; set; }
 
+        public int TagId { get; set; }
         [Required]
         public EdgarDatasetTag Tag { get; set; }
 
+        public int DimensionId { get; set; }
         [Required]
         public EdgarDatasetDimension Dimension { get; set; }
 
         public virtual ICollection<EdgarDatasetPresentation> Presentations { get; set; }
-
         
     }
 }

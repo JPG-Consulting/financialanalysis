@@ -118,6 +118,11 @@ namespace Analyst.Domain.Edgar.Datasets
             }
         }
 
+        public int DatasetId { get; set; }
+        
+        [Required]
+        public EdgarDataset Dataset { get; set; }
+
         public virtual ICollection<EdgarDatasetRender> Renders { get; set; }
 
         public virtual ICollection<EdgarDatasetNumber> Numbers { get; set; }
@@ -127,5 +132,7 @@ namespace Analyst.Domain.Edgar.Datasets
         public virtual ICollection<EdgarDatasetPresentation> Presentations { get; set; }
 
         public virtual ICollection<EdgarDatasetCalculation> Calculations { get; set; }
+        public int RegistrantId { get; set; }
+        public int SECFormId { get; set; }
     }
 }

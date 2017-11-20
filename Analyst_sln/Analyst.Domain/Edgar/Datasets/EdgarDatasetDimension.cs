@@ -53,6 +53,7 @@ namespace Analyst.Domain.Edgar.Datasets
             }
         }
 
+        public int DatasetId { get; set; }
 
         public virtual EdgarDataset Dataset { get; set; } 
 

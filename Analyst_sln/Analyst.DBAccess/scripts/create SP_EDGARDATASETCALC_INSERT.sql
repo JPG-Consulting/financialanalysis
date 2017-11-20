@@ -16,10 +16,10 @@ BEGIN
 			where 1=1
 				AND [SequentialNumberForGrouping] = @SequentialNumberForGrouping
 				AND [SequentialNumberForArc] = @SequentialNumberForArc
-				AND [Submission_Id] = @Submission_Id
+				AND [SubmissionId] = @Submission_Id
 				AND [ParentTagId] = @ParentTagId
 				AND [ChildTagId] = @ChildTagId
-				AND [Dataset_Id] = @Dataset_Id
+				AND [DatasetId] = @Dataset_Id
 		)
 	) 
 	begin
@@ -32,8 +32,8 @@ BEGIN
 				,[Negative]
 				,[ParentTagId]
 				,[ChildTagId]
-				,[Dataset_Id]
-				,[Submission_Id])
+				,[DatasetId]
+				,[SubmissionId])
 			VALUES
 				(@LineNumber
 				,@SequentialNumberForGrouping

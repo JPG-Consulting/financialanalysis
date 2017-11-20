@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarFileService<T> where T : IEdgarDatasetFile
+    public interface IEdgarFileService<T> where T :class, IEdgarDatasetFile
     {
-        ConcurrentDictionary<string, T> GetAsConcurrent();
+        ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId);
         ConcurrentDictionary<string, T> GetAsConcurrent(string include);
         void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate);
     }
 
-    public abstract class EdgarFileService<T>:IEdgarFileService<T> where T:IEdgarDatasetFile
+    public abstract class EdgarFileService<T>:IEdgarFileService<T> where T:class,IEdgarDatasetFile
     {
         private const int DEFAULT_MAX_ERRORS_ALLOWED = 10;
         // private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -38,12 +38,13 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        public ConcurrentDictionary<string, T> GetAsConcurrent()
+        public ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId)
         {
             ConcurrentDictionary<string, T> ret = new ConcurrentDictionary<string, T>();
             IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-            
-            IList<T> xs = repository.Get<T>();
+
+            //IList<T> xs = repository.Get<T>();
+            IList<T> xs = repository.GetByDatasetId<T>(datasetId);
             foreach (T x in xs)
             {
                 ret.TryAdd(x.Key, x);
@@ -79,6 +80,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 string field = "Total" + fieldToUpdate;
                 state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset,allLines.Length - 1);
                 state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset,field);
+                ConcurrentDictionary<string, T> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
                 if (processInParallel && allLines.Length > 1)
                 {
                     //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
@@ -89,12 +91,12 @@ namespace Analyst.Services.EdgarDatasetServices
                     // Loop over the partitions in parallel.
                     Parallel.ForEach(rangePartitioner, (range, loopState) =>
                     {
-                        ProcessRange(fileToProcess, state, range, allLines, header);
+                        ProcessRange(fileToProcess, state, range, allLines, header,existing);
                     });
                 }
                 else
                 {
-                    ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header);
+                    ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header,existing);
                 }
                 long elapsedMs = watch.ElapsedMilliseconds;
                 Log.Info("End process " + fileToProcess + " - time: " + new TimeSpan(elapsedMs).ToString());
@@ -118,7 +120,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header)
+        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, T> existing)
         {
             /*
             EF isn't thread safe and it doesn't allow parallel
@@ -144,7 +146,7 @@ namespace Analyst.Services.EdgarDatasetServices
                             string line = allLines[i];
                             List<string> fields = line.Split('\t').ToList();
 
-                            T file = Parse(repo, fieldNames, fields, i+1);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
+                            T file = Parse(repo, fieldNames, fields, i+1,existing);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
                             Add(repo, state.Dataset, file);
                         }
                         catch(Exception ex)
@@ -169,7 +171,7 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public abstract void Add(IAnalystRepository repo, EdgarDataset dataset, T file);
-        public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber);
+        public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, T> existing);
         
     }
 }

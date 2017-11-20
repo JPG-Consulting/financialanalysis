@@ -46,7 +46,7 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override EdgarDatasetTag Parse(IAnalystRepository repository,List<string> fieldNames, List<string> fields, int linenumber)
+        public override EdgarDatasetTag Parse(IAnalystRepository repository,List<string> fieldNames, List<string> fields, int linenumber, ConcurrentDictionary<string, EdgarDatasetTag> existing)
         {
             /*
             File content:
@@ -59,8 +59,11 @@ namespace Analyst.Services.EdgarDatasetServices
 
             string strTag = fields[fieldNames.IndexOf("tag")];
             string version = fields[fieldNames.IndexOf("version")];
-            EdgarDatasetTag tag = repository.GetTag(strTag, version);
-            if (tag == null)
+
+            EdgarDatasetTag tag;
+            if(existing.ContainsKey(strTag+version))
+                tag = repository.GetTag(strTag, version);
+            else
             {
                 tag = new EdgarDatasetTag();
                 tag.Tag = strTag;

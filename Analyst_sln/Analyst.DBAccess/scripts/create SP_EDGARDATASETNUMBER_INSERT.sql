@@ -34,13 +34,13 @@ BEGIN
 			*/
 			select 1
 			from [dbo].[EdgarDatasetNumbers] 
-			where [EdgarDataset_Id]=@EdgarDataset_Id
-				and [Submission_Id]= @Submission_Id
-				and [Tag_Id]=@Tag_Id
+			where [DatasetId]=@EdgarDataset_Id
+				and [SubmissionId]= @Submission_Id
+				and [TagId]=@Tag_Id
 				and cast([DDate] as date)=cast(@DDate as date)
 				and [CountOfNumberOfQuarters]=@CountOfNumberOfQuarters
 				and [UnitOfMeasure]=@UnitOfMeasure
-				and [Dimension_Id] = @Dimension_Id
+				and [DimensionId] = @Dimension_Id
 				and [IPRX] =@IPRX
 			   
 			   
@@ -62,11 +62,11 @@ BEGIN
 			   ,[durp]
 			   ,[datp]
 			   ,[Decimals]
-			   ,[Dimension_Id]
-			   ,[Submission_Id]
-			   ,[Tag_Id]
+			   ,[DimensionId]
+			   ,[SubmissionId]
+			   ,[TagId]
 			   ,[LineNumber]
-			   ,[EdgarDataset_Id])
+			   ,[DatasetId])
 			 VALUES
 			 (
 				@DDate

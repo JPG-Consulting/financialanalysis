@@ -92,8 +92,10 @@ namespace Analyst.Domain.Edgar.Datasets
                 return Submission.ADSH + Report.ToString();
             }
         }
+        
+        public int DatasetId { get; set; }
 
-
+        public int SubmissionId { get; set; }
         [Required]
         public EdgarDatasetSubmission Submission { get; set; }
 
@@ -101,5 +103,6 @@ namespace Analyst.Domain.Edgar.Datasets
         public virtual EdgarDataset Dataset { get; set; }
 
         public ICollection<EdgarDatasetPresentation> Presentations { get; set; }
+        
     }
 }
