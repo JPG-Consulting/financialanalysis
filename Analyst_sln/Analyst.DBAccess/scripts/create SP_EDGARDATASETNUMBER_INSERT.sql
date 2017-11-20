@@ -52,6 +52,7 @@ BEGIN
 			INSERT INTO [dbo].[EdgarDatasetNumbers]
 			   ([DDate]
 			   ,[CountOfNumberOfQuarters]
+			   ,[UnitOfMeasure]
 			   ,[IPRX]
 			   ,[Value]
 			   ,[FootNote]
@@ -70,6 +71,7 @@ BEGIN
 			 (
 				@DDate
 				,@CountOfNumberOfQuarters
+				,@UnitOfMeasure
 				,@IPRX
 				,@Value
 				,@FootNote

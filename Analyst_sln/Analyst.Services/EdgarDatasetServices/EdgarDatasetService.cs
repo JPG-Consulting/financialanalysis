@@ -12,16 +12,17 @@ using System.Threading.Tasks;
 namespace Analyst.Services.EdgarDatasetServices
 {
 
-    public interface IEdgarDatasetService
+    public interface IEdgarDatasetService: IDisposable
     {
         IList<EdgarDataset> GetDatasets();
         void ProcessDataset(int id);
         EdgarDataset GetDataset(int id);
     }
-    public class EdgarDatasetService: IEdgarDatasetService, IDisposable
+    public class EdgarDatasetService: IEdgarDatasetService
     {
         private static ConcurrentDictionary<int, Task> datasetsInProcess = new ConcurrentDictionary<int,Task>();
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly bool allowProcess;
 
         private IAnalystRepository repository;
         private IEdgarDatasetSubmissionsService submissionService;
@@ -43,6 +44,18 @@ namespace Analyst.Services.EdgarDatasetServices
             this.presentationService = presentationService;
             this.calcService = calcService;
             this.textService = textService;
+            allowProcess = true;
+        }
+
+        public EdgarDatasetService(IAnalystRepository repository)
+        {
+            this.repository = repository;
+            allowProcess = false;
+        }
+
+        public static IEdgarDatasetService CreateOnlyForRetrieval()
+        {
+            return new EdgarDatasetService(new AnalystRepository(new AnalystContext()));
         }
 
         public IList<EdgarDataset> GetDatasets()
@@ -61,25 +74,31 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             //https://stackify.com/log4net-guide-dotnet-logging/
             log.Info("Dataset " + id.ToString() + " requested");
-
-            if (datasetsInProcess.ContainsKey(id))
+            if (allowProcess)
             {
-                Task t = datasetsInProcess[id];
-                //TODO: how to control that task finished ok and there is no need to rerun?
-                if (t != null)
+                if (datasetsInProcess.ContainsKey(id))
                 {
-                    if (t.Status != TaskStatus.Running)
+                    Task t = datasetsInProcess[id];
+                    //TODO: how to control that task finished ok and there is no need to rerun?
+                    if (t != null)
                     {
-                        t.Dispose();
-                        datasetsInProcess[id] = null;
-                        Run(id);
+                        if (t.Status != TaskStatus.Running)
+                        {
+                            t.Dispose();
+                            datasetsInProcess[id] = null;
+                            Run(id);
+                        }
                     }
+                    else
+                        Run(id);
                 }
                 else
                     Run(id);
             }
             else
-                Run(id);
+            {
+                throw new ApplicationException("This service doesn't allow process, you have to use other constructor");
+            }
         }
 
         private void Run(int id)
@@ -104,7 +123,7 @@ namespace Analyst.Services.EdgarDatasetServices
             t.Start();
             datasetsInProcess.TryAdd(id, t);
         }
-                
+
         private EdgarTaskState[] LoadCoreData(EdgarDataset ds, IAnalystRepository repo)
         {
             List<EdgarTaskState> states = new List<EdgarTaskState>();
@@ -116,9 +135,14 @@ namespace Analyst.Services.EdgarDatasetServices
             states.Add(stateTag);
             states.Add(stateDim);
             IList<Task> tasks = new List<Task>();
-            tasks.Add(Task.Factory.StartNew(() => submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")));
-            tasks.Add(Task.Factory.StartNew(() => tagService.Process(stateTag,true,EdgarDatasetTag.FILE_NAME,"Tags")));
-            tasks.Add(Task.Factory.StartNew(() => dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")
+            tasks.Add(Task.Factory.StartNew(() => 
+                submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")
+            ));
+            tasks.Add(Task.Factory.StartNew(() => 
+                tagService.Process(stateTag,true,EdgarDatasetTag.FILE_NAME,"Tags")
+            ));
+            tasks.Add(Task.Factory.StartNew(() => 
+                dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")
             ));
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
@@ -134,17 +158,15 @@ namespace Analyst.Services.EdgarDatasetServices
             states.Add(statePre);
             EdgarTaskState stateRen = new EdgarTaskState(EdgarDatasetRendering.FILE_NAME, ds, repo);
             states.Add(stateRen);
-            tasks.Add(
-                Task.Factory.StartNew(
-                    () =>
-                        {
-                            renderingService.Subs = subs;
-                            renderingService.Process(stateRen, false, EdgarDatasetRendering.FILE_NAME, "Renders");
-                            presentationService.Subs = subs;
-                            presentationService.Tags = tags;
-                            presentationService.Renders = renderingService.GetAsConcurrent("Submission");
-                            presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");
-                        }
+            tasks.Add(Task.Factory.StartNew(() =>
+                {
+                    renderingService.Subs = subs;
+                    renderingService.Process(stateRen, false, EdgarDatasetRendering.FILE_NAME, "Renders");
+                    presentationService.Subs = subs;
+                    presentationService.Tags = tags;
+                    presentationService.Renders = renderingService.GetAsConcurrent("Submission");
+                    presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");
+                }
             ));
             
             //process calc file
@@ -155,7 +177,7 @@ namespace Analyst.Services.EdgarDatasetServices
             tasks.Add(Task.Factory.StartNew(() => 
                 calcService.Process(stateCalc, true, EdgarDatasetCalculation.FILE_NAME, "Calculations"))
             );
-            
+
             //process text file
             EdgarTaskState stateText = new EdgarTaskState(EdgarDatasetText.FILE_NAME, ds, repo);
             states.Add(stateText);
@@ -175,11 +197,10 @@ namespace Analyst.Services.EdgarDatasetServices
             tasks.Add(Task.Factory.StartNew(() => 
                 numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers"))
             );
-            
+
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
-
 
         private void ManageErrors(EdgarTaskState[] states)
         {

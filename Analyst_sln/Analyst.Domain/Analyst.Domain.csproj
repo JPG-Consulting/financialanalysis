@@ -53,7 +53,7 @@
     <Compile Include="Edgar\Datasets\EdgarDataset.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetCalculation.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetDimension.cs" />
-    <Compile Include="Edgar\Datasets\EdgarDatasetException.cs" />
+    <Compile Include="Edgar\Exceptions\EdgarDatasetException.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetNumber.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetPresentation.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetRendering.cs" />
@@ -61,7 +61,8 @@
     <Compile Include="Edgar\Datasets\EdgarDatasetTag.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetText.cs" />
     <Compile Include="Edgar\Datasets\IEdgarDatasetFile.cs" />
-    <Compile Include="Edgar\EdgarException.cs" />
+    <Compile Include="Edgar\Exceptions\EdgarException.cs" />
+    <Compile Include="Edgar\Exceptions\EdgarLineException.cs" />
     <Compile Include="Edgar\MutualFund.cs" />
     <Compile Include="Edgar\Registrant.cs" />
     <Compile Include="Edgar\SECForm.cs" />

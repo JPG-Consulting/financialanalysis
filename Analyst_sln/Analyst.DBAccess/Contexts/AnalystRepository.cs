@@ -31,7 +31,6 @@ namespace Analyst.DBAccess.Contexts
         EdgarDatasetTag GetTag(string tag, string version);
         
         EdgarDatasetDimension GetDimension(string dimhash);
-        //EdgarDatasetNumber GetNumber(int datasetID, int lineNumber);
         
         void Add(SECForm sECForm);
         void Add(SIC sic);
@@ -122,7 +121,6 @@ namespace Analyst.DBAccess.Contexts
 
         public EdgarDatasetDimension GetDimension(string dimhash)
         {
-            //return Context.Dimensions.Where(x => x.DimensionH == dimhash).SingleOrDefault();
             IQueryable<EdgarDatasetDimension> q = Context.Dimensions.Where(x => x.DimensionH == dimhash);
             string sql = q.ToString();
             return q.SingleOrDefault();
@@ -140,14 +138,6 @@ namespace Analyst.DBAccess.Contexts
             return q.SingleOrDefault();
 
         }
-        /*
-        public EdgarDatasetNumber GetNumber(int datasetID, int lineNumber)
-        {
-            SqlParameter dsId = new SqlParameter("@dataSetID", datasetID);
-            SqlParameter line = new SqlParameter("@lineNumber", lineNumber);
-            return Context.Database.SqlQuery<EdgarDatasetNumber>("exec SP_EDGARDATASETNUMBER_SELECT @dataSetID,@lineNumber", dsId, line).SingleOrDefault();
-        }
-        */
 
         public IList<TEntity> Get<TEntity>() where TEntity:IEdgarEntity
         {

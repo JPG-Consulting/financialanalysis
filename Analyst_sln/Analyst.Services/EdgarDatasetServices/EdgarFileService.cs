@@ -1,9 +1,11 @@
 ﻿using Analyst.DBAccess.Contexts;
 using Analyst.Domain.Edgar.Datasets;
+using Analyst.Domain.Edgar.Exceptions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,6 +68,8 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             try
             {
+                Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+                Log.Info("Begin process " + fileToProcess);
                 if (IsAlreadyProcessed(state.Dataset,fieldToUpdate))
                     return;
                 string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
@@ -92,7 +96,8 @@ namespace Analyst.Services.EdgarDatasetServices
                 {
                     ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header);
                 }
-
+                long elapsedMs = watch.ElapsedMilliseconds;
+                Log.Info("End process " + fileToProcess + " - time: " + new TimeSpan(elapsedMs).ToString());
                 state.ResultOk = true;
             }
             catch (Exception ex)
@@ -144,8 +149,9 @@ namespace Analyst.Services.EdgarDatasetServices
                         }
                         catch(Exception ex)
                         {
-                            exceptions.Add(ex);
-                            Log.Error(fileName + ": " + ex.Message, ex);
+                            EdgarLineException elex = new EdgarLineException(fileName, i, ex);
+                            exceptions.Add(elex);
+                            Log.Error(fileName + "["+ i.ToString() + "]: " + ex.Message, elex);
                             if (exceptions.Count > MaxErrorsAllowed)
                             {
                                 Log.Fatal(fileName + ": max errors allowed reached", ex);

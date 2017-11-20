@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,31 +17,39 @@ namespace Analyst.Windows
 {
     public partial class Form1 : Form
     {
-
-        EdgarDatasetService edgarDatasetService;
+        private const int SECONDS_REFRESH = 1;
+        private int? datasetIdInProcess;
+        private BindingSource bindingSourceDatasets;
+        private BindingSource bindingSourceDatasetInProcess;
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
         public Form1()
         {
             InitializeComponent();
-            InitializeServices();
-            
         }
 
-        private void InitializeServices()
+        private void Form1_Load(object sender, EventArgs e)
         {
-            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-            IEdgarDatasetSubmissionsService submissionService = new EdgarDatasetSubmissionsService();
-            IEdgarDatasetTagService tagService = new EdgarDatasetTagService();
-            IEdgarDatasetNumService numService = new EdgarDatasetNumService();
-            IEdgarDatasetDimensionService dimensionService = new EdgarDatasetDimensionService();
-            IEdgarDatasetRenderingService renderingService = new EdgarDatasetRenderingService();
-            IEdgarDatasetPresentationService presentationService = new EdgarDatasetPresentationService();
-            IEdgarDatasetCalculationService calcService = new EdgarDatasetCalculationService();
-            IEdgarDatasetTextService textService = new EdgarDatasetTextService();
-
-            edgarDatasetService = new EdgarDatasetService(repository,  submissionService,  tagService,  numService,  dimensionService,  renderingService,  presentationService,  calcService,  textService);
+            timer.Interval = (SECONDS_REFRESH * 1000);
+            timer.Tick += Timer_Tick;
+            //timer.Start();
+            bindingSourceDatasets = new BindingSource();
+            bindingSourceDatasetInProcess = new BindingSource();
+            dgvDatasets.DataSource = bindingSourceDatasets;
+            dgvDatasetInProcess.DataSource = bindingSourceDatasetInProcess;
+            LoadDatasets();
         }
 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            using (IEdgarDatasetService edsserv = EdgarDatasetService.CreateOnlyForRetrieval())
+            {
+                int id = Convert.ToInt32(lblDatasetInProcess.Text);
+                EdgarDataset ds = edsserv.GetDataset(id);
+                LoadDatasets(ds, bindingSourceDatasetInProcess);
+            }
+            lblTimer.Text = "Timer running - " + DateTime.Now.ToLongTimeString();
+        }
 
         private void btnMockFiles_Click(object sender, EventArgs e)
         {
@@ -67,11 +76,103 @@ namespace Analyst.Windows
 
         private void btnLoadDataset_Click(object sender, EventArgs e)
         {
-            int id = Convert.ToInt32(txtDatasetId.Text);
-            edgarDatasetService.ProcessDataset(id);
-            
+            if (dgvDatasets.SelectedRows.Count > 0)
+            {
+                DataRowView dr = dgvDatasets.SelectedRows[0].DataBoundItem as DataRowView;
+                lblDatasetInProcess.Text = dr["Id"].ToString();
+                int id = Convert.ToInt32(dr["Id"]);
+                CreateEdgarDatasetService().ProcessDataset(id);
+                timer.Start();
+            }
+            LoadDatasets();
         }
 
+        private IEdgarDatasetService CreateEdgarDatasetService()
+        {
+            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
+            IEdgarDatasetSubmissionsService submissionService = new EdgarDatasetSubmissionsService();
+            IEdgarDatasetTagService tagService = new EdgarDatasetTagService();
+            IEdgarDatasetNumService numService = new EdgarDatasetNumService();
+            IEdgarDatasetDimensionService dimensionService = new EdgarDatasetDimensionService();
+            IEdgarDatasetRenderingService renderingService = new EdgarDatasetRenderingService();
+            IEdgarDatasetPresentationService presentationService = new EdgarDatasetPresentationService();
+            IEdgarDatasetCalculationService calcService = new EdgarDatasetCalculationService();
+            IEdgarDatasetTextService textService = new EdgarDatasetTextService();
+
+            IEdgarDatasetService edgarDatasetService = new EdgarDatasetService(repository, submissionService, tagService, numService, dimensionService, renderingService, presentationService, calcService, textService);
+            return edgarDatasetService;
+        }
+
+        private void LoadDatasets()
+        {
+            IList<EdgarDataset> datasets;
+            using (IEdgarDatasetService dsServ = EdgarDatasetService.CreateOnlyForRetrieval())
+            {
+                datasets = dsServ.GetDatasets();
+            }
+            LoadDatasets(datasets, bindingSourceDatasets);
+        }
+        private void LoadDatasets(EdgarDataset ds,BindingSource bs)
+        {
+            IList<EdgarDataset> datasets = new List<EdgarDataset>();
+            datasets.Add(ds);
+            LoadDatasets(datasets, bindingSourceDatasetInProcess);
+        }
+
+        private void LoadDatasets(IList<EdgarDataset> datasets, BindingSource bs)
+        {
+            /*
+            public int Id 
+            public string RelativePath 
+            public int Year 
+            public Quarter Quarter 
+            public int TotalSubmissions 
+            public int ProcessedSubmissions 
+            public int TotalTags 
+            public int ProcessedTags 
+            public int TotalNumbers 
+            public int ProcessedNumbers 
+            public int ProcessedDimensions 
+            public int TotalDimensions 
+            public int ProcessedRenders 
+            public int TotalRenders 
+            public int ProcessedPresentations 
+            public int TotalPresentations 
+            public int ProcessedCalculations 
+            public int TotalCalculations 
+            public int ProcessedTexts 
+            public int TotalTexts 
+            */
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Year");
+            dt.Columns.Add("Submissions");
+            dt.Columns.Add("Tags");
+            dt.Columns.Add("Numbers");
+            dt.Columns.Add("Dimensions");
+            dt.Columns.Add("Renders");
+            dt.Columns.Add("Presentations");
+            dt.Columns.Add("Calculations");
+            dt.Columns.Add("Texts");
+            foreach (EdgarDataset ds in datasets)
+            {
+                DataRow dr = dt.NewRow();
+                dr["Id"] = ds.Id;
+                dr["Year"] = ds.Year;
+                dr["Submissions"] = (ds.TotalSubmissions > 0 ? (float)ds.ProcessedSubmissions / (float)ds.TotalSubmissions : 0.00).ToString("0.00 %");
+                dr["Tags"] = (ds.TotalTags > 0 ? (float)ds.ProcessedTags / (float)ds.TotalTags : 0.00).ToString("0.00 %");
+                dr["Numbers"] = (ds.TotalNumbers > 0 ? (float)ds.ProcessedNumbers / (float)ds.TotalNumbers : 0.00).ToString("0.00 %");
+                dr["Dimensions"] = (ds.TotalDimensions > 0 ? (float)ds.ProcessedDimensions / (float)ds.TotalDimensions : 0.00).ToString("0.00 %");
+                dr["Renders"] = (ds.TotalRenders > 0 ? (float)ds.ProcessedRenders / (float)ds.TotalRenders : 0.00).ToString("0.00 %");
+                dr["Presentations"] = (ds.TotalPresentations > 0 ? (float)ds.ProcessedPresentations / (float)ds.TotalPresentations : 0.00).ToString("0.00 %");
+                dr["Calculations"] = (ds.TotalCalculations > 0 ? (float)ds.ProcessedCalculations / (float)ds.TotalCalculations : 0.00).ToString("0.00 %");
+                dr["Texts"] = (ds.TotalTexts > 0 ? (float)ds.ProcessedTexts / (float)ds.TotalTexts : 0.00).ToString("0.00 %");
+                dt.Rows.Add(dr);
+            }
+            bs.DataSource = null;
+            bs.DataSource = dt;
+          
+        }
 
         private void ProcessFile(string pathSource, string pathDestination, string filename, string[] codesToFilter)
         {
@@ -104,78 +205,5 @@ namespace Analyst.Windows
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            Timer timer = new Timer();
-            timer.Interval = (5 * 1000); // 1 secs
-            timer.Tick += Timer_Tick;
-            timer.Start();
-            LoadDatasets(null);
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            LoadDatasets(txtDatasetId.Text);
-        }
-
-        private void LoadDatasets(string dsID)
-        { 
-            IList<EdgarDataset> datasets = edgarDatasetService.GetDatasets();
-            IList<EdgarDataset> inProcess;
-            if (!string.IsNullOrEmpty(dsID))
-                inProcess = datasets.Where(ds => ds.Id.ToString() == dsID).ToList();
-            else
-                inProcess = datasets;
-
-            //dgvDatasets.DataSource = datasets;
-            /*
-            public int Id 
-            public string RelativePath 
-            public int Year 
-            public Quarter Quarter 
-            public int TotalSubmissions 
-            public int ProcessedSubmissions 
-            public int TotalTags 
-            public int ProcessedTags 
-            public int TotalNumbers 
-            public int ProcessedNumbers 
-            public int ProcessedDimensions 
-            public int TotalDimensions 
-            public int ProcessedRenders 
-            public int TotalRenders 
-            public int ProcessedPresentations 
-            public int TotalPresentations 
-            public int ProcessedCalculations 
-            public int TotalCalculations 
-            public int ProcessedTexts 
-            public int TotalTexts 
-            */
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Id");
-            dt.Columns.Add("Submissions");
-            dt.Columns.Add("Tags");
-            dt.Columns.Add("Numbers");
-            dt.Columns.Add("Dimensions");
-            dt.Columns.Add("Renders");
-            dt.Columns.Add("Presentations");
-            dt.Columns.Add("Calculations");
-            dt.Columns.Add("Texts");
-            foreach (EdgarDataset ds in inProcess)
-            {
-                DataRow dr = dt.NewRow();
-                dr["Id"] = ds.Id;
-
-                dr["Submissions"] = (ds.TotalSubmissions > 0 ? (float)ds.ProcessedSubmissions / (float)ds.TotalSubmissions:0.00).ToString("0.00 %");
-                dr["Tags"] = (ds.TotalTags > 0 ? (float)ds.ProcessedTags / (float)ds.TotalTags : 0.00).ToString("0.00 %");
-                dr["Numbers"] = (ds.TotalNumbers > 0 ? (float)ds.ProcessedNumbers / (float)ds.TotalNumbers: 0.00).ToString("0.00 %");
-                dr["Dimensions"] = (ds.TotalDimensions > 0 ? (float)ds.ProcessedDimensions / (float)ds.TotalDimensions : 0.00).ToString("0.00 %");
-                dr["Renders"] = (ds.TotalRenders > 0 ? (float)ds.ProcessedRenders / (float)ds.TotalRenders : 0.00).ToString("0.00 %");
-                dr["Presentations"] = (ds.TotalPresentations > 0 ? (float)ds.ProcessedPresentations / (float)ds.TotalPresentations : 0.00).ToString("0.00 %");
-                dr["Calculations"] = (ds.TotalCalculations > 0 ? (float)ds.ProcessedCalculations / (float)ds.TotalCalculations : 0.00).ToString("0.00 %");
-                dr["Texts"] = (ds.TotalTexts > 0 ? (float)ds.ProcessedTexts / (float)ds.TotalTexts : 0.00).ToString("0.00 %");
-                dt.Rows.Add(dr);
-            }
-            dgvDatasets.DataSource = dt;
-        }
     }
 }

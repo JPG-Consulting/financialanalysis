@@ -1,5 +1,7 @@
 
 use [Analyst]
+declare @datasetid int;
+set @datasetid = 201604;
 
 --estado de la ejecucion
 --select * from EdgarDatasets where year =2016 and Quarter= 4;
@@ -12,12 +14,17 @@ select id,
 	,cast(iif(totalnumbers != 0 ,cast(processednumbers as float)/cast(totalnumbers as float) *100,0)as nvarchar) + '%' nums
 	,cast(iif(TotalCalculations != 0 ,cast(ProcessedCalculations as float)/cast(TotalCalculations as float) *100,0)as nvarchar) + '%' calcs
 	,cast(iif(TotalTexts != 0 ,cast(ProcessedTexts as float)/cast(TotalTexts as float) *100,0)as nvarchar) + '%' texts
-from EdgarDatasets where year =2016 and Quarter= 4;
+from EdgarDatasets where id =@datasetid;
+
+--select * from EdgarDatasets where id=@datasetid;
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --LOG
-select top 20 * from [dbo].[Log] 
+select 
+	--top 20 * 
+	*
+from [dbo].[Log] 
 where 1=1
 	--and logger <> 'EdgarDatasetTagService'
 	and Level <> 'DEBUG'
@@ -54,16 +61,24 @@ select * from [dbo].[EdgarDatasetSubmissions] where EdgarDataset_Id is null;
 select * from secforms; 
 select * from sics;
 select * from registrants order by name;
+
+--core data
 select * from [dbo].[EdgarDatasetSubmissions];
 select * from [dbo].[EdgarDatasetSubmissions] where registrant_id = (select id from registrants where cik = 811222);
 select * from [dbo].[EdgarDatasetTags];
 select * from [dbo].[EdgarDatasetTags] where tag ='EchoStarXVIMember';
 select * from [dbo].[EdgarDatasetTags] where tag+version like 'ARcountry/2013';
-select * from [dbo].[EdgarDatasetTagEdgarDatasets];
+select * from [dbo].[EdgarDatasetEdgarDatasetTags];
 select * from [dbo].[EdgarDatasetDimensions];
+
+--related data
 select * from [dbo].[EdgarDatasetRenderings];
 select * from [dbo].[EdgarDatasetPresentations]
+select * from [dbo].[EdgarDatasetCalculations];
+select * from [dbo].[EdgarDatasetTexts];
+select * from [dbo].[EdgarDatasetNumbers];
 */
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --delete para reprocesamiento
 /*
@@ -83,7 +98,7 @@ update EdgarDatasets set
       ,[TotalDimensions] = 0
 	where year =2016 and Quarter= 4;
 
-update EdgarDatasets set [TotalTags] = 557638 where year =2016 and Quarter= 4;
+update EdgarDatasets set year =2016, Quarter= 4 where id=201604;
 
 */
 
