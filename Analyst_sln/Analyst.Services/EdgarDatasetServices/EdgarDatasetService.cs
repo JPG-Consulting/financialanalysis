@@ -17,6 +17,7 @@ namespace Analyst.Services.EdgarDatasetServices
         IList<EdgarDataset> GetDatasets();
         void ProcessDataset(int id);
         EdgarDataset GetDataset(int id);
+        bool IsRunning(int id);
     }
     public class EdgarDatasetService: IEdgarDatasetService
     {
@@ -68,6 +69,14 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             EdgarDataset ds = repository.GetDataset(id);
             return ds;
+        }
+
+        public bool IsRunning(int id)
+        {
+            if (datasetsInProcess.ContainsKey(id) && datasetsInProcess[id] != null)
+                return datasetsInProcess[id].Status == TaskStatus.Running;
+            else
+                return false;
         }
 
         public void ProcessDataset(int id)
@@ -266,6 +275,24 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 
             }
+            if(repository!=null)
+                repository.Dispose();
+            if(submissionService != null)
+                submissionService.Dispose();
+            if(tagService != null)
+                tagService.Dispose();
+            if (numService != null)
+                numService.Dispose();
+            if (dimensionService != null)
+                dimensionService.Dispose();
+            if (renderingService != null)
+                renderingService.Dispose();
+            if (presentationService != null)
+                presentationService.Dispose();
+            if (calcService != null)
+                calcService.Dispose();
+            if (textService != null)
+                textService.Dispose();
         }
     }
 }

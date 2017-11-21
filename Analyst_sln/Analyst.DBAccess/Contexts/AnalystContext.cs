@@ -111,6 +111,7 @@ namespace Analyst.DBAccess.Contexts
                 .HasForeignKey(fk => fk.SubmissionId)
                 .WillCascadeOnDelete(false);
 
+            /*
             modelBuilder.Entity<EdgarDatasetPresentation>()
                 .HasRequired(fk => fk.Number)
                 .WithMany(n => n.Presentations)
@@ -122,7 +123,7 @@ namespace Analyst.DBAccess.Contexts
                 .WithMany(sub => sub.Presentations)
                 .HasForeignKey(fk => fk.TextId)
                 .WillCascadeOnDelete(false);
-
+            */
 
             modelBuilder.Entity<EdgarDatasetText>()
                 .HasRequired(fk => fk.Submission)
@@ -133,13 +134,13 @@ namespace Analyst.DBAccess.Contexts
             modelBuilder.Entity<EdgarDatasetText>()
                 .HasRequired(fk => fk.Tag)
                 .WithMany(t => t.Texts)
-                .HasForeignKey(fk => fk.SubmissionId)
+                .HasForeignKey(fk => fk.TagId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<EdgarDatasetText>()
                 .HasRequired(fk => fk.Dimension)
                 .WithMany(d => d.Texts)
-                .HasForeignKey(fk => fk.SubmissionId)
+                .HasForeignKey(fk => fk.DimensionId)
                 .WillCascadeOnDelete(false);
 
             

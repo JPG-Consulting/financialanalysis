@@ -42,6 +42,7 @@ CREATE PROCEDURE [dbo].[SP_EDGARDATASETDIMENSIONS_INSERT]
 	,@Segments nvarchar(1024)
 	,@SegmentTruncated bit
 	,@DataSetId int
+	,@LineNumber int
 	
 AS
 
@@ -54,12 +55,14 @@ BEGIN
 			   ([DimensionH]
 			   ,[Segments]
 			   ,[SegmentTruncated]
-			   ,[Datasetid])
+			   ,[Datasetid]
+			   ,[LineNumber])
 		 VALUES
 			   (@DimensionH
 				,@Segments
 				,@SegmentTruncated
-				,@DataSetId)
+				,@DataSetId
+				,@LineNumber)
 			;
 
 		--set @DIMID = (SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY]);

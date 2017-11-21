@@ -21,18 +21,22 @@ from EdgarDatasets where id =@datasetid;
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --LOG
 select 
-	--top 20 * 
-	*
+	top 20 * 
+	--*
 from [dbo].[Log] 
 where 1=1
 	--and logger <> 'EdgarDatasetTagService'
 	--and Level <> 'DEBUG'
 	--and level in ('ERROR','FATAL')
 	--and message like '%process dim.tsv%'
-order by date desc;
+order by date desc
+--order by message 
+;
 
---delete from [dbo].[Log] where level='DEBUG';
-
+/*
+delete from [dbo].[Log] 
+where level='DEBUG';
+*/
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --CHECKS

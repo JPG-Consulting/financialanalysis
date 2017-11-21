@@ -34,6 +34,7 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETTAGS_INSERT
     ,@Datatype nvarchar(max)
     ,@Tlabel nvarchar(max)
     ,@Doc nvarchar(max)
+	,@LineNumber int
 	
 AS
 
@@ -42,9 +43,9 @@ BEGIN
 	
     BEGIN TRANSACTION;
 		INSERT INTO [dbo].[EdgarDatasetTags]
-			   ([Tag],[Version],[Custom],[Abstract],[Datatype],[Tlabel],[Doc],[DatasetId])
+			   ([Tag],[Version],[Custom],[Abstract],[Datatype],[Tlabel],[Doc],[DatasetId],[LineNumber])
 		 VALUES
-			   (@tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc,@DataSetId);
+			   (@tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc,@DataSetId,@LineNumber);
 	
 		--set @tagid = (SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY]);
 

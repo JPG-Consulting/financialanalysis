@@ -74,13 +74,19 @@ namespace Analyst.Services.EdgarDatasetServices
                 pre.LineNumber = lineNumber;
 
                 string key = adsh + tag + version;
-                if (Nums.ContainsKey(key))
+                if (Nums.ContainsKey(key) && Nums[key] != null)
+                {
                     pre.Number = Nums[key];
+                    pre.NumberId = pre.Number.Id;
+                }
                 else
                     pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
 
-                if (Texts.ContainsKey(key))
-                    pre.Text = Texts[adsh + tag + version];
+                if (Texts.ContainsKey(key) && Texts[key] != null)
+                {
+                    pre.Text = Texts[key];
+                    pre.TextId = pre.Text.Id;
+                }
                 else
                     pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
 

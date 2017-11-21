@@ -108,7 +108,6 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         public string Doc { get; set; }
 
-        [NotMapped]//TODO: This field should be
         public int LineNumber { get; set; }
 
         /// <summary>

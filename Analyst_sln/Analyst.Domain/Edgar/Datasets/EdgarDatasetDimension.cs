@@ -42,7 +42,6 @@ namespace Analyst.Domain.Edgar.Datasets
 
         
 
-        [NotMapped]
         public int LineNumber { get; set; }
 
         public string Key

@@ -154,19 +154,8 @@ namespace Analyst.DBAccess.Contexts
             return GetQuery<TEntity>().Count();
         }
 
-        //public IList<T> Get<T>(string include) where T : IEdgarEntity
-        //{
-        //    return GetQuery<T>().Include(include).ToList();
-        //}
-
-        //public IList<T> GetByDatasetId<T>(int datasetId) where T : class, IEdgarDatasetFile
-        //{
-        //    return GetQuery<T>().Where(t => t.DatasetId == datasetId).ToList();
-        //}
-
         public IList<T> GetByDatasetId<T>(int datasetId, string[] includes) where T : class,IEdgarDatasetFile
         {
-            //return GetQuery<T>().Where(t => t.DatasetId == datasetId).ToList();
             ObjectQuery<T> q = GetQuery<T>();
             if(includes != null)
             {
@@ -177,7 +166,6 @@ namespace Analyst.DBAccess.Contexts
             }
             IQueryable<T> query = q.Where(t => t.DatasetId == datasetId);
             return query.ToList();
-            //return q.Where(t => t.DatasetId == datasetId).ToList();
 
         }
         private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
@@ -267,13 +255,19 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter custom = new SqlParameter("@Custom",tag.Custom); 
             SqlParameter abstracto = new SqlParameter("@Abstract",tag.Abstract);
             SqlParameter datatype = new SqlParameter("@Datatype",tag.Datatype);
-            if (tag.Datatype == null) datatype.Value = DBNull.Value;
+            if (tag.Datatype == null)
+                datatype.Value = DBNull.Value;
             SqlParameter tlabel = new SqlParameter("@Tlabel",tag.Tlabel);
-            if (tag.Tlabel == null) tlabel.Value = DBNull.Value;
+            if (tag.Tlabel == null)
+                tlabel.Value = DBNull.Value;
             SqlParameter doc = new SqlParameter("@Doc",tag.Doc);
-            if (tag.Doc == null) doc.Value = DBNull.Value;
+            if (tag.Doc == null)
+                doc.Value = DBNull.Value;
+            SqlParameter LineNumber = new SqlParameter("@LineNumber", tag.LineNumber);
 
-            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_INSERT @DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc",dsid, tagparam, version, custom, abstracto, datatype, tlabel, doc);
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_INSERT "+
+                "@DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc,@LineNumber",
+                dsid, tagparam, version, custom, abstracto, datatype, tlabel, doc, LineNumber);
         }
 
         
@@ -315,10 +309,10 @@ namespace Analyst.DBAccess.Contexts
                 Segments.Value = DBNull.Value;
             SqlParameter SegmentTruncated = new SqlParameter("@SegmentTruncated", dim.SegmentTruncated);
             SqlParameter DataSetId = new SqlParameter("@DataSetId", dataset.Id);
-
+            SqlParameter LineNumber = new SqlParameter("@LineNumber", dim.LineNumber);
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETDIMENSIONS_INSERT " +
-                "@DimensionH , @Segments, @SegmentTruncated, @DataSetId",
-                DimensionH, Segments, SegmentTruncated, DataSetId)
+                "@DimensionH , @Segments, @SegmentTruncated, @DataSetId,@LineNumber",
+                DimensionH, Segments, SegmentTruncated, DataSetId, LineNumber)
                 ;
 
         }
@@ -365,9 +359,11 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter Number_Id = new SqlParameter("@Number_Id", pre.NumberId);
             if (pre.Number == null)
                 Number_Id.Value = DBNull.Value;
-            SqlParameter Text_Id = new SqlParameter("@Text_Id", pre.TextId);
+            SqlParameter Text_Id;
             if (pre.Text == null)
-                Text_Id.Value = DBNull.Value;
+                Text_Id = new SqlParameter("@Text_Id",DBNull.Value);
+            else
+                Text_Id = new SqlParameter("@Text_Id", pre.Text.Id);
             SqlParameter Render_Id;
             if (pre.Render == null)
                 Render_Id = new SqlParameter("@Render_Id",DBNull.Value);
@@ -376,7 +372,7 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter adsh_tag_version = new SqlParameter("@adsh_tag_version", pre.ADSH_Tag_Version);
             if (string.IsNullOrEmpty(pre.ADSH_Tag_Version))
                 adsh_tag_version.Value = DBNull.Value;
-
+        
             try
             {
                 Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
@@ -454,13 +450,5 @@ namespace Analyst.DBAccess.Contexts
             Context.SaveChanges();
         }
 
-        /*
-        public void AddTagAssociacion(EdgarDataset dataset, EdgarDatasetTag tag)
-        {
-            SqlParameter dsid = new SqlParameter("@DataSetId", dataset.Id);
-            SqlParameter tagid = new SqlParameter("@TagId", tag.Id);
-            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_RELATE @DataSetId, @TagId", dsid, tagid);
-        }
-        */
     }
 }

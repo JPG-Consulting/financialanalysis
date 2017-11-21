@@ -12,18 +12,16 @@ using System.Threading.Tasks;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarFileService<T> where T :class, IEdgarDatasetFile
+    public interface IEdgarFileService<T>: IDisposable where T :class, IEdgarDatasetFile
     {
         ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId);
         ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId,string[] includes);
-        //ConcurrentDictionary<string, T> GetAsConcurrent(string include);
         void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate);
     }
 
     public abstract class EdgarFileService<T>:IEdgarFileService<T> where T:class,IEdgarDatasetFile
     {
         private const int DEFAULT_MAX_ERRORS_ALLOWED = 10;
-        // private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         protected abstract log4net.ILog Log { get; }
 
         protected int MaxErrorsAllowed
@@ -49,7 +47,6 @@ namespace Analyst.Services.EdgarDatasetServices
             ConcurrentDictionary<string, T> ret = new ConcurrentDictionary<string, T>();
             IAnalystRepository repository = new AnalystRepository(new AnalystContext());
 
-            //IList<T> xs = repository.Get<T>();
             IList<T> xs = repository.GetByDatasetId<T>(datasetId,includes);
             foreach (T x in xs)
             {
@@ -58,55 +55,46 @@ namespace Analyst.Services.EdgarDatasetServices
             return ret;
         }
 
-        /*
-        public ConcurrentDictionary<string, T> GetAsConcurrent(string include)
-        {
-            ConcurrentDictionary<string, T> ret = new ConcurrentDictionary<string, T>();
-            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-
-            IList<T> xs = repository.Get<T>(include);
-            foreach (T x in xs)
-            {
-                ret.TryAdd(x.Key, x);
-            }
-            return ret;
-        }
-        */
         public void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
         {
             try
             {
                 Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
                 Log.Info("Begin process " + fileToProcess);
-                if (IsAlreadyProcessed(state.Dataset,fieldToUpdate))
-                    return;
-                string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
-                string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\" + fileToProcess;
-                string[] allLines = File.ReadAllLines(filepath);
-                string header = allLines[0];
-                string field = "Total" + fieldToUpdate;
-                state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset,allLines.Length - 1);
-                state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset,field);
-                ConcurrentDictionary<string, T> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
-                if (processInParallel && allLines.Length > 1)
+                if (!IsAlreadyProcessed(state.Dataset, fieldToUpdate))
                 {
-                    //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
-
-                    // Partition the entire source array.
-                    OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(1, allLines.Length);
-
-                    // Loop over the partitions in parallel.
-                    Parallel.ForEach(rangePartitioner, (range, loopState) =>
+                    string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
+                    string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\" + fileToProcess;
+                    string[] allLines = File.ReadAllLines(filepath);
+                    string header = allLines[0];
+                    string field = "Total" + fieldToUpdate;
+                    state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset, allLines.Length - 1);
+                    state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, field);
+                    ConcurrentDictionary<string, T> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
+                    if (processInParallel && allLines.Length > 1)
                     {
-                        ProcessRange(fileToProcess, state, range, allLines, header,existing);
-                    });
+                        //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
+
+                        // Partition the entire source array.
+                        OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(1, allLines.Length);
+
+                        // Loop over the partitions in parallel.
+                        Parallel.ForEach(rangePartitioner, (range, loopState) =>
+                        {
+                            ProcessRange(fileToProcess, state, range, allLines, header, existing);
+                        });
+                    }
+                    else
+                    {
+                        ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header, existing);
+                    }
                 }
                 else
                 {
-                    ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header,existing);
+                    Log.Info("The complete file " + fileToProcess + " has been processed");
                 }
-                long elapsedMs = watch.ElapsedMilliseconds;
-                Log.Info("End process " + fileToProcess + " - time: " + new TimeSpan(elapsedMs).ToString());
+                watch.Stop();
+                Log.Info("End process " + fileToProcess + " - time: " + watch.Elapsed.ToString());
                 state.ResultOk = true;
             }
             catch (Exception ex)
@@ -161,8 +149,8 @@ namespace Analyst.Services.EdgarDatasetServices
                         {
                             EdgarLineException elex = new EdgarLineException(fileName, i, ex);
                             exceptions.Add(elex);
-                            Log.Error(fileName + "["+ i.ToString() + "]: " + ex.Message, elex);
                             Log.Error(fileName + "[" + i.ToString() + "]: " + line);
+                            Log.Error(fileName + "["+ i.ToString() + "]: " + ex.Message, elex);
                             if (exceptions.Count > MaxErrorsAllowed)
                             {
                                 Log.Fatal(fileName + ": max errors allowed reached", ex);
@@ -181,6 +169,10 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public abstract void Add(IAnalystRepository repo, EdgarDataset dataset, T file);
         public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, T> existing);
-        
+     
+        public void Dispose()
+        {
+
+        }
     }
 }
