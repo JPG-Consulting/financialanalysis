@@ -59,6 +59,8 @@ namespace Analyst.Services.EdgarDatasetServices
                 pre.Submission = Subs[adsh];
                 string report = fields[fieldNames.IndexOf("report")];
                 pre.Render = Renders[adsh + report];
+                if (pre.Render != null)
+                    pre.RenderId = pre.Render.Id;
                 pre.Line = Convert.ToInt32(fields[fieldNames.IndexOf("line")]);
                 pre.FinancialStatement = fields[fieldNames.IndexOf("stmt")];
                 pre.Inpth = fields[fieldNames.IndexOf("inpth")] == "1";
@@ -71,8 +73,17 @@ namespace Analyst.Services.EdgarDatasetServices
                 pre.Negating = !(fields[fieldNames.IndexOf("negating")] == "0");
                 pre.LineNumber = lineNumber;
 
-                pre.Number = Nums[adsh + tag + version];
-                pre.Text = Texts[adsh + tag + version];
+                string key = adsh + tag + version;
+                if (Nums.ContainsKey(key))
+                    pre.Number = Nums[key];
+                else
+                    pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
+
+                if (Texts.ContainsKey(key))
+                    pre.Text = Texts[adsh + tag + version];
+                else
+                    pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
+
 
                 return pre;
             }

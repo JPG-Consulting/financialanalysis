@@ -88,7 +88,6 @@ namespace Analyst.Domain.Edgar.Datasets
         
         public int DatasetId { get; set; }
 
-
         [Required]
         public EdgarDataset Dataset { get; set; }
         public int SubmissionId { get; set; }
@@ -98,16 +97,20 @@ namespace Analyst.Domain.Edgar.Datasets
         public int TagId { get; set; }
         [Required]
         public EdgarDatasetTag Tag { get; set; }
-        public int NumberId { get; set; }
-        [Required]
+
+        public int? NumberId { get; set; }
+        //[Required]
         public EdgarDatasetNumber Number { get; set; } //NUM: adsh, tag, version
-        public int TextId { get; set; }
-        [Required]
+
+        public int? TextId { get; set; }
+        //[Required]
         public EdgarDatasetText Text { get; set; } //TEXT: adsh, tag, version
 
         public int RenderId { get; set; }
         [Required]
         public EdgarDatasetRender Render { get; set; } //REN: adsh, report
-        
+
+        [StringLength(300)]
+        public string ADSH_Tag_Version { get; set; }
     }
 }

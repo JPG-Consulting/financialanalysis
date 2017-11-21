@@ -81,7 +81,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\create SP_EDGARDATASETSUBMISSIONS_INSERT.sql" />
-    <Content Include="scripts\create SP_EDGARDATASETRENDERINGS_INSERT.sql">
+    <Content Include="scripts\create SP_EDGARDATASETRENDERS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="scripts\create table LOG.sql" />

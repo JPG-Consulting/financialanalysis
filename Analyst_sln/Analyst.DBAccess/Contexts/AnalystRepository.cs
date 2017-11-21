@@ -19,9 +19,10 @@ namespace Analyst.DBAccess.Contexts
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
 
         IList<T> Get<T>() where T:IEdgarEntity;
-        IList<T> Get<T>(string include) where T : IEdgarEntity;
+        //IList<T> Get<T>(string include) where T : IEdgarEntity;
         int GetCount<T>() where T : IEdgarEntity;
-        IList<T> GetByDatasetId<T>(int datasetId) where T : class, IEdgarDatasetFile;
+        //IList<T> GetByDatasetId<T>(int datasetId) where T : class, IEdgarDatasetFile;
+        IList<T> GetByDatasetId<T>(int datasetId, string[] includes) where T : class, IEdgarDatasetFile;
 
         int GetDatasetsCount();
         int GetSECFormsCount();
@@ -153,15 +154,30 @@ namespace Analyst.DBAccess.Contexts
             return GetQuery<TEntity>().Count();
         }
 
-        public IList<T> Get<T>(string include) where T : IEdgarEntity
-        {
-            return GetQuery<T>().Include(include).ToList();
-        }
+        //public IList<T> Get<T>(string include) where T : IEdgarEntity
+        //{
+        //    return GetQuery<T>().Include(include).ToList();
+        //}
 
-        public IList<T> GetByDatasetId<T>(int datasetId) where T : class,IEdgarDatasetFile
-        {
-            return GetQuery<T>().Where(t => t.DatasetId == datasetId).ToList();
+        //public IList<T> GetByDatasetId<T>(int datasetId) where T : class, IEdgarDatasetFile
+        //{
+        //    return GetQuery<T>().Where(t => t.DatasetId == datasetId).ToList();
+        //}
 
+        public IList<T> GetByDatasetId<T>(int datasetId, string[] includes) where T : class,IEdgarDatasetFile
+        {
+            //return GetQuery<T>().Where(t => t.DatasetId == datasetId).ToList();
+            ObjectQuery<T> q = GetQuery<T>();
+            if(includes != null)
+            {
+                for(int i=0;i<includes.Length;i++)
+                {
+                    q = q.Include(includes[i]);
+                }
+            }
+            IQueryable<T> query = q.Where(t => t.DatasetId == datasetId);
+            return query.ToList();
+            //return q.Where(t => t.DatasetId == datasetId).ToList();
 
         }
         private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
@@ -326,13 +342,14 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter Submission_Id = new SqlParameter("@Submission_Id", ren.Submission.Id);
             SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
             SqlParameter lineNumber = new SqlParameter("@LineNumber", ren.LineNumber);
-            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETRENDERINGS_INSERT " +
+
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETRENDERS_INSERT " +
                 "@Report, @MenuCategory, @ShortName, @LongName, @Roleuri, @ParentRoleuri, @ParentReport, @UltimateParentReport, @Submission_Id, @DataSetId, @LineNumber",
                 Report, MenuCategory, ShortName, LongName, Roleuri, ParentRoleuri, ParentReport, UltimateParentReport, Submission_Id, DataSetId, lineNumber
                 );
         }
 
-        public void Add(EdgarDataset ds,EdgarDatasetPresentation pre)
+        public void Add(EdgarDataset ds, EdgarDatasetPresentation pre)
         {
             SqlParameter ReportNumber = new SqlParameter("@ReportNumber", pre.ReportNumber);
             SqlParameter Line = new SqlParameter("@Line", pre.Line);
@@ -341,16 +358,35 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter prole = new SqlParameter("@prole", pre.prole);
             SqlParameter PreferredLabel = new SqlParameter("@PreferredLabel", pre.PreferredLabel);
             SqlParameter Negating = new SqlParameter("@Negating", pre.Negating);
+            SqlParameter LineNumber = new SqlParameter("@LineNumber", pre.LineNumber);
+            SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
             SqlParameter Submission_Id = new SqlParameter("@Submission_Id", pre.Submission.Id);
             SqlParameter Tag_Id = new SqlParameter("@Tag_Id", pre.Tag.Id);
-            SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
-            SqlParameter LineNumber = new SqlParameter("@LineNumber", pre.LineNumber);
             SqlParameter Number_Id = new SqlParameter("@Number_Id", pre.NumberId);
+            if (pre.Number == null)
+                Number_Id.Value = DBNull.Value;
             SqlParameter Text_Id = new SqlParameter("@Text_Id", pre.TextId);
+            if (pre.Text == null)
+                Text_Id.Value = DBNull.Value;
+            SqlParameter Render_Id;
+            if (pre.Render == null)
+                Render_Id = new SqlParameter("@Render_Id",DBNull.Value);
+            else
+                Render_Id = new SqlParameter("@Render_Id", pre.Render.Id);
+            SqlParameter adsh_tag_version = new SqlParameter("@adsh_tag_version", pre.ADSH_Tag_Version);
+            if (string.IsNullOrEmpty(pre.ADSH_Tag_Version))
+                adsh_tag_version.Value = DBNull.Value;
 
-            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
-                "@ReportNumber, @Line, @FinancialStatement, @Inpth, @prole, @PreferredLabel, @Negating, @Submission_Id, @Tag_Id, @DataSetId, @LineNumber,@Number_Id, @Text_Id",
-                ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, Submission_Id, Tag_Id, DataSetId, LineNumber, Number_Id, Text_Id);
+            try
+            {
+                Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
+                    "@ReportNumber, @Line, @FinancialStatement, @Inpth, @prole, @PreferredLabel, @Negating, @LineNumber, @DataSetId, @Submission_Id, @Tag_Id, @Number_Id, @Text_Id, @Render_Id, @adsh_tag_version",
+                    ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, LineNumber, DataSetId, Submission_Id, Tag_Id, Number_Id, Text_Id, Render_Id, adsh_tag_version);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public void Add(EdgarDataset dataset, EdgarDatasetCalculation file)

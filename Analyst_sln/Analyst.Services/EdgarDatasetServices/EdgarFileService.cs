@@ -15,7 +15,8 @@ namespace Analyst.Services.EdgarDatasetServices
     public interface IEdgarFileService<T> where T :class, IEdgarDatasetFile
     {
         ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId);
-        ConcurrentDictionary<string, T> GetAsConcurrent(string include);
+        ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId,string[] includes);
+        //ConcurrentDictionary<string, T> GetAsConcurrent(string include);
         void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate);
     }
 
@@ -40,11 +41,16 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId)
         {
+            return GetAsConcurrent(datasetId, null);
+        }
+
+        public ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId, string[] includes)
+        {
             ConcurrentDictionary<string, T> ret = new ConcurrentDictionary<string, T>();
             IAnalystRepository repository = new AnalystRepository(new AnalystContext());
 
             //IList<T> xs = repository.Get<T>();
-            IList<T> xs = repository.GetByDatasetId<T>(datasetId);
+            IList<T> xs = repository.GetByDatasetId<T>(datasetId,includes);
             foreach (T x in xs)
             {
                 ret.TryAdd(x.Key, x);
@@ -52,6 +58,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return ret;
         }
 
+        /*
         public ConcurrentDictionary<string, T> GetAsConcurrent(string include)
         {
             ConcurrentDictionary<string, T> ret = new ConcurrentDictionary<string, T>();
@@ -64,7 +71,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
             return ret;
         }
-
+        */
         public void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
         {
             try
@@ -138,12 +145,13 @@ namespace Analyst.Services.EdgarDatasetServices
                 {
                     List<string> fieldNames = header.Split('\t').ToList();
                     List<Exception> exceptions = new List<Exception>();
+                    string line = null;
                     for (int i = range.Item1; i < range.Item2; i++)
                     {
                         try
                         {
                             Log.Debug(fileName + ": parsing line: " + i.ToString());
-                            string line = allLines[i];
+                            line = allLines[i];
                             List<string> fields = line.Split('\t').ToList();
 
                             T file = Parse(repo, fieldNames, fields, i+1,existing);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
@@ -154,6 +162,7 @@ namespace Analyst.Services.EdgarDatasetServices
                             EdgarLineException elex = new EdgarLineException(fileName, i, ex);
                             exceptions.Add(elex);
                             Log.Error(fileName + "["+ i.ToString() + "]: " + ex.Message, elex);
+                            Log.Error(fileName + "[" + i.ToString() + "]: " + line);
                             if (exceptions.Count > MaxErrorsAllowed)
                             {
                                 Log.Fatal(fileName + ": max errors allowed reached", ex);

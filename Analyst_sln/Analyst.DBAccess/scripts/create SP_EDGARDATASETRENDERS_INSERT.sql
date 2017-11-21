@@ -21,11 +21,11 @@ GO
 -- Description:	<Description,,>
 -- =============================================
 /*
-IF OBJECT_ID ( 'SP_EDGARDATASETRENDERINGS_INSERT', 'P' ) IS NOT NULL   
-    DROP PROCEDURE SP_EDGARDATASETRENDERINGS_INSERT;  
+IF OBJECT_ID ( 'SP_EDGARDATASETRENDERS_INSERT', 'P' ) IS NOT NULL   
+    DROP PROCEDURE SP_EDGARDATASETRENDERS_INSERT;  
 GO
 */
-CREATE PROCEDURE dbo.SP_EDGARDATASETRENDERINGS_INSERT
+CREATE PROCEDURE dbo.SP_EDGARDATASETRENDERS_INSERT
 	@Report int
 	,@MenuCategory nvarchar(20)
 	,@ShortName nvarchar(255)
@@ -43,7 +43,7 @@ BEGIN
 	if(
 		not exists(
 			select 1
-			from [dbo].[EdgarDatasetRenderings] 
+			from [dbo].[EdgarDatasetRenders] 
 			where 
 				[DatasetId] =@DataSetId 
 				and report = @report
@@ -52,7 +52,7 @@ BEGIN
 	) 
 	BEGIN
 		Begin transaction;
-			INSERT INTO [dbo].[EdgarDatasetRenderings]
+			INSERT INTO [dbo].[EdgarDatasetRenders]
 				   ([Report]
 				   ,[MenuCategory]
 				   ,[ShortName]

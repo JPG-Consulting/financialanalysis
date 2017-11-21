@@ -49,7 +49,7 @@
     <Compile Include="EdgarDatasetServices\EdgarDatasetCalculationService.cs" />
     <Compile Include="EdgarDatasetServices\EdgarDatasetDimensionService.cs" />
     <Compile Include="EdgarDatasetServices\EdgarDatasetPresentationService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetRenderingService.cs" />
+    <Compile Include="EdgarDatasetServices\EdgarDatasetRenderService.cs" />
     <Compile Include="EdgarDatasetServices\EdgarDatasetTextService.cs" />
     <Compile Include="EdgarDatasetServices\EdgarFileService.cs" />
     <Compile Include="EdgarServices\EdgarService.cs" />

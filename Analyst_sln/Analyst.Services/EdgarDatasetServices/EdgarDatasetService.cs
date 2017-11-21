@@ -29,11 +29,11 @@ namespace Analyst.Services.EdgarDatasetServices
         private IEdgarDatasetTagService tagService;
         private IEdgarDatasetNumService numService;
         private IEdgarDatasetDimensionService dimensionService;
-        private IEdgarDatasetRenderingService renderingService;
+        private IEdgarDatasetRenderService renderingService;
         private IEdgarDatasetPresentationService presentationService;
         private IEdgarDatasetCalculationService calcService;
         private IEdgarDatasetTextService textService;
-        public EdgarDatasetService(IAnalystRepository repository, IEdgarDatasetSubmissionsService submissionService, IEdgarDatasetTagService tagService, IEdgarDatasetNumService numService, IEdgarDatasetDimensionService dimensionService, IEdgarDatasetRenderingService renderingService,IEdgarDatasetPresentationService presentationService,IEdgarDatasetCalculationService calcService, IEdgarDatasetTextService textService)
+        public EdgarDatasetService(IAnalystRepository repository, IEdgarDatasetSubmissionsService submissionService, IEdgarDatasetTagService tagService, IEdgarDatasetNumService numService, IEdgarDatasetDimensionService dimensionService, IEdgarDatasetRenderService renderingService,IEdgarDatasetPresentationService presentationService,IEdgarDatasetCalculationService calcService, IEdgarDatasetTextService textService)
         {
             this.repository = repository;
             this.submissionService = submissionService;
@@ -126,8 +126,8 @@ namespace Analyst.Services.EdgarDatasetServices
                 ManageErrors(states);
 
                 //Load Presentations and Numbers
-                ConcurrentDictionary<string, EdgarDatasetNumber> nums = numService.GetAsConcurrent(id);
-                ConcurrentDictionary<string, EdgarDatasetText> txts = textService.GetAsConcurrent(id);
+                ConcurrentDictionary<string, EdgarDatasetNumber> nums = numService.GetAsConcurrent(id,new string[] { "Tag", "Submission" });
+                ConcurrentDictionary<string, EdgarDatasetText> txts = textService.GetAsConcurrent(id, new string[] { "Tag", "Submission" });
                 states = LoadRenPre(ds, repository, subs, tags, nums, txts);
                 ManageErrors(states);
 
@@ -224,7 +224,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 renderingService.Process(stateRen, false, EdgarDatasetRender.FILE_NAME, "Renders");
                 presentationService.Subs = subs;
                 presentationService.Tags = tags;
-                presentationService.Renders = renderingService.GetAsConcurrent("Submission");
+                presentationService.Renders = renderingService.GetAsConcurrent(ds.Id,new string[] { "Submission" });
                 presentationService.Nums = nums;
                 presentationService.Texts = texts;
                 presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");

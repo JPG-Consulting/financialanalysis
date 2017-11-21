@@ -4,6 +4,6 @@
     [Thread] [varchar] (255) NOT NULL,
     [Level] [varchar] (50) NOT NULL,
     [Logger] [varchar] (255) NOT NULL,
-    [Message] [varchar] (4000) NOT NULL,
-    [Exception] [varchar] (2000) NULL
+    [Message] [varchar] (max) NOT NULL,
+    [Exception] [varchar] (max) NULL
 )

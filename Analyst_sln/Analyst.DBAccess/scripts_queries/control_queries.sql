@@ -4,7 +4,7 @@ declare @datasetid int;
 set @datasetid = 201604;
 
 --estado de la ejecucion
---select * from EdgarDatasets where year =2016 and Quarter= 4;
+
 select id,
 	cast(iif(totalsubmissions != 0, cast(processedsubmissions as float)/cast(totalsubmissions as float) *100,0) as nvarchar) + '%' subs
 	,cast(iif(TotalTags != 0, cast(ProcessedTags as float)/cast(TotalTags as float)*100,0) as nvarchar) + '%' tags
@@ -18,7 +18,6 @@ from EdgarDatasets where id =@datasetid;
 
 --select * from EdgarDatasets where id=@datasetid;
 
-
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --LOG
 select 
@@ -28,7 +27,9 @@ from [dbo].[Log]
 where 1=1
 	--and logger <> 'EdgarDatasetTagService'
 	--and Level <> 'DEBUG'
-order by Date desc;
+	--and level in ('ERROR','FATAL')
+	--and message like '%process dim.tsv%'
+order by date desc;
 
 --delete from [dbo].[Log] where level='DEBUG';
 

@@ -33,12 +33,14 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETPRESENTATIONS_INSERT
 	,@prole nvarchar(50)
 	,@PreferredLabel nvarchar(512)
 	,@Negating bit
+	,@LineNumber int
+	,@DataSetId int
 	,@Submission_Id int
 	,@Tag_Id int
-	,@DataSetId int
-	,@LineNumber int
 	,@Number_Id int
 	,@Text_Id int
+	,@Render_Id int
+	,@adsh_tag_version nvarchar(300)
 AS
 BEGIN
 	Begin transaction;
@@ -62,26 +64,31 @@ BEGIN
 				   ,[prole]
 				   ,[PreferredLabel]
 				   ,[Negating]
+				   ,[LineNumber]
+				   ,[DatasetId]
 				   ,[SubmissionId]
 				   ,[TagId]
-				   ,[DatasetId]
-				   ,[LineNumber]
 				   ,[NumberId]
-				   ,[TextId])
+				   ,[TextId]
+				   ,[RenderId]
+				   ,[ADSH_Tag_Version]
+				   )
 			 VALUES
 				   (@ReportNumber
 					,@Line
-					,@FinancialStatement 
+					,@FinancialStatement
 					,@Inpth
 					,@prole
-					,@PreferredLabel 
-					,@Negating 
-					,@Submission_Id
-					,@Tag_Id 
-					,@DataSetId
+					,@PreferredLabel
+					,@Negating
 					,@LineNumber
+					,@DataSetId
+					,@Submission_Id
+					,@Tag_Id
 					,@Number_Id
-				   ,@Text_Id)
+					,@Text_Id
+					,@Render_Id
+					,@adsh_tag_version)
 			;
 
 			UPDATE DBO.EdgarDatasets 

@@ -72,6 +72,8 @@
             // 
             // dgvDatasetInProcess
             // 
+            this.dgvDatasetInProcess.AllowUserToAddRows = false;
+            this.dgvDatasetInProcess.AllowUserToDeleteRows = false;
             this.dgvDatasetInProcess.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvDatasetInProcess.Location = new System.Drawing.Point(13, 421);
             this.dgvDatasetInProcess.Name = "dgvDatasetInProcess";

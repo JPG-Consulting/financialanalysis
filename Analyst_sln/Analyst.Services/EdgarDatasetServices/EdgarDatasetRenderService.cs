@@ -10,11 +10,11 @@ using log4net;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetRenderingService : IEdgarFileService<EdgarDatasetRender>
+    public interface IEdgarDatasetRenderService : IEdgarFileService<EdgarDatasetRender>
     {
         ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
     }
-    public class EdgarDatasetRenderingService : EdgarFileService<EdgarDatasetRender>, IEdgarDatasetRenderingService
+    public class EdgarDatasetRenderService : EdgarFileService<EdgarDatasetRender>, IEdgarDatasetRenderService
     {
         public ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
 
@@ -26,7 +26,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 return log;
             }
         }
-        public EdgarDatasetRenderingService()
+        public EdgarDatasetRenderService()
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }

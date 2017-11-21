@@ -54,6 +54,8 @@ namespace Analyst.Domain.Edgar.Datasets
 
 
         public int ProcessedDimensions { get; set; }
+
+        
         public int TotalDimensions { get; set; }
 
         public int ProcessedRenders { get; set; }
@@ -75,5 +77,19 @@ namespace Analyst.Domain.Edgar.Datasets
                 return Id.ToString();
             }
         }
+
+
+        public bool IsComplete()
+        {
+            return TotalSubmissions == ProcessedSubmissions && TotalSubmissions > 0 &&
+                    TotalTags == ProcessedTags && TotalTags > 0 &&
+                    TotalNumbers == ProcessedNumbers && TotalNumbers >0 &&
+                    ProcessedDimensions == TotalDimensions && TotalDimensions > 0 &&
+                    ProcessedRenders == TotalRenders && TotalRenders > 0 &&
+                    ProcessedPresentations == TotalPresentations && TotalPresentations > 0 &&
+                    ProcessedCalculations == TotalCalculations && TotalCalculations > 0 &&
+                    ProcessedTexts == TotalTexts && TotalTexts > 0;
+        }
+
     }
 }

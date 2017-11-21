@@ -22,6 +22,7 @@ namespace Analyst.Windows
         private BindingSource bindingSourceDatasets;
         private BindingSource bindingSourceDatasetInProcess;
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        private DateTime startTime;
 
         public Form1()
         {
@@ -32,7 +33,6 @@ namespace Analyst.Windows
         {
             timer.Interval = (SECONDS_REFRESH * 1000);
             timer.Tick += Timer_Tick;
-            //timer.Start();
             bindingSourceDatasets = new BindingSource();
             bindingSourceDatasetInProcess = new BindingSource();
             dgvDatasets.DataSource = bindingSourceDatasets;
@@ -47,8 +47,13 @@ namespace Analyst.Windows
                 int id = Convert.ToInt32(lblDatasetInProcess.Text);
                 EdgarDataset ds = edsserv.GetDataset(id);
                 LoadDatasets(ds, bindingSourceDatasetInProcess);
+                if (ds.IsComplete())
+                {
+                    timer.Stop();
+                    btnLoadDataset.Enabled = true;
+                }
             }
-            lblTimer.Text = "Timer running - " + DateTime.Now.ToLongTimeString();
+            lblTimer.Text = "Timer running - " + (DateTime.Now - startTime).ToString();
         }
 
         private void btnMockFiles_Click(object sender, EventArgs e)
@@ -68,9 +73,6 @@ namespace Analyst.Windows
             //ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016", "invest/2013" }); //field version
             ProcessFile(pathSource, pathDestination, "tag", null);
             ProcessFile(pathSource, pathDestination, "txt", new string[] { strCIK });
-
-
-
             MessageBox.Show("Fin ok");
         }
 
@@ -83,6 +85,8 @@ namespace Analyst.Windows
                 int id = Convert.ToInt32(dr["Id"]);
                 CreateEdgarDatasetService().ProcessDataset(id);
                 timer.Start();
+                this.startTime = DateTime.Now;
+                btnLoadDataset.Enabled = false;
             }
             LoadDatasets();
         }
@@ -94,7 +98,7 @@ namespace Analyst.Windows
             IEdgarDatasetTagService tagService = new EdgarDatasetTagService();
             IEdgarDatasetNumService numService = new EdgarDatasetNumService();
             IEdgarDatasetDimensionService dimensionService = new EdgarDatasetDimensionService();
-            IEdgarDatasetRenderingService renderingService = new EdgarDatasetRenderingService();
+            IEdgarDatasetRenderService renderingService = new EdgarDatasetRenderService();
             IEdgarDatasetPresentationService presentationService = new EdgarDatasetPresentationService();
             IEdgarDatasetCalculationService calcService = new EdgarDatasetCalculationService();
             IEdgarDatasetTextService textService = new EdgarDatasetTextService();
@@ -159,14 +163,15 @@ namespace Analyst.Windows
                 DataRow dr = dt.NewRow();
                 dr["Id"] = ds.Id;
                 dr["Year"] = ds.Year;
-                dr["Submissions"] = (ds.TotalSubmissions > 0 ? (float)ds.ProcessedSubmissions / (float)ds.TotalSubmissions : 0.00).ToString("0.00 %");
-                dr["Tags"] = (ds.TotalTags > 0 ? (float)ds.ProcessedTags / (float)ds.TotalTags : 0.00).ToString("0.00 %");
-                dr["Numbers"] = (ds.TotalNumbers > 0 ? (float)ds.ProcessedNumbers / (float)ds.TotalNumbers : 0.00).ToString("0.00 %");
-                dr["Dimensions"] = (ds.TotalDimensions > 0 ? (float)ds.ProcessedDimensions / (float)ds.TotalDimensions : 0.00).ToString("0.00 %");
-                dr["Renders"] = (ds.TotalRenders > 0 ? (float)ds.ProcessedRenders / (float)ds.TotalRenders : 0.00).ToString("0.00 %");
-                dr["Presentations"] = (ds.TotalPresentations > 0 ? (float)ds.ProcessedPresentations / (float)ds.TotalPresentations : 0.00).ToString("0.00 %");
-                dr["Calculations"] = (ds.TotalCalculations > 0 ? (float)ds.ProcessedCalculations / (float)ds.TotalCalculations : 0.00).ToString("0.00 %");
-                dr["Texts"] = (ds.TotalTexts > 0 ? (float)ds.ProcessedTexts / (float)ds.TotalTexts : 0.00).ToString("0.00 %");
+                dr["Submissions"] = (ds.TotalSubmissions > 0 ? (float)ds.ProcessedSubmissions / (float)ds.TotalSubmissions : 0.00).ToString("0.0000 %");
+                dr["Tags"] = (ds.TotalTags > 0 ? (float)ds.ProcessedTags / (float)ds.TotalTags : 0.00).ToString("0.0000 %");
+                dr["Dimensions"] = (ds.TotalDimensions > 0 ? (float)ds.ProcessedDimensions / (float)ds.TotalDimensions : 0.00).ToString("0.0000 %");
+                dr["Calculations"] = (ds.TotalCalculations > 0 ? (float)ds.ProcessedCalculations / (float)ds.TotalCalculations : 0.00).ToString("0.0000 %");
+                dr["Texts"] = (ds.TotalTexts > 0 ? (float)ds.ProcessedTexts / (float)ds.TotalTexts : 0.00).ToString("0.0000 %");
+                dr["Numbers"] = (ds.TotalNumbers > 0 ? (float)ds.ProcessedNumbers / (float)ds.TotalNumbers : 0.00).ToString("0.0000 %");
+                dr["Renders"] = (ds.TotalRenders > 0 ? (float)ds.ProcessedRenders / (float)ds.TotalRenders : 0.00).ToString("0.0000 %");
+                dr["Presentations"] = (ds.TotalPresentations > 0 ? (float)ds.ProcessedPresentations / (float)ds.TotalPresentations : 0.00).ToString("0.0000 %");
+                
                 dt.Rows.Add(dr);
             }
             bs.DataSource = null;
