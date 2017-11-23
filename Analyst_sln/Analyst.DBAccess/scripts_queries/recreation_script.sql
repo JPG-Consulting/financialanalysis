@@ -14,17 +14,17 @@ else
 	end
 
 use [master];
-print 'Creating analyst'
+print 'Creating Analyst'
 create database Analyst
 ON   
 	( NAME = Analyst_dat,  
-		FILENAME = 'E:\_analyst_db\Analyst_dat.mdf',  
+		FILENAME = 'E:\_analyst\DB\Analyst_dat.mdf',  
 		SIZE = 2000MB,  
 		--MAXSIZE = 50,  
 		FILEGROWTH = 2000MB )  
 	LOG ON  
 	( NAME = Analyst_log,  
-		FILENAME = 'E:\_analyst_db\Analyst_log.ldf',  
+		FILENAME = 'E:\_analyst\DB\Analyst_log.ldf',  
 		SIZE = 100MB,  
 		--MAXSIZE = 25MB,  
 		FILEGROWTH = 100MB ) ; 

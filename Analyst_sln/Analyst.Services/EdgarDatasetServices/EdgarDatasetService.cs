@@ -21,6 +21,7 @@ namespace Analyst.Services.EdgarDatasetServices
     }
     public class EdgarDatasetService: IEdgarDatasetService
     {
+
         private static ConcurrentDictionary<int, Task> datasetsInProcess = new ConcurrentDictionary<int,Task>();
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly bool allowProcess;
@@ -168,11 +169,11 @@ namespace Analyst.Services.EdgarDatasetServices
             ));
             
             tasks.Add(Task.Factory.StartNew(() => 
-                tagService.Process(stateTag,true,EdgarDatasetTag.FILE_NAME,"Tags")
+                tagService.Process(stateTag,true, EdgarDatasetTag.FILE_NAME,"Tags")
             ));
 
             tasks.Add(Task.Factory.StartNew(() => 
-                dimensionService.Process(stateDim,true,EdgarDatasetDimension.FILE_NAME,"Dimensions")
+                dimensionService.Process(stateDim,true, EdgarDatasetDimension.FILE_NAME,"Dimensions")
             ));
             
             Task.WaitAll(tasks.ToArray());

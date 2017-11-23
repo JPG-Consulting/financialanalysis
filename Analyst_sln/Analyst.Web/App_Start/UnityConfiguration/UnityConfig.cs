@@ -64,7 +64,7 @@ namespace Analyst.Web.App_Start.UnityConfiguration
             container.RegisterType<IEdgarDatasetTagService, EdgarDatasetTagService>();
             container.RegisterType<IEdgarDatasetNumService, EdgarDatasetNumService>();
             container.RegisterType<IEdgarDatasetDimensionService, EdgarDatasetDimensionService>();
-            container.RegisterType<IEdgarDatasetRenderingService, EdgarDatasetRenderService>();
+            container.RegisterType<IEdgarDatasetRenderService, EdgarDatasetRenderService>();
             container.RegisterType<IEdgarDatasetPresentationService, EdgarDatasetPresentationService>();
             container.RegisterType<IEdgarDatasetCalculationService, EdgarDatasetCalculationService>();
             container.RegisterType<IEdgarDatasetTextService, EdgarDatasetTextService>();

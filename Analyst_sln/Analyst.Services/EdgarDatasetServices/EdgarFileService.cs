@@ -21,7 +21,7 @@ namespace Analyst.Services.EdgarDatasetServices
 
     public abstract class EdgarFileService<T>:IEdgarFileService<T> where T:class,IEdgarDatasetFile
     {
-        private const int DEFAULT_MAX_ERRORS_ALLOWED = 10;
+        private const int DEFAULT_MAX_ERRORS_ALLOWED = int.MaxValue;
         protected abstract log4net.ILog Log { get; }
 
         protected int MaxErrorsAllowed
@@ -71,6 +71,7 @@ namespace Analyst.Services.EdgarDatasetServices
                     state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset, allLines.Length - 1);
                     state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, field);
                     ConcurrentDictionary<string, T> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
+                    ConcurrentBag<string> failedLines = new ConcurrentBag<string>();
                     if (processInParallel && allLines.Length > 1)
                     {
                         //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
@@ -81,18 +82,21 @@ namespace Analyst.Services.EdgarDatasetServices
                         // Loop over the partitions in parallel.
                         Parallel.ForEach(rangePartitioner, (range, loopState) =>
                         {
-                            ProcessRange(fileToProcess, state, range, allLines, header, existing);
+                            ProcessRange(fileToProcess, state, range, allLines, header, existing, failedLines);
                         });
+                        
                     }
                     else
                     {
-                        ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header, existing);
+                        ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header, existing, failedLines);
                     }
+                    WriteFailedLines(filepath, header, failedLines);
                 }
                 else
                 {
                     Log.Info("The complete file " + fileToProcess + " has been processed");
                 }
+                
                 watch.Stop();
                 Log.Info("End process " + fileToProcess + " - time: " + watch.Elapsed.ToString());
                 state.ResultOk = true;
@@ -101,6 +105,20 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 state.ResultOk = false;
                 state.Exception = new EdgarDatasetException(fileToProcess,ex);
+            }
+        }
+
+        private void WriteFailedLines(string filepath, string header, ConcurrentBag<string> failedLines)
+        {
+            if(failedLines.Count > 0)
+            {
+                StreamWriter sw = File.CreateText(filepath + "_failed_" + DateTime.Now.ToString("yyyyMMddmiss") + ".tsv");
+                sw.WriteLine(header);
+                foreach(string s in failedLines)
+                {
+                    sw.WriteLine(s);
+                }
+                sw.Close();
             }
         }
 
@@ -115,7 +133,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, T> existing)
+        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, T> existing,ConcurrentBag<string> failedLines)
         {
             /*
             EF isn't thread safe and it doesn't allow parallel
@@ -149,6 +167,7 @@ namespace Analyst.Services.EdgarDatasetServices
                         {
                             EdgarLineException elex = new EdgarLineException(fileName, i, ex);
                             exceptions.Add(elex);
+                            failedLines.Add(line);
                             Log.Error(fileName + "[" + i.ToString() + "]: " + line);
                             Log.Error(fileName + "["+ i.ToString() + "]: " + ex.Message, elex);
                             if (exceptions.Count > MaxErrorsAllowed)

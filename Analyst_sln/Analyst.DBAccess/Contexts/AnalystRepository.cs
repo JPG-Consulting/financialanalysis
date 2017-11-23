@@ -11,6 +11,7 @@ using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data;
+using System.Configuration;
 
 namespace Analyst.DBAccess.Contexts
 {
@@ -57,12 +58,18 @@ namespace Analyst.DBAccess.Contexts
 
     public class AnalystRepository: IAnalystRepository
     {
-
+        public const int DEFAULT_CONN_TIMEOUT = 180;
         private AnalystContext Context;
         
         public AnalystRepository(AnalystContext context)
         {
             this.Context = context;
+            int timeout;
+            if (String.IsNullOrEmpty(ConfigurationManager.AppSettings["ef_conn_timeout"]))
+                timeout = DEFAULT_CONN_TIMEOUT;
+            else
+                timeout = Convert.ToInt32(ConfigurationManager.AppSettings["ef_conn_timeout"]);
+            this.Context.Database.CommandTimeout = timeout;
         }
 
         
