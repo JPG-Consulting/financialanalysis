@@ -11,7 +11,18 @@ using System.Threading.Tasks;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
+    public static class LogExtensions
+    {
+        public static void FatalInner(this log4net.ILog logger, Exception ex)
+        {
+            if(ex != null)
+            {
+                logger.Fatal(ex.Message, ex);
+                logger.FatalInner(ex.InnerException);
+            }
+        }
 
+    }
     public interface IEdgarDatasetService: IDisposable
     {
         IList<EdgarDataset> GetDatasets();
@@ -116,37 +127,53 @@ namespace Analyst.Services.EdgarDatasetServices
             //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming?view=netframework-4.5.2
             Task t = new Task(() =>
             {
-                Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                log.Info("Begin dataset process id=" + id.ToString());
-                EdgarDataset ds = repository.GetDataset(id);
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////
-                ////BEGIN PROCESS
-                
-                //Load Submissions, Tags and Dimensions
-                EdgarTaskState[] states = LoadSubTagDim(ds, repository);
-                ManageErrors(states);
+                try
+                {
+                    Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+                    log.Info("Begin dataset process id=" + id.ToString());
+                    EdgarDataset ds = repository.GetDataset(id);
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    ////BEGIN PROCESS
 
+                    //Load Submissions, Tags and Dimensions
+                    EdgarTaskState[] states = LoadSubTagDim(ds, repository);
+                    ManageErrors(states);
 
-                //Retrieve all tags, submissions and dimensions to fill the relationship
-                //Load Calculations, Texts and Numbers
-                ConcurrentDictionary<string, EdgarDatasetTag> tags = tagService.GetAsConcurrent(id);
-                ConcurrentDictionary<string, EdgarDatasetSubmission> subs = submissionService.GetAsConcurrent(id);
-                ConcurrentDictionary<string,EdgarDatasetDimension> dims = dimensionService.GetAsConcurrent(id);
-                states = LoadCalTxtNum(ds, repository,subs,tags,dims);
-                ManageErrors(states);
+                    //Retrieve all tags, submissions and dimensions to fill the relationship
+                    //Load Calculations, Texts and Numbers
+                    ConcurrentDictionary<string, int> tags = tagService.GetAsConcurrent(id);
+                    ConcurrentDictionary<string, int> subs = submissionService.GetAsConcurrent(id);
+                    ConcurrentDictionary<string, int> dims = dimensionService.GetAsConcurrent(id);
+                    states = LoadCalTxtNum(ds, repository, subs, tags, dims);
+                    ManageErrors(states);
+                    /*
+                    //Load Presentations and Numbers
+                    ConcurrentDictionary<string, EdgarDatasetNumber> nums = numService.GetAsConcurrent(id, new string[] { "Tag", "Submission" });
+                    ConcurrentDictionary<string, EdgarDatasetText> txts = textService.GetAsConcurrent(id, new string[] { "Tag", "Submission" });
+                    states = LoadRenPre(ds, repository, subs, tags, nums, txts);
+                    ManageErrors(states);
+                    */
+                    ////END PROCESS
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                //Load Presentations and Numbers
-                ConcurrentDictionary<string, EdgarDatasetNumber> nums = numService.GetAsConcurrent(id,new string[] { "Tag", "Submission" });
-                ConcurrentDictionary<string, EdgarDatasetText> txts = textService.GetAsConcurrent(id, new string[] { "Tag", "Submission" });
-                states = LoadRenPre(ds, repository, subs, tags, nums, txts);
-                ManageErrors(states);
-
-                ////END PROCESS
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                watch.Stop();
-                long elapsedMs = watch.ElapsedMilliseconds;
-                log.Info("End dataset process id=" + id.ToString() + " - time: " + new TimeSpan(elapsedMs).ToString());
+                    watch.Stop();
+                    long elapsedMs = watch.ElapsedMilliseconds;
+                    log.Info("End dataset process id=" + id.ToString() + " - time: " + new TimeSpan(elapsedMs).ToString());
+                }
+                catch(EdgarException eex)
+                {
+                    log.Fatal("Edgar exception in EdgarDatasetService.Run(" + id.ToString() + "): " + eex.Message, eex);
+                    if (eex.InnerExceptions != null)
+                    {
+                        foreach (Exception ex in eex.InnerExceptions)
+                            log.Fatal("Inner: " + ex.Message, ex);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    log.Fatal("Unexpected error in EdgarDatasetService.Run(" + id.ToString() + "): " + ex.Message, ex);
+                    log.FatalInner(ex.InnerException);
+                }
             });
             t.Start();
             datasetsInProcess.TryAdd(id, t);
@@ -180,7 +207,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return states.ToArray();
         }
 
-        private EdgarTaskState[] LoadCalTxtNum(EdgarDataset ds,IAnalystRepository repo,ConcurrentDictionary<string,EdgarDatasetSubmission> subs,ConcurrentDictionary<string,EdgarDatasetTag> tags,ConcurrentDictionary<string,EdgarDatasetDimension> dims)
+        private EdgarTaskState[] LoadCalTxtNum(EdgarDataset ds,IAnalystRepository repo,ConcurrentDictionary<string,int> subs,ConcurrentDictionary<string,int> tags,ConcurrentDictionary<string,int> dims)
         {
             List<EdgarTaskState> states = new List<EdgarTaskState>();
             List<Task> tasks = new List<Task>();
@@ -203,7 +230,7 @@ namespace Analyst.Services.EdgarDatasetServices
             tasks.Add(Task.Factory.StartNew(() => 
                 textService.Process(stateText, true, EdgarDatasetText.FILE_NAME, "Texts"))
             );
-            
+            /*
             //Process num file
             EdgarTaskState stateNum = new EdgarTaskState(EdgarDatasetNumber.FILE_NAME, ds, repo);
             states.Add(stateNum);
@@ -213,12 +240,12 @@ namespace Analyst.Services.EdgarDatasetServices
             tasks.Add(Task.Factory.StartNew(() => 
                 numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers"))
             );
-
+            */
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
 
-        private EdgarTaskState[] LoadRenPre(EdgarDataset ds, IAnalystRepository repo, ConcurrentDictionary<string, EdgarDatasetSubmission> subs, ConcurrentDictionary<string, EdgarDatasetTag> tags,ConcurrentDictionary<string, EdgarDatasetNumber> nums,ConcurrentDictionary<string, EdgarDatasetText> texts)
+        private EdgarTaskState[] LoadRenPre(EdgarDataset ds, IAnalystRepository repo, ConcurrentDictionary<string, int> subs, ConcurrentDictionary<string, int> tags,ConcurrentDictionary<string, int> nums,ConcurrentDictionary<string, int> texts)
         {
             List<EdgarTaskState> states = new List<EdgarTaskState>();
             List<Task> tasks = new List<Task>();

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using log4net;
+using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -35,7 +36,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetDimension Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber,ConcurrentDictionary<string,EdgarDatasetDimension> existing)
+        public override EdgarDatasetDimension Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
         {
             string dimhash = fields[fieldNames.IndexOf("dimhash")];
             EdgarDatasetDimension dim;
@@ -52,6 +53,9 @@ namespace Analyst.Services.EdgarDatasetServices
             return dim;
         }
 
-        
+        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        {
+            return repository.GetDimensionKeys(datasetId);
+        }
     }
 }

@@ -7,19 +7,20 @@ using System.Threading.Tasks;
 using Analyst.DBAccess.Contexts;
 using System.Collections.Concurrent;
 using log4net;
+using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
     public interface IEdgarDatasetCalculationService:IEdgarFileService<EdgarDatasetCalculation>
     {
-        ConcurrentDictionary<string, EdgarDatasetSubmission> Submissions { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+        ConcurrentDictionary<string, int> Submissions { get; set; }
+        ConcurrentDictionary<string, int> Tags { get; set; }
     }
     public class EdgarDatasetCalculationService : EdgarFileService<EdgarDatasetCalculation>, IEdgarDatasetCalculationService
     {
 
-        public ConcurrentDictionary<string, EdgarDatasetSubmission> Submissions { get; set; }
-        public ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+        public ConcurrentDictionary<string, int> Submissions { get; set; }
+        public ConcurrentDictionary<string, int> Tags { get; set; }
 
         private readonly ILog log;
         protected override ILog Log
@@ -39,24 +40,24 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetCalculation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetCalculation> existing)
+        public override EdgarDatasetCalculation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
         {
             try
             {
                 EdgarDatasetCalculation calc = new EdgarDatasetCalculation();
                 string adsh = fields[fieldNames.IndexOf("adsh")];
-                calc.Submission = Submissions[adsh];
+                calc.SubmissionId = Submissions[adsh];
 
                 calc.SequentialNumberForGrouping = Convert.ToInt16(fields[fieldNames.IndexOf("grp")]);
                 calc.SequentialNumberForArc = Convert.ToInt16(fields[fieldNames.IndexOf("arc")]);
 
                 string pTag = fields[fieldNames.IndexOf("ptag")];
                 string pVersion = fields[fieldNames.IndexOf("pversion")];
-                calc.ParentTag = Tags[pTag + pVersion];
+                calc.ParentTagId = Tags[pTag + pVersion];
 
                 string cTag = fields[fieldNames.IndexOf("ctag")];
                 string cVersion = fields[fieldNames.IndexOf("cversion")];
-                calc.ChildTag = Tags[cTag + cVersion];
+                calc.ChildTagId = Tags[cTag + cVersion];
 
                 calc.LineNumber= lineNumber;
                 return calc;
@@ -65,6 +66,11 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 throw ex;
             }
+        }
+
+        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        {
+            return repository.GetCalculationKeys(datasetId);
         }
     }
 }

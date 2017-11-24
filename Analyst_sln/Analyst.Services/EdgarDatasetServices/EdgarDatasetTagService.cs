@@ -11,6 +11,7 @@ using System.Threading;
 using System.Web.Hosting;
 using System.Collections.Concurrent;
 using log4net;
+using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -46,7 +47,7 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override EdgarDatasetTag Parse(IAnalystRepository repository,List<string> fieldNames, List<string> fields, int linenumber, ConcurrentDictionary<string, EdgarDatasetTag> existing)
+        public override EdgarDatasetTag Parse(IAnalystRepository repository,List<string> fieldNames, List<string> fields, int linenumber, ConcurrentDictionary<string, int> existing)
         {
             /*
             File content:
@@ -94,11 +95,11 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 repo.AddTag(dataset, file);
             }
-            //else
-            //{
-            //    repo.AddTagAssociacion(dataset, file);
-            //}
         }
 
+        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        {
+            return repository.GetTagsKeys(datasetId);
+        }
     }
 }

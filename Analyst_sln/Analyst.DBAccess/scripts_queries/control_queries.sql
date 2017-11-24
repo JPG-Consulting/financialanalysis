@@ -1,7 +1,7 @@
 
 use [Analyst]
 declare @datasetid int;
-set @datasetid = 201604;
+set @datasetid = 201701;
 
 --estado de la ejecucion
 
@@ -21,15 +21,17 @@ from EdgarDatasets where id =@datasetid;
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --LOG
 select 
-	top 20 * 
-	--*
+	--top 20 * 
+	*
 from [dbo].[Log] 
 where 1=1
 	--and logger <> 'EdgarDatasetTagService'
 	--and Level <> 'DEBUG'
 	--and level in ('ERROR','FATAL')
+	--and level = 'INFO'
 	--and message like '%process dim.tsv%'
-order by date desc
+	--AND Logger = 'EdgarDatasetNumService'
+order by date asc
 --order by message 
 ;
 

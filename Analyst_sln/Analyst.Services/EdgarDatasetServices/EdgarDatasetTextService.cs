@@ -8,23 +8,24 @@ using Analyst.DBAccess.Contexts;
 using System.Collections.Concurrent;
 using System.Globalization;
 using log4net;
+using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
     public interface IEdgarDatasetTextService:IEdgarFileService<EdgarDatasetText>
     {
-        ConcurrentDictionary<string, EdgarDatasetSubmission> Submissions { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+        ConcurrentDictionary<string, int> Submissions { get; set; }
+        ConcurrentDictionary<string, int> Tags { get; set; }
 
-        ConcurrentDictionary<string, EdgarDatasetDimension> Dimensions { get; set; }
+        ConcurrentDictionary<string, int> Dimensions { get; set; }
 
     }
     public class EdgarDatasetTextService : EdgarFileService<EdgarDatasetText>, IEdgarDatasetTextService
     {
-        public ConcurrentDictionary<string, EdgarDatasetSubmission> Submissions { get; set; }
-        public ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+        public ConcurrentDictionary<string, int> Submissions { get; set; }
+        public ConcurrentDictionary<string, int> Tags { get; set; }
 
-        public ConcurrentDictionary<string, EdgarDatasetDimension> Dimensions { get; set; }
+        public ConcurrentDictionary<string, int> Dimensions { get; set; }
 
         private readonly ILog log;
         protected override ILog Log
@@ -43,7 +44,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetText Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetText> existing)
+        public override EdgarDatasetText Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
         {
             /*
             adsh	tag	version	ddate	qtrs	iprx	lang	dcml	durp	datp	dimh	dimn	coreg	escaped	srclen	txtlen	footnote	footlen	context	value
@@ -55,10 +56,10 @@ namespace Analyst.Services.EdgarDatasetServices
 
             EdgarDatasetText text = new EdgarDatasetText();
             string adsh = fields[fieldNames.IndexOf("adsh")];
-            text.Submission = Submissions[adsh];
+            text.SubmissionId = Submissions[adsh];
             string tag = fields[fieldNames.IndexOf("tag")];
             string version = fields[fieldNames.IndexOf("version")];
-            text.Tag = Tags[tag+version];
+            text.TagId = Tags[tag+version];
             string value = fields[fieldNames.IndexOf("ddate")];
             text.DDate = new DateTime(int.Parse(value.Substring(0, 4)), int.Parse(value.Substring(4, 2)), int.Parse(value.Substring(6, 2)));
             text.Qtrs = Convert.ToInt32(fields[fieldNames.IndexOf("qtrs")]);
@@ -67,7 +68,7 @@ namespace Analyst.Services.EdgarDatasetServices
             text.Dcml = Convert.ToInt32(fields[fieldNames.IndexOf("dcml")]);
             text.Durp = float.Parse(fields[fieldNames.IndexOf("durp")], CultureInfo.InvariantCulture.NumberFormat);
             text.Datp = float.Parse(fields[fieldNames.IndexOf("datp")], CultureInfo.InvariantCulture.NumberFormat);
-            text.Dimension = Dimensions[fields[fieldNames.IndexOf("dimh")]];
+            text.DimensionId = Dimensions[fields[fieldNames.IndexOf("dimh")]];
             value = fields[fieldNames.IndexOf("dimn")];
             if (!string.IsNullOrEmpty(value))
                 text.DimN = Convert.ToInt16(value);
@@ -87,5 +88,11 @@ namespace Analyst.Services.EdgarDatasetServices
             return text;
         }
 
+
+        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        {
+            return repository.GetTextKeys(datasetId);
+        }
     }
+
 }

@@ -20,10 +20,8 @@ namespace Analyst.DBAccess.Contexts
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
 
         IList<T> Get<T>() where T:IEdgarEntity;
-        //IList<T> Get<T>(string include) where T : IEdgarEntity;
+        
         int GetCount<T>() where T : IEdgarEntity;
-        //IList<T> GetByDatasetId<T>(int datasetId) where T : class, IEdgarDatasetFile;
-        IList<T> GetByDatasetId<T>(int datasetId, string[] includes) where T : class, IEdgarDatasetFile;
 
         int GetDatasetsCount();
         int GetSECFormsCount();
@@ -36,6 +34,13 @@ namespace Analyst.DBAccess.Contexts
         
         EdgarDatasetDimension GetDimension(string dimhash);
         EdgarDatasetSubmission GetSubmission(string adsh);
+
+        IList<EdgarTuple> GetCalculationKeys(int datasetId);
+        IList<EdgarTuple> GetTagsKeys(int datasetId);
+        IList<EdgarTuple> GetTextKeys(int datasetId);
+        IList<EdgarTuple> GetDimensionKeys(int datasetId);
+        IList<EdgarTuple> GetNumberKeys(int datasetId);
+        IList<EdgarTuple> GetSubmissionKeys(int datasetId);
 
         void Add(SECForm sECForm);
         void Add(SIC sic);
@@ -52,15 +57,14 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset dataset, EdgarDatasetText file);
         
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
-        
-        
+
     }
 
-    public class AnalystRepository: IAnalystRepository
+    public class AnalystRepository : IAnalystRepository
     {
         public const int DEFAULT_CONN_TIMEOUT = 180;
         private AnalystContext Context;
-        
+
         public AnalystRepository(AnalystContext context)
         {
             this.Context = context;
@@ -72,7 +76,7 @@ namespace Analyst.DBAccess.Contexts
             this.Context.Database.CommandTimeout = timeout;
         }
 
-        
+
 
         public bool ContextConfigurationAutoDetectChangesEnabled
         {
@@ -96,7 +100,7 @@ namespace Analyst.DBAccess.Contexts
             return Context.SICs.Count();
         }
 
-        
+
         public EdgarDataset GetDataset(int id)
         {
             EdgarDataset ds = Context.DataSets.Single(x => x.Id == id);
@@ -152,7 +156,7 @@ namespace Analyst.DBAccess.Contexts
 
         }
 
-        public IList<TEntity> Get<TEntity>() where TEntity:IEdgarEntity
+        public IList<TEntity> Get<TEntity>() where TEntity : IEdgarEntity
         {
             return GetQuery<TEntity>().ToList<TEntity>();
         }
@@ -161,20 +165,38 @@ namespace Analyst.DBAccess.Contexts
             return GetQuery<TEntity>().Count();
         }
 
-        public IList<T> GetByDatasetId<T>(int datasetId, string[] includes) where T : class,IEdgarDatasetFile
+        public IList<EdgarTuple> GetCalculationKeys(int datasetId)
         {
-            ObjectQuery<T> q = GetQuery<T>();
-            if(includes != null)
-            {
-                for(int i=0;i<includes.Length;i++)
-                {
-                    q = q.Include(includes[i]);
-                }
-            }
-            IQueryable<T> query = q.Where(t => t.DatasetId == datasetId);
-            return query.ToList();
-
+            return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_CALCULATIONS_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
         }
+
+        public IList<EdgarTuple> GetDimensionKeys(int datasetId)
+        {
+            return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_DIMENSIONS_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
+        }
+        public IList<EdgarTuple> GetTagsKeys(int datasetId)
+        {
+            return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_TAGS_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
+        }
+
+        public IList<EdgarTuple> GetSubmissionKeys(int datasetId)
+        {
+            return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_SUBMISSIONS_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
+        }
+
+
+        public IList<EdgarTuple> GetNumberKeys(int datasetId)
+        {
+            return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_NUMBER_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
+        }
+
+        public IList<EdgarTuple> GetTextKeys(int datasetId)
+        {
+            return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_TEXT_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
+        }
+       
+
+
         private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
         {
             string key = typeof(TEntity).Name;
@@ -276,9 +298,7 @@ namespace Analyst.DBAccess.Contexts
                 "@DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc,@LineNumber",
                 dsid, tagparam, version, custom, abstracto, datatype, tlabel, doc, LineNumber);
         }
-
         
-
         public void Add(EdgarDataset dataset, EdgarDatasetNumber number)
         {
             SqlParameter ddate = new SqlParameter("@DDate", number.DDate);
@@ -295,9 +315,9 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter durp = new SqlParameter("@durp", number.durp);
             SqlParameter datp = new SqlParameter("@datp", number.datp);
             SqlParameter decimals = new SqlParameter("@Decimals", number.Decimals);
-            SqlParameter dimensionId = new SqlParameter("@Dimension_Id", number.Dimension.Id);
-            SqlParameter submissionId = new SqlParameter("@Submission_Id", number.Submission.Id);
-            SqlParameter tagId = new SqlParameter("@Tag_Id", number.Tag.Id);
+            SqlParameter dimensionId = new SqlParameter("@Dimension_Id", number.DimensionId);
+            SqlParameter submissionId = new SqlParameter("@Submission_Id", number.SubmissionId);
+            SqlParameter tagId = new SqlParameter("@Tag_Id", number.TagId);
             SqlParameter lineNumber = new SqlParameter("@LineNumber", number.LineNumber);
             SqlParameter edgarDatasetId = new SqlParameter("@EdgarDataset_Id", dataset.Id);
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETNUMBER_INSERT "+
@@ -330,17 +350,28 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter MenuCategory = new SqlParameter("@MenuCategory", ren.MenuCategory);
             SqlParameter ShortName = new SqlParameter("@ShortName", ren.ShortName);
             SqlParameter LongName = new SqlParameter("@LongName", ren.LongName);
-            SqlParameter Roleuri = new SqlParameter("@Roleuri", ren.Roleuri);
+
+            SqlParameter Roleuri;
             if (string.IsNullOrEmpty(ren.Roleuri))
-                Roleuri.Value = DBNull.Value;
-            SqlParameter ParentRoleuri = new SqlParameter("@ParentRoleuri", ren.ParentRoleuri);
+                Roleuri = new SqlParameter("@Roleuri", DBNull.Value);
+            else
+                Roleuri = new SqlParameter("@Roleuri", ren.Roleuri);
+
+            SqlParameter ParentRoleuri;
+            if(string.IsNullOrEmpty(ren.ParentRoleuri))
+                ParentRoleuri = new SqlParameter("@ParentRoleuri", DBNull.Value);
+            else
+                ParentRoleuri = new SqlParameter("@ParentRoleuri", ren.ParentRoleuri);
+
             SqlParameter ParentReport = new SqlParameter("@ParentReport", ren.ParentReport);
             if (ren.ParentReport == null)
                 ParentReport.Value = DBNull.Value;
+
             SqlParameter UltimateParentReport = new SqlParameter("@UltimateParentReport", ren.UltimateParentReport);
             if (ren.UltimateParentReport == null)
                 UltimateParentReport.Value = DBNull.Value;
-            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", ren.Submission.Id);
+
+            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", ren.SubmissionId);
             SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
             SqlParameter lineNumber = new SqlParameter("@LineNumber", ren.LineNumber);
 
@@ -361,16 +392,16 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter Negating = new SqlParameter("@Negating", pre.Negating);
             SqlParameter LineNumber = new SqlParameter("@LineNumber", pre.LineNumber);
             SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
-            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", pre.Submission.Id);
-            SqlParameter Tag_Id = new SqlParameter("@Tag_Id", pre.Tag.Id);
+            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", pre.SubmissionId);
+            SqlParameter Tag_Id = new SqlParameter("@Tag_Id", pre.TagId);
             SqlParameter Number_Id = new SqlParameter("@Number_Id", pre.NumberId);
-            if (pre.Number == null)
+            if (pre.NumberId <= 0)
                 Number_Id.Value = DBNull.Value;
             SqlParameter Text_Id;
-            if (pre.Text == null)
-                Text_Id = new SqlParameter("@Text_Id",DBNull.Value);
+            if (pre.TextId > 0)
+                Text_Id = new SqlParameter("@Text_Id", pre.TextId);
             else
-                Text_Id = new SqlParameter("@Text_Id", pre.Text.Id);
+            Text_Id = new SqlParameter("@Text_Id", DBNull.Value);
             SqlParameter Render_Id;
             if (pre.Render == null)
                 Render_Id = new SqlParameter("@Render_Id",DBNull.Value);
@@ -398,10 +429,10 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter SequentialNumberForGrouping = new SqlParameter("@SequentialNumberForGrouping", file.SequentialNumberForGrouping);
             SqlParameter SequentialNumberForArc = new SqlParameter("@SequentialNumberForArc", file.SequentialNumberForArc);
             SqlParameter Negative = new SqlParameter("@Negative", file.Negative);
-            SqlParameter ParentTagId = new SqlParameter("@ParentTagId", file.ParentTag.Id);
-            SqlParameter ChildTagId = new SqlParameter("@ChildTagId", file.ChildTag.Id);
+            SqlParameter ParentTagId = new SqlParameter("@ParentTagId", file.ParentTagId);
+            SqlParameter ChildTagId = new SqlParameter("@ChildTagId", file.ChildTagId);
             SqlParameter Dataset_Id = new SqlParameter("@Dataset_Id", dataset.Id);
-            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", file.Submission.Id);
+            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", file.SubmissionId);
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETCALC_INSERT " +
                 "@LineNumber, @SequentialNumberForGrouping, @SequentialNumberForArc, @Negative, @ParentTagId, @ChildTagId, @Dataset_Id, @Submission_Id",
@@ -433,9 +464,9 @@ namespace Analyst.DBAccess.Contexts
                 FootLen.Value = DBNull.Value;
             SqlParameter paramContext = new SqlParameter("@Context", file.Context);
             SqlParameter Value = new SqlParameter("@Value", file.Value);
-            SqlParameter Dimension_Id = new SqlParameter("@Dimension_Id", file.Dimension.Id);
-            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", file.Submission.Id);
-            SqlParameter Tag_Id = new SqlParameter("@Tag_Id", file.Tag.Id);
+            SqlParameter Dimension_Id = new SqlParameter("@Dimension_Id", file.DimensionId);
+            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", file.SubmissionId);
+            SqlParameter Tag_Id = new SqlParameter("@Tag_Id", file.TagId);
             SqlParameter DatasetId = new SqlParameter("@DatasetId", dataset.Id);
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTEXT_INSERT " +

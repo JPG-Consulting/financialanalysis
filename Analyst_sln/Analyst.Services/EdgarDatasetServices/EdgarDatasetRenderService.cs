@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 using Analyst.DBAccess.Contexts;
 using System.Collections.Concurrent;
 using log4net;
+using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
     public interface IEdgarDatasetRenderService : IEdgarFileService<EdgarDatasetRender>
     {
-        ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
+        ConcurrentDictionary<string, int> Subs { get; set; }
     }
     public class EdgarDatasetRenderService : EdgarFileService<EdgarDatasetRender>, IEdgarDatasetRenderService
     {
-        public ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
+        public ConcurrentDictionary<string, int> Subs { get; set; }
 
         private readonly ILog log;
         protected override ILog Log
@@ -35,7 +36,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetRender Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetRender> existing)
+        public override EdgarDatasetRender Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
         {
             /*
             adsh	report	rfile	menucat	shortname	longname	roleuri	parentroleuri	parentreport	ultparentrpt
@@ -44,7 +45,7 @@ namespace Analyst.Services.EdgarDatasetServices
             */
             EdgarDatasetRender ren = new EdgarDatasetRender();
             string adsh = fields[fieldNames.IndexOf("adsh")];
-            ren.Submission = Subs[adsh];
+            ren.SubmissionId = Subs[adsh];
             ren.Report = Convert.ToInt32(fields[fieldNames.IndexOf("report")]);
             string value = "";
             ren.RenderFile = fields[fieldNames.IndexOf("rfile")][0];
@@ -61,6 +62,11 @@ namespace Analyst.Services.EdgarDatasetServices
                 ren.UltimateParentReport = Convert.ToInt32(value);
             ren.LineNumber = lineNumber;
             return ren;
+        }
+
+        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

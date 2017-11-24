@@ -10,21 +10,22 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Globalization;
 using log4net;
+using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
     public interface IEdgarDatasetNumService : IEdgarFileService<EdgarDatasetNumber>
     {
-        ConcurrentDictionary<string, EdgarDatasetDimension> Dimensions { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetSubmission> Submissions { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+        ConcurrentDictionary<string, int> Dimensions { get; set; }
+        ConcurrentDictionary<string, int> Submissions { get; set; }
+        ConcurrentDictionary<string, int> Tags { get; set; }
     }
     public class EdgarDatasetNumService:EdgarFileService<EdgarDatasetNumber>, IEdgarDatasetNumService
     {
         
-        public ConcurrentDictionary<string, EdgarDatasetSubmission> Submissions { get; set; }
-        public ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
-        public ConcurrentDictionary<string, EdgarDatasetDimension> Dimensions { get; set; }
+        public ConcurrentDictionary<string, int> Submissions { get; set; }
+        public ConcurrentDictionary<string, int> Tags { get; set; }
+        public ConcurrentDictionary<string, int> Dimensions { get; set; }
 
         private readonly ILog log;
         protected override ILog Log
@@ -40,13 +41,13 @@ namespace Analyst.Services.EdgarDatasetServices
         }
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetNumber file)
         {
-            file.Submission = Submissions[file.ADSH];
-            file.Tag = Tags[file.TagCompoundKey];
-            file.Dimension = Dimensions[file.DimensionStr];
+            file.SubmissionId = Submissions[file.ADSH];
+            file.TagId = Tags[file.TagCompoundKey];
+            file.DimensionId = Dimensions[file.DimensionStr];
             repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetNumber Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetNumber> existing)
+        public override EdgarDatasetNumber Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
         {
             /*
             Ejemplo
@@ -89,6 +90,11 @@ namespace Analyst.Services.EdgarDatasetServices
             number.LineNumber = lineNumber;
 
             return number;
+        }
+
+        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        {
+            return repository.GetNumberKeys(datasetId);
         }
     }
 }

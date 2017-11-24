@@ -7,25 +7,26 @@ using System.Threading.Tasks;
 using Analyst.DBAccess.Contexts;
 using System.Collections.Concurrent;
 using log4net;
+using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
     public interface IEdgarDatasetPresentationService : IEdgarFileService<EdgarDatasetPresentation>
     {
-        ConcurrentDictionary<string, EdgarDatasetNumber> Nums { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetRender> Renders { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetSubmission> Subs { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
-        ConcurrentDictionary<string, EdgarDatasetText> Texts { get; set; }
+        ConcurrentDictionary<string, int> Nums { get; set; }
+        ConcurrentDictionary<string, int> Renders { get; set; }
+        ConcurrentDictionary<string, int> Subs { get; set; }
+        ConcurrentDictionary<string, int> Tags { get; set; }
+        ConcurrentDictionary<string, int> Texts { get; set; }
     }
     public class EdgarDatasetPresentationService : EdgarFileService<EdgarDatasetPresentation>, IEdgarDatasetPresentationService
     {
-        public ConcurrentDictionary<string, EdgarDatasetRender> Renders { get; set; }
-        public ConcurrentDictionary<string,EdgarDatasetSubmission> Subs { get; set; }
-        public ConcurrentDictionary<string, EdgarDatasetTag> Tags { get; set; }
+        public ConcurrentDictionary<string, int> Renders { get; set; }
+        public ConcurrentDictionary<string, int> Subs { get; set; }
+        public ConcurrentDictionary<string, int> Tags { get; set; }
 
-        public ConcurrentDictionary<string, EdgarDatasetNumber> Nums { get; set; }
-        public ConcurrentDictionary<string, EdgarDatasetText> Texts { get; set; }
+        public ConcurrentDictionary<string, int> Nums { get; set; }
+        public ConcurrentDictionary<string, int> Texts { get; set; }
 
         private readonly ILog log;
         protected override ILog Log
@@ -44,7 +45,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetPresentation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, EdgarDatasetPresentation> existing)
+        public override EdgarDatasetPresentation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
         {
             /*
             adsh	report	line	stmt	inpth	rfile	tag	version	prole	plabel	negating
@@ -56,9 +57,9 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 EdgarDatasetPresentation pre = new EdgarDatasetPresentation();
                 string adsh = fields[fieldNames.IndexOf("adsh")];
-                pre.Submission = Subs[adsh];
+                pre.SubmissionId = Subs[adsh];
                 string report = fields[fieldNames.IndexOf("report")];
-                pre.Render = Renders[adsh + report];
+                pre.RenderId = Renders[adsh + report];
                 if (pre.Render != null)
                     pre.RenderId = pre.Render.Id;
                 pre.Line = Convert.ToInt32(fields[fieldNames.IndexOf("line")]);
@@ -67,26 +68,20 @@ namespace Analyst.Services.EdgarDatasetServices
                 pre.RenderFile = fields[fieldNames.IndexOf("rfile")][0];
                 string tag = fields[fieldNames.IndexOf("tag")];
                 string version = fields[fieldNames.IndexOf("version")];
-                pre.Tag = Tags[tag + version];
+                pre.TagId = Tags[tag + version];
                 pre.prole = fields[fieldNames.IndexOf("prole")];
                 pre.PreferredLabel = fields[fieldNames.IndexOf("plabel")];
                 pre.Negating = !(fields[fieldNames.IndexOf("negating")] == "0");
                 pre.LineNumber = lineNumber;
 
                 string key = adsh + tag + version;
-                if (Nums.ContainsKey(key) && Nums[key] != null)
-                {
-                    pre.Number = Nums[key];
-                    pre.NumberId = pre.Number.Id;
-                }
+                if (Nums.ContainsKey(key))
+                    pre.NumberId = Nums[key];
                 else
                     pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
 
-                if (Texts.ContainsKey(key) && Texts[key] != null)
-                {
-                    pre.Text = Texts[key];
-                    pre.TextId = pre.Text.Id;
-                }
+                if (Texts.ContainsKey(key))
+                    pre.TextId = Texts[key];
                 else
                     pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
 
@@ -97,6 +92,11 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 throw ex;
             }
+        }
+
+        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

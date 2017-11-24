@@ -42,14 +42,18 @@ namespace Analyst.DBAccess.Contexts
             List<string> scripts = new List<string>();
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETCALC_INSERT.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETDIMENSIONS_INSERT.sql"));
-            //context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETDIMENSIONS_RELATE.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETNUMBER_INSERT.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETPRESENTATIONS_INSERT.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETRENDERS_INSERT.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETSUBMISSIONS_INSERT.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETTAGS_INSERT.sql"));
-            //context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETTAGS_RELATE.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETTEXT_INSERT.sql"));
+            context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_CALCULATIONS_KEYS.sql"));
+            context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_DIMENSIONS_KEYS.sql"));
+            context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_NUMBER_KEYS.sql"));
+            context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_SUBMISSIONS_KEYS.sql"));
+            context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_TAGS_KEYS.sql"));
+            context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_TEXT_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create table LOG.sql"));
             
             InitialLoader.LoadInitialData(new AnalystRepository(context));

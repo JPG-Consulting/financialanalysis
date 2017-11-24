@@ -1,4 +1,5 @@
 ﻿using Analyst.DBAccess.Contexts;
+using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
 using Analyst.Domain.Edgar.Exceptions;
 using System;
@@ -12,10 +13,12 @@ using System.Threading.Tasks;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
+
+
     public interface IEdgarFileService<T>: IDisposable where T :class, IEdgarDatasetFile
     {
-        ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId);
-        ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId,string[] includes);
+        ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId);
+        ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId,string[] includes);
         void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate);
     }
 
@@ -37,20 +40,20 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        public ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId)
+        public ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId)
         {
             return GetAsConcurrent(datasetId, null);
         }
 
-        public ConcurrentDictionary<string, T> GetAsConcurrent(int datasetId, string[] includes)
+        public ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId, string[] includes)
         {
-            ConcurrentDictionary<string, T> ret = new ConcurrentDictionary<string, T>();
+            ConcurrentDictionary<string, int> ret = new ConcurrentDictionary<string, int>();
             IAnalystRepository repository = new AnalystRepository(new AnalystContext());
 
-            IList<T> xs = repository.GetByDatasetId<T>(datasetId,includes);
-            foreach (T x in xs)
+            IList<EdgarTuple> keysId = GetKeys(repository,datasetId);
+            foreach (EdgarTuple t in keysId)
             {
-                ret.TryAdd(x.Key, x);
+                ret.TryAdd(t.Key,t.Id);
             }
             return ret;
         }
@@ -67,10 +70,10 @@ namespace Analyst.Services.EdgarDatasetServices
                     string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\" + fileToProcess;
                     string[] allLines = File.ReadAllLines(filepath);
                     string header = allLines[0];
-                    string field = "Total" + fieldToUpdate;
-                    state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset, allLines.Length - 1);
-                    state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, field);
-                    ConcurrentDictionary<string, T> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
+
+                    UpdateTotal(state,fieldToUpdate, allLines.Length - 1);
+
+                    ConcurrentDictionary<string, int> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
                     ConcurrentBag<string> failedLines = new ConcurrentBag<string>();
                     if (processInParallel && allLines.Length > 1)
                     {
@@ -108,6 +111,17 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
+        private void UpdateTotal(EdgarTaskState state,string fieldToUpdate,int value)
+        {
+            string field = "Total" + fieldToUpdate;
+            int currentValue = (int)state.Dataset.GetType().GetProperty(field).GetValue(state.Dataset);
+            if (currentValue == 0)
+            {
+                state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset, value);
+                state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, field);
+            }
+        }
+
         private void WriteFailedLines(string filepath, string header, ConcurrentBag<string> failedLines)
         {
             if(failedLines.Count > 0)
@@ -133,7 +147,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, T> existing,ConcurrentBag<string> failedLines)
+        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, int> existing,ConcurrentBag<string> failedLines)
         {
             /*
             EF isn't thread safe and it doesn't allow parallel
@@ -187,8 +201,10 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public abstract void Add(IAnalystRepository repo, EdgarDataset dataset, T file);
-        public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, T> existing);
+        public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing);
      
+        public abstract IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId);
+
         public void Dispose()
         {
 
