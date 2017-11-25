@@ -66,15 +66,18 @@ namespace Analyst.Services.EdgarDatasetServices
             text.Iprx = Convert.ToInt16(fields[fieldNames.IndexOf("iprx")]);
             text.Language = fields[fieldNames.IndexOf("lang")];
             text.Dcml = Convert.ToInt32(fields[fieldNames.IndexOf("dcml")]);
-            text.Durp = float.Parse(fields[fieldNames.IndexOf("durp")], CultureInfo.InvariantCulture.NumberFormat);
-            text.Datp = float.Parse(fields[fieldNames.IndexOf("datp")], CultureInfo.InvariantCulture.NumberFormat);
+            text.Durp = float.Parse(fields[fieldNames.IndexOf("durp")], CultureInfo.GetCultureInfo("en-us").NumberFormat);
+            text.Datp = float.Parse(fields[fieldNames.IndexOf("datp")], CultureInfo.GetCultureInfo("en-us").NumberFormat);
             text.DimensionId = Dimensions[fields[fieldNames.IndexOf("dimh")]];
             value = fields[fieldNames.IndexOf("dimn")];
             if (!string.IsNullOrEmpty(value))
                 text.DimN = Convert.ToInt16(value);
             value = fields[fieldNames.IndexOf("coreg")];
+            //TODO: hay que cambiar el tipo de dato a string y el nombre a CoRegistrant
+            /*
             if (!string.IsNullOrEmpty(value))
                 text.Coreg = Convert.ToInt32(value);
+            */
             text.Escaped = fields[fieldNames.IndexOf("escaped")]!= "0";
             text.SrcLen = Convert.ToInt32(fields[fieldNames.IndexOf("srclen")]);
             text.TxtLen = Convert.ToInt32(fields[fieldNames.IndexOf("txtlen")]);

@@ -94,7 +94,7 @@ namespace Analyst.Services.EdgarDatasetServices
         public void ProcessDataset(int id)
         {
             //https://stackify.com/log4net-guide-dotnet-logging/
-            log.Info("Dataset " + id.ToString() + " requested");
+            log.Info("Datasetid " + id.ToString() + "-- Requested");
             if (allowProcess)
             {
                 if (datasetsInProcess.ContainsKey(id))
@@ -130,7 +130,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 try
                 {
                     Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                    log.Info("Begin dataset process id=" + id.ToString());
+                    log.Info("Datasetid " + id.ToString() + " -- BEGIN dataset process");
                     EdgarDataset ds = repository.GetDataset(id);
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////
                     ////BEGIN PROCESS
@@ -146,32 +146,25 @@ namespace Analyst.Services.EdgarDatasetServices
                     ConcurrentDictionary<string, int> dims = dimensionService.GetAsConcurrent(id);
                     states = LoadCalTxtNum(ds, repository, subs, tags, dims);
                     ManageErrors(states);
-                    /*
-                    //Load Presentations and Numbers
-                    ConcurrentDictionary<string, EdgarDatasetNumber> nums = numService.GetAsConcurrent(id, new string[] { "Tag", "Submission" });
-                    ConcurrentDictionary<string, EdgarDatasetText> txts = textService.GetAsConcurrent(id, new string[] { "Tag", "Submission" });
+                    
+                    //Load Presentations and Renders
+                    ConcurrentDictionary<string, int> nums = numService.GetAsConcurrent(id);
+                    ConcurrentDictionary<string, int> txts = textService.GetAsConcurrent(id);
                     states = LoadRenPre(ds, repository, subs, tags, nums, txts);
                     ManageErrors(states);
-                    */
+                    
                     ////END PROCESS
                     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     watch.Stop();
-                    long elapsedMs = watch.ElapsedMilliseconds;
-                    log.Info("End dataset process id=" + id.ToString() + " - time: " + new TimeSpan(elapsedMs).ToString());
-                }
-                catch(EdgarException eex)
-                {
-                    log.Fatal("Edgar exception in EdgarDatasetService.Run(" + id.ToString() + "): " + eex.Message, eex);
-                    if (eex.InnerExceptions != null)
-                    {
-                        foreach (Exception ex in eex.InnerExceptions)
-                            log.Fatal("Inner: " + ex.Message, ex);
-                    }
+                    TimeSpan ts = watch.Elapsed;
+                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",ts.Hours, ts.Minutes, ts.Seconds,ts.Milliseconds / 10);
+                    log.Info("Datasetid " + id.ToString() + " -- END dataset process -- time: " + elapsedTime);
+                    
                 }
                 catch(Exception ex)
                 {
-                    log.Fatal("Unexpected error in EdgarDatasetService.Run(" + id.ToString() + "): " + ex.Message, ex);
+                    log.Fatal("Datasetid " + id.ToString() + " -- Unexpected error in EdgarDatasetService.Run(" + id.ToString() + "): " + ex.Message, ex);
                     log.FatalInner(ex.InnerException);
                 }
             });
@@ -192,7 +185,7 @@ namespace Analyst.Services.EdgarDatasetServices
             IList<Task> tasks = new List<Task>();
 
             tasks.Add(Task.Factory.StartNew(() => 
-                submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")
+                submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")//false --> to avoid to have too many threads
             ));
             
             tasks.Add(Task.Factory.StartNew(() => 
@@ -200,7 +193,7 @@ namespace Analyst.Services.EdgarDatasetServices
             ));
 
             tasks.Add(Task.Factory.StartNew(() => 
-                dimensionService.Process(stateDim,true, EdgarDatasetDimension.FILE_NAME,"Dimensions")
+                dimensionService.Process(stateDim,false, EdgarDatasetDimension.FILE_NAME,"Dimensions")//false --> to avoid to have too many threads
             ));
             
             Task.WaitAll(tasks.ToArray());
@@ -218,7 +211,7 @@ namespace Analyst.Services.EdgarDatasetServices
             calcService.Submissions = subs;
             calcService.Tags = tags;
             tasks.Add(Task.Factory.StartNew(() => 
-                calcService.Process(stateCalc, true, EdgarDatasetCalculation.FILE_NAME, "Calculations"))
+                calcService.Process(stateCalc, false, EdgarDatasetCalculation.FILE_NAME, "Calculations")) //false --> to avoid to have too many threads
             );
 
             //process text file
@@ -230,7 +223,7 @@ namespace Analyst.Services.EdgarDatasetServices
             tasks.Add(Task.Factory.StartNew(() => 
                 textService.Process(stateText, true, EdgarDatasetText.FILE_NAME, "Texts"))
             );
-            /*
+            
             //Process num file
             EdgarTaskState stateNum = new EdgarTaskState(EdgarDatasetNumber.FILE_NAME, ds, repo);
             states.Add(stateNum);
@@ -240,7 +233,7 @@ namespace Analyst.Services.EdgarDatasetServices
             tasks.Add(Task.Factory.StartNew(() => 
                 numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers"))
             );
-            */
+
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
@@ -250,29 +243,33 @@ namespace Analyst.Services.EdgarDatasetServices
             List<EdgarTaskState> states = new List<EdgarTaskState>();
             List<Task> tasks = new List<Task>();
 
-            //Process presentation file
-            EdgarTaskState statePre = new EdgarTaskState(EdgarDatasetPresentation.FILE_NAME, ds, repo);
-            states.Add(statePre);
             EdgarTaskState stateRen = new EdgarTaskState(EdgarDatasetRender.FILE_NAME, ds, repo);
             states.Add(stateRen);
+
+            EdgarTaskState statePre = new EdgarTaskState(EdgarDatasetPresentation.FILE_NAME, ds, repo);
+            states.Add(statePre);
+
             tasks.Add(Task.Factory.StartNew(() =>
             {
                 renderingService.Subs = subs;
-                renderingService.Process(stateRen, false, EdgarDatasetRender.FILE_NAME, "Renders");
+                renderingService.Process(stateRen, true, EdgarDatasetRender.FILE_NAME, "Renders");//Presentations has a relationship to renders
                 presentationService.Subs = subs;
                 presentationService.Tags = tags;
                 presentationService.Renders = renderingService.GetAsConcurrent(ds.Id,new string[] { "Submission" });
                 presentationService.Nums = nums;
                 presentationService.Texts = texts;
-                presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");
+                presentationService.Process(statePre, true, EdgarDatasetPresentation.FILE_NAME, "Presentations");
             }
             ));
-
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
 
 
+        /// <summary>
+        /// Takes all exceptions of states and it throws them to Run(..) method
+        /// </summary>
+        /// <param name="states"></param>
         private void ManageErrors(EdgarTaskState[] states)
         {
             EdgarException edex = null;
@@ -282,8 +279,13 @@ namespace Analyst.Services.EdgarDatasetServices
                 {
                     if (edex == null)
                         edex = new EdgarException();
-                    edex.AddInnerException(states[i].Exception);
-                    log.Error(states[i].ProcessName, states[i].Exception);
+                    if (states[i].Exception != null)
+                    {
+                        edex.AddInnerException(states[i].Exception);
+                        log.Fatal("Datasetid " + states[i].Dataset.Id.ToString() + " -- " + states[i].ProcessName + ": " + states[i].Exception.Message, states[i].Exception);
+                    }
+                    else
+                        log.Fatal("Datasetid " + states[i].Dataset.Id.ToString() + "-- " + states[i].ProcessName + ": It failed but theres is NonSerializedAttribute excpetion");
                 }
             }
             if (edex != null)

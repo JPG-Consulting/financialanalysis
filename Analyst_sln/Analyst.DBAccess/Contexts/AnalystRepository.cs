@@ -452,9 +452,11 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter DimN = new SqlParameter("@DimN", file.DimN);
             if (!file.DimN.HasValue)
                 DimN.Value = DBNull.Value;
-            SqlParameter Coreg = new SqlParameter("@Coreg", file.Coreg);
-            if (!file.Coreg.HasValue)
-                Coreg.Value = DBNull.Value;
+            SqlParameter Coreg;
+            if (file.Coreg.HasValue)
+                Coreg = new SqlParameter("@Coreg", file.Coreg.ToString());
+            else
+                Coreg = new SqlParameter("@Coreg", DBNull.Value);
             SqlParameter Escaped = new SqlParameter("@Escaped", file.Escaped);
             SqlParameter SrcLen = new SqlParameter("@SrcLen", file.SrcLen);
             SqlParameter TxtLen = new SqlParameter("@TxtLen", file.TxtLen);

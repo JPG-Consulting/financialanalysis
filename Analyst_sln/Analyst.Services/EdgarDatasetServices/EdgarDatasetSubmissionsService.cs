@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using log4net;
+using System.Globalization;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -68,7 +69,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 sub.AdditionalCIKs = String.IsNullOrEmpty(value) ? null : value;
 
                 value = fields[fieldNames.IndexOf("pubfloatusd")];
-                sub.PubFloatUSD = string.IsNullOrEmpty(value) ? (float?)null : float.Parse(value);
+                sub.PubFloatUSD = string.IsNullOrEmpty(value) ? (float?)null : float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
 
                 string floatdate = fields[fieldNames.IndexOf("floatdate")];
                 sub.FloatDate = String.IsNullOrEmpty(floatdate) ? (DateTime?)null : new DateTime(int.Parse(floatdate.Substring(0, 4)), int.Parse(floatdate.Substring(4, 2)), int.Parse(floatdate.Substring(6, 2)));

@@ -63,7 +63,7 @@ namespace Analyst.Services.EdgarDatasetServices
             try
             {
                 Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                Log.Info("Begin process " + fileToProcess);
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN process");
                 if (!IsAlreadyProcessed(state.Dataset, fieldToUpdate))
                 {
                     string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
@@ -97,11 +97,13 @@ namespace Analyst.Services.EdgarDatasetServices
                 }
                 else
                 {
-                    Log.Info("The complete file " + fileToProcess + " has been processed");
+                    Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- The complete file is already processed");
                 }
                 
                 watch.Stop();
-                Log.Info("End process " + fileToProcess + " - time: " + watch.Elapsed.ToString());
+                TimeSpan ts = watch.Elapsed;
+                string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- time: " + elapsedTime);
                 state.ResultOk = true;
             }
             catch (Exception ex)
@@ -149,6 +151,9 @@ namespace Analyst.Services.EdgarDatasetServices
 
         protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, int> existing,ConcurrentBag<string> failedLines)
         {
+            Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+            Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- BEGIN range: " + range.Item1 + " to " + range.Item2);
+
             /*
             EF isn't thread safe and it doesn't allow parallel
             https://stackoverflow.com/questions/12827599/parallel-doesnt-work-with-entity-framework
@@ -166,6 +171,7 @@ namespace Analyst.Services.EdgarDatasetServices
                     List<string> fieldNames = header.Split('\t').ToList();
                     List<Exception> exceptions = new List<Exception>();
                     string line = null;
+                    
                     for (int i = range.Item1; i < range.Item2; i++)
                     {
                         try
@@ -182,22 +188,29 @@ namespace Analyst.Services.EdgarDatasetServices
                             EdgarLineException elex = new EdgarLineException(fileName, i, ex);
                             exceptions.Add(elex);
                             failedLines.Add(line);
-                            Log.Error(fileName + "[" + i.ToString() + "]: " + line);
-                            Log.Error(fileName + "["+ i.ToString() + "]: " + ex.Message, elex);
+                            Log.Error("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- line[" + i.ToString() + "]: " + line);
+                            Log.Error("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- line[" + i.ToString() + "]: " + ex.Message, elex);
                             if (exceptions.Count > MaxErrorsAllowed)
                             {
-                                Log.Fatal(fileName + ": max errors allowed reached", ex);
+                                Log.Fatal("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- line[" + i.ToString() + "]: max errors allowed reached", ex);
                                 throw new EdgarDatasetException(fileName, exceptions);
                             }
                             
                         }
                     }
+                    
+
                 }
                 finally
                 {
                     repo.ContextConfigurationAutoDetectChangesEnabled = true;
                 }
             }
+            watch.Stop();
+            TimeSpan ts = watch.Elapsed;
+            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+            Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- END range: " + range.Item1 + " to " + range.Item2 + " -- time: " + elapsedTime);
+
         }
 
         public abstract void Add(IAnalystRepository repo, EdgarDataset dataset, T file);
