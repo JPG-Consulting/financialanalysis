@@ -1,21 +1,35 @@
---me parece que el poblema esta en el if not exists que no los inserta y no avisa nada
---en el else podria hacer un insert en la tabla de log, llamando a un sp
+declare @datasetid int;
+declare @table varchar(10);
+
+set @datasetid = 201701;
+set @table ='num';
 
 --status in dataset
-select id,totalnumbers,processednumbers,(totalnumbers -processednumbers) totalmissing  from EdgarDatasets where id=201701;
+--select id,totalnumbers,processednumbers,(totalnumbers -processednumbers) totalmissing  from EdgarDatasets where id=@datasetid;
 
 --quantity in table 
-select count(1) quantity_in_table_num from EdgarDatasetNumbers where DatasetId = 201701;
+--select count(1) quantity_in_table_num from EdgarDatasetNumbers where DatasetId = @datasetid;
 
+/*
 --missing lines
 --Datasetid 201701 -- num.tsv -- range: 5939781 to 6252401 -- BEGIN
-SELECT  'missing line: ' + str(n) missing,* 
+SELECT  
+	--'missing line: ' + str(number) missing,* 
+	number
+	--,LineNumber
+	--,id
 FROM 
-	(select top 8000000 * from Numbers where n>1) n
-	left join EdgarDatasetNumbers t on t.LineNumber = n.n 
-where t.LineNumber is null
-order by n
+	(select top 7502895 * from Numbers where number>1) n
+	left join EdgarDatasetNumbers t on t.LineNumber = n.number
+where 1=1
+	and t.LineNumber is null
+	--and n.number <= 7502895
+
+order by number
 ;
+*/
+
+exec GET_MISSING_LINE_NUMBERS @datasetid,@table;
 
 /*
 4.    NUM is a data set of all numeric XBRL facts presented on the primary financial statements. These fields comprise a unique compound key:

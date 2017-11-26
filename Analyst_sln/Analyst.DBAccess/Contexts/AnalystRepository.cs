@@ -58,7 +58,7 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset dataset, EdgarDatasetText file);
         
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
-        
+        List<int> GetMissingLines(int id, string table);
     }
 
     public class AnalystRepository : IAnalystRepository
@@ -199,6 +199,12 @@ namespace Analyst.DBAccess.Contexts
             return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_RENDER_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
         }
 
+        public List<int> GetMissingLines(int id, string table)
+        {
+            SqlParameter paramid = new SqlParameter("@datasetid", id);
+            SqlParameter paramtable = new SqlParameter("@table", table);
+            return Context.Database.SqlQuery<int>("exec GET_MISSING_LINE_NUMBERS @datasetid,@table", paramid, paramtable).ToList();
+        }
 
         private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
         {

@@ -44,12 +44,13 @@ namespace Analyst.Services.EdgarDatasetServices
         public ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId)
         {
             ConcurrentDictionary<string, int> ret = new ConcurrentDictionary<string, int>();
-            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
-
-            IList<EdgarTuple> keysId = GetKeys(repository,datasetId);
-            foreach (EdgarTuple t in keysId)
+            using (IAnalystRepository repository = new AnalystRepository(new AnalystContext()))
             {
-                ret.TryAdd(t.Key,t.Id);
+                IList<EdgarTuple> keysId = GetKeys(repository, datasetId);
+                foreach (EdgarTuple t in keysId)
+                {
+                    ret.TryAdd(t.Key, t.Id);
+                }
             }
             return ret;
         }
@@ -62,20 +63,24 @@ namespace Analyst.Services.EdgarDatasetServices
             string[] missing = new string[allLines.Length];
             string header = allLines[0];
             missing[0] = header;
-            ConcurrentDictionary<string, int> existing = GetAsConcurrent(ds.Id);
+
+            List<int> missingLinenumbers = GetMissingLines(ds.Id, table);
             List<string> fieldNames = header.Split('\t').ToList();
-            for (int i = 1; i < allLines.Length; i++)
+            int i = 1;
+            int j = 0;
+            while(j < missingLinenumbers.Count && i<allLines.Length)
             {
-                string line = allLines[i];
-                List<string> fields = line.Split('\t').ToList();
-                string key = GetKey(fieldNames, fields);
-                if (existing.ContainsKey(key))
-                    missing[i] = "";
+                if (i+1 == missingLinenumbers[j])
+                {
+                    missing[i] = allLines[i];
+                    j++;
+                }
                 else
-                    missing[i] = line;
+                    missing[i] = "";
+                i++;
             }
 
-            //WriteFailedLines(sourceFilepath, header, failedLines);
+
             StreamWriter sw = File.CreateText(filepath + "_missing_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv");
             foreach (string s in missing)
             {
@@ -83,6 +88,14 @@ namespace Analyst.Services.EdgarDatasetServices
             }
             sw.Close();
 
+        }
+
+        private List<int> GetMissingLines(int id, string table)
+        {
+            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            {
+                return repo.GetMissingLines(id, table);
+            }
         }
 
         public void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
@@ -102,14 +115,20 @@ namespace Analyst.Services.EdgarDatasetServices
 
                     ConcurrentDictionary<string, int> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
                     /*
+                    getasconcurrent puede traer todos y es muy pesado
+
                     Opcion 1:
-                        usar existing para verificar repetidos
+                        seguir usandolo 
                         ConcurrentDictionary<string, int> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
 
                     Opcion 2:
-                        usar la query de numeros para traer los faltantes (metodo todos en 1 solo sp que filtre asi: @tablename = 'nombretabla', la que no es va a dar false
+                        usar la query de numeros para traer los EXISTENTES (linenumber != null en vez linenumber is null)
+                            where 1=1
+                                ?? (linnumber is null ?? @filter ='missing)
+                                ?? (linnumber is not null ?? @filter = 'existing')
+                        
                         creo un array del tamaño total y uso el numero de linea como indice,
-                        es decir, regenero el total pero con null en los ya procesados
+                        es decir, regenero el total pero con null en los no procesados
                         vuelvo a recorrer el array
                         solo habria que agregar la validacion: allLines[i] != null
 

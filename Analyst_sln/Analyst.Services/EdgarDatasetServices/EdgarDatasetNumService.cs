@@ -99,16 +99,38 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public override string GetKey(List<string> fieldNames, List<string> fields)
         {
+            /*
+            	if(
+		            not exists(
+			            /* complete compund key:
+			            4.    NUM is a data set of all numeric XBRL facts presented on the primary financial statements. These fields comprise a unique compound key:
+			            1)    adsh - EDGAR accession number
+			            2)    tag - tag used by the filer
+			            3)    version – if a standard tag, the taxonomy of origin, otherwise equal to adsh.
+			            4)    ddate - period end date
+			            5)    qtrs - duration in number of quarters
+			            6)    uom - unit of measure
+			            7)    dimh - 16-byte dimensional qualifier
+			            8)    iprx - a sequential integer used to distinguish otherwise identical facts
+			            * /
+                        select 1
+                        from[dbo].[EdgarDatasetNumbers]
+                        where[DatasetId] = @EdgarDataset_Id
+                            and[SubmissionId] = @Submission_Id
+                            and[TagId] = @Tag_Id
+                            and cast([DDate] as date) = cast(@DDate as date)
+                            and[CountOfNumberOfQuarters] = @CountOfNumberOfQuarters
+                            and[UnitOfMeasure] = @UnitOfMeasure
+                            and[DimensionId] = @Dimension_Id
+                            and[IPRX] = @IPRX
+		            )
+	            ) 
+             */
+
             string ADSH = fields[fieldNames.IndexOf("adsh")];
             string TagStr = fields[fieldNames.IndexOf("tag")];
             string Version = fields[fieldNames.IndexOf("version")];
-            /*
-            	and cast([DDate] as date)=cast(@DDate as date)
-				and [CountOfNumberOfQuarters]=@CountOfNumberOfQuarters
-				and [UnitOfMeasure]=@UnitOfMeasure
-				and [DimensionId] = @Dimension_Id
-				and [IPRX] =@IPRX
-             */
+            
             return ADSH + TagStr + Version;
         }
     }

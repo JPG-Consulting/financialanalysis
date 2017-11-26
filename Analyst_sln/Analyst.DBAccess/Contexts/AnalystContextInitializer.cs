@@ -41,6 +41,7 @@ namespace Analyst.DBAccess.Contexts
 
 
             List<string> scripts = new List<string>();
+            context.Database.ExecuteSqlCommand(GetTextScript("create GET_MISSING_LINE_NUMBERS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETCALC_INSERT.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETDIMENSIONS_INSERT.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETNUMBER_INSERT.sql"));
@@ -56,7 +57,7 @@ namespace Analyst.DBAccess.Contexts
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_TAGS_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_TEXT_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create table LOG.sql"));
-            
+            context.Database.ExecuteSqlCommand(GetTextScript("create table numbers.sql"));
             InitialLoader.LoadInitialData(new AnalystRepository(context));
         }
 

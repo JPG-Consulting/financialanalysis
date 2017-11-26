@@ -100,7 +100,7 @@ namespace Analyst.Windows
             {
                 serv.WriteMissingFiles(datasetID, table);
             }
-            
+            MessageBox.Show("Finished");
         }
 
         private IEdgarDatasetService CreateEdgarDatasetService()
