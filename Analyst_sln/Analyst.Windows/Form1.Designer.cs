@@ -34,6 +34,9 @@
             this.dgvDatasetInProcess = new System.Windows.Forms.DataGridView();
             this.lblTimer = new System.Windows.Forms.Label();
             this.lblDatasetInProcess = new System.Windows.Forms.Label();
+            this.btnGenerateMissingLines = new System.Windows.Forms.Button();
+            this.cboTables = new System.Windows.Forms.ComboBox();
+            this.lblTable = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatasets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatasetInProcess)).BeginInit();
             this.SuspendLayout();
@@ -98,11 +101,41 @@
             this.lblDatasetInProcess.TabIndex = 7;
             this.lblDatasetInProcess.Text = "lblDatasetInProcess";
             // 
+            // btnGenerateMissingLines
+            // 
+            this.btnGenerateMissingLines.Location = new System.Drawing.Point(377, 72);
+            this.btnGenerateMissingLines.Name = "btnGenerateMissingLines";
+            this.btnGenerateMissingLines.Size = new System.Drawing.Size(186, 37);
+            this.btnGenerateMissingLines.TabIndex = 8;
+            this.btnGenerateMissingLines.Text = "Generate missing lines";
+            this.btnGenerateMissingLines.UseVisualStyleBackColor = true;
+            this.btnGenerateMissingLines.Click += new System.EventHandler(this.btnGenerateMissingLines_Click);
+            // 
+            // cboTables
+            // 
+            this.cboTables.FormattingEnabled = true;
+            this.cboTables.Location = new System.Drawing.Point(442, 18);
+            this.cboTables.Name = "cboTables";
+            this.cboTables.Size = new System.Drawing.Size(121, 28);
+            this.cboTables.TabIndex = 9;
+            // 
+            // lblTable
+            // 
+            this.lblTable.AutoSize = true;
+            this.lblTable.Location = new System.Drawing.Point(373, 21);
+            this.lblTable.Name = "lblTable";
+            this.lblTable.Size = new System.Drawing.Size(48, 20);
+            this.lblTable.TabIndex = 10;
+            this.lblTable.Text = "Table";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1749, 544);
+            this.Controls.Add(this.lblTable);
+            this.Controls.Add(this.cboTables);
+            this.Controls.Add(this.btnGenerateMissingLines);
             this.Controls.Add(this.lblDatasetInProcess);
             this.Controls.Add(this.lblTimer);
             this.Controls.Add(this.dgvDatasetInProcess);
@@ -127,6 +160,9 @@
         private System.Windows.Forms.DataGridView dgvDatasetInProcess;
         private System.Windows.Forms.Label lblTimer;
         private System.Windows.Forms.Label lblDatasetInProcess;
+        private System.Windows.Forms.Button btnGenerateMissingLines;
+        private System.Windows.Forms.ComboBox cboTables;
+        private System.Windows.Forms.Label lblTable;
     }
 }
 

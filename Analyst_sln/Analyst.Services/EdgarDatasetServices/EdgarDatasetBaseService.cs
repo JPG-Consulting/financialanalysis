@@ -19,6 +19,8 @@ namespace Analyst.Services.EdgarDatasetServices
     {
         ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId);
         void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate);
+
+        void WriteMissingLines(EdgarDataset ds, string table);
     }
 
     public abstract class EdgarDatasetBaseService<T>: IEdgarDatasetBaseService<T> where T:class,IEdgarDatasetFile
@@ -52,6 +54,37 @@ namespace Analyst.Services.EdgarDatasetServices
             return ret;
         }
 
+        public void WriteMissingLines(EdgarDataset ds, string table)
+        {
+            string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
+            string filepath = cacheFolder + ds.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\" + table + ".tsv";
+            string[] allLines = File.ReadAllLines(filepath);
+            string[] missing = new string[allLines.Length];
+            string header = allLines[0];
+            missing[0] = header;
+            ConcurrentDictionary<string, int> existing = GetAsConcurrent(ds.Id);
+            List<string> fieldNames = header.Split('\t').ToList();
+            for (int i = 1; i < allLines.Length; i++)
+            {
+                string line = allLines[i];
+                List<string> fields = line.Split('\t').ToList();
+                string key = GetKey(fieldNames, fields);
+                if (existing.ContainsKey(key))
+                    missing[i] = "";
+                else
+                    missing[i] = line;
+            }
+
+            //WriteFailedLines(sourceFilepath, header, failedLines);
+            StreamWriter sw = File.CreateText(filepath + "_missing_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv");
+            foreach (string s in missing)
+            {
+                sw.WriteLine(s);
+            }
+            sw.Close();
+
+        }
+
         public void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
         {
             try
@@ -67,7 +100,7 @@ namespace Analyst.Services.EdgarDatasetServices
 
                     UpdateTotal(state,fieldToUpdate, allLines.Length - 1);
 
-
+                    ConcurrentDictionary<string, int> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
                     /*
                     Opcion 1:
                         usar existing para verificar repetidos
@@ -85,6 +118,7 @@ namespace Analyst.Services.EdgarDatasetServices
                     seria un union gigantesco
                     */
 
+                    //TODO: usar array con vacios para las failed lines. Usando esto, si reproceso, se pierde el nro de linea
                     ConcurrentBag<string> failedLines = new ConcurrentBag<string>();
                     if (processInParallel && allLines.Length > 1)
                     {
@@ -139,7 +173,7 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             if(failedLines.Count > 0)
             {
-                StreamWriter sw = File.CreateText(filepath + "_failed_" + DateTime.Now.ToString("yyyyMMddmiss") + ".tsv");
+                StreamWriter sw = File.CreateText(filepath + "_failed_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv");
                 sw.WriteLine(header);
                 foreach(string s in failedLines)
                 {
@@ -232,6 +266,10 @@ namespace Analyst.Services.EdgarDatasetServices
         public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing);
      
         public abstract IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId);
+
+        public abstract string GetKey(List<string> fieldNames, List<string> fields);
+
+        
 
         public void Dispose()
         {

@@ -38,6 +38,7 @@ namespace Analyst.Windows
             dgvDatasets.DataSource = bindingSourceDatasets;
             dgvDatasetInProcess.DataSource = bindingSourceDatasetInProcess;
             LoadDatasets();
+            LoadTables();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -80,15 +81,26 @@ namespace Analyst.Windows
         {
             if (dgvDatasets.SelectedRows.Count > 0)
             {
-                DataRowView dr = dgvDatasets.SelectedRows[0].DataBoundItem as DataRowView;
-                lblDatasetInProcess.Text = dr["Id"].ToString();
-                int id = Convert.ToInt32(dr["Id"]);
+                int id = GetDatasetId();
                 CreateEdgarDatasetService().ProcessDataset(id);
                 timer.Start();
                 this.startTime = DateTime.Now;
                 btnLoadDataset.Enabled = false;
             }
             LoadDatasets();
+        }
+
+        
+
+        private void btnGenerateMissingLines_Click(object sender, EventArgs e)
+        {
+            int datasetID = GetDatasetId();
+            string table = cboTables.SelectedItem.ToString();
+            using (IEdgarDatasetService serv = CreateEdgarDatasetService())
+            {
+                serv.WriteMissingFiles(datasetID, table);
+            }
+            
         }
 
         private IEdgarDatasetService CreateEdgarDatasetService()
@@ -210,5 +222,17 @@ namespace Analyst.Windows
 
         }
 
+        private void LoadTables()
+        {
+            string[] tables = new string[] { "cal", "dim", "num", "pre", "ren", "sub", "tag", "txt" };
+            cboTables.DataSource = tables;
+        }
+        private int GetDatasetId()
+        {
+            DataRowView dr = dgvDatasets.SelectedRows[0].DataBoundItem as DataRowView;
+            lblDatasetInProcess.Text = dr["Id"].ToString();
+            int id = Convert.ToInt32(dr["Id"]);
+            return id;
+        }
     }
 }

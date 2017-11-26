@@ -98,5 +98,10 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             throw new NotImplementedException("method EdgarDatasetPresentationService.GetKeys(...)");
         }
+
+        public override string GetKey(List<string> fieldNames, List<string> fields)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

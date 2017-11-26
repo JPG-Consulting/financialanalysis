@@ -26,9 +26,10 @@ namespace Analyst.Services.EdgarDatasetServices
     public interface IEdgarDatasetService: IDisposable
     {
         IList<EdgarDataset> GetDatasets();
-        void ProcessDataset(int id);
         EdgarDataset GetDataset(int id);
         bool IsRunning(int id);
+        void ProcessDataset(int id);
+        void WriteMissingFiles(int datasetID, string table);
     }
     public class EdgarDatasetService: IEdgarDatasetService
     {
@@ -295,6 +296,13 @@ namespace Analyst.Services.EdgarDatasetServices
                 repository = new AnalystRepository(new AnalystContext());
                 throw edex;
             }
+        }
+
+
+        public void WriteMissingFiles(int datasetID, string table)
+        {
+            EdgarDataset ds = GetDataset(datasetID);
+            numService.WriteMissingLines(ds, table);
         }
 
         public void Dispose()

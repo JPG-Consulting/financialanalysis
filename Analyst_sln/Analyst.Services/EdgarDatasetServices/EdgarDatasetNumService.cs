@@ -96,5 +96,20 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             return repository.GetNumberKeys(datasetId);
         }
+
+        public override string GetKey(List<string> fieldNames, List<string> fields)
+        {
+            string ADSH = fields[fieldNames.IndexOf("adsh")];
+            string TagStr = fields[fieldNames.IndexOf("tag")];
+            string Version = fields[fieldNames.IndexOf("version")];
+            /*
+            	and cast([DDate] as date)=cast(@DDate as date)
+				and [CountOfNumberOfQuarters]=@CountOfNumberOfQuarters
+				and [UnitOfMeasure]=@UnitOfMeasure
+				and [DimensionId] = @Dimension_Id
+				and [IPRX] =@IPRX
+             */
+            return ADSH + TagStr + Version;
+        }
     }
 }

@@ -57,5 +57,10 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             return repository.GetDimensionKeys(datasetId);
         }
+
+        public override string GetKey(List<string> fieldNames, List<string> fields)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

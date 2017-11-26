@@ -119,5 +119,10 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             return repository.GetSubmissionKeys(datasetId);
         }
+
+        public override string GetKey(List<string> fieldNames, List<string> fields)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
