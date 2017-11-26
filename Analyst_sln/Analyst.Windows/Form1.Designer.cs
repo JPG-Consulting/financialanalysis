@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnMockFiles = new System.Windows.Forms.Button();
+            this.btnFilterSubmissions = new System.Windows.Forms.Button();
             this.btnLoadDataset = new System.Windows.Forms.Button();
             this.dgvDatasets = new System.Windows.Forms.DataGridView();
             this.dgvDatasetInProcess = new System.Windows.Forms.DataGridView();
@@ -37,24 +37,25 @@
             this.btnGenerateMissingLines = new System.Windows.Forms.Button();
             this.cboTables = new System.Windows.Forms.ComboBox();
             this.lblTable = new System.Windows.Forms.Label();
+            this.txtKey = new System.Windows.Forms.TextBox();
+            this.lblKeyToFilter = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatasets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDatasetInProcess)).BeginInit();
             this.SuspendLayout();
             // 
-            // btnMockFiles
+            // btnFilterSubmissions
             // 
-            this.btnMockFiles.Enabled = false;
-            this.btnMockFiles.Location = new System.Drawing.Point(13, 21);
-            this.btnMockFiles.Name = "btnMockFiles";
-            this.btnMockFiles.Size = new System.Drawing.Size(191, 38);
-            this.btnMockFiles.TabIndex = 0;
-            this.btnMockFiles.Text = "Create mock files";
-            this.btnMockFiles.UseVisualStyleBackColor = true;
-            this.btnMockFiles.Click += new System.EventHandler(this.btnMockFiles_Click);
+            this.btnFilterSubmissions.Location = new System.Drawing.Point(1004, 66);
+            this.btnFilterSubmissions.Name = "btnFilterSubmissions";
+            this.btnFilterSubmissions.Size = new System.Drawing.Size(278, 38);
+            this.btnFilterSubmissions.TabIndex = 0;
+            this.btnFilterSubmissions.Text = "Filter submissions";
+            this.btnFilterSubmissions.UseVisualStyleBackColor = true;
+            this.btnFilterSubmissions.Click += new System.EventHandler(this.btnFilterSubmissions_Click);
             // 
             // btnLoadDataset
             // 
-            this.btnLoadDataset.Location = new System.Drawing.Point(13, 65);
+            this.btnLoadDataset.Location = new System.Drawing.Point(13, 16);
             this.btnLoadDataset.Name = "btnLoadDataset";
             this.btnLoadDataset.Size = new System.Drawing.Size(192, 30);
             this.btnLoadDataset.TabIndex = 1;
@@ -86,7 +87,7 @@
             // lblTimer
             // 
             this.lblTimer.AutoSize = true;
-            this.lblTimer.Location = new System.Drawing.Point(12, 138);
+            this.lblTimer.Location = new System.Drawing.Point(12, 103);
             this.lblTimer.Name = "lblTimer";
             this.lblTimer.Size = new System.Drawing.Size(63, 20);
             this.lblTimer.TabIndex = 6;
@@ -95,7 +96,7 @@
             // lblDatasetInProcess
             // 
             this.lblDatasetInProcess.AutoSize = true;
-            this.lblDatasetInProcess.Location = new System.Drawing.Point(12, 107);
+            this.lblDatasetInProcess.Location = new System.Drawing.Point(12, 66);
             this.lblDatasetInProcess.Name = "lblDatasetInProcess";
             this.lblDatasetInProcess.Size = new System.Drawing.Size(152, 20);
             this.lblDatasetInProcess.TabIndex = 7;
@@ -103,7 +104,7 @@
             // 
             // btnGenerateMissingLines
             // 
-            this.btnGenerateMissingLines.Location = new System.Drawing.Point(377, 72);
+            this.btnGenerateMissingLines.Location = new System.Drawing.Point(511, 66);
             this.btnGenerateMissingLines.Name = "btnGenerateMissingLines";
             this.btnGenerateMissingLines.Size = new System.Drawing.Size(186, 37);
             this.btnGenerateMissingLines.TabIndex = 8;
@@ -114,7 +115,7 @@
             // cboTables
             // 
             this.cboTables.FormattingEnabled = true;
-            this.cboTables.Location = new System.Drawing.Point(442, 18);
+            this.cboTables.Location = new System.Drawing.Point(576, 12);
             this.cboTables.Name = "cboTables";
             this.cboTables.Size = new System.Drawing.Size(121, 28);
             this.cboTables.TabIndex = 9;
@@ -122,17 +123,36 @@
             // lblTable
             // 
             this.lblTable.AutoSize = true;
-            this.lblTable.Location = new System.Drawing.Point(373, 21);
+            this.lblTable.Location = new System.Drawing.Point(507, 15);
             this.lblTable.Name = "lblTable";
             this.lblTable.Size = new System.Drawing.Size(48, 20);
             this.lblTable.TabIndex = 10;
             this.lblTable.Text = "Table";
+            // 
+            // txtKey
+            // 
+            this.txtKey.Location = new System.Drawing.Point(1117, 25);
+            this.txtKey.Name = "txtKey";
+            this.txtKey.Size = new System.Drawing.Size(165, 26);
+            this.txtKey.TabIndex = 11;
+            this.txtKey.Text = "0001564590-17-001812";
+            // 
+            // lblKeyToFilter
+            // 
+            this.lblKeyToFilter.AutoSize = true;
+            this.lblKeyToFilter.Location = new System.Drawing.Point(1004, 25);
+            this.lblKeyToFilter.Name = "lblKeyToFilter";
+            this.lblKeyToFilter.Size = new System.Drawing.Size(87, 20);
+            this.lblKeyToFilter.TabIndex = 12;
+            this.lblKeyToFilter.Text = "Key to filter";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1749, 544);
+            this.Controls.Add(this.lblKeyToFilter);
+            this.Controls.Add(this.txtKey);
             this.Controls.Add(this.lblTable);
             this.Controls.Add(this.cboTables);
             this.Controls.Add(this.btnGenerateMissingLines);
@@ -141,7 +161,7 @@
             this.Controls.Add(this.dgvDatasetInProcess);
             this.Controls.Add(this.dgvDatasets);
             this.Controls.Add(this.btnLoadDataset);
-            this.Controls.Add(this.btnMockFiles);
+            this.Controls.Add(this.btnFilterSubmissions);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -154,7 +174,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnMockFiles;
+        private System.Windows.Forms.Button btnFilterSubmissions;
         private System.Windows.Forms.Button btnLoadDataset;
         private System.Windows.Forms.DataGridView dgvDatasets;
         private System.Windows.Forms.DataGridView dgvDatasetInProcess;
@@ -163,6 +183,8 @@
         private System.Windows.Forms.Button btnGenerateMissingLines;
         private System.Windows.Forms.ComboBox cboTables;
         private System.Windows.Forms.Label lblTable;
+        private System.Windows.Forms.TextBox txtKey;
+        private System.Windows.Forms.Label lblKeyToFilter;
     }
 }
 

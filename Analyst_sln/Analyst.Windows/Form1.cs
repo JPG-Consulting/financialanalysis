@@ -57,31 +57,12 @@ namespace Analyst.Windows
             lblTimer.Text = "Timer running - " + (DateTime.Now - startTime).ToString();
         }
 
-        private void btnMockFiles_Click(object sender, EventArgs e)
-        {
-            string strCIK = "0001163302";
-            //int cik = 1163302;//UNITED STATES STEEL CORP
-            //string version = "0001163302-16-000148";
-            string pathSource = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes--original";
-            string pathDestination = @"D:\http_sec_gov -- edgar cache\files\dera\data\financial-statement-and-notes-data-sets\2016q4_notes";
-
-            ProcessFile(pathSource, pathDestination, "cal", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "dim", null);
-            ProcessFile(pathSource, pathDestination, "num", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "pre", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "ren", new string[] { strCIK }); //field adsh
-            ProcessFile(pathSource, pathDestination, "sub", new string[] { strCIK }); //field adsh
-            //ProcessFile(pathSource, pathDestination, "tag", new string[] { strCIK, "us-gaap/2016", "invest/2013" }); //field version
-            ProcessFile(pathSource, pathDestination, "tag", null);
-            ProcessFile(pathSource, pathDestination, "txt", new string[] { strCIK });
-            MessageBox.Show("Fin ok");
-        }
 
         private void btnLoadDataset_Click(object sender, EventArgs e)
         {
             if (dgvDatasets.SelectedRows.Count > 0)
             {
-                int id = GetDatasetId();
+                int id = GetSelectedDatasetId();
                 CreateEdgarDatasetService().ProcessDataset(id);
                 timer.Start();
                 this.startTime = DateTime.Now;
@@ -90,17 +71,41 @@ namespace Analyst.Windows
             LoadDatasets();
         }
 
-        
-
         private void btnGenerateMissingLines_Click(object sender, EventArgs e)
         {
-            int datasetID = GetDatasetId();
+            int datasetID = GetSelectedDatasetId();
             string table = cboTables.SelectedItem.ToString();
             using (IEdgarDatasetService serv = CreateEdgarDatasetService())
             {
                 serv.WriteMissingFiles(datasetID, table);
             }
             MessageBox.Show("Finished");
+        }
+
+        private void btnFilterSubmissions_Click(object sender, EventArgs e)
+        {
+            //string key = "0001163302";//cik = 1163302; --> UNITED STATES STEEL CORP
+            //string dataset = "2017q1";
+            //string key = "0001564590-17-001812"; //0001564590-17-001812	1379661	TARGA RESOURCES PARTNERS 
+
+            string key = txtKey.Text;
+            int datasetId = GetSelectedDatasetId();
+            string dataset = (datasetId / 100).ToString() + "q" + (datasetId % 100).ToString();
+
+            string cacheFolder = @"E:\_analyst\http_sec_gov--edgar cache\files\dera\data\financial-statement-and-notes-data-sets";
+
+            string pathSource = string.Format(cacheFolder + @"\{0}_notes", dataset);
+            string pathDestination = string.Format(cacheFolder + @"\{0}_notes--copy", dataset);
+
+            ProcessFile(pathSource, pathDestination, "cal", new string[] { key }); //field adsh
+            ProcessFile(pathSource, pathDestination, "dim", null);
+            ProcessFile(pathSource, pathDestination, "num", new string[] { key }); //field adsh
+            ProcessFile(pathSource, pathDestination, "pre", new string[] { key }); //field adsh
+            ProcessFile(pathSource, pathDestination, "ren", new string[] { key }); //field adsh
+            ProcessFile(pathSource, pathDestination, "sub", new string[] { key }); //field adsh
+            ProcessFile(pathSource, pathDestination, "tag", null);
+            ProcessFile(pathSource, pathDestination, "txt", new string[] { key });
+            MessageBox.Show("Fin ok");
         }
 
         private IEdgarDatasetService CreateEdgarDatasetService()
@@ -227,12 +232,14 @@ namespace Analyst.Windows
             string[] tables = new string[] { "cal", "dim", "num", "pre", "ren", "sub", "tag", "txt" };
             cboTables.DataSource = tables;
         }
-        private int GetDatasetId()
+        private int GetSelectedDatasetId()
         {
             DataRowView dr = dgvDatasets.SelectedRows[0].DataBoundItem as DataRowView;
             lblDatasetInProcess.Text = dr["Id"].ToString();
             int id = Convert.ToInt32(dr["Id"]);
             return id;
         }
+
+     
     }
 }
