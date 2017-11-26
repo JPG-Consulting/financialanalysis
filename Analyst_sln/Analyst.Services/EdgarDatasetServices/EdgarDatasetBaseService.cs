@@ -66,7 +66,7 @@ namespace Analyst.Services.EdgarDatasetServices
 
             List<int> missingLinenumbers = GetMissingLines(ds.Id, table);
             List<string> fieldNames = header.Split('\t').ToList();
-            int i = 1;
+            int i = 1;//first line,index 0, is the header
             int j = 0;
             while(j < missingLinenumbers.Count && i<allLines.Length)
             {
@@ -137,8 +137,7 @@ namespace Analyst.Services.EdgarDatasetServices
                     seria un union gigantesco
                     */
 
-                    //TODO: usar array con vacios para las failed lines. Usando esto, si reproceso, se pierde el nro de linea
-                    ConcurrentBag<string> failedLines = new ConcurrentBag<string>();
+                    ConcurrentDictionary<int, string> failedLines = new ConcurrentDictionary<int, string>();
                     if (processInParallel && allLines.Length > 1)
                     {
                         //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
@@ -157,7 +156,7 @@ namespace Analyst.Services.EdgarDatasetServices
                     {
                         ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header, existing, failedLines);
                     }
-                    WriteFailedLines(filepath, header, failedLines);
+                    WriteFailedLines(filepath, header, failedLines,allLines.Length);
                 }
                 else
                 {
@@ -188,15 +187,20 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        private void WriteFailedLines(string filepath, string header, ConcurrentBag<string> failedLines)
+        private void WriteFailedLines(string filepath, string header, ConcurrentDictionary<int,string> failedLines,int totalLines)
         {
             if(failedLines.Count > 0)
             {
                 StreamWriter sw = File.CreateText(filepath + "_failed_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv");
                 sw.WriteLine(header);
-                foreach(string s in failedLines)
+                for(int i=1;i<totalLines;i++)
                 {
-                    sw.WriteLine(s);
+                    if (failedLines.ContainsKey(i + 1))
+                    {
+                        sw.WriteLine(failedLines[i + 1]);
+                    }
+                    else
+                        sw.WriteLine("");
                 }
                 sw.Close();
             }
@@ -213,7 +217,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, int> existing,ConcurrentBag<string> failedLines)
+        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, int> existing,ConcurrentDictionary<int,string> failedLines)
         {
             Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
             string rangeMsg = "Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- range: " + range.Item1 + " to " + range.Item2;
@@ -254,7 +258,7 @@ namespace Analyst.Services.EdgarDatasetServices
                         {
                             EdgarLineException elex = new EdgarLineException(fileName, i, ex);
                             exceptions.Add(elex);
-                            failedLines.Add(line);
+                            failedLines.TryAdd(i,line);
                             Log.Error(rangeMsg + " -- line[" + i.ToString() + "]: " + line);
                             Log.Error(rangeMsg + " -- line[" + i.ToString() + "]: " + ex.Message, elex);
                             if (exceptions.Count > MaxErrorsAllowed)

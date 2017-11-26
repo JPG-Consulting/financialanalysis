@@ -74,12 +74,20 @@ namespace Analyst.Services.EdgarDatasetServices
                 number.Value = null;
             else
                 number.Value = double.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
-            number.FootNote = fields[fieldNames.IndexOf("footnote")];
+            value = fields[fieldNames.IndexOf("footnote")];
+            if (string.IsNullOrEmpty(value))
+                number.FootNote = null;
+            else
+                number.FootNote = value;
             value = fields[fieldNames.IndexOf("footlen")];
             number.FootLength = Convert.ToInt16(value);
             value = fields[fieldNames.IndexOf("dimn")];
             number.NumberOfDimensions = Convert.ToInt16(value);
-            number.CoRegistrant = fields[fieldNames.IndexOf("coreg")];
+            value = fields[fieldNames.IndexOf("coreg")];
+            if (string.IsNullOrEmpty(value))
+                number.CoRegistrant = null;
+            else
+                number.CoRegistrant = value;
             value = fields[fieldNames.IndexOf("durp")];
             number.durp = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
             value = fields[fieldNames.IndexOf("datp")];

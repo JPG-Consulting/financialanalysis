@@ -42,7 +42,7 @@ BEGIN
 				and [UnitOfMeasure]=@UnitOfMeasure
 				and [DimensionId] = @Dimension_Id
 				and [IPRX] =@IPRX
-			   
+				and [LineNumber] = @LineNumber
 			   
 			   
 		)

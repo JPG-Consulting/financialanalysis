@@ -317,10 +317,18 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter value = new SqlParameter("@Value", number.Value);
             if (!number.Value.HasValue)
                 value.Value = DBNull.Value;
-            SqlParameter footNote = new SqlParameter("@FootNote", number.FootNote);
+            SqlParameter footNote;
+            if (string.IsNullOrEmpty(number.FootNote))
+                footNote = new SqlParameter("@FootNote", DBNull.Value);
+            else
+                footNote = new SqlParameter("@FootNote", number.FootNote);
             SqlParameter footLength = new SqlParameter("@FootLength", number.FootLength);
             SqlParameter numberOfDimensions = new SqlParameter("@NumberOfDimensions", number.NumberOfDimensions);
-            SqlParameter coRegistrant = new SqlParameter("@CoRegistrant", number.CoRegistrant);
+            SqlParameter coRegistrant;
+            if (string.IsNullOrEmpty(number.CoRegistrant))
+                coRegistrant = new SqlParameter("@CoRegistrant", DBNull.Value);
+            else
+                coRegistrant = new SqlParameter("@CoRegistrant", number.CoRegistrant);
             SqlParameter durp = new SqlParameter("@durp", number.durp);
             SqlParameter datp = new SqlParameter("@datp", number.datp);
             SqlParameter decimals = new SqlParameter("@Decimals", number.Decimals);
