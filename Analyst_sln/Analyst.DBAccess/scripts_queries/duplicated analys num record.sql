@@ -1,10 +1,21 @@
---select * from EdgarDatasets where id=201604;
+--me parece que el poblema esta en el if not exists que no los inserta y no avisa nada
+--en el else podria hacer un insert en la tabla de log, llamando a un sp
 
-SELECT  'missing line: ' + str(n),* 
+--status in dataset
+select id,totalnumbers,processednumbers,(totalnumbers -processednumbers) totalmissing  from EdgarDatasets where id=201701;
+
+--quantity in table 
+select count(1) quantity_in_table_num from EdgarDatasetNumbers where DatasetId = 201701;
+
+--missing lines
+--Datasetid 201701 -- num.tsv -- range: 5939781 to 6252401 -- BEGIN
+SELECT  'missing line: ' + str(n) missing,* 
 FROM 
-	(select top 986 * from Numbers where n>1) n
+	(select top 8000000 * from Numbers where n>1) n
 	left join EdgarDatasetNumbers t on t.LineNumber = n.n 
-where t.LineNumber is null;
+where t.LineNumber is null
+order by n
+;
 
 /*
 4.    NUM is a data set of all numeric XBRL facts presented on the primary financial statements. These fields comprise a unique compound key:

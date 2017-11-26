@@ -47,33 +47,39 @@ CREATE PROCEDURE [dbo].[SP_EDGARDATASETDIMENSIONS_INSERT]
 AS
 
 BEGIN
-	--declare @DIMID int;
-	
-    BEGIN TRANSACTION;
+	IF(
+		NOT EXISTS(
+			SELECT 1
+			FROM [EdgarDatasetDimensions]
+			WHERE 1=1
+				and [Datasetid] = @DataSetId
+				and [LineNumber] = @LineNumber
+				and [DimensionH] = @DimensionH
+		)
+	)
+	BEGIN
+		BEGIN TRANSACTION;
 
-		INSERT INTO [dbo].[EdgarDatasetDimensions]
-			   ([DimensionH]
-			   ,[Segments]
-			   ,[SegmentTruncated]
-			   ,[Datasetid]
-			   ,[LineNumber])
-		 VALUES
-			   (@DimensionH
-				,@Segments
-				,@SegmentTruncated
-				,@DataSetId
-				,@LineNumber)
-			;
+			INSERT INTO [dbo].[EdgarDatasetDimensions]
+				   ([DimensionH]
+				   ,[Segments]
+				   ,[SegmentTruncated]
+				   ,[Datasetid]
+				   ,[LineNumber])
+			 VALUES
+				   (@DimensionH
+					,@Segments
+					,@SegmentTruncated
+					,@DataSetId
+					,@LineNumber)
+				;
 
-		--set @DIMID = (SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY]);
+			UPDATE DBO.EdgarDatasets 
+			SET ProcessedDimensions = ProcessedDimensions + 1 
+			WHERE ID= @DataSetId;
 
-		--exec [dbo].[SP_EDGARDATASETDIMENSIONS_RELATE] @DataSetId,@DIMID;
-		
-		UPDATE DBO.EdgarDatasets 
-		SET ProcessedDimensions = ProcessedDimensions + 1 
-		WHERE ID= @DataSetId;
-
-	COMMIT TRANSACTION;
+		COMMIT TRANSACTION;
+	END
 END
 --GO
 

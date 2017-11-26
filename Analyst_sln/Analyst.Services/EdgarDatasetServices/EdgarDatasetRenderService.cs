@@ -11,11 +11,11 @@ using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetRenderService : IEdgarFileService<EdgarDatasetRender>
+    public interface IEdgarDatasetRenderService : IEdgarDatasetBaseService<EdgarDatasetRender>
     {
         ConcurrentDictionary<string, int> Subs { get; set; }
     }
-    public class EdgarDatasetRenderService : EdgarFileService<EdgarDatasetRender>, IEdgarDatasetRenderService
+    public class EdgarDatasetRenderService : EdgarDatasetBaseService<EdgarDatasetRender>, IEdgarDatasetRenderService
     {
         public ConcurrentDictionary<string, int> Subs { get; set; }
 
@@ -66,7 +66,7 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
         {
-            throw new NotImplementedException();
+            return repository.GetRendersKeys(datasetId);
         }
     }
 }

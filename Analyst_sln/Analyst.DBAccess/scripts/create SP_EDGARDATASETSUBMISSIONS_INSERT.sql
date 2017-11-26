@@ -42,42 +42,54 @@ CREATE PROCEDURE dbo.SP_EDGARDATASSUBMISSIONS_INSERT
 	,@EdgarDataset_Id int
 AS
 BEGIN
+	IF(
+		NOT EXISTS(
+			SELECT 1
+			FROM [EdgarDatasetSubmissions]
+			WHERE 1=1
+				AND [ADSH] =@ADSH
+				AND [DatasetId] =@EdgarDataset_Id
+				AND [LineNumber] = @LineNumber
+		)
+	)
+	BEGIN
 
-	Begin transaction;
-		INSERT INTO [dbo].[EdgarDatasetSubmissions]
-			   ([ADSH]
-			   ,[Period]
-			   ,[Detail]
-			   ,[XBRLInstance]
-			   ,[NumberOfCIKs]
-			   ,[AdditionalCIKs]
-			   ,[PubFloatUSD]
-			   ,[FloatDate]
-			   ,[FloatAxis]
-			   ,[FloatMems]
-			   ,[LineNumber]
-			   ,[SECFormId]
-			   ,[RegistrantId]
-			   ,[DatasetId])
-		 VALUES
-			   (@ADSH
-				,@Period
-				,@Detail
-				,@XBRLInstance
-				,@NumberOfCIKs
-				,@AdditionalCIKs
-				,@PubFloatUSD
-				,@FloatDate
-				,@FloatAxis
-				,@FloatMems
-				,@LineNumber
-				,@Form_id
-				,@Registrant_Id
-				,@EdgarDataset_Id);
+		Begin transaction;
+			INSERT INTO [dbo].[EdgarDatasetSubmissions]
+				   ([ADSH]
+				   ,[Period]
+				   ,[Detail]
+				   ,[XBRLInstance]
+				   ,[NumberOfCIKs]
+				   ,[AdditionalCIKs]
+				   ,[PubFloatUSD]
+				   ,[FloatDate]
+				   ,[FloatAxis]
+				   ,[FloatMems]
+				   ,[LineNumber]
+				   ,[SECFormId]
+				   ,[RegistrantId]
+				   ,[DatasetId])
+			 VALUES
+				   (@ADSH
+					,@Period
+					,@Detail
+					,@XBRLInstance
+					,@NumberOfCIKs
+					,@AdditionalCIKs
+					,@PubFloatUSD
+					,@FloatDate
+					,@FloatAxis
+					,@FloatMems
+					,@LineNumber
+					,@Form_id
+					,@Registrant_Id
+					,@EdgarDataset_Id);
 		
-		UPDATE DBO.EdgarDatasets SET ProcessedSubmissions = ProcessedSubmissions+ 1 WHERE ID= @EdgarDataset_Id
+			UPDATE DBO.EdgarDatasets SET ProcessedSubmissions = ProcessedSubmissions+ 1 WHERE ID= @EdgarDataset_Id
 		
-	Commit transaction;
+		Commit transaction;
+	END
 END
 --GO
 

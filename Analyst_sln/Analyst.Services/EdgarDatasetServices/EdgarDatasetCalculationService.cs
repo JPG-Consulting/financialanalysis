@@ -11,12 +11,12 @@ using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetCalculationService:IEdgarFileService<EdgarDatasetCalculation>
+    public interface IEdgarDatasetCalculationService: IEdgarDatasetBaseService<EdgarDatasetCalculation>
     {
         ConcurrentDictionary<string, int> Submissions { get; set; }
         ConcurrentDictionary<string, int> Tags { get; set; }
     }
-    public class EdgarDatasetCalculationService : EdgarFileService<EdgarDatasetCalculation>, IEdgarDatasetCalculationService
+    public class EdgarDatasetCalculationService : EdgarDatasetBaseService<EdgarDatasetCalculation>, IEdgarDatasetCalculationService
     {
 
         public ConcurrentDictionary<string, int> Submissions { get; set; }
@@ -45,6 +45,7 @@ namespace Analyst.Services.EdgarDatasetServices
             try
             {
                 EdgarDatasetCalculation calc = new EdgarDatasetCalculation();
+
                 string adsh = fields[fieldNames.IndexOf("adsh")];
                 calc.SubmissionId = Submissions[adsh];
 

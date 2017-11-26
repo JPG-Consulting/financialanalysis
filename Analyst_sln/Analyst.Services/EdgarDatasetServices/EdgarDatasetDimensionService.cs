@@ -12,11 +12,11 @@ using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetDimensionService : IEdgarFileService<EdgarDatasetDimension>
+    public interface IEdgarDatasetDimensionService : IEdgarDatasetBaseService<EdgarDatasetDimension>
     {
         
     }
-    public class EdgarDatasetDimensionService : EdgarFileService<EdgarDatasetDimension>, IEdgarDatasetDimensionService
+    public class EdgarDatasetDimensionService : EdgarDatasetBaseService<EdgarDatasetDimension>, IEdgarDatasetDimensionService
     {
         private readonly ILog log;
         protected override ILog Log

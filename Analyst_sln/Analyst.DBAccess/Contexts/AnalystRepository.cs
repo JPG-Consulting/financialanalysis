@@ -41,6 +41,7 @@ namespace Analyst.DBAccess.Contexts
         IList<EdgarTuple> GetDimensionKeys(int datasetId);
         IList<EdgarTuple> GetNumberKeys(int datasetId);
         IList<EdgarTuple> GetSubmissionKeys(int datasetId);
+        IList<EdgarTuple> GetRendersKeys(int datasetId);
 
         void Add(SECForm sECForm);
         void Add(SIC sic);
@@ -57,7 +58,7 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset dataset, EdgarDatasetText file);
         
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
-
+        
     }
 
     public class AnalystRepository : IAnalystRepository
@@ -184,7 +185,6 @@ namespace Analyst.DBAccess.Contexts
             return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_SUBMISSIONS_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
         }
 
-
         public IList<EdgarTuple> GetNumberKeys(int datasetId)
         {
             return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_NUMBER_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
@@ -194,7 +194,10 @@ namespace Analyst.DBAccess.Contexts
         {
             return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_TEXT_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
         }
-       
+        public IList<EdgarTuple> GetRendersKeys(int datasetId)
+        {
+            return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_RENDER_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
+        }
 
 
         private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
@@ -410,17 +413,10 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter adsh_tag_version = new SqlParameter("@adsh_tag_version", pre.ADSH_Tag_Version);
             if (string.IsNullOrEmpty(pre.ADSH_Tag_Version))
                 adsh_tag_version.Value = DBNull.Value;
-        
-            try
-            {
-                Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
-                    "@ReportNumber, @Line, @FinancialStatement, @Inpth, @prole, @PreferredLabel, @Negating, @LineNumber, @DataSetId, @Submission_Id, @Tag_Id, @Number_Id, @Text_Id, @Render_Id, @adsh_tag_version",
-                    ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, LineNumber, DataSetId, Submission_Id, Tag_Id, Number_Id, Text_Id, Render_Id, adsh_tag_version);
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
+
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
+                "@ReportNumber, @Line, @FinancialStatement, @Inpth, @prole, @PreferredLabel, @Negating, @LineNumber, @DataSetId, @Submission_Id, @Tag_Id, @Number_Id, @Text_Id, @Render_Id, @adsh_tag_version",
+                ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, LineNumber, DataSetId, Submission_Id, Tag_Id, Number_Id, Text_Id, Render_Id, adsh_tag_version);
         }
 
         public void Add(EdgarDataset dataset, EdgarDatasetCalculation file)

@@ -12,7 +12,7 @@ END
 */
 
 --Opcion B
-SELECT TOP (1000000) n = CONVERT(INT, ROW_NUMBER() OVER (ORDER BY s1.[object_id]))
+SELECT TOP (10000000) n = CONVERT(INT, ROW_NUMBER() OVER (ORDER BY s1.[object_id]))
 INTO dbo.Numbers
 FROM sys.all_objects AS s1 CROSS JOIN sys.all_objects AS s2
 OPTION (MAXDOP 1);

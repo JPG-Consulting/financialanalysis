@@ -28,12 +28,12 @@ namespace Analyst.Services.EdgarDatasetServices
         }
     }
 
-    public interface IEdgarDatasetTagService : IEdgarFileService<EdgarDatasetTag>
+    public interface IEdgarDatasetTagService : IEdgarDatasetBaseService<EdgarDatasetTag>
     {
 
     }
 
-    public class EdgarDatasetTagService : EdgarFileService<EdgarDatasetTag>, IEdgarDatasetTagService
+    public class EdgarDatasetTagService : EdgarDatasetBaseService<EdgarDatasetTag>, IEdgarDatasetTagService
     {
         private readonly ILog log;
         protected override ILog Log

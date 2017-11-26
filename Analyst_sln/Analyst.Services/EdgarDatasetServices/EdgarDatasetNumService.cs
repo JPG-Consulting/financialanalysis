@@ -14,13 +14,13 @@ using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetNumService : IEdgarFileService<EdgarDatasetNumber>
+    public interface IEdgarDatasetNumService : IEdgarDatasetBaseService<EdgarDatasetNumber>
     {
         ConcurrentDictionary<string, int> Dimensions { get; set; }
         ConcurrentDictionary<string, int> Submissions { get; set; }
         ConcurrentDictionary<string, int> Tags { get; set; }
     }
-    public class EdgarDatasetNumService:EdgarFileService<EdgarDatasetNumber>, IEdgarDatasetNumService
+    public class EdgarDatasetNumService: EdgarDatasetBaseService<EdgarDatasetNumber>, IEdgarDatasetNumService
     {
         
         public ConcurrentDictionary<string, int> Submissions { get; set; }

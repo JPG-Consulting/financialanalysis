@@ -94,7 +94,7 @@ namespace Analyst.Services.EdgarDatasetServices
         public void ProcessDataset(int id)
         {
             //https://stackify.com/log4net-guide-dotnet-logging/
-            log.Info("Datasetid " + id.ToString() + "-- Requested");
+            log.Info("Datasetid " + id.ToString() + " -- Requested");
             if (allowProcess)
             {
                 if (datasetsInProcess.ContainsKey(id))
@@ -255,7 +255,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 renderingService.Process(stateRen, true, EdgarDatasetRender.FILE_NAME, "Renders");//Presentations has a relationship to renders
                 presentationService.Subs = subs;
                 presentationService.Tags = tags;
-                presentationService.Renders = renderingService.GetAsConcurrent(ds.Id,new string[] { "Submission" });
+                presentationService.Renders = renderingService.GetAsConcurrent(ds.Id);
                 presentationService.Nums = nums;
                 presentationService.Texts = texts;
                 presentationService.Process(statePre, true, EdgarDatasetPresentation.FILE_NAME, "Presentations");

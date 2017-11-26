@@ -43,19 +43,20 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETPRESENTATIONS_INSERT
 	,@adsh_tag_version nvarchar(300)
 AS
 BEGIN
-	Begin transaction;
-		if(
-			not exists(
-				select 1
-				from [dbo].[EdgarDatasetPresentations] 
-				where 
-					[DatasetId] =@DataSetId 
-					and reportnumber = @ReportNumber
-					and line =@line
-					and linenumber = @linenumber
-			)
-		) 
-		BEGIN
+	
+	if(
+		not exists(
+			select 1
+			from [dbo].[EdgarDatasetPresentations] 
+			where 
+				[DatasetId] =@DataSetId 
+				and reportnumber = @ReportNumber
+				and line =@line
+				and linenumber = @linenumber
+		)
+	) 
+	BEGIN
+		Begin transaction;
 			INSERT INTO [dbo].[EdgarDatasetPresentations]
 				   ([ReportNumber]
 				   ,[Line]
@@ -95,8 +96,9 @@ BEGIN
 			SET ProcessedPresentations = ProcessedPresentations + 1 
 			WHERE ID= @DataSetId
 			;
-		END	
+		COMMIT TRANSACTION;
+	END	
 		
-	COMMIT TRANSACTION;
+	
 END
 --GO

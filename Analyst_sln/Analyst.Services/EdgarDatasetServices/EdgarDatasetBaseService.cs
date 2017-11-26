@@ -15,14 +15,13 @@ namespace Analyst.Services.EdgarDatasetServices
 {
 
 
-    public interface IEdgarFileService<T>: IDisposable where T :class, IEdgarDatasetFile
+    public interface IEdgarDatasetBaseService<T>: IDisposable where T :class, IEdgarDatasetFile
     {
         ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId);
-        ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId,string[] includes);
         void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate);
     }
 
-    public abstract class EdgarFileService<T>:IEdgarFileService<T> where T:class,IEdgarDatasetFile
+    public abstract class EdgarDatasetBaseService<T>: IEdgarDatasetBaseService<T> where T:class,IEdgarDatasetFile
     {
         private const int DEFAULT_MAX_ERRORS_ALLOWED = int.MaxValue;
         protected abstract log4net.ILog Log { get; }
@@ -41,11 +40,6 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId)
-        {
-            return GetAsConcurrent(datasetId, null);
-        }
-
-        public ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId, string[] includes)
         {
             ConcurrentDictionary<string, int> ret = new ConcurrentDictionary<string, int>();
             IAnalystRepository repository = new AnalystRepository(new AnalystContext());
@@ -73,7 +67,24 @@ namespace Analyst.Services.EdgarDatasetServices
 
                     UpdateTotal(state,fieldToUpdate, allLines.Length - 1);
 
-                    ConcurrentDictionary<string, int> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
+
+                    /*
+                    Opcion 1:
+                        usar existing para verificar repetidos
+                        ConcurrentDictionary<string, int> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
+
+                    Opcion 2:
+                        usar la query de numeros para traer los faltantes (metodo todos en 1 solo sp que filtre asi: @tablename = 'nombretabla', la que no es va a dar false
+                        creo un array del tamaño total y uso el numero de linea como indice,
+                        es decir, regenero el total pero con null en los ya procesados
+                        vuelvo a recorrer el array
+                        solo habria que agregar la validacion: allLines[i] != null
+
+                    ------------------------------------------------------------------------------------
+                    lo del filtro, lo puedo replicar para los get...keys porque son todos iguales
+                    seria un union gigantesco
+                    */
+
                     ConcurrentBag<string> failedLines = new ConcurrentBag<string>();
                     if (processInParallel && allLines.Length > 1)
                     {
@@ -152,7 +163,8 @@ namespace Analyst.Services.EdgarDatasetServices
         protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, int> existing,ConcurrentBag<string> failedLines)
         {
             Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-            Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- BEGIN range: " + range.Item1 + " to " + range.Item2);
+            string rangeMsg = "Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- range: " + range.Item1 + " to " + range.Item2;
+            Log.Info(rangeMsg + " -- BEGIN");
 
             /*
             EF isn't thread safe and it doesn't allow parallel
@@ -176,23 +188,25 @@ namespace Analyst.Services.EdgarDatasetServices
                     {
                         try
                         {
-                            Log.Debug(fileName + ": parsing line: " + i.ToString());
+                            Log.Debug(rangeMsg + " -- parsing line: " + i.ToString());
                             line = allLines[i];
-                            List<string> fields = line.Split('\t').ToList();
-
-                            T file = Parse(repo, fieldNames, fields, i+1,existing);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
-                            Add(repo, state.Dataset, file);
+                            if (!string.IsNullOrEmpty(line))
+                            {
+                                List<string> fields = line.Split('\t').ToList();
+                                T file = Parse(repo, fieldNames, fields, i + 1, existing);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
+                                Add(repo, state.Dataset, file);
+                            }
                         }
                         catch(Exception ex)
                         {
                             EdgarLineException elex = new EdgarLineException(fileName, i, ex);
                             exceptions.Add(elex);
                             failedLines.Add(line);
-                            Log.Error("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- line[" + i.ToString() + "]: " + line);
-                            Log.Error("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- line[" + i.ToString() + "]: " + ex.Message, elex);
+                            Log.Error(rangeMsg + " -- line[" + i.ToString() + "]: " + line);
+                            Log.Error(rangeMsg + " -- line[" + i.ToString() + "]: " + ex.Message, elex);
                             if (exceptions.Count > MaxErrorsAllowed)
                             {
-                                Log.Fatal("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- line[" + i.ToString() + "]: max errors allowed reached", ex);
+                                Log.Fatal(rangeMsg + " -- line[" + i.ToString() + "]: max errors allowed reached", ex);
                                 throw new EdgarDatasetException(fileName, exceptions);
                             }
                             
@@ -209,7 +223,8 @@ namespace Analyst.Services.EdgarDatasetServices
             watch.Stop();
             TimeSpan ts = watch.Elapsed;
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-            Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- END range: " + range.Item1 + " to " + range.Item2 + " -- time: " + elapsedTime);
+            Log.Info(rangeMsg + " -- END");
+            Log.Info(rangeMsg + " -- time: " + elapsedTime);
 
         }
 

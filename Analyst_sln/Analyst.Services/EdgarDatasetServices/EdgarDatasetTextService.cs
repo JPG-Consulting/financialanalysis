@@ -12,7 +12,7 @@ using Analyst.Domain.Edgar;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetTextService:IEdgarFileService<EdgarDatasetText>
+    public interface IEdgarDatasetTextService: IEdgarDatasetBaseService<EdgarDatasetText>
     {
         ConcurrentDictionary<string, int> Submissions { get; set; }
         ConcurrentDictionary<string, int> Tags { get; set; }
@@ -20,7 +20,7 @@ namespace Analyst.Services.EdgarDatasetServices
         ConcurrentDictionary<string, int> Dimensions { get; set; }
 
     }
-    public class EdgarDatasetTextService : EdgarFileService<EdgarDatasetText>, IEdgarDatasetTextService
+    public class EdgarDatasetTextService : EdgarDatasetBaseService<EdgarDatasetText>, IEdgarDatasetTextService
     {
         public ConcurrentDictionary<string, int> Submissions { get; set; }
         public ConcurrentDictionary<string, int> Tags { get; set; }

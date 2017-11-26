@@ -14,11 +14,11 @@ using System.Globalization;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
-    public interface IEdgarDatasetSubmissionsService : IEdgarFileService<EdgarDatasetSubmission>
+    public interface IEdgarDatasetSubmissionsService : IEdgarDatasetBaseService<EdgarDatasetSubmission>
     {
 
     }
-    public class EdgarDatasetSubmissionsService: EdgarFileService<EdgarDatasetSubmission>, IEdgarDatasetSubmissionsService
+    public class EdgarDatasetSubmissionsService: EdgarDatasetBaseService<EdgarDatasetSubmission>, IEdgarDatasetSubmissionsService
     {
         private readonly ILog log;
         protected override ILog Log
@@ -34,7 +34,8 @@ namespace Analyst.Services.EdgarDatasetServices
         }
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetSubmission file)
         {
-            repo.Add(dataset, file);
+            if(file.Id <= 0)
+                repo.Add(dataset, file);
         }
 
         public override EdgarDatasetSubmission Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
