@@ -111,11 +111,17 @@ where [DatasetId]=@EdgarDataset_Id
 	and [IPRX] =@IPRX
 	;
 
+--supuestas lineas duplicadas
+select * from EdgarDatasetNumbers where datasetid=201701 and LineNumber in (17667,17668) ORDER BY LineNumber;
 
-select * from EdgarDatasetNumbers where LineNumber >= 17667 and LineNumber <= 17669 ORDER BY LineNumber;
+select * from EdgarDatasetSubmissions where id=4954;
+--ADSH: 0001564590-17-001812
+--0001564590-17-001812	1379661	TARGA RESOURCES PARTNERS LP	4922	US	TX	HOUSTON	77002	1000 LOUISIANA	SUITE 4300	(713)584-100	US	TX	HOUSTON	77002	1000 LOUISIANA	SUITE 4300	US	DE	651295427			4-NON	1	1231	10-K	20161231	2016	FY	20170221	2017-02-17 19:08:00.0	0	1	ngls-20161231.xml	1					
 
+select * from Registrants where id = 4538;
+--CIK: 1379661
 
-
+--revisando los archivos, la unica diferencia entre ambas lineas es el valor de footlen
 
 -------------------------------------------------------------------------------------------------------------------------------------
 /*

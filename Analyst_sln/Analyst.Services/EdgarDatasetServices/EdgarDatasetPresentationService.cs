@@ -96,7 +96,7 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
         {
-            throw new NotImplementedException("method EdgarDatasetPresentationService.GetKeys(...)");
+            return repository.GetPresentationsKeys(datasetId);
         }
 
         public override string GetKey(List<string> fieldNames, List<string> fields)

@@ -42,7 +42,7 @@ namespace Analyst.DBAccess.Contexts
         IList<EdgarTuple> GetNumberKeys(int datasetId);
         IList<EdgarTuple> GetSubmissionKeys(int datasetId);
         IList<EdgarTuple> GetRendersKeys(int datasetId);
-
+        IList<EdgarTuple> GetPresentationsKeys(int datasetId);
         void Add(SECForm sECForm);
         void Add(SIC sic);
         void Add(Registrant r);
@@ -59,6 +59,7 @@ namespace Analyst.DBAccess.Contexts
         
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
         List<int> GetMissingLines(int id, string table);
+        
     }
 
     public class AnalystRepository : IAnalystRepository
@@ -198,7 +199,10 @@ namespace Analyst.DBAccess.Contexts
         {
             return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_RENDER_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
         }
-
+        public IList<EdgarTuple> GetPresentationsKeys(int datasetId)
+        {
+            return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_PRESENTATION_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
+        }
         public List<int> GetMissingLines(int id, string table)
         {
             SqlParameter paramid = new SqlParameter("@datasetid", id);

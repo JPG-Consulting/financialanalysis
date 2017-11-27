@@ -106,6 +106,7 @@
     <Content Include="scripts\create SP_GET_CALCULATIONS_KEYS.sql" />
     <Content Include="scripts\create SP_GET_DIMENSIONS_KEYS.sql" />
     <Content Include="scripts\create SP_GET_NUMBER_KEYS.sql" />
+    <Content Include="scripts\create SP_GET_PRESENTATION_KEYS.sql" />
     <Content Include="scripts\create SP_GET_RENDER_KEYS.sql" />
     <Content Include="scripts\create SP_GET_SUBMISSIONS_KEYS.sql" />
     <Content Include="scripts\create SP_GET_TAGS_KEYS.sql" />

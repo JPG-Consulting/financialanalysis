@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    public class AnalystContextInitializer : DropCreateDatabaseIfModelChanges<AnalystContext>
+    //public class AnalystContextInitializer : DropCreateDatabaseIfModelChanges<AnalystContext>
+    public class AnalystContextInitializer: CreateDatabaseIfNotExists<AnalystContext>
     {
         protected override void Seed(AnalystContext context)
         {
@@ -53,6 +54,8 @@ namespace Analyst.DBAccess.Contexts
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_CALCULATIONS_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_DIMENSIONS_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_NUMBER_KEYS.sql"));
+            context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_PRESENTATION_KEYS.sql"));
+            context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_RENDER_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_SUBMISSIONS_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_TAGS_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_TEXT_KEYS.sql"));
