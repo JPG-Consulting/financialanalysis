@@ -415,9 +415,11 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
             SqlParameter Submission_Id = new SqlParameter("@Submission_Id", pre.SubmissionId);
             SqlParameter Tag_Id = new SqlParameter("@Tag_Id", pre.TagId);
-            SqlParameter Number_Id = new SqlParameter("@Number_Id", pre.NumberId);
-            if (pre.NumberId <= 0)
-                Number_Id.Value = DBNull.Value;
+            SqlParameter Number_Id;
+            if (pre.NumberId > 0)
+                Number_Id = new SqlParameter("@Number_Id", pre.NumberId);
+            else
+                Number_Id = new SqlParameter("@Number_Id", DBNull.Value);
             SqlParameter Text_Id;
             if (pre.TextId > 0)
                 Text_Id = new SqlParameter("@Text_Id", pre.TextId);

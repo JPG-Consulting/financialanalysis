@@ -37,6 +37,8 @@ order by date asc
 --order by message,date asc
 ;
 
+--select distinct exception from Log;
+
 /*
 delete from [dbo].[Log] 
 where level='DEBUG';
