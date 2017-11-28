@@ -142,15 +142,23 @@ namespace Analyst.Services.EdgarDatasetServices
 
                     //Retrieve all tags, submissions and dimensions to fill the relationship
                     //Load Calculations, Texts and Numbers
-                    ConcurrentDictionary<string, int> tags = tagService.GetAsConcurrent(id);
+                    log.Info("Datasetid " + id.ToString() + " -- loading all tags for LoadCalTxtNum(...)");
+                    ConcurrentDictionary <string, int> tags = tagService.GetAsConcurrent(id);
+                    log.Info("Datasetid " + id.ToString() + " -- loading all subs for LoadCalTxtNum(...)");
                     ConcurrentDictionary<string, int> subs = submissionService.GetAsConcurrent(id);
+                    log.Info("Datasetid " + id.ToString() + " -- loading all dims for LoadCalTxtNum(...)");
                     ConcurrentDictionary<string, int> dims = dimensionService.GetAsConcurrent(id);
+                    log.Info("Datasetid " + id.ToString() + " -- Starting LoadCalTxtNum(...)");
                     states = LoadCalTxtNum(ds, repository, subs, tags, dims);
                     ManageErrors(states);
-                    
+                    log.Info("Datasetid " + id.ToString() + " -- realising memory for dims");
+                    dims = null;
                     //Load Presentations and Renders
+                    log.Info("Datasetid " + id.ToString() + " -- loading all nums for LoadRenPre(...)");
                     ConcurrentDictionary<string, int> nums = numService.GetAsConcurrent(id);
+                    log.Info("Datasetid " + id.ToString() + " -- loading all txt for LoadRenPre(...)");
                     ConcurrentDictionary<string, int> txts = textService.GetAsConcurrent(id);
+                    log.Info("Datasetid " + id.ToString() + " -- Starting LoadRenPre(...)");
                     states = LoadRenPre(ds, repository, subs, tags, nums, txts);
                     ManageErrors(states);
                     
@@ -185,14 +193,17 @@ namespace Analyst.Services.EdgarDatasetServices
             states.Add(stateDim);
             IList<Task> tasks = new List<Task>();
 
+            log.Info("Datasetid " + ds.Id.ToString() + " -- starting  submissionService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
                 submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")//false --> to avoid to have too many threads
             ));
-            
+
+            log.Info("Datasetid " + ds.Id.ToString() + " -- starting  tagService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
                 tagService.Process(stateTag,true, EdgarDatasetTag.FILE_NAME,"Tags")
             ));
 
+            log.Info("Datasetid " + ds.Id.ToString() + " -- starting  dimensionService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
                 dimensionService.Process(stateDim,false, EdgarDatasetDimension.FILE_NAME,"Dimensions")//false --> to avoid to have too many threads
             ));
@@ -211,6 +222,7 @@ namespace Analyst.Services.EdgarDatasetServices
             states.Add(stateCalc);
             calcService.Submissions = subs;
             calcService.Tags = tags;
+            log.Info("Datasetid " + ds.Id.ToString() + " -- starting  calcService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
                 calcService.Process(stateCalc, false, EdgarDatasetCalculation.FILE_NAME, "Calculations")) //false --> to avoid to have too many threads
             );
@@ -221,6 +233,7 @@ namespace Analyst.Services.EdgarDatasetServices
             textService.Dimensions = dims;
             textService.Submissions = subs;
             textService.Tags = tags;
+            log.Info("Datasetid " + ds.Id.ToString() + " -- starting  textService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
                 textService.Process(stateText, true, EdgarDatasetText.FILE_NAME, "Texts"))
             );
@@ -231,6 +244,7 @@ namespace Analyst.Services.EdgarDatasetServices
             numService.Dimensions = dims;
             numService.Submissions = subs;
             numService.Tags = tags;
+            log.Info("Datasetid " + ds.Id.ToString() + " -- starting  numService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
                 numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers"))
             );
@@ -253,12 +267,15 @@ namespace Analyst.Services.EdgarDatasetServices
             tasks.Add(Task.Factory.StartNew(() =>
             {
                 renderingService.Subs = subs;
+                log.Info("Datasetid " + ds.Id.ToString() + " -- starting  renderingService.Process(...)");
                 renderingService.Process(stateRen, true, EdgarDatasetRender.FILE_NAME, "Renders");//Presentations has a relationship to renders
                 presentationService.Subs = subs;
                 presentationService.Tags = tags;
+                log.Info("Datasetid " + ds.Id.ToString() + " -- loading all rens for presentationService.Process(...)");
                 presentationService.Renders = renderingService.GetAsConcurrent(ds.Id);
                 presentationService.Nums = nums;
                 presentationService.Texts = texts;
+                log.Info("Datasetid " + ds.Id.ToString() + " -- starting  presentationService.Process(...)");
                 presentationService.Process(statePre, true, EdgarDatasetPresentation.FILE_NAME, "Presentations");
             }
             ));
