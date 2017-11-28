@@ -424,10 +424,10 @@ namespace Analyst.DBAccess.Contexts
             else
             Text_Id = new SqlParameter("@Text_Id", DBNull.Value);
             SqlParameter Render_Id;
-            if (pre.Render == null)
+            if (pre.RenderId <= 0)
                 Render_Id = new SqlParameter("@Render_Id",DBNull.Value);
             else
-                Render_Id = new SqlParameter("@Render_Id", pre.Render.Id);
+                Render_Id = new SqlParameter("@Render_Id", pre.RenderId);
             SqlParameter adsh_tag_version = new SqlParameter("@adsh_tag_version", pre.ADSH_Tag_Version);
             if (string.IsNullOrEmpty(pre.ADSH_Tag_Version))
                 adsh_tag_version.Value = DBNull.Value;

@@ -60,8 +60,6 @@ namespace Analyst.Services.EdgarDatasetServices
                 pre.SubmissionId = Subs[adsh];
                 string report = fields[fieldNames.IndexOf("report")];
                 pre.RenderId = Renders[adsh + report];
-                if (pre.Render != null)
-                    pre.RenderId = pre.Render.Id;
                 pre.Line = Convert.ToInt32(fields[fieldNames.IndexOf("line")]);
                 pre.FinancialStatement = fields[fieldNames.IndexOf("stmt")];
                 pre.Inpth = fields[fieldNames.IndexOf("inpth")] == "1";
