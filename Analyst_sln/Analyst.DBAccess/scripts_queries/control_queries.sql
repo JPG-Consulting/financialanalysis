@@ -18,6 +18,8 @@ from EdgarDatasets where id =@datasetid;
 
 --select * from EdgarDatasets where id=@datasetid;
 
+--select count(1) pre from EdgarDatasetPresentations;
+
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --LOG
 select 
@@ -25,7 +27,7 @@ select
 	*
 from [dbo].[Log] 
 where 1=1
-	AND cast([Date] as date) >= cast(SYSDATETIME() as date)
+	--AND cast([Date] as date) >= cast(SYSDATETIME() as date)
 	--and logger <> 'EdgarDatasetTagService'
 	--and Level <> 'DEBUG'
 	--and level in ('ERROR','FATAL')

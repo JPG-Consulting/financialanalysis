@@ -151,8 +151,9 @@ namespace Analyst.Services.EdgarDatasetServices
                     log.Info("Datasetid " + id.ToString() + " -- Starting LoadCalTxtNum(...)");
                     states = LoadCalTxtNum(ds, repository, subs, tags, dims);
                     ManageErrors(states);
-                    log.Info("Datasetid " + id.ToString() + " -- realising memory for dims");
+                    log.Info("Datasetid " + id.ToString() + " -- releasing memory for dims");
                     dims = null;
+                    
                     //Load Presentations and Renders
                     log.Info("Datasetid " + id.ToString() + " -- loading all nums for LoadRenPre(...)");
                     ConcurrentDictionary<string, int> nums = numService.GetAsConcurrent(id);
@@ -276,7 +277,8 @@ namespace Analyst.Services.EdgarDatasetServices
                 presentationService.Nums = nums;
                 presentationService.Texts = texts;
                 log.Info("Datasetid " + ds.Id.ToString() + " -- starting  presentationService.Process(...)");
-                presentationService.Process(statePre, true, EdgarDatasetPresentation.FILE_NAME, "Presentations");
+                presentationService.Process(statePre, true, EdgarDatasetPresentation.FILE_NAME, "Presentations"); //parallel execution
+                //presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");//sequential execution
             }
             ));
             Task.WaitAll(tasks.ToArray());

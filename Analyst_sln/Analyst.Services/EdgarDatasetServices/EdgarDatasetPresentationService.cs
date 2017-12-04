@@ -42,7 +42,8 @@ namespace Analyst.Services.EdgarDatasetServices
         }
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetPresentation file)
         {
-            repo.Add(dataset,file);
+            if(file.Id <= 0)
+                repo.Add(dataset,file);
         }
 
         public override EdgarDatasetPresentation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
@@ -58,35 +59,50 @@ namespace Analyst.Services.EdgarDatasetServices
             */
             try
             {
-                EdgarDatasetPresentation pre = new EdgarDatasetPresentation();
+                EdgarDatasetPresentation pre;
                 string adsh = fields[fieldNames.IndexOf("adsh")];
-                pre.SubmissionId = Subs[adsh];
+                string line = fields[fieldNames.IndexOf("line")];
                 string report = fields[fieldNames.IndexOf("report")];
-                pre.RenderId = Renders[adsh + report];
-                pre.Line = Convert.ToInt32(fields[fieldNames.IndexOf("line")]);
-                pre.FinancialStatement = fields[fieldNames.IndexOf("stmt")];
-                pre.Inpth = fields[fieldNames.IndexOf("inpth")] == "1";
-                pre.RenderFile = fields[fieldNames.IndexOf("rfile")][0];
-                string tag = fields[fieldNames.IndexOf("tag")];
-                string version = fields[fieldNames.IndexOf("version")];
-                pre.TagId = Tags[tag + version];
-                pre.prole = fields[fieldNames.IndexOf("prole")];
-                pre.PreferredLabel = fields[fieldNames.IndexOf("plabel")];
-                pre.Negating = !(fields[fieldNames.IndexOf("negating")] == "0");
-                pre.LineNumber = lineNumber;
+                //select S.ADSH + CAST(p.ReportNumber as varchar) + cast(p.Line as varchar) [key] ...
 
-                string key = adsh + tag + version;
-                if (Nums.ContainsKey(key))
-                    pre.NumberId = Nums[key];
+                string key = adsh + report + line;
+                if (existing.ContainsKey(key))
+                {
+                    //Here, it should retrieve the entity from DB but it only saves it.
+                    //pre = repository.Get<EdgarDatasetPresentation>(key);
+                    pre = new EdgarDatasetPresentation();
+                    pre.Id = existing[key];
+                }
                 else
-                    pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
+                { 
+                    pre = new EdgarDatasetPresentation();
+                    pre.SubmissionId = Subs[adsh];
+                    pre.ReportNumber = Convert.ToInt32(report);
+                    pre.RenderId = Renders[adsh + report];
+                    pre.Line = Convert.ToInt32(line);
+                    pre.FinancialStatement = fields[fieldNames.IndexOf("stmt")];
+                    pre.Inpth = fields[fieldNames.IndexOf("inpth")] == "1";
+                    pre.RenderFile = fields[fieldNames.IndexOf("rfile")][0];
+                    string tag = fields[fieldNames.IndexOf("tag")];
+                    string version = fields[fieldNames.IndexOf("version")];
+                    pre.TagId = Tags[tag + version];
+                    pre.prole = fields[fieldNames.IndexOf("prole")];
+                    pre.PreferredLabel = fields[fieldNames.IndexOf("plabel")];
+                    pre.Negating = !(fields[fieldNames.IndexOf("negating")] == "0");
+                    pre.LineNumber = lineNumber;
 
-                if (Texts.ContainsKey(key))
-                    pre.TextId = Texts[key];
-                else
-                    pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
+                    string numKey = adsh + tag + version;
+                    if (Nums.ContainsKey(numKey))
+                        pre.NumberId = Nums[numKey];
+                    else
+                        pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
 
+                    if (Texts.ContainsKey(numKey))
+                        pre.TextId = Texts[numKey];
+                    else
+                        pre.ADSH_Tag_Version = adsh + "|" + tag + "|" + version;
 
+                }
                 return pre;
             }
             catch(Exception ex)
