@@ -22,8 +22,10 @@ namespace Analyst.Domain.Edgar
         [Index(IsUnique =true)]
         public short Code { get; set; }
 
+        [StringLength(5)]
         public string ADOffice { get; set; }
 
+        [StringLength(100)]
         public string IndustryTitle { get; set; }
 
         public string Key

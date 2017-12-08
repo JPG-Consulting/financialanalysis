@@ -52,8 +52,8 @@ namespace Analyst.Services.EdgarDatasetServices
             ren.MenuCategory = fields[fieldNames.IndexOf("menucat")];
             ren.ShortName = fields[fieldNames.IndexOf("shortname")];
             ren.LongName = fields[fieldNames.IndexOf("longname")];
-            ren.Roleuri = fields[fieldNames.IndexOf("roleuri")];
-            ren.ParentRoleuri = fields[fieldNames.IndexOf("parentroleuri")];
+            ren.RoleURI = fields[fieldNames.IndexOf("roleuri")];
+            ren.ParentRoleURI = fields[fieldNames.IndexOf("parentroleuri")];
             value = fields[fieldNames.IndexOf("parentreport")];
             if (!string.IsNullOrEmpty(value))
                 ren.ParentReport = Convert.ToInt32(value);

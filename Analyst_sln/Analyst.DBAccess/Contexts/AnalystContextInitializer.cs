@@ -38,10 +38,10 @@ namespace Analyst.DBAccess.Contexts
             context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Tag VARCHAR(256) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
             context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Version VARCHAR(20) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
             context.Database.ExecuteSqlCommand("CREATE UNIQUE INDEX IX_TagVersion ON EdgarDatasetTags (Tag, Version)");
-            context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetSubmissions ALTER COLUMN ADSH VARCHAR(20) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
+            context.Database.ExecuteSqlCommand(GetTextScript("alter column ADSH.sql"));
 
 
-            List<string> scripts = new List<string>();
+            List <string> scripts = new List<string>();
             context.Database.ExecuteSqlCommand(GetTextScript("create GET_MISSING_LINE_NUMBERS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETCALC_INSERT.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_EDGARDATASETDIMENSIONS_INSERT.sql"));

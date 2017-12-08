@@ -9,17 +9,6 @@ using System.Threading.Tasks;
 namespace Analyst.Domain.Edgar.Datasets
 {
 
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class CaseSensitiveAttribute : Attribute
-    {
-        public CaseSensitiveAttribute()
-        {
-            IsEnabled = true;
-        }
-        public bool IsEnabled { get; set; }
-    }
-
-
     /// <summary>
     /// TAG is a data set of all tags used in the submissions, both standard and custom.
     /// The TAG data set contains all standard taxonomy tags, 
@@ -74,31 +63,82 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// If abstract=1, then NULL, 
         /// otherwise the data type (e.g., monetary) for the tag.
+        /// Field name in the file: datatype
         /// </summary>
+        [StringLength(25)]
         public string Datatype { get; set; }
 
         /// <summary>
-        /// f abstract=1, then NULL; 
+        /// If abstract=1, then NULL; 
         /// otherwise, "I" if the value is a point in time, or "D" if the value is a duration.
+        /// Field name in the file: Iord
         /// </summary>
-        public char? Iord { get; set; }
+        public char? ValueType { get; set; }
+        
+        /// <summary>
+        /// Another getter of ValueType
+        /// </summary>
+        /// <returns></returns>
+        public ValueType GetValueType()
+        {
+            if (!this.ValueType.HasValue)
+                return ValueTypeValue.NoValue;
+            if (ValueType.Value.Equals("D"))
+                return ValueTypeValue.Duration;
+            return ValueTypeValue.PointInTime;
+        }
+
+        /// <summary>
+        /// Possible values for the ValueType property.
+        /// </summary>
+        public enum ValueTypeValue
+        {
+            NoValue,
+            PointInTime,
+            Duration
+        }
+
 
         /// <summary>
         /// If datatype = monetary, then the tag's natural accounting balance 
         /// from the perspective of the balance sheet 
         /// or income statement (debit or credit); 
         /// if not defined, then NULL.
+        /// Field name in the file: crdr
         /// </summary>
-        public char? Crdr { get; set; }
+        public char? NaturalAccountingBalance { get; set; }
 
+        /// <summary>
+        /// Another getter of NaturalAccountingBalance
+        /// </summary>
+        public NaturalAccountingBalanceValue GetNaturalAccountingBalance()
+        {
+            if (!NaturalAccountingBalance.HasValue)
+                return NaturalAccountingBalanceValue.NoValue;
+            if (NaturalAccountingBalance.Value.Equals("D") == true)
+                return NaturalAccountingBalanceValue.Debit;
+            return NaturalAccountingBalanceValue.Credit;
+        }
+
+        /// <summary>
+        /// Possible values for the NaturalAccountingBalance property.
+        /// </summary>
+        public enum NaturalAccountingBalanceValue
+        {
+            NoValue,
+            Credit,
+            Debit
+        }
 
         /// <summary>
         /// Tag label
         /// If a standard tag, then the label text provided by the taxonomy, 
         /// otherwise the text provided by the filer.  
         /// A tag which had neither would have a NULL value here.
+        /// Field name in the file: tlabel
         /// </summary>
-        public string Tlabel { get; set; }
+        [StringLength(512)]
+        public string LabelText { get; set; }
 
         /// <summary>
         /// The detailed definition for the tag, truncated to 2048 characters. 
@@ -106,7 +146,8 @@ namespace Analyst.Domain.Edgar.Datasets
         /// otherwise the text assigned by the filer.  
         /// Some tags have neither, in which case this field is NULL.
         /// </summary>
-        public string Doc { get; set; }
+        [StringLength(2048)]
+        public string Documentation { get; set; }
 
         public int LineNumber { get; set; }
 
@@ -134,9 +175,9 @@ namespace Analyst.Domain.Edgar.Datasets
 
         public virtual ICollection<EdgarDatasetPresentation> Presentations { get; set; }
 
-        public virtual IList<EdgarDatasetCalculation> ParentCalculations { get; set; }
+        public virtual ICollection<EdgarDatasetCalculation> ParentCalculations { get; set; }
 
-        public virtual IList<EdgarDatasetCalculation> ChildCalculations { get; set; }
+        public virtual ICollection<EdgarDatasetCalculation> ChildCalculations { get; set; }
 
     }
 }

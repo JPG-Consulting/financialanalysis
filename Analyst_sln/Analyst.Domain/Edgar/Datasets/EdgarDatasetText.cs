@@ -22,15 +22,19 @@ namespace Analyst.Domain.Edgar.Datasets
         /// The end date for the data value, rounded to the nearest month end.
         /// </summary>
         [Required]
-        public DateTime DDate { get; set; }
+        public DateTime DatavalueEnddate { get; set; }
         /// <summary>
         /// The count of the number of quarters represented by the data value, rounded to the nearest whole number. A point in time value is represented by 0.
         /// </summary>
         [Required]
-        public int Qtrs { get; set; }
+        public int CountOfNumberOfQuarters { get; set; }
 
         /// <summary>
-        /// A positive integer to distinguish different reported facts that otherwise would have the same primary key.  For most purposes, data with iprx greater than 1 are not needed.  The priority for the fact based on higher precision, closeness of the end date to a month end, and closeness of the duration to a multiple of three months. See fields dcml, durp and datp below.
+        /// A positive integer to distinguish different reported facts that otherwise would have the same primary key.  
+        /// For most purposes, data with iprx greater than 1 are not needed.  
+        /// The priority for the fact based on higher precision, closeness of the end date to a month end, 
+        /// and closeness of the duration to a multiple of three months. 
+        /// See fields dcml, durp and datp below.
         /// </summary>
         [Required]
         public short Iprx { get; set; }
@@ -43,19 +47,24 @@ namespace Analyst.Domain.Edgar.Datasets
         public string Language { get; set; }
 
         /// <summary>
-        /// The value of the fact "xml:lang" attribute, en-US represented by 32767, other "en" dialects having lower values, and other languages lower still.
+        /// The value of the fact "xml:lang" attribute, en-US represented by 32767, 
+        /// other "en" dialects having lower values, and other languages lower still.
         /// </summary>
         [Required]
         public int Dcml { get; set; }
 
         /// <summary>
-        /// The difference between the reported fact duration and the quarter duration (qtrs), expressed as a fraction of 1.  For example, a fact with duration of 120 days rounded to a 91-day quarter has a durp value of 29/91 = +0.3187.
+        /// The difference between the reported fact duration and the quarter duration (qtrs), 
+        /// expressed as a fraction of 1.  
+        /// For example, a fact with duration of 120 days rounded to a 91-day quarter has a durp value of 29/91 = +0.3187.
         /// </summary>
         [Required]
         public float Durp { get; set; }
 
         /// <summary>
-        /// The difference between the reported fact date and the month-end rounded date (ddate), expressed as a fraction of 1.  For example, a fact reported for 29/Dec, with ddate rounded to 31/Dec, has a datp value of minus 2/31 = -0.0645.
+        /// The difference between the reported fact date and the month-end rounded date (ddate), 
+        /// expressed as a fraction of 1.  
+        /// For example, a fact reported for 29/Dec, with ddate rounded to 31/Dec, has a datp value of minus 2/31 = -0.0645.
         /// </summary>
         [Required]
         public float Datp { get; set; }
@@ -63,14 +72,19 @@ namespace Analyst.Domain.Edgar.Datasets
         
 
         /// <summary>
-        /// Small integer representing the number of dimensions, useful for sorting.Note that this value is function of the dimension segments.
+        /// Small integer representing the number of dimensions, 
+        /// useful for sorting.
+        /// Note that this value is function of the dimension segments.
         /// </summary>
-        public short? DimN { get; set; }
+        public short? DimensionNumber { get; set; }
 
         /// <summary>
-        /// If specified, indicates a specific co-registrant, the parent company, or other entity (e.g., guarantor).  NULL indicates the consolidated entity.  Note that this value is a function of the dimension segments.
+        /// If specified, indicates a specific co-registrant, the parent company, or other entity (e.g., guarantor). 
+        /// NULL indicates the consolidated entity.  
+        /// Note that this value is a function of the dimension segments.
         /// </summary>
-        public int? Coreg { get; set; }
+        [StringLength(256)]
+        public string CoRegistrant { get; set; }
 
         /// <summary>
         /// Flag indicating whether the value has had tags removed.
@@ -79,18 +93,21 @@ namespace Analyst.Domain.Edgar.Datasets
         public bool Escaped { get; set; }
 
         /// <summary>
-        /// Number of bytes in the original, unprocessed value.  Zero indicates a NULL value.
+        /// Number of bytes in the original, unprocessed value.  
+        /// Zero indicates a NULL value.
         /// </summary>
         [Required]
-        public int SrcLen { get; set; }
+        public int SourceLength { get; set; }
 
         /// <summary>
-        /// The original length of the whitespace normalized value, which may have been greater than 8192.
+        /// The original length of the whitespace normalized value, 
+        /// which may have been greater than 8192.
         /// </summary>
-        public int TxtLen { get; set; }
+        public int TextLength { get; set; }
 
         /// <summary>
-        /// The plain text of any superscripted footnotes on the value, as shown on the page, truncated to 512 characters, or if there is no footnote, then this field will be blank.
+        /// The plain text of any superscripted footnotes on the value, as shown on the page, truncated to 512 characters, 
+        /// or if there is no footnote, then this field will be blank.
         /// </summary>
         [StringLength(512)]
         public string FootNote { get; set; }
@@ -98,7 +115,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// Number of bytes in the plain text of the footnote prior to truncation.
         /// </summary>
-        public int? FootLen { get; set; }
+        public int? FootLength { get; set; }
 
 
         /// <summary>

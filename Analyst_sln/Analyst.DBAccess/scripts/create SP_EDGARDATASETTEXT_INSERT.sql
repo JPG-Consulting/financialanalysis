@@ -1,19 +1,19 @@
 ﻿CREATE PROCEDURE dbo.SP_EDGARDATASETTEXT_INSERT
 	@LineNumber int
-    ,@DDate datetime
-    ,@Qtrs int
+    ,@DatavalueEnddate datetime
+    ,@CountOfNumberOfQuarters int
     ,@Iprx smallint
     ,@Language nvarchar(5)
     ,@Dcml int
     ,@Durp real
     ,@Datp real
-    ,@DimN smallint
-    ,@Coreg int
+    ,@DimensionNumber smallint
+    ,@CoRegistrant int
     ,@Escaped bit
-    ,@SrcLen int
-    ,@TxtLen int
+    ,@SourceLength int
+    ,@TextLength int
     ,@FootNote nvarchar(512)
-    ,@FootLen int
+    ,@FootLength int
     ,@Context nvarchar(255)
     ,@Value nvarchar(2048)
     ,@Dimension_Id int
@@ -41,8 +41,8 @@ BEGIN
 				[DatasetId] =@DataSetId 
 				AND [SubmissionId] =@Submission_Id
 				AND [TagId] =@Tag_Id
-				AND [DDate]=@DDate
-				AND [Qtrs]=@Qtrs
+				AND [DatavalueEnddate]=@DatavalueEnddate
+				AND [CountOfNumberOfQuarters]=@CountOfNumberOfQuarters
 				AND [DimensionId] =@Dimension_Id
 				AND [Iprx]=@Iprx
 		)
@@ -51,20 +51,20 @@ BEGIN
 		Begin transaction;
 			INSERT INTO [dbo].[EdgarDatasetTexts]
 			   ([LineNumber]
-			   ,[DDate]
-			   ,[Qtrs]
+			   ,[DatavalueEnddate]
+			   ,[CountOfNumberOfQuarters]
 			   ,[Iprx]
 			   ,[Language]
 			   ,[Dcml]
 			   ,[Durp]
 			   ,[Datp]
-			   ,[DimN]
-			   ,[Coreg]
+			   ,[DimensionNumber]
+			   ,[CoRegistrant]
 			   ,[Escaped]
-			   ,[SrcLen]
-			   ,[TxtLen]
+			   ,[SourceLength]
+			   ,[TextLength]
 			   ,[FootNote]
-			   ,[FootLen]
+			   ,[FootLength]
 			   ,[Context]
 			   ,[Value]
 			   ,[DimensionId]
@@ -73,20 +73,20 @@ BEGIN
 			   ,[DatasetId])
 		 VALUES
 			   (@LineNumber 
-				,@DDate
-				,@Qtrs
+				,@DatavalueEnddate
+				,@CountOfNumberOfQuarters
 				,@Iprx
 				,@Language
 				,@Dcml
 				,@Durp
 				,@Datp
-				,@DimN
-				,@Coreg
+				,@DimensionNumber
+				,@CoRegistrant
 				,@Escaped
-				,@SrcLen
-				,@TxtLen
+				,@SourceLength
+				,@TextLength
 				,@FootNote
-				,@FootLen
+				,@FootLength
 				,@Context
 				,@Value
 				,@Dimension_Id

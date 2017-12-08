@@ -86,7 +86,7 @@ namespace Analyst.Services.EdgarDatasetServices
                     string tag = fields[fieldNames.IndexOf("tag")];
                     string version = fields[fieldNames.IndexOf("version")];
                     pre.TagId = Tags[tag + version];
-                    pre.prole = fields[fieldNames.IndexOf("prole")];
+                    pre.PreferredLabelXBRLLinkRole = fields[fieldNames.IndexOf("prole")];
                     pre.PreferredLabel = fields[fieldNames.IndexOf("plabel")];
                     pre.Negating = !(fields[fieldNames.IndexOf("negating")] == "0");
                     pre.LineNumber = lineNumber;

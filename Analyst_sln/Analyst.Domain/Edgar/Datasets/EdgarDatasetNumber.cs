@@ -29,7 +29,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         //[Key]
         [Required]
-        public DateTime DDate { get; set; }
+        public DateTime DatavalueEnddate { get; set; }
 
         /// <summary>
         /// QTRS

@@ -62,7 +62,7 @@ namespace Analyst.Services.EdgarDatasetServices
             number.TagStr = fields[fieldNames.IndexOf("tag")];
             number.Version = fields[fieldNames.IndexOf("version")];
             value = fields[fieldNames.IndexOf("ddate")];
-            number.DDate = new DateTime(int.Parse(value.Substring(0, 4)), int.Parse(value.Substring(4, 2)), int.Parse(value.Substring(6, 2)));
+            number.DatavalueEnddate = new DateTime(int.Parse(value.Substring(0, 4)), int.Parse(value.Substring(4, 2)), int.Parse(value.Substring(6, 2)));
             value = fields[fieldNames.IndexOf("qtrs")];
             number.CountOfNumberOfQuarters = Convert.ToInt32(value);
             number.UnitOfMeasure = fields[fieldNames.IndexOf("uom")];

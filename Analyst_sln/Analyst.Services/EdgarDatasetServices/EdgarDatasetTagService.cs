@@ -76,13 +76,13 @@ namespace Analyst.Services.EdgarDatasetServices
                 value = fields[fieldNames.IndexOf("datatype")];
                 tag.Datatype = string.IsNullOrEmpty(value) ? null : value;
                 value = fields[fieldNames.IndexOf("iord")];
-                tag.Iord = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+                tag.ValueType = string.IsNullOrEmpty(value) ? (char?)null : value[0];
                 value = fields[fieldNames.IndexOf("crdr")];
-                tag.Crdr = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+                tag.NaturalAccountingBalance = string.IsNullOrEmpty(value) ? (char?)null : value[0];
                 value = fields[fieldNames.IndexOf("tlabel")];
-                tag.Tlabel = string.IsNullOrEmpty(value) ? null : value;
+                tag.LabelText = string.IsNullOrEmpty(value) ? null : value;
                 value = fields[fieldNames.IndexOf("doc")];
-                tag.Doc = string.IsNullOrEmpty(value) ? null : value;
+                tag.Documentation = string.IsNullOrEmpty(value) ? null : value;
                 tag.LineNumber = linenumber;
             }
             return tag;

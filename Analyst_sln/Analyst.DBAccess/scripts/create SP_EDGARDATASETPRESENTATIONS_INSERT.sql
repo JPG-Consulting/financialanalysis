@@ -30,7 +30,7 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETPRESENTATIONS_INSERT
 	,@Line int
 	,@FinancialStatement nvarchar(2)
 	,@Inpth bit
-	,@prole nvarchar(50)
+	,@PreferredLabelXBRLLinkRole nvarchar(50)
 	,@PreferredLabel nvarchar(512)
 	,@Negating bit
 	,@LineNumber int
@@ -62,7 +62,7 @@ BEGIN
 				   ,[Line]
 				   ,[FinancialStatement]
 				   ,[Inpth]
-				   ,[prole]
+				   ,[PreferredLabelXBRLLinkRole]
 				   ,[PreferredLabel]
 				   ,[Negating]
 				   ,[LineNumber]
@@ -79,7 +79,7 @@ BEGIN
 					,@Line
 					,@FinancialStatement
 					,@Inpth
-					,@prole
+					,@PreferredLabelXBRLLinkRole
 					,@PreferredLabel
 					,@Negating
 					,@LineNumber

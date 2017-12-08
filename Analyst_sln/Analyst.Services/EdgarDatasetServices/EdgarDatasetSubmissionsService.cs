@@ -70,7 +70,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 sub.AdditionalCIKs = String.IsNullOrEmpty(value) ? null : value;
 
                 value = fields[fieldNames.IndexOf("pubfloatusd")];
-                sub.PubFloatUSD = string.IsNullOrEmpty(value) ? (float?)null : float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
+                sub.PublicFloatUSD = string.IsNullOrEmpty(value) ? (float?)null : float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
 
                 string floatdate = fields[fieldNames.IndexOf("floatdate")];
                 sub.FloatDate = String.IsNullOrEmpty(floatdate) ? (DateTime?)null : new DateTime(int.Parse(floatdate.Substring(0, 4)), int.Parse(floatdate.Substring(4, 2)), int.Parse(floatdate.Substring(6, 2)));
@@ -104,11 +104,11 @@ namespace Analyst.Services.EdgarDatasetServices
                 value = fields[fieldNames.IndexOf("countryinc")];
                 r.CountryInc = String.IsNullOrEmpty(value) ? null : value;
                 value = fields[fieldNames.IndexOf("ein")];
-                r.EIN = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
-                r.AFS = fields[fieldNames.IndexOf("afs")];
-                r.WKSI = fields[fieldNames.IndexOf("wksi")] == "1";
+                r.EmployeeIdentificationNumber = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
+                r.FilerStatus = fields[fieldNames.IndexOf("afs")];
+                r.WellKnownSeasonedIssuer = fields[fieldNames.IndexOf("wksi")] == "1";
                 value = fields[fieldNames.IndexOf("fye")];
-                r.FYE = string.IsNullOrEmpty(value) ? null : value;
+                r.FiscalYearEndDate = Convert.ToInt16(value);
                 repository.Add(r);
             }
             return r;

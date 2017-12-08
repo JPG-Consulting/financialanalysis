@@ -54,10 +54,11 @@ namespace Analyst.Domain.Edgar.Datasets
 
         /// <summary>
         /// The XBRL link "role" of the preferred label, using only the portion of the role URI after the last "/".
+        /// Field name in the file: prole
         /// </summary>
         [Required]
         [StringLength(50)]
-        public string prole{ get; set; }
+        public string PreferredLabelXBRLLinkRole{ get; set; }
 
         /// <summary>
         /// The text presented on the line item, also known as a "preferred" label.
@@ -99,11 +100,11 @@ namespace Analyst.Domain.Edgar.Datasets
         public EdgarDatasetTag Tag { get; set; }
 
         public int? NumberId { get; set; }
-        //[Required]
+        
         public EdgarDatasetNumber Number { get; set; } //NUM: adsh, tag, version
 
         public int? TextId { get; set; }
-        //[Required]
+        
         public EdgarDatasetText Text { get; set; } //TEXT: adsh, tag, version
 
         public int RenderId { get; set; }

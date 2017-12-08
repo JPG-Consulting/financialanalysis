@@ -269,8 +269,8 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter NumberOfCIKs = new SqlParameter("@NumberOfCIKs", sub.NumberOfCIKs);
             SqlParameter AdditionalCIKs = new SqlParameter("@AdditionalCIKs", sub.AdditionalCIKs);
             if (sub.AdditionalCIKs == null) AdditionalCIKs.Value = DBNull.Value;
-            SqlParameter PubFloatUSD = new SqlParameter("@PubFloatUSD", sub.PubFloatUSD);
-            if (sub.PubFloatUSD == null) PubFloatUSD.Value = DBNull.Value;
+            SqlParameter PublicFloatUSD = new SqlParameter("@PublicFloatUSD", sub.PublicFloatUSD);
+            if (sub.PublicFloatUSD == null) PublicFloatUSD.Value = DBNull.Value;
             SqlParameter FloatDate = new SqlParameter("@FloatDate", sub.FloatDate);
             if (sub.FloatDate == null) FloatDate.Value = DBNull.Value;
             SqlParameter FloatAxis = new SqlParameter("@FloatAxis", sub.FloatAxis);
@@ -284,8 +284,8 @@ namespace Analyst.DBAccess.Contexts
             
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASSUBMISSIONS_INSERT "+
-                "@ADSH, @Period, @Detail, @XBRLInstance, @NumberOfCIKs, @AdditionalCIKs, @PubFloatUSD, @FloatDate, @FloatAxis, @FloatMems,@LineNumber, @Form_Id, @Registrant_Id, @EdgarDataset_Id",
-                ADSH, Period, Detail, XBRLInstance, NumberOfCIKs, AdditionalCIKs, PubFloatUSD, FloatDate, FloatAxis, FloatMems,lineNumber, FormId, Registrant_Id, EdgarDataset_Id);
+                "@ADSH, @Period, @Detail, @XBRLInstance, @NumberOfCIKs, @AdditionalCIKs, @PublicFloatUSD, @FloatDate, @FloatAxis, @FloatMems,@LineNumber, @Form_Id, @Registrant_Id, @EdgarDataset_Id",
+                ADSH, Period, Detail, XBRLInstance, NumberOfCIKs, AdditionalCIKs, PublicFloatUSD, FloatDate, FloatAxis, FloatMems,lineNumber, FormId, Registrant_Id, EdgarDataset_Id);
         }
 
         public void AddTag(EdgarDataset dataset, EdgarDatasetTag tag)
@@ -296,25 +296,25 @@ namespace Analyst.DBAccess.Contexts
 
             SqlParameter custom = new SqlParameter("@Custom",tag.Custom); 
             SqlParameter abstracto = new SqlParameter("@Abstract",tag.Abstract);
-            SqlParameter datatype = new SqlParameter("@Datatype",tag.Datatype);
-            if (tag.Datatype == null)
+            SqlParameter datatype = new SqlParameter("@Datatype",tag.ValueType);
+            if (tag.ValueType == null)
                 datatype.Value = DBNull.Value;
-            SqlParameter tlabel = new SqlParameter("@Tlabel",tag.Tlabel);
-            if (tag.Tlabel == null)
-                tlabel.Value = DBNull.Value;
-            SqlParameter doc = new SqlParameter("@Doc",tag.Doc);
-            if (tag.Doc == null)
-                doc.Value = DBNull.Value;
+            SqlParameter LabelText = new SqlParameter("@LabelText", tag.LabelText);
+            if (tag.LabelText == null)
+                LabelText.Value = DBNull.Value;
+            SqlParameter Documentation = new SqlParameter("@Documentation", tag.Documentation);
+            if (tag.Documentation == null)
+                Documentation.Value = DBNull.Value;
             SqlParameter LineNumber = new SqlParameter("@LineNumber", tag.LineNumber);
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTAGS_INSERT "+
-                "@DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc,@LineNumber",
-                dsid, tagparam, version, custom, abstracto, datatype, tlabel, doc, LineNumber);
+                "@DataSetId, @tag,@version,@custom,@Abstract,@Datatype,@LabelText,@Documentation,@LineNumber",
+                dsid, tagparam, version, custom, abstracto, datatype, LabelText, Documentation, LineNumber);
         }
         
         public void Add(EdgarDataset dataset, EdgarDatasetNumber number)
         {
-            SqlParameter ddate = new SqlParameter("@DDate", number.DDate);
+            SqlParameter DatavalueEnddate = new SqlParameter("@DatavalueEnddate", number.DatavalueEnddate);
             SqlParameter countOfNumberOfQuarters = new SqlParameter("@CountOfNumberOfQuarters", number.CountOfNumberOfQuarters);
             SqlParameter UnitOfMeasure = new SqlParameter("@UnitOfMeasure", number.UnitOfMeasure);
             SqlParameter iprx = new SqlParameter("@IPRX", number.IPRX);
@@ -342,8 +342,8 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter lineNumber = new SqlParameter("@LineNumber", number.LineNumber);
             SqlParameter edgarDatasetId = new SqlParameter("@EdgarDataset_Id", dataset.Id);
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETNUMBER_INSERT "+
-                "@DDate, @CountOfNumberOfQuarters,@UnitOfMeasure, @IPRX, @Value, @FootNote, @FootLength, @NumberOfDimensions, @CoRegistrant, @durp, @datp, @Decimals, @Dimension_Id, @Submission_Id, @Tag_Id,@LineNumber, @EdgarDataset_Id",
-                ddate, countOfNumberOfQuarters,UnitOfMeasure, iprx, value, footNote, footLength, numberOfDimensions, coRegistrant, durp, datp, decimals, dimensionId, submissionId, tagId,lineNumber, edgarDatasetId
+                "@DatavalueEnddate, @CountOfNumberOfQuarters,@UnitOfMeasure, @IPRX, @Value, @FootNote, @FootLength, @NumberOfDimensions, @CoRegistrant, @durp, @datp, @Decimals, @Dimension_Id, @Submission_Id, @Tag_Id,@LineNumber, @EdgarDataset_Id",
+                DatavalueEnddate, countOfNumberOfQuarters,UnitOfMeasure, iprx, value, footNote, footLength, numberOfDimensions, coRegistrant, durp, datp, decimals, dimensionId, submissionId, tagId,lineNumber, edgarDatasetId
                 );
             
         }
@@ -373,16 +373,16 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter LongName = new SqlParameter("@LongName", ren.LongName);
 
             SqlParameter Roleuri;
-            if (string.IsNullOrEmpty(ren.Roleuri))
+            if (string.IsNullOrEmpty(ren.RoleURI))
                 Roleuri = new SqlParameter("@Roleuri", DBNull.Value);
             else
-                Roleuri = new SqlParameter("@Roleuri", ren.Roleuri);
+                Roleuri = new SqlParameter("@Roleuri", ren.RoleURI);
 
             SqlParameter ParentRoleuri;
-            if(string.IsNullOrEmpty(ren.ParentRoleuri))
+            if(string.IsNullOrEmpty(ren.ParentRoleURI))
                 ParentRoleuri = new SqlParameter("@ParentRoleuri", DBNull.Value);
             else
-                ParentRoleuri = new SqlParameter("@ParentRoleuri", ren.ParentRoleuri);
+                ParentRoleuri = new SqlParameter("@ParentRoleuri", ren.ParentRoleURI);
 
             SqlParameter ParentReport = new SqlParameter("@ParentReport", ren.ParentReport);
             if (ren.ParentReport == null)
@@ -408,7 +408,7 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter Line = new SqlParameter("@Line", pre.Line);
             SqlParameter FinancialStatement = new SqlParameter("@FinancialStatement", pre.FinancialStatement);
             SqlParameter Inpth = new SqlParameter("@Inpth", pre.Inpth);
-            SqlParameter prole = new SqlParameter("@prole", pre.prole);
+            SqlParameter PreferredLabelXBRLLinkRole = new SqlParameter("@prole", pre.PreferredLabelXBRLLinkRole);
             SqlParameter PreferredLabel = new SqlParameter("@PreferredLabel", pre.PreferredLabel);
             SqlParameter Negating = new SqlParameter("@Negating", pre.Negating);
             SqlParameter LineNumber = new SqlParameter("@LineNumber", pre.LineNumber);
@@ -435,8 +435,8 @@ namespace Analyst.DBAccess.Contexts
                 adsh_tag_version.Value = DBNull.Value;
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
-                "@ReportNumber, @Line, @FinancialStatement, @Inpth, @prole, @PreferredLabel, @Negating, @LineNumber, @DataSetId, @Submission_Id, @Tag_Id, @Number_Id, @Text_Id, @Render_Id, @adsh_tag_version",
-                ReportNumber, Line, FinancialStatement, Inpth, prole, PreferredLabel, Negating, LineNumber, DataSetId, Submission_Id, Tag_Id, Number_Id, Text_Id, Render_Id, adsh_tag_version);
+                "@ReportNumber, @Line, @FinancialStatement, @Inpth, @PreferredLabelXBRLLinkRole, @PreferredLabel, @Negating, @LineNumber, @DataSetId, @Submission_Id, @Tag_Id, @Number_Id, @Text_Id, @Render_Id, @adsh_tag_version",
+                ReportNumber, Line, FinancialStatement, Inpth, PreferredLabelXBRLLinkRole, PreferredLabel, Negating, LineNumber, DataSetId, Submission_Id, Tag_Id, Number_Id, Text_Id, Render_Id, adsh_tag_version);
         }
 
         public void Add(EdgarDataset dataset, EdgarDatasetCalculation file)
@@ -458,28 +458,28 @@ namespace Analyst.DBAccess.Contexts
         public void Add(EdgarDataset dataset, EdgarDatasetText file)
         {
             SqlParameter LineNumber = new SqlParameter("@LineNumber", file.LineNumber);
-            SqlParameter DDate = new SqlParameter("@DDate", file.DDate);
-            SqlParameter Qtrs = new SqlParameter("@Qtrs", file.Qtrs);
+            SqlParameter DatavalueEnddate = new SqlParameter("@DatavalueEnddate", file.DatavalueEnddate);
+            SqlParameter CountOfNumberOfQuarters = new SqlParameter("@CountOfNumberOfQuarters", file.CountOfNumberOfQuarters);
             SqlParameter Iprx = new SqlParameter("@Iprx", file.Iprx);
             SqlParameter Language = new SqlParameter("@Language", file.Language);
             SqlParameter Dcml = new SqlParameter("@Dcml", file.Dcml);
             SqlParameter Durp = new SqlParameter("@Durp", file.Durp);
             SqlParameter Datp = new SqlParameter("@Datp", file.Datp);
-            SqlParameter DimN = new SqlParameter("@DimN", file.DimN);
-            if (!file.DimN.HasValue)
-                DimN.Value = DBNull.Value;
-            SqlParameter Coreg;
-            if (file.Coreg.HasValue)
-                Coreg = new SqlParameter("@Coreg", file.Coreg.ToString());
+            SqlParameter DimensionNumber = new SqlParameter("@DimensionNumber", file.DimensionNumber);
+            if (!file.DimensionNumber.HasValue)
+                DimensionNumber.Value = DBNull.Value;
+            SqlParameter CoRegistrant;
+            if (!string.IsNullOrEmpty(file.CoRegistrant))
+                CoRegistrant = new SqlParameter("@CoRegistrant", file.CoRegistrant);
             else
-                Coreg = new SqlParameter("@Coreg", DBNull.Value);
+                CoRegistrant = new SqlParameter("@CoRegistrant", DBNull.Value);
             SqlParameter Escaped = new SqlParameter("@Escaped", file.Escaped);
-            SqlParameter SrcLen = new SqlParameter("@SrcLen", file.SrcLen);
-            SqlParameter TxtLen = new SqlParameter("@TxtLen", file.TxtLen);
+            SqlParameter SourceLength = new SqlParameter("@SourceLength", file.SourceLength);
+            SqlParameter TextLength = new SqlParameter("@TextLength", file.TextLength);
             SqlParameter FootNote = new SqlParameter("@FootNote", file.FootNote);
-            SqlParameter FootLen = new SqlParameter("@FootLen", file.FootLen);
-            if (!file.FootLen.HasValue)
-                FootLen.Value = DBNull.Value;
+            SqlParameter FootLength = new SqlParameter("@FootLength", file.FootLength);
+            if (!file.FootLength.HasValue)
+                FootLength.Value = DBNull.Value;
             SqlParameter paramContext = new SqlParameter("@Context", file.Context);
             SqlParameter Value = new SqlParameter("@Value", file.Value);
             SqlParameter Dimension_Id = new SqlParameter("@Dimension_Id", file.DimensionId);
@@ -488,8 +488,8 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter DatasetId = new SqlParameter("@DatasetId", dataset.Id);
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTEXT_INSERT " +
-                "@LineNumber, @DDate, @Qtrs, @Iprx, @Language, @Dcml, @Durp, @Datp, @DimN, @Coreg, @Escaped, @SrcLen, @TxtLen, @FootNote, @FootLen, @Context, @Value, @Dimension_Id, @Submission_Id, @Tag_Id, @DatasetId",
-                LineNumber, DDate, Qtrs, Iprx, Language, Dcml, Durp, Datp, DimN, Coreg, Escaped, SrcLen, TxtLen, FootNote, FootLen, paramContext, Value, Dimension_Id, Submission_Id, Tag_Id, DatasetId);
+                "@LineNumber, @DatavalueEnddate, @CountOfNumberOfQuarters, @Iprx, @Language, @Dcml, @Durp, @Datp, @DimensionNumber, @CoRegistrant, @Escaped, @SourceLength, @TextLength, @FootNote, @FootLength, @Context, @Value, @Dimension_Id, @Submission_Id, @Tag_Id, @DatasetId",
+                LineNumber, DatavalueEnddate, CountOfNumberOfQuarters, Iprx, Language, Dcml, Durp, Datp, DimensionNumber, CoRegistrant, Escaped, SourceLength, TextLength, FootNote, FootLength, paramContext, Value, Dimension_Id, Submission_Id, Tag_Id, DatasetId);
        }
 
         #endregion

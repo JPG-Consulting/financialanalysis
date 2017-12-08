@@ -40,12 +40,14 @@ namespace Analyst.Domain.Edgar.Datasets
 
 
         /// <summary>
-        /// Accession Number, it's the Unique Key of each submission.
+        /// Accession Number:
+        /// it's the Unique Key of each submission.
         /// The 20-character string formed 
         /// from the 18-digit number assigned by the Commission to each EDGAR submission.
         /// </summary>
         [Column(TypeName = "VARCHAR")]
-        [Index(IsUnique = true)]
+        [StringLength(20)]
+        //[Index(IsUnique = true)]Due the collate of this column (it has to be case sensitive), index has to be created after change collation
         [Required]
         public string ADSH { get; set; }
 
@@ -70,9 +72,12 @@ namespace Analyst.Domain.Edgar.Datasets
         
 
         /// <summary>
-        /// The name of the submitted XBRL Instance Document (EX-101.INS) type data file. The name often begins with the company ticker symbol.
+        /// The name of the submitted XBRL Instance Document (EX-101.INS) type data file. 
+        /// The name often begins with the company ticker symbol.
+        /// Field name in the file: instance
         /// </summary>
         [Required]
+        [StringLength(32)]
         public string XBRLInstance { get; set; }
 
         /// <summary>
@@ -84,13 +89,20 @@ namespace Analyst.Domain.Edgar.Datasets
 
         /// <summary>
         /// aciks
-        /// Additional CIKs of co-registrants included in a consolidating entity's EDGAR submission, separated by spaces. If there are no other co-registrants (i.e., nciks = 1), the value of aciks is NULL.  For a very small number of filers, the list of co-registrants is too long to fit in the field.  Where this is the case, PARTIAL will appear at the end of the list indicating that not all co-registrants' CIKs are included in the field; users should refer to the complete submission file for all CIK information.
+        /// Additional CIKs of co-registrants included in a consolidating entity's EDGAR submission, separated by spaces. 
+        /// If there are no other co-registrants (i.e., nciks = 1), the value of aciks is NULL.  
+        /// For a very small number of filers, the list of co-registrants is too long to fit in the field.  
+        /// Where this is the case, PARTIAL will appear at the end of the list indicating that not all co-registrants' CIKs are included in the field; 
+        /// users should refer to the complete submission file for all CIK information.
+        /// Field name in the file: aciks
         /// </summary>
+        [StringLength(120)]
         public string AdditionalCIKs { get; set; }
+
         /// <summary>
         /// Public float, in USD, if provided in this submission.
         /// </summary>
-        public float? PubFloatUSD { get; set; }
+        public float? PublicFloatUSD { get; set; }
 
         /// <summary>
         /// Date on which the public float was measured by the filer.
@@ -101,6 +113,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// If the public float value was computed by summing across several tagged values, this indicates the nature of the summation.
         /// </summary>
+        [StringLength(255)]
         public String FloatAxis { get; set; }
 
         /// <summary>

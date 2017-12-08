@@ -32,7 +32,7 @@ CREATE PROCEDURE dbo.SP_EDGARDATASSUBMISSIONS_INSERT
 	,@XBRLInstance nvarchar(max)
 	,@NumberOfCIKs int
 	,@AdditionalCIKs nvarchar(max)
-	,@PubFloatUSD real
+	,@PublicFloatUSD real
 	,@FloatDate datetime
 	,@FloatAxis nvarchar(max)
 	,@FloatMems int
@@ -62,7 +62,7 @@ BEGIN
 				   ,[XBRLInstance]
 				   ,[NumberOfCIKs]
 				   ,[AdditionalCIKs]
-				   ,[PubFloatUSD]
+				   ,[PublicFloatUSD]
 				   ,[FloatDate]
 				   ,[FloatAxis]
 				   ,[FloatMems]
@@ -77,7 +77,7 @@ BEGIN
 					,@XBRLInstance
 					,@NumberOfCIKs
 					,@AdditionalCIKs
-					,@PubFloatUSD
+					,@PublicFloatUSD
 					,@FloatDate
 					,@FloatAxis
 					,@FloatMems

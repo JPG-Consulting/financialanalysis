@@ -87,6 +87,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\alter column ADSH.sql" />
     <Content Include="scripts\create GET_MISSING_LINE_NUMBERS.sql" />
     <Content Include="scripts\create SP_EDGARDATASETCALC_INSERT.sql" />
     <Content Include="scripts\create SP_EDGARDATASETDIMENSIONS_INSERT.sql" />

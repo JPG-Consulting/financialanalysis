@@ -26,9 +26,11 @@ namespace Analyst.Domain.Edgar.Datasets
         public int Id { get; set; }
 
         /// <summary>
-        /// Represents the report grouping. The numeric value refers to the "R file" as computed by the renderer and posted on the EDGAR website.  Note that in some situations the numbers skip.
+        /// Represents the report grouping. 
+        /// The numeric value refers to the "R file" as computed by the renderer and posted on the EDGAR website.  
+        /// Note that in some situations the numbers skip.
         /// </summary>
-        [Index(IsUnique = true)]
+        [Index("IX_SubmissionId_Report",IsUnique = true,Order =2)]
         [Required]
         public int Report { get; set; }
 
@@ -56,7 +58,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// The space-normalized text of the XBRL link "definition" element content.
         /// </summary>
-        
+        [StringLength(255)]
         public string LongName{ get; set; }
 
         /// <summary>
@@ -64,13 +66,13 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         [Required]
         [StringLength(255)]
-        public string Roleuri { get; set; }
+        public string RoleURI { get; set; }
 
         /// <summary>
         /// The XBRL roleuri of a role for which this role has a matching shortname prefix and a higher level menu category, as computed by the renderer.
         /// </summary>
         [StringLength(255)]
-        public string ParentRoleuri { get; set; }
+        public string ParentRoleURI { get; set; }
 
         /// <summary>
         /// The value of the report field for the role where roleuri equals this parentroleuri.
@@ -95,6 +97,7 @@ namespace Analyst.Domain.Edgar.Datasets
         
         public int DatasetId { get; set; }
 
+        [Index("IX_SubmissionId_Report", IsUnique = true, Order = 1)]
         public int SubmissionId { get; set; }
         [Required]
         public EdgarDatasetSubmission Submission { get; set; }

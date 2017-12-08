@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE dbo.SP_EDGARDATASETNUMBER_INSERT
-	@DDate datetime
+	@DatavalueEnddate datetime
     ,@CountOfNumberOfQuarters int
 	,@UnitOfMeasure nvarchar(20)
     ,@IPRX smallint
@@ -37,7 +37,7 @@ BEGIN
 			where [DatasetId]=@EdgarDataset_Id
 				and [SubmissionId]= @Submission_Id
 				and [TagId]=@Tag_Id
-				and cast([DDate] as date)=cast(@DDate as date)
+				and cast([DatavalueEnddate] as date)=cast(@DatavalueEnddate as date)
 				and [CountOfNumberOfQuarters]=@CountOfNumberOfQuarters
 				and [UnitOfMeasure]=@UnitOfMeasure
 				and [DimensionId] = @Dimension_Id
@@ -50,7 +50,7 @@ BEGIN
 	begin
 		Begin transaction;
 			INSERT INTO [dbo].[EdgarDatasetNumbers]
-			   ([DDate]
+			   ([DatavalueEnddate]
 			   ,[CountOfNumberOfQuarters]
 			   ,[UnitOfMeasure]
 			   ,[IPRX]
@@ -69,7 +69,7 @@ BEGIN
 			   ,[DatasetId])
 			 VALUES
 			 (
-				@DDate
+				@DatavalueEnddate
 				,@CountOfNumberOfQuarters
 				,@UnitOfMeasure
 				,@IPRX

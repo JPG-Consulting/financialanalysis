@@ -19,15 +19,15 @@ create database Analyst
 ON   
 	( NAME = Analyst_dat,  
 		FILENAME = 'E:\_analyst\DB\Analyst_dat.mdf',  
-		SIZE = 2000MB,  
+		SIZE = 10000MB,  
 		--MAXSIZE = 50,  
 		FILEGROWTH = 2000MB )  
 	LOG ON  
 	( NAME = Analyst_log,  
 		FILENAME = 'E:\_analyst\DB\Analyst_log.ldf',  
-		SIZE = 100MB,  
+		SIZE = 1000MB,  
 		--MAXSIZE = 25MB,  
-		FILEGROWTH = 100MB ) ; 
+		FILEGROWTH = 1000MB ) ; 
 go
 
 --[]

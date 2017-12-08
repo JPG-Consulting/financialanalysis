@@ -32,8 +32,8 @@ CREATE PROCEDURE dbo.SP_EDGARDATASETTAGS_INSERT
     ,@Custom bit
     ,@Abstract bit
     ,@Datatype nvarchar(max)
-    ,@Tlabel nvarchar(max)
-    ,@Doc nvarchar(max)
+    ,@LabelText nvarchar(max)
+    ,@Documentation nvarchar(max)
 	,@LineNumber int
 	
 AS
@@ -54,9 +54,9 @@ BEGIN
 	
 		BEGIN TRANSACTION;
 			INSERT INTO [dbo].[EdgarDatasetTags]
-				   ([Tag],[Version],[Custom],[Abstract],[Datatype],[Tlabel],[Doc],[DatasetId],[LineNumber])
+				   ([Tag],[Version],[Custom],[Abstract],[Datatype],[LabelText],[Documentation],[DatasetId],[LineNumber])
 			 VALUES
-				   (@tag,@version,@custom,@Abstract,@Datatype,@Tlabel,@doc,@DataSetId,@LineNumber);
+				   (@tag,@version,@custom,@Abstract,@Datatype,@LabelText,@Documentation,@DataSetId,@LineNumber);
 	
 
 			UPDATE DBO.EdgarDatasets 

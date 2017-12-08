@@ -1,18 +1,15 @@
 Falta:
 	Backend
-		* Log4net --> que loguee los errores en vez de stopear todo el proceso cada vez que falla
-		* Que despues de X fallos, pare el proceso
-		----------------------------------------------------------------------------------------------
-		* que ejecute un dataset completo
-		----------------------------------------------------------------------------------------------
+		* Solo quedaria procesar el pre.tsv para que procese un dataset completo
+		* crear backend con angular:
+			- que en la misma pagina pueda ver
+				estado de datasets --> debe tener un timer
+				sics
+				forms
+				registrants
+			- login con token
 		* que si el archivo no esta avise, no son tantos como para automatizar la descarga
 		* que haga unzip y cree la carpeta correspondiente
-		
-		Solo quedaria procesar el txt.tsv
-
-		* corregir las FK
-			http://www.entityframeworktutorial.net/code-first/foreignkey-dataannotations-attribute-in-code-first.aspx
-			
 		
 	Frontend
 		1) armar los estados financieros historicos

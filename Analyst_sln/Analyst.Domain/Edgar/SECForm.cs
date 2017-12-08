@@ -15,19 +15,24 @@ namespace Analyst.Domain.Edgar
         [Key]
         public int Id { get; set; }
 
-        [Column(TypeName = "VARCHAR")]
+        [Column(TypeName = "NVARCHAR")]
         [StringLength(20)]
         [Index(IsUnique =true)]
         public String Code { get; set; }
 
+        [StringLength(300)]
         public string Description { get; set; }
 
+        [StringLength(100)]
         public string LinkToPdf { get; set; }
 
+        [StringLength(20)]
         public string LastUpddate { get; set; }
 
+        [StringLength(20)]
         public string SECNumber { get; set; }
 
+        [StringLength(100)]
         public string Topic { get; set; }
 
         public string Key

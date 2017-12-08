@@ -19,6 +19,9 @@ from EdgarDatasets where id =@datasetid;
 --select * from EdgarDatasets where id=@datasetid;
 
 --select count(1) pre from EdgarDatasetPresentations;
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--Para revisar performance
+--https://docs.microsoft.com/en-us/sql/relational-databases/performance/monitoring-performance-by-using-the-query-store
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --LOG

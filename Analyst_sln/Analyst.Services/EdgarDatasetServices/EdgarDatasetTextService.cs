@@ -61,8 +61,8 @@ namespace Analyst.Services.EdgarDatasetServices
             string version = fields[fieldNames.IndexOf("version")];
             text.TagId = Tags[tag+version];
             string value = fields[fieldNames.IndexOf("ddate")];
-            text.DDate = new DateTime(int.Parse(value.Substring(0, 4)), int.Parse(value.Substring(4, 2)), int.Parse(value.Substring(6, 2)));
-            text.Qtrs = Convert.ToInt32(fields[fieldNames.IndexOf("qtrs")]);
+            text.DatavalueEnddate = new DateTime(int.Parse(value.Substring(0, 4)), int.Parse(value.Substring(4, 2)), int.Parse(value.Substring(6, 2)));
+            text.CountOfNumberOfQuarters = Convert.ToInt32(fields[fieldNames.IndexOf("qtrs")]);
             text.Iprx = Convert.ToInt16(fields[fieldNames.IndexOf("iprx")]);
             text.Language = fields[fieldNames.IndexOf("lang")];
             text.Dcml = Convert.ToInt32(fields[fieldNames.IndexOf("dcml")]);
@@ -71,20 +71,19 @@ namespace Analyst.Services.EdgarDatasetServices
             text.DimensionId = Dimensions[fields[fieldNames.IndexOf("dimh")]];
             value = fields[fieldNames.IndexOf("dimn")];
             if (!string.IsNullOrEmpty(value))
-                text.DimN = Convert.ToInt16(value);
+                text.DimensionNumber = Convert.ToInt16(value);
             value = fields[fieldNames.IndexOf("coreg")];
-            //TODO: hay que cambiar el tipo de dato a string y el nombre a CoRegistrant
-            /*
-            if (!string.IsNullOrEmpty(value))
-                text.Coreg = Convert.ToInt32(value);
-            */
+            if (string.IsNullOrEmpty(value))
+                text.CoRegistrant = null;
+            else
+                text.CoRegistrant = value;
             text.Escaped = fields[fieldNames.IndexOf("escaped")]!= "0";
-            text.SrcLen = Convert.ToInt32(fields[fieldNames.IndexOf("srclen")]);
-            text.TxtLen = Convert.ToInt32(fields[fieldNames.IndexOf("txtlen")]);
+            text.SourceLength = Convert.ToInt32(fields[fieldNames.IndexOf("srclen")]);
+            text.TextLength = Convert.ToInt32(fields[fieldNames.IndexOf("txtlen")]);
             text.FootNote = fields[fieldNames.IndexOf("footnote")];
             value = fields[fieldNames.IndexOf("footlen")];
             if (!string.IsNullOrEmpty(value))
-                text.FootLen = Convert.ToInt32(value); ;
+                text.FootLength = Convert.ToInt32(value); ;
             text.Context = fields[fieldNames.IndexOf("context")];
             text.Value = fields[fieldNames.IndexOf("value")];
             text.LineNumber = lineNumber;
