@@ -6,7 +6,7 @@ var edgarApp = angular.module('edgarApp', []);
 edgarApp.service('edgarServ', ['$http', edgarServ]);
 
 edgarApp.controller('indexCtrl', indexCtrl);
-indexCtrl.$inject = ['$scope', 'edgarServ'];
+indexCtrl.$inject = ['$scope','$interval', 'edgarServ'];
 
 
 

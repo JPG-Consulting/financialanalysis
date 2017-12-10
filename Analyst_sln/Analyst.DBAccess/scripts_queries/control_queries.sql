@@ -33,7 +33,7 @@ where 1=1
 	--AND cast([Date] as date) >= cast(SYSDATETIME() as date)
 	--and logger <> 'EdgarDatasetTagService'
 	--and Level <> 'DEBUG'
-	--and level in ('ERROR','FATAL')
+	and level in ('ERROR','FATAL')
 	--and level = 'INFO'
 	--and message like '%process dim.tsv%'
 	--AND Logger = 'EdgarDatasetNumService'
@@ -67,7 +67,7 @@ select name,count(1) cant from [dbo].[registrants] group by name having count(1)
 select DimensionH,count(1) cant from [dbo].[EdgarDatasetDimensions]  group by DimensionH having count(1) > 1;
 
 --check de subs sin relacion --> poner constraint FK
-select * from [dbo].[EdgarDatasetSubmissions] where EdgarDataset_Id is null;
+select * from [dbo].[EdgarDatasetSubmissions] where DatasetId is null;
 */
 
 

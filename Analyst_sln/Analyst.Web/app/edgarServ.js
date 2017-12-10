@@ -8,7 +8,7 @@
         var promise = $http({
             method: "GET",
             url: URL_SERVICE,
-            cache: true
+            cache: false
         });
         promise.success(
             function (data, status) {

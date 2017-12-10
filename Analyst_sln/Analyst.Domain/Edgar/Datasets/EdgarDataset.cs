@@ -103,6 +103,7 @@ namespace Analyst.Domain.Edgar.Datasets
             }
         }
 
+        [DataMember]
         public bool IsComplete
         {
             get

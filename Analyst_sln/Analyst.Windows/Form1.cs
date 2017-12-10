@@ -48,7 +48,7 @@ namespace Analyst.Windows
                 int id = Convert.ToInt32(lblDatasetInProcess.Text);
                 EdgarDataset ds = edsserv.GetDataset(id);
                 LoadDatasets(ds, bindingSourceDatasetInProcess);
-                if (ds.IsComplete() || !edsserv.IsRunning(id))
+                if (ds.IsComplete || !edsserv.IsRunning(id))
                 {
                     timer.Stop();
                     btnLoadDataset.Enabled = true;

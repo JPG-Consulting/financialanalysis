@@ -32,7 +32,7 @@ namespace Analyst.Web.Controllers
 
 
         [HttpGet]
-        [Route("readme")]
+        [Route("datasets/readme")]
         public ActionResult Readme()
         {
             return View("readme");
