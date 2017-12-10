@@ -142,7 +142,7 @@ namespace Analyst.Domain.Edgar
         /// ALPHANUMERIC (mmdd)
         /// Field name in the file: FYE
         /// </summary>
-        public short FiscalYearEndDate { get; set; }
+        public short? FiscalYearEndDate { get; set; }
 
 
     }

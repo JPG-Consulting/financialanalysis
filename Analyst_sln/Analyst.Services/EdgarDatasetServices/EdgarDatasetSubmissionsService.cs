@@ -108,7 +108,10 @@ namespace Analyst.Services.EdgarDatasetServices
                 r.FilerStatus = fields[fieldNames.IndexOf("afs")];
                 r.WellKnownSeasonedIssuer = fields[fieldNames.IndexOf("wksi")] == "1";
                 value = fields[fieldNames.IndexOf("fye")];
-                r.FiscalYearEndDate = Convert.ToInt16(value);
+                if (string.IsNullOrEmpty(value))
+                    r.FiscalYearEndDate = null;
+                else
+                    r.FiscalYearEndDate = Convert.ToInt16(value);
                 repository.Add(r);
             }
             return r;
