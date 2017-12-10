@@ -396,17 +396,10 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter DataSetId = new SqlParameter("@DataSetId", ds.Id);
             SqlParameter lineNumber = new SqlParameter("@LineNumber", ren.LineNumber);
 
-            try
-            {
-                Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETRENDERS_INSERT " +
-                    "@Report, @MenuCategory, @ShortName, @LongName, @Roleuri, @ParentRoleuri, @ParentReport, @UltimateParentReport, @Submission_Id, @DataSetId, @LineNumber",
-                    Report, MenuCategory, ShortName, LongName, Roleuri, ParentRoleuri, ParentReport, UltimateParentReport, Submission_Id, DataSetId, lineNumber
-                    );
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
+            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETRENDERS_INSERT " +
+                "@Report, @MenuCategory, @ShortName, @LongName, @Roleuri, @ParentRoleuri, @ParentReport, @UltimateParentReport, @Submission_Id, @DataSetId, @LineNumber",
+                Report, MenuCategory, ShortName, LongName, Roleuri, ParentRoleuri, ParentReport, UltimateParentReport, Submission_Id, DataSetId, lineNumber
+                );
         }
 
         public void Add(EdgarDataset ds, EdgarDatasetPresentation pre)

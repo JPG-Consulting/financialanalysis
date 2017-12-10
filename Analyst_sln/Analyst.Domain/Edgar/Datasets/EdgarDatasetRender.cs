@@ -58,7 +58,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// The space-normalized text of the XBRL link "definition" element content.
         /// </summary>
-        [StringLength(255)]
+        [StringLength(300)]
         public string LongName{ get; set; }
 
         /// <summary>
