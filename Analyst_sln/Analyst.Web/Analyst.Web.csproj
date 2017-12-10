@@ -183,10 +183,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\angular-simple-pagination.js" />
+    <Content Include="app\edgarApp.js" />
+    <Content Include="app\indexCtrl.js" />
+    <Content Include="app\edgarServ.js" />
     <Content Include="Global.asax" />
     <Content Include="config\log4net\debug.config" />
+    <Content Include="index_unittests.html" />
+    <Content Include="scripts\angular.min.js.map" />
+    <Content Include="Views\Edgar\Home.cshtml" />
     <None Include="Views\Edgar\readme.cshtml" />
     <Content Include="index.html" />
+    <Content Include="scripts\angular-mocks.js" />
+    <Content Include="scripts\angular.js" />
+    <Content Include="scripts\angular.min.js" />
+    <Content Include="styles\angular-simple-pagination.css" />
+    <Content Include="styles\bootstrap.min.css" />
+    <Content Include="styles\global.css" />
+    <Content Include="styles\tests_style.css" />
     <Content Include="Views\Edgar\readme.css" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -194,6 +208,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfiguration\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\EdgarApiController.cs" />
     <Compile Include="Controllers\EdgarController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -217,8 +232,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Analyst.DBAccess\Analyst.DBAccess.csproj">

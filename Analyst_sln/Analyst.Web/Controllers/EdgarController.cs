@@ -1,6 +1,5 @@
 ﻿using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
-using Analyst.Services;
 using Analyst.Services.EdgarDatasetServices;
 using Analyst.Services.EdgarServices;
 using System;
@@ -10,58 +9,41 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace Analyst.Web.Controllers
-{ 
-
+{
     [RoutePrefix("edgar")]
     public class EdgarController : Controller
     {
-        
+
         private IEdgarService edgarService;
         private IEdgarDatasetService datasetService;
 
-        public EdgarController(IEdgarService edgarService,IEdgarDatasetService datasetService)
+        public EdgarController(IEdgarService edgarService, IEdgarDatasetService datasetService)
         {
             this.edgarService = edgarService;
             this.datasetService = datasetService;
         }
 
         [HttpGet]
-        [Route("datasets/all")]
-        public ActionResult GetAllDatasets()
+        [Route("home")]
+        public ActionResult Index()
         {
-            IList<EdgarDataset> datasets = datasetService.GetDatasets();
-            return View("Datasets", datasets);
-
+            return View("Home");
         }
 
+
         [HttpGet]
-        [Route("datasets/readme")]
-        public ActionResult GetReadme()
+        [Route("readme")]
+        public ActionResult Readme()
         {
             return View("readme");
         }
 
-        [Route("datasets/process",Name = "processds")]
-        public ActionResult ProcessDataset(int id)
-        {
-            datasetService.ProcessDataset(id);
-            IList<EdgarDataset> datasets = datasetService.GetDatasets();
-            return View("Datasets", datasets);
-        }
-
-        [Route("datasets/getdetails",Name= "dsdetails")]
-        public ActionResult GetDatasetDetails(int id)
-        {
-            EdgarDataset ds = datasetService.GetDataset(id);
-            return View("DatasetDetail", id);
-        }
-
         [HttpGet]
         [Route("secforms")]
-        public ActionResult GetSECForms()
+        public ActionResult GetSecForms()
         {
             IList<SECForm> forms = edgarService.GetSECForms();
-            return View("SECForms", forms);
+            return View("SECForms",forms);
         }
 
         [HttpGet]
@@ -69,7 +51,15 @@ namespace Analyst.Web.Controllers
         public ActionResult GetSICs()
         {
             IList<SIC> sics = edgarService.GetSICs();
-            return View("SICs", sics);
+            return View("SICs",sics);
+        }
+
+        [HttpGet]
+        [Route("datasets/all")]
+        public ActionResult GetDatasets()
+        {
+            IList<EdgarDataset> datasets = datasetService.GetDatasets();
+            return View("Datasets",datasets);
         }
     }
 }

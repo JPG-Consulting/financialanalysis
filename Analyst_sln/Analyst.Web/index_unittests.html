@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html ng-app="axaApp">
+<head>
+    <meta charset="utf-8" />
+    <title>AngularJS test</title>
+
+    <!-- Jasmine dependencies -->
+    <link data-require="jasmine" data-semver="2.0.0" rel="stylesheet" href="//cdn.jsdelivr.net/jasmine/2.0.0/jasmine.css" />
+    <script data-require="jasmine" data-semver="2.0.0" src="//cdn.jsdelivr.net/jasmine/2.0.0/jasmine.js"></script>
+    <script data-require="jasmine" data-semver="2.0.0" src="//cdn.jsdelivr.net/jasmine/2.0.0/jasmine-html.js"></script>
+    <script data-require="jasmine@*" data-semver="2.0.0" src="//cdn.jsdelivr.net/jasmine/2.0.0/boot.js"></script>
+
+    <!-- Angular dependencies -->
+    <script data-require="angular.js" data-semver="1.4.9" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.9/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.9/angular-route.js"></script>
+    <script data-require="angular-mocks" data-semver="1.4.9" src="https://code.angularjs.org/1.4.9/angular-mocks.js"></script>
+
+    <!-- Application -->
+    <script src="app/service.js"></script>
+    <script src="app/angular-simple-pagination.js"></script>
+    <script src="app/indexCtrl.js"></script>
+    <script src="app/app.js"></script>
+
+    <!-- Tests + Jasmine Bootstrap -->
+    <link rel="stylesheet" href="styles/tests_style.css" />
+    <script src="app_test/appSpec.js"></script>
+    <script src="app_test/jasmineBootstrap.js"></script>
+</head>
+<body>
+    
+    <div ng-view></div>
+    <div id="HTMLReporter" class="jasmine_reporter"></div>
+</body>
+</html>
+

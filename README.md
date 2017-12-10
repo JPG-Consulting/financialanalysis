@@ -25,3 +25,22 @@ Falta:
 			EBT - Taxes = RdoNeto
 		5) Pensar que otros multiplos puedo calcular
 
+		10) Used frameworks:
+			Angular 
+				version 1.4.9
+
+			Bootstrap 
+				version 4.0.0-beta
+				It is used for styling.
+
+			Angular simple pagination
+				version 1.0.5
+				https://www.npmjs.com/package/angular-simple-pagination
+				It's under MIT License (https://spdx.org/licenses/MIT.html)
+				It is used to reuse standard behaviors.
+
+			Jasmine 
+				version 2.0
+				It is used for unit testing
+			
+

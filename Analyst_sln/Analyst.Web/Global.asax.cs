@@ -8,6 +8,8 @@ using System.Web.Security;
 using System.Web.SessionState;
 using System.Web.Http;
 using Analyst.Web.App_Start.UnityConfiguration;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Analyst.Web
 {
@@ -24,6 +26,11 @@ namespace Analyst.Web
             UnityConfig.RegisterComponents();
 
             log4net.Config.XmlConfigurator.Configure();
+            /*
+            JsonSerializerSettings serializerSettings = GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings;
+            DefaultContractResolver contractResolver = (DefaultContractResolver)serializerSettings.ContractResolver;
+            contractResolver.IgnoreSerializableAttribute = true;
+            */
         }
     }
 }
