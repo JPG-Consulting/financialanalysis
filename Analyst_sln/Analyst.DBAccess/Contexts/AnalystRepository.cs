@@ -457,39 +457,46 @@ namespace Analyst.DBAccess.Contexts
 
         public void Add(EdgarDataset dataset, EdgarDatasetText file)
         {
-            SqlParameter LineNumber = new SqlParameter("@LineNumber", file.LineNumber);
-            SqlParameter DatavalueEnddate = new SqlParameter("@DatavalueEnddate", file.DatavalueEnddate);
-            SqlParameter CountOfNumberOfQuarters = new SqlParameter("@CountOfNumberOfQuarters", file.CountOfNumberOfQuarters);
-            SqlParameter Iprx = new SqlParameter("@Iprx", file.Iprx);
-            SqlParameter Language = new SqlParameter("@Language", file.Language);
-            SqlParameter Dcml = new SqlParameter("@Dcml", file.Dcml);
-            SqlParameter Durp = new SqlParameter("@Durp", file.Durp);
-            SqlParameter Datp = new SqlParameter("@Datp", file.Datp);
-            SqlParameter DimensionNumber = new SqlParameter("@DimensionNumber", file.DimensionNumber);
-            if (!file.DimensionNumber.HasValue)
-                DimensionNumber.Value = DBNull.Value;
-            SqlParameter CoRegistrant;
-            if (!string.IsNullOrEmpty(file.CoRegistrant))
-                CoRegistrant = new SqlParameter("@CoRegistrant", file.CoRegistrant);
-            else
-                CoRegistrant = new SqlParameter("@CoRegistrant", DBNull.Value);
-            SqlParameter Escaped = new SqlParameter("@Escaped", file.Escaped);
-            SqlParameter SourceLength = new SqlParameter("@SourceLength", file.SourceLength);
-            SqlParameter TextLength = new SqlParameter("@TextLength", file.TextLength);
-            SqlParameter FootNote = new SqlParameter("@FootNote", file.FootNote);
-            SqlParameter FootLength = new SqlParameter("@FootLength", file.FootLength);
-            if (!file.FootLength.HasValue)
-                FootLength.Value = DBNull.Value;
-            SqlParameter paramContext = new SqlParameter("@Context", file.Context);
-            SqlParameter Value = new SqlParameter("@Value", file.Value);
-            SqlParameter Dimension_Id = new SqlParameter("@Dimension_Id", file.DimensionId);
-            SqlParameter Submission_Id = new SqlParameter("@Submission_Id", file.SubmissionId);
-            SqlParameter Tag_Id = new SqlParameter("@Tag_Id", file.TagId);
-            SqlParameter DatasetId = new SqlParameter("@DatasetId", dataset.Id);
+            try
+            {
+                SqlParameter LineNumber = new SqlParameter("@LineNumber", file.LineNumber);
+                SqlParameter DatavalueEnddate = new SqlParameter("@DatavalueEnddate", file.DatavalueEnddate);
+                SqlParameter CountOfNumberOfQuarters = new SqlParameter("@CountOfNumberOfQuarters", file.CountOfNumberOfQuarters);
+                SqlParameter Iprx = new SqlParameter("@Iprx", file.Iprx);
+                SqlParameter Language = new SqlParameter("@Language", file.Language);
+                SqlParameter Dcml = new SqlParameter("@Dcml", file.Dcml);
+                SqlParameter Durp = new SqlParameter("@Durp", file.Durp);
+                SqlParameter Datp = new SqlParameter("@Datp", file.Datp);
+                SqlParameter DimensionNumber = new SqlParameter("@DimensionNumber", file.DimensionNumber);
+                if (!file.DimensionNumber.HasValue)
+                    DimensionNumber.Value = DBNull.Value;
+                SqlParameter CoRegistrant;
+                if (!string.IsNullOrEmpty(file.CoRegistrant))
+                    CoRegistrant = new SqlParameter("@CoRegistrant", file.CoRegistrant);
+                else
+                    CoRegistrant = new SqlParameter("@CoRegistrant", DBNull.Value);
+                SqlParameter Escaped = new SqlParameter("@Escaped", file.Escaped);
+                SqlParameter SourceLength = new SqlParameter("@SourceLength", file.SourceLength);
+                SqlParameter TextLength = new SqlParameter("@TextLength", file.TextLength);
+                SqlParameter FootNote = new SqlParameter("@FootNote", file.FootNote);
+                SqlParameter FootLength = new SqlParameter("@FootLength", file.FootLength);
+                if (!file.FootLength.HasValue)
+                    FootLength.Value = DBNull.Value;
+                SqlParameter paramContext = new SqlParameter("@Context", file.Context);
+                SqlParameter Value = new SqlParameter("@Value", file.Value);
+                SqlParameter Dimension_Id = new SqlParameter("@Dimension_Id", file.DimensionId);
+                SqlParameter Submission_Id = new SqlParameter("@Submission_Id", file.SubmissionId);
+                SqlParameter Tag_Id = new SqlParameter("@Tag_Id", file.TagId);
+                SqlParameter DatasetId = new SqlParameter("@DatasetId", dataset.Id);
 
-            Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTEXT_INSERT " +
-                "@LineNumber, @DatavalueEnddate, @CountOfNumberOfQuarters, @Iprx, @Language, @Dcml, @Durp, @Datp, @DimensionNumber, @CoRegistrant, @Escaped, @SourceLength, @TextLength, @FootNote, @FootLength, @Context, @Value, @Dimension_Id, @Submission_Id, @Tag_Id, @DatasetId",
-                LineNumber, DatavalueEnddate, CountOfNumberOfQuarters, Iprx, Language, Dcml, Durp, Datp, DimensionNumber, CoRegistrant, Escaped, SourceLength, TextLength, FootNote, FootLength, paramContext, Value, Dimension_Id, Submission_Id, Tag_Id, DatasetId);
+                Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETTEXT_INSERT " +
+                    "@LineNumber, @DatavalueEnddate, @CountOfNumberOfQuarters, @Iprx, @Language, @Dcml, @Durp, @Datp, @DimensionNumber, @CoRegistrant, @Escaped, @SourceLength, @TextLength, @FootNote, @FootLength, @Context, @Value, @Dimension_Id, @Submission_Id, @Tag_Id, @DatasetId",
+                    LineNumber, DatavalueEnddate, CountOfNumberOfQuarters, Iprx, Language, Dcml, Durp, Datp, DimensionNumber, CoRegistrant, Escaped, SourceLength, TextLength, FootNote, FootLength, paramContext, Value, Dimension_Id, Submission_Id, Tag_Id, DatasetId);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
        }
 
         #endregion

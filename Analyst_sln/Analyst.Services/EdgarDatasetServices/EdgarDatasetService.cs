@@ -4,6 +4,7 @@ using Analyst.Domain.Edgar.Datasets;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -277,8 +278,10 @@ namespace Analyst.Services.EdgarDatasetServices
                 presentationService.Nums = nums;
                 presentationService.Texts = texts;
                 log.Info("Datasetid " + ds.Id.ToString() + " -- starting  presentationService.Process(...)");
-                presentationService.Process(statePre, true, EdgarDatasetPresentation.FILE_NAME, "Presentations"); //parallel execution
-                //presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");//sequential execution
+                if(ConfigurationManager.AppSettings["run_pre_in_parallel"] == "true")
+                    presentationService.Process(statePre, true, EdgarDatasetPresentation.FILE_NAME, "Presentations"); //parallel execution
+                else
+                    presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");//sequential execution
             }
             ));
             Task.WaitAll(tasks.ToArray());

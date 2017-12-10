@@ -8,7 +8,7 @@
     ,@Durp real
     ,@Datp real
     ,@DimensionNumber smallint
-    ,@CoRegistrant int
+    ,@CoRegistrant  varchar(256)
     ,@Escaped bit
     ,@SourceLength int
     ,@TextLength int

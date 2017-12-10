@@ -54,7 +54,6 @@ namespace Analyst.Services.EdgarDatasetServices
             0001163302-16-000148	1	3	CP	0	H	DocumentPeriodEndDate	dei/2014	terseLabel	Document Period End Date	0
             0001125345-17-000041	6	1	CF	0	H	NetCashProvidedByUsedInOperatingActivitiesContinuingOperationsAbstract	us-gaap/2015	terseLabel	Operating activities	0
             0001104659-17-016575	111	6		0	H	NetCashProvidedByUsedInOperatingActivitiesContinuingOperationsAbstract	us-gaap/2015	terseLabel	Cash flows from operating activities:	0
-            Datasetid 201701 -- pre.tsv -- range: 1 to 5229396 -- line[18096]: The parameterized query '(@ReportNumber int,@Line int,@FinancialStatement nvarchar(4000),' expects the parameter '@Number_Id', which was not supplied.
             ...
             */
             try
