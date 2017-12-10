@@ -26,11 +26,7 @@ namespace Analyst.Web
             UnityConfig.RegisterComponents();
 
             log4net.Config.XmlConfigurator.Configure();
-            /*
-            JsonSerializerSettings serializerSettings = GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings;
-            DefaultContractResolver contractResolver = (DefaultContractResolver)serializerSettings.ContractResolver;
-            contractResolver.IgnoreSerializableAttribute = true;
-            */
+            
         }
     }
 }

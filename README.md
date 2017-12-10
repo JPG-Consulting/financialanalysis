@@ -8,6 +8,12 @@ Falta:
 				forms
 				registrants
 			- login con token
+			- Api controller:
+				andan ok
+					http://localhost:1326/edgar_api/datasets/all
+					http://localhost:1326/edgar_api/datasets/getdetails?id=201701
+					http://localhost:1326/edgar_api/secforms
+					http://localhost:1326/edgar_api/sics
 		* que si el archivo no esta avise, no son tantos como para automatizar la descarga
 		* que haga unzip y cree la carpeta correspondiente
 		
