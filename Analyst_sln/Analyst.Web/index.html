@@ -24,11 +24,16 @@
     <form name="myForm" ng-controller="indexCtrl">
         <main class="container">
             <h1>Message: {{ model.message }}</h1>
-
+            <br />
+            <p ng-bind-html="model.errorMessage">asdf</p>
+            <p>Error:<br /> {{ model.errorMessage }}</p>
+            <hr />
             <section class="col pt-5">
                 <input type="button" ng-click="startMonitorinDatasets_click()" value="Start monitoring datasets" />
                 &nbsp;
                 <input type="button" ng-click="stopMonitorinDatasets_click()" value="Stop monitoring datasets" />
+                <br />
+                <input type="button" ng-click="showDatasets_click()" value="Show datasets" />
                 <br />
 
                 <a href="edgar/datasets/readme">EDGAR Dataset Readme --> It's the explanation of all source files</a>
@@ -70,6 +75,9 @@
                             <div ng-show="dataset.IsComplete">
                                 Completed
                             </div>
+                        </td>
+                        <td>
+                            <div id="lblMsg{{dataset.id}}"></div>
                         </td>
                     </tr>
                 </table>

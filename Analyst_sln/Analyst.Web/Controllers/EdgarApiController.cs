@@ -64,9 +64,9 @@ namespace Analyst.Web.Controllers
             return Ok(sics);
         }
 
-
+        [HttpPost]
         [Route("datasets/process", Name = "processds")]
-        public IHttpActionResult ProcessDataset(int id)
+        public IHttpActionResult ProcessDataset([FromBody]int id)
         {
             datasetService.ProcessDataset(id);
             IList<EdgarDataset> datasets = datasetService.GetDatasets();

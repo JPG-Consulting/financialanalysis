@@ -9,32 +9,21 @@ function indexCtrl($scope,$interval, serv) {
     var stop;
     $scope.startMonitorinDatasets_click = function () {
         $scope.model.message = "mostrar datasets";
-        /*
-        serv.getDatasets(
-            function (datasets) {
-                $scope.model.datasets = datasets;
-            }
-        );
-        */
-
-
+        
         // Don't start a new fight if we are already fighting
         if (angular.isDefined(stop))
             return;
         $scope.model.monitoringDatasets = true;
         stop = $interval(function () {
             serv.getDatasets(
+                //sucess callback
                 function (rawDatasets) {
                     $scope.model.datasets = rawDatasets;
-                    /*
-                    var datasets = new Array(rawDatasets.length);
-                    for (var i = 0; i < rawDatasets.length;i++)
-                    {
-                        datasets = getPercentageDataset(rawDatasets[i]);
-                    }
-                    $scope.model.datasets = datasets;
-                    */
                     $scope.model.datasetsMessage = "Executing at: " + (new Date());
+                },
+                //error callback
+                function (response) {
+                    $scope.model.errorMessage = response;
                 }
             );
             
@@ -54,8 +43,40 @@ function indexCtrl($scope,$interval, serv) {
         $scope.stopFight();
     });
 
+    $scope.showDatasets_click = function()
+    {
+        serv.getDatasets(
+                //sucess callback
+                function (rawDatasets) {
+                    $scope.model.datasets = rawDatasets;
+                    $scope.model.datasetsMessage = "Executing at: " + (new Date());
+                },
+                //error callback
+                function (response) {
+                    $scope.model.errorMessage = response;
+                }
+            );
+    }
+
     $scope.processDataset = function (dsId) {
         $scope.model.message = "get dataset id: " + dsId;
+        serv.processDataset(dsId, processDatasetCallbackSuccess, processDatasetCallbackError);
+    }
+
+    var processDatasetCallbackSuccess = function (data, status, headers, config) {
+        //alert("processDataset_sucesscallback: " + data);
+        //$scope.model.message = data;
+        $scope.model.message = "Process started";
+        $scope.model.datasets = data;
+    }
+
+    var processDatasetCallbackError = function (data, status, header, config) {
+        $scope.model.errorMessage =
+            "Message: " + data.data.Message + "<br>" +
+            "Message detail: " + data.data.MessageDetail + "<br>" +
+            "status: " + status + "<br>" +
+            "headers: " + header + "<br>" +
+            "config: " + config;
     }
 
    ///////////////////////////////////////////

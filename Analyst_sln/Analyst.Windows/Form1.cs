@@ -4,6 +4,7 @@ using Analyst.Services.EdgarDatasetServices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -92,7 +93,7 @@ namespace Analyst.Windows
             int datasetId = GetSelectedDatasetId();
             string dataset = (datasetId / 100).ToString() + "q" + (datasetId % 100).ToString();
 
-            string cacheFolder = @"E:\_analyst\http_sec_gov--edgar cache\files\dera\data\financial-statement-and-notes-data-sets";
+            string cacheFolder = ConfigurationManager.AppSettings["cache_folder"] +  @"\files\dera\data\financial-statement-and-notes-data-sets";
 
             string pathSource = string.Format(cacheFolder + @"\{0}_notes", dataset);
             string pathDestination = string.Format(cacheFolder + @"\{0}_notes--copy", dataset);
@@ -200,6 +201,8 @@ namespace Analyst.Windows
         {
             string sourceFile = pathSource + "\\" + filename + ".tsv";
             string targetFile = pathDestination + "\\" + filename + ".tsv";
+            if (!Directory.Exists(pathDestination))
+                Directory.CreateDirectory(pathDestination);
             StreamReader srS = File.OpenText(sourceFile);
             StreamWriter srT = new StreamWriter(targetFile);
             string header = srS.ReadLine();
