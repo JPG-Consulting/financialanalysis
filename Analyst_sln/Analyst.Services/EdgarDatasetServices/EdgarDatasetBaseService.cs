@@ -98,7 +98,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        public void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
+        public virtual void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
         {
             try
             {
@@ -176,7 +176,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        private void UpdateTotal(EdgarTaskState state,string fieldToUpdate,int value)
+        protected void UpdateTotal(EdgarTaskState state,string fieldToUpdate,int value)
         {
             string field = "Total" + fieldToUpdate;
             int currentValue = (int)state.Dataset.GetType().GetProperty(field).GetValue(state.Dataset);
@@ -187,7 +187,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        private void WriteFailedLines(string filepath, string header, ConcurrentDictionary<int,string> failedLines,int totalLines)
+        protected void WriteFailedLines(string filepath, string header, ConcurrentDictionary<int,string> failedLines,int totalLines)
         {
             if(failedLines.Count > 0)
             {
@@ -206,7 +206,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        private bool IsAlreadyProcessed(EdgarDataset ds, string fieldToUpdate)
+        protected bool IsAlreadyProcessed(EdgarDataset ds, string fieldToUpdate)
         {
             using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
             {
@@ -235,6 +235,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 //It improves performance
                 //https://msdn.microsoft.com/en-us/library/jj556205(v=vs.113).aspx
                 repo.ContextConfigurationAutoDetectChangesEnabled = false;
+                repo.ContextConfigurationValidateOnSaveEnabled = false;
                 try
                 {
                     List<string> fieldNames = header.Split('\t').ToList();
@@ -275,6 +276,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 finally
                 {
                     repo.ContextConfigurationAutoDetectChangesEnabled = true;
+                    repo.ContextConfigurationValidateOnSaveEnabled = true;
                 }
             }
             watch.Stop();

@@ -18,6 +18,7 @@ namespace Analyst.DBAccess.Contexts
     public interface IAnalystRepository:IDisposable
     {
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
+        bool ContextConfigurationValidateOnSaveEnabled { get; set; }
 
         IList<T> Get<T>() where T:IEdgarEntity;
         
@@ -59,7 +60,7 @@ namespace Analyst.DBAccess.Contexts
         
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
         List<int> GetMissingLines(int id, string table);
-        
+        void ExecuteBulkInsert(string table, string fileToInsert, string fIELD_SEPARATOR, string lINE_SEPARATOR);
     }
 
     public class AnalystRepository : IAnalystRepository
@@ -84,6 +85,12 @@ namespace Analyst.DBAccess.Contexts
         {
             get { return Context.Configuration.AutoDetectChangesEnabled; }
             set { Context.Configuration.AutoDetectChangesEnabled = value; }
+        }
+
+        public bool ContextConfigurationValidateOnSaveEnabled
+        {
+            get { return Context.Configuration.ValidateOnSaveEnabled; }
+            set { Context.Configuration.ValidateOnSaveEnabled = value; }
         }
 
         #region Get methods
@@ -495,6 +502,30 @@ namespace Analyst.DBAccess.Contexts
 
         #endregion
 
+
+        public void ExecuteBulkInsert(string table, string fileToInsert, string fieldSeparator, string lineSeparator)
+        {
+            //another option
+            //https://www.codeproject.com/Articles/439843/Handling-BULK-Data-insert-from-CSV-to-SQL-Server
+
+            string command =
+                "BULK INSERT " + table + " " +
+                "FROM '" + fileToInsert + "' " +
+                "WITH ( " +
+                    "FIRSTROW = 1," +
+                    "FIELDTERMINATOR = '" + fieldSeparator + "', " +
+                    "ROWTERMINATOR = '" + lineSeparator + "'" +
+                ");";
+            try
+            {
+                Context.Database.ExecuteSqlCommand(command);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
         public void Dispose()
         {
             if (this.Context != null)
