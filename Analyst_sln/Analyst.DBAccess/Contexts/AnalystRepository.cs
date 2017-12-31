@@ -59,7 +59,7 @@ namespace Analyst.DBAccess.Contexts
         
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
         List<int> GetMissingLines(int id, string table);
-        
+        void EnablePresentationIndexes(bool enable);
     }
 
     public class AnalystRepository : IAnalystRepository
@@ -105,7 +105,7 @@ namespace Analyst.DBAccess.Contexts
 
         public EdgarDataset GetDataset(int id)
         {
-            EdgarDataset ds = Context.DataSets.Single(x => x.Id == id);
+            EdgarDataset ds = Context.DataSets.Where(x => x.Id == id).SingleOrDefault();
             return ds;
         }
 
@@ -505,6 +505,12 @@ namespace Analyst.DBAccess.Contexts
         {
             Context.Entry<EdgarDataset>(dataset).Property(property).IsModified = true;
             Context.SaveChanges();
+        }
+
+        public void EnablePresentationIndexes(bool enable)
+        {
+            SqlParameter enableParam = new SqlParameter("@enable", enable);
+            Context.Database.ExecuteSqlCommand("exec SP_DISABLE_PRESENTATION_INDEXES @enable", enableParam);
         }
 
     }

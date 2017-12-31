@@ -33,7 +33,7 @@ where 1=1
 	--AND cast([Date] as date) >= cast(SYSDATETIME() as date)
 	--and logger <> 'EdgarDatasetTagService'
 	--and Level <> 'DEBUG'
-	and level in ('ERROR','FATAL')
+	--and level in ('ERROR','FATAL')
 	--and level = 'INFO'
 	--and message like '%process dim.tsv%'
 	--AND Logger = 'EdgarDatasetNumService'
@@ -45,7 +45,7 @@ order by date asc
 --select distinct exception from Log;
 
 /*
-delete from [dbo].[Log] 
+delete from [dbo].[Log]
 where level='DEBUG';
 */
 

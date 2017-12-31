@@ -8,6 +8,7 @@ using Analyst.DBAccess.Contexts;
 using System.Collections.Concurrent;
 using log4net;
 using Analyst.Domain.Edgar;
+using Analyst.Domain.Edgar.Exceptions;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -84,7 +85,16 @@ namespace Analyst.Services.EdgarDatasetServices
                     pre.RenderFile = fields[fieldNames.IndexOf("rfile")][0];
                     string tag = fields[fieldNames.IndexOf("tag")];
                     string version = fields[fieldNames.IndexOf("version")];
-                    pre.TagId = Tags[tag + version];
+                    if(Tags.ContainsKey(tag+version))
+                        pre.TagId = Tags[tag + version];
+                    else
+                    {
+                        string tag2 = Encoding.GetEncoding(1252).GetString(Encoding.GetEncoding("iso-8859-7").GetBytes(tag));
+                        if (Tags.ContainsKey(tag + version))
+                            pre.TagId = Tags[tag + version];
+                        else
+                            throw new EdgarLineException(EdgarDatasetPresentation.FILE_NAME, lineNumber, "Error retrieving key: " + tag + version);
+                    }
                     pre.PreferredLabelXBRLLinkRole = fields[fieldNames.IndexOf("prole")];
                     pre.PreferredLabel = fields[fieldNames.IndexOf("plabel")];
                     pre.Negating = !(fields[fieldNames.IndexOf("negating")] == "0");
@@ -118,6 +128,19 @@ namespace Analyst.Services.EdgarDatasetServices
         public override string GetKey(List<string> fieldNames, List<string> fields)
         {
             throw new NotImplementedException();
+        }
+
+        public override void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate)
+        {
+            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            {
+                repo.EnablePresentationIndexes(false);
+            }
+            base.Process(state, processInParallel, fileToProcess, fieldToUpdate);
+            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            {
+                repo.EnablePresentationIndexes(true);
+            }
         }
     }
 }

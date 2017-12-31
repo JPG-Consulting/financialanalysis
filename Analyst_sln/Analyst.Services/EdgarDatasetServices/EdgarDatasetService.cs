@@ -131,47 +131,55 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 try
                 {
-                    Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                    log.Info("Datasetid " + id.ToString() + " -- BEGIN dataset process");
                     EdgarDataset ds = repository.GetDataset(id);
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    ////BEGIN PROCESS
+                    if (ds != null)
+                    {
 
-                    //Load Submissions, Tags and Dimensions
-                    EdgarTaskState[] states = LoadSubTagDim(ds, repository);
-                    ManageErrors(states);
+                        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        ////BEGIN PROCESS
+                        Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+                        log.Info("Datasetid " + id.ToString() + " -- BEGIN dataset process");
 
-                    //Retrieve all tags, submissions and dimensions to fill the relationship
-                    //Load Calculations, Texts and Numbers
-                    log.Info("Datasetid " + id.ToString() + " -- loading all tags for LoadCalTxtNum(...)");
-                    ConcurrentDictionary <string, int> tags = tagService.GetAsConcurrent(id);
-                    log.Info("Datasetid " + id.ToString() + " -- loading all subs for LoadCalTxtNum(...)");
-                    ConcurrentDictionary<string, int> subs = submissionService.GetAsConcurrent(id);
-                    log.Info("Datasetid " + id.ToString() + " -- loading all dims for LoadCalTxtNum(...)");
-                    ConcurrentDictionary<string, int> dims = dimensionService.GetAsConcurrent(id);
-                    log.Info("Datasetid " + id.ToString() + " -- Starting LoadCalTxtNum(...)");
-                    states = LoadCalTxtNum(ds, repository, subs, tags, dims);
-                    ManageErrors(states);
-                    log.Info("Datasetid " + id.ToString() + " -- releasing memory for dims");
-                    dims = null;
-                    
-                    //Load Presentations and Renders
-                    log.Info("Datasetid " + id.ToString() + " -- loading all nums for LoadRenPre(...)");
-                    ConcurrentDictionary<string, int> nums = numService.GetAsConcurrent(id);
-                    log.Info("Datasetid " + id.ToString() + " -- loading all txt for LoadRenPre(...)");
-                    ConcurrentDictionary<string, int> txts = textService.GetAsConcurrent(id);
-                    log.Info("Datasetid " + id.ToString() + " -- Starting LoadRenPre(...)");
-                    states = LoadRenPre(ds, repository, subs, tags, nums, txts);
-                    ManageErrors(states);
-                    
-                    ////END PROCESS
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        //Load Submissions, Tags and Dimensions
+                        EdgarTaskState[] states = LoadSubTagDim(ds, repository);
+                        ManageErrors(states);
 
-                    watch.Stop();
-                    TimeSpan ts = watch.Elapsed;
-                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",ts.Hours, ts.Minutes, ts.Seconds,ts.Milliseconds / 10);
-                    log.Info("Datasetid " + id.ToString() + " -- END dataset process -- time: " + elapsedTime);
-                    
+                        //Retrieve all tags, submissions and dimensions to fill the relationship
+                        //Load Calculations, Texts and Numbers
+                        log.Info("Datasetid " + id.ToString() + " -- loading all tags for LoadCalTxtNum(...)");
+                        ConcurrentDictionary<string, int> tags = tagService.GetAsConcurrent(id);
+                        log.Info("Datasetid " + id.ToString() + " -- loading all subs for LoadCalTxtNum(...)");
+                        ConcurrentDictionary<string, int> subs = submissionService.GetAsConcurrent(id);
+                        log.Info("Datasetid " + id.ToString() + " -- loading all dims for LoadCalTxtNum(...)");
+                        ConcurrentDictionary<string, int> dims = dimensionService.GetAsConcurrent(id);
+                        log.Info("Datasetid " + id.ToString() + " -- Starting LoadCalTxtNum(...)");
+                        states = LoadCalTxtNum(ds, repository, subs, tags, dims);
+                        ManageErrors(states);
+                        log.Info("Datasetid " + id.ToString() + " -- releasing memory for dims");
+                        dims = null;
+
+                        //Load Presentations and Renders
+                        log.Info("Datasetid " + id.ToString() + " -- loading all nums for LoadRenPre(...)");
+                        ConcurrentDictionary<string, int> nums = numService.GetAsConcurrent(id);
+                        log.Info("Datasetid " + id.ToString() + " -- loading all txt for LoadRenPre(...)");
+                        ConcurrentDictionary<string, int> txts = textService.GetAsConcurrent(id);
+                        log.Info("Datasetid " + id.ToString() + " -- Starting LoadRenPre(...)");
+                        states = LoadRenPre(ds, repository, subs, tags, nums, txts);
+                        ManageErrors(states);
+
+                        ////END PROCESS
+                        //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                        watch.Stop();
+                        TimeSpan ts = watch.Elapsed;
+                        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                        log.Info("Datasetid " + id.ToString() + " -- END dataset process -- time: " + elapsedTime);
+
+                    }
+                    else
+                    {
+                        log.Fatal("Datasetid " + id.ToString() + " does not exists");
+                    }
                 }
                 catch(Exception ex)
                 {

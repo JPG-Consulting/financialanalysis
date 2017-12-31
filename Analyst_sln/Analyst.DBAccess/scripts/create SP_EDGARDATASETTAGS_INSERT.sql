@@ -27,8 +27,8 @@ GO
 */  
 CREATE PROCEDURE dbo.SP_EDGARDATASETTAGS_INSERT
 	@DataSetId int
-	,@Tag varchar(256)
-	,@Version varchar(20)
+	,@Tag nvarchar(256)
+	,@Version nvarchar(20)
     ,@Custom bit
     ,@Abstract bit
     ,@Datatype nvarchar(max)

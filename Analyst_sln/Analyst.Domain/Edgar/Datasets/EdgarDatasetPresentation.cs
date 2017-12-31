@@ -41,7 +41,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// (CP = Cover Page, BS = Balance Sheet, IS = Income Statement, CF = Cash Flow, EQ = Equity, CI = Comprehensive Income, UN = Unclassifiable Statement).
         /// </summary>
         [StringLength(2)]
-        [Required]
+        //[Required]//Readme.html says that it can't be null, but it's null in some cases
         public string FinancialStatement{ get; set; }
 
         /// <summary>

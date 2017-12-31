@@ -98,7 +98,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        public void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
+        public virtual void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
         {
             try
             {
@@ -245,7 +245,7 @@ namespace Analyst.Services.EdgarDatasetServices
                     {
                         try
                         {
-                            Log.Debug(rangeMsg + " -- parsing line: " + i.ToString());
+                            Log.Debug(rangeMsg + " -- parsing[" + i.ToString() + "]: " + line);
                             line = allLines[i];
                             if (!string.IsNullOrEmpty(line))
                             {

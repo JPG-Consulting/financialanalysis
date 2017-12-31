@@ -35,7 +35,6 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// Tag used by the filer
         /// </summary>
-        [Column(TypeName = "VARCHAR")]
         [StringLength(256)]
         [Required]
         public string Tag { get; set; }
@@ -43,7 +42,6 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// If a standard tag, the taxonomy of origin, otherwise equal to adsh.
         /// </summary>
-        [Column(TypeName = "VARCHAR")]
         [StringLength(20)]
         [Required]
         public string Version { get; set; }

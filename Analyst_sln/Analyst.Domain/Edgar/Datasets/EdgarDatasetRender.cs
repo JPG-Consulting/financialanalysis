@@ -51,14 +51,14 @@ namespace Analyst.Domain.Edgar.Datasets
         /// The portion of the long name used in the renderer menu.
         /// </summary>
         [Required]
-        [StringLength(255)]
+        [StringLength(500)]
         public string ShortName { get; set; }
 
 
         /// <summary>
         /// The space-normalized text of the XBRL link "definition" element content.
         /// </summary>
-        [StringLength(300)]
+        [StringLength(500)]
         public string LongName{ get; set; }
 
         /// <summary>
