@@ -23,7 +23,8 @@ function indexCtrl($scope,$interval, serv) {
                 },
                 //error callback
                 function (response) {
-                    $scope.model.errorMessage = response;
+                    $scope.message = "Error startMonitorinDatasets_click";
+                    $scope.model.errorMessage = response.data;
                 }
             );
             
@@ -53,7 +54,8 @@ function indexCtrl($scope,$interval, serv) {
                 },
                 //error callback
                 function (response) {
-                    $scope.model.errorMessage = response;
+                    $scope.model.message = "Error in showDatasets_click";
+                    $scope.model.errorMessage = response.data;
                 }
             );
     }
