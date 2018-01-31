@@ -1,94 +1,13 @@
 ﻿<!DOCTYPE html>
-<html lang="en" ng-app="edgarApp">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>{{model.Respuesta}}</title>
-    <script src="scripts/angular.js"></script>
-    <script src="app/edgarServ.js"></script>
-    <script src="app/indexCtrl.js"></script>
-    <!--<script src="app/angular-simple-pagination.js"></script>-->
-    <link rel="stylesheet" type="text/css" href="styles/global.css">
-    <link rel="stylesheet" type="text/css" href="styles/angular-simple-pagination.css" />
-    <link rel="stylesheet" href="styles/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-
+    <title></title>
+	<meta charset="utf-8" />
 </head>
 <body>
-    <script src="app/edgarApp.js"></script>
-    <header>
-        <nav class="navbar navbar-light bg-light">
-            <a class="navbar-brand">
-                <span class="navbar-text"> Backend  </span>
-            </a>
-        </nav>
-    </header>
-    <form name="myForm" ng-controller="indexCtrl">
-        <main class="container">
-            <h1>Message: {{ model.message }}</h1>
-            <br />
-            <div>{{model.errorMessage}}</div>
-            <br />
-            <hr />
-            <section class="col pt-5">
-                <input type="button" ng-click="startMonitorinDatasets_click()" value="Start monitoring datasets" />
-                &nbsp;
-                <input type="button" ng-click="stopMonitorinDatasets_click()" value="Stop monitoring datasets" />
-                <br />
-                <input type="button" ng-click="showDatasets_click()" value="Show datasets" />
-                <br />
-
-                <a href="edgar/datasets/readme">EDGAR Dataset Readme --> It's the explanation of all source files</a>
-                <br />
-                <a href="edgar/secforms">SEC Forms</a>
-                <br />
-                <a href="edgar/sics">SIC Codes</a>
-            </section>
-            <!--<section class="col" ng-show="monitoringDatasets">-->
-            <section class="col">
-                <table class="table table-hover">
-                    <tr>
-                        <td><strong>Dataset</strong></td>
-                        <td><strong>Submissions</strong></td>
-                        <td><strong>Tags</strong></td>
-                        <td><strong>Dimensions</strong></td>
-                        <td><strong>Numbers</strong></td>
-                        <td><strong>Calculations</strong></td>
-                        <td><strong>Texts</strong></td>
-                        <td><strong>Renders</strong></td>
-                        <td><strong>Presentations</strong></td>
-                        <td><strong>Run</strong></td>
-                    </tr>
-              
-                    <tr ng-repeat="dataset in model.datasets | limitTo:pagingSettings.pageLimit:pagingSettings.offset" ng-click="selectDataset(dataset.id);">
-                        <td>{{dataset.Year }} - {{dataset.Quarter}}</td>
-                        <td>{{ dataset.TotalSubmissions == 0 ? 0.00 : dataset.ProcessedSubmissions / dataset.TotalSubmissions * 100 | number: 4 }} %</td>
-                        <td>{{ dataset.TotalTags == 0 ? 0.00 : dataset.ProcessedTags / dataset.TotalTags * 100 | number: 4 }} %</td>
-                        <td>{{ dataset.TotalDimensions == 0 ? 0.00 : dataset.ProcessedDimensions / dataset.TotalDimensions * 100 | number: 4 }} %</td>
-                        <td>{{ dataset.TotalNumbers == 0 ? 0.00 : dataset.ProcessedNumbers / dataset.TotalNumbers * 100 | number: 4 }} %</td>
-                        <td>{{ dataset.TotalCalculations == 0 ? 0.00 : dataset.ProcessedCalculations / dataset.TotalCalculations * 100 | number: 4 }} %</td>
-                        <td>{{ dataset.TotalTexts == 0 ? 0.00 : dataset.ProcessedTexts / dataset.TotalTexts * 100 | number: 4 }} %</td>
-                        <td>{{ dataset.TotalRenders == 0 ? 0.00 : dataset.ProcessedRenders / dataset.TotalRenders * 100 | number: 4 }} %</td>
-                        <td>{{ dataset.TotalPresentations == 0 ? 0.00 : dataset.ProcessedPresentations / dataset.TotalPresentations * 100 | number: 4 }} %</td>
-                        <td>
-                            <div ng-show="!dataset.IsComplete">
-                                <input type="button" value="Run" ng-click="processDataset(dataset.Id)" />
-                            </div>
-                            <div ng-show="dataset.IsComplete">
-                                Completed
-                            </div>
-                        </td>
-                        <td>
-                            <div id="lblMsg{{dataset.id}}"></div>
-                        </td>
-                    </tr>
-                </table>
-                <pre>{{model.datasetsMessage}}</pre>
-                <br />
-                <div style="height:300px;width:700px;overflow-y:scroll" ng-show="false">
-                    <pre>raw data = {{model.datasets | json}}</pre>
-                </div>
-                <br />
-            </section>
-        </main>
-    </form>
+    <a href="spa_datasets.html">Datasets status</a>
+    <br />
+    <br />
+    <a href="spa_screen_analyze_trade.html">Screen --> Analyze --> Trade</a>
 </body>
 </html>

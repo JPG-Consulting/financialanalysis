@@ -72,17 +72,6 @@ namespace Analyst.Windows
             LoadDatasets();
         }
 
-        private void btnGenerateMissingLines_Click(object sender, EventArgs e)
-        {
-            int datasetID = GetSelectedDatasetId();
-            string table = cboTables.SelectedItem.ToString();
-            using (IEdgarDatasetService serv = CreateEdgarDatasetService())
-            {
-                serv.WriteMissingFiles(datasetID, table);
-            }
-            MessageBox.Show("Finished");
-        }
-
         private void btnFilterSubmissions_Click(object sender, EventArgs e)
         {
             //string key = "0001163302";//cik = 1163302; --> UNITED STATES STEEL CORP

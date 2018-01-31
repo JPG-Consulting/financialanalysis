@@ -202,16 +202,18 @@
   <ItemGroup>
     <Content Include="app\angular-simple-pagination.js" />
     <Content Include="app\edgarApp.js" />
-    <Content Include="app\indexCtrl.js" />
+    <Content Include="app\spaDatasetsCtrl.js" />
     <Content Include="app\edgarServ.js" />
     <Content Include="Global.asax" />
     <Content Include="config\log4net\debug.config" />
-    <Content Include="index_unittests.html" />
+    <Content Include="index.html" />
+    <Content Include="spa_datasets_unittests.html" />
+    <Content Include="spa_screen_analyze_trade.html" />
     <Content Include="scripts\angular.min.js.map" />
     <Content Include="Views\Edgar\Home.cshtml" />
     <None Include="Properties\PublishProfiles\analyst local.pubxml" />
     <None Include="Views\Edgar\readme.cshtml" />
-    <Content Include="index.html" />
+    <Content Include="spa_datasets.html" />
     <Content Include="scripts\angular-mocks.js" />
     <Content Include="scripts\angular.js" />
     <Content Include="scripts\angular.min.js" />

@@ -23,6 +23,8 @@ namespace Analyst.Services.EdgarDatasetServices
         private string processName;
         public string ProcessName { get { return processName; } }
 
+        public string FileNameToReprocess { get; set; }
+
         public EdgarTaskState(string processName ,EdgarDataset ds,IAnalystRepository dsRepo)
         {
             this.ds = ds;

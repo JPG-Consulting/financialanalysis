@@ -8,6 +8,7 @@ using Analyst.DBAccess.Contexts;
 using System.Collections.Concurrent;
 using log4net;
 using Analyst.Domain.Edgar;
+using System.Data;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -40,7 +41,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetCalculation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
+        public override EdgarDatasetCalculation Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             try
             {
@@ -75,6 +76,26 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public override string GetKey(List<string> fieldNames, List<string> fields)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
         {
             throw new NotImplementedException();
         }

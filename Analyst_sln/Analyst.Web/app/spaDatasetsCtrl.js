@@ -1,12 +1,15 @@
 ﻿///////////////////////////////////////////////////////////////////////////////////
 //Controller
 
-function indexCtrl($scope,$interval, serv) {
+function spaDatasetsCtrl($scope, $interval, serv) {
     $scope.model = new Object();
 
-    $scope.model.Respuesta = "Backend EDGAR";
+    $scope.model.Title = "EDGAR datasets status";
     
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    //Timer
     var stop;
+    var seconds = 10;
     $scope.startMonitorinDatasets_click = function () {
         $scope.model.message = "mostrar datasets";
         
@@ -28,7 +31,7 @@ function indexCtrl($scope,$interval, serv) {
                 }
             );
             
-        }, 1000);
+        }, seconds * 1000);
     }
 
     $scope.stopMonitorinDatasets_click = function () {
@@ -44,6 +47,8 @@ function indexCtrl($scope,$interval, serv) {
         $scope.stopFight();
     });
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    //Show datasets
     $scope.showDatasets_click = function()
     {
         serv.getDatasets(
@@ -60,7 +65,9 @@ function indexCtrl($scope,$interval, serv) {
             );
     }
 
-    $scope.processDataset = function (dsId) {
+    //////////////////////////////////////////////////////////////////////////////////////////////////
+    //Process datasets
+    $scope.processDataset_click = function (dsId) {
         $scope.model.message = "get dataset id: " + dsId;
         serv.processDataset(dsId, processDatasetCallbackSuccess, processDatasetCallbackError);
     }
@@ -80,8 +87,20 @@ function indexCtrl($scope,$interval, serv) {
             "headers: " + header + "<br>" +
             "config: " + config;
     }
+    //////////////////////////////////////////////////////////////////////////////////////////////////
 
-   ///////////////////////////////////////////
+    
+    $scope.progressNumberStyle = function (value) {
+        var iValue = parseInt(value);
+        if (iValue == 100)
+            return { color: 'green' };
+        else if (0 < iValue && iValue < 100)
+            return { color: 'red' };
+        else
+            return { color: 'grey' };
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////
     //Paging
     /*
     var setPaging = function (currentPage) {

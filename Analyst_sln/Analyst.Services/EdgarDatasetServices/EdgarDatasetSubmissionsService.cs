@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using log4net;
 using System.Globalization;
+using System.Data;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -34,11 +35,10 @@ namespace Analyst.Services.EdgarDatasetServices
         }
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetSubmission file)
         {
-            if(file.Id <= 0)
-                repo.Add(dataset, file);
+            repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetSubmission Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
+        public override EdgarDatasetSubmission Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             //Example
             //adsh	cik	name	sic	countryba	stprba	cityba	zipba	bas1	bas2	baph	countryma	stprma	cityma	zipma	mas1	mas2	countryinc	stprinc	ein	former	changed	afs	wksi	fye	form	period	fy	fp	filed	accepted	prevrpt	detail	instance	nciks	aciks	pubfloatusd	floatdate	floataxis	floatmems
@@ -46,43 +46,40 @@ namespace Analyst.Services.EdgarDatasetServices
 
             EdgarDatasetSubmission sub;
             string adsh = fields[fieldNames.IndexOf("adsh")];
-            if (existing.ContainsKey(adsh))
-                sub = repository.GetSubmission(adsh);
-            else
-            {
-                sub = new EdgarDatasetSubmission();
-                sub.ADSH = adsh;
 
-                sub.Registrant = ParseRegistrant(repository, fields[fieldNames.IndexOf("cik")], fieldNames, fields);
+            sub = new EdgarDatasetSubmission();
+            sub.ADSH = adsh;
 
-                sub.Form = repository.GetSECForm(fields[fieldNames.IndexOf("form")]);
+            sub.Registrant = ParseRegistrant(repository, fields[fieldNames.IndexOf("cik")], fieldNames, fields);
 
-                string period = fields[fieldNames.IndexOf("period")];
-                sub.Period = new DateTime(int.Parse(period.Substring(0, 4)), int.Parse(period.Substring(4, 2)), int.Parse(period.Substring(6, 2)));
+            sub.Form = repository.GetSECForm(fields[fieldNames.IndexOf("form")]);
 
-                sub.Detail = fields[fieldNames.IndexOf("period")] == "1";
+            string period = fields[fieldNames.IndexOf("period")];
+            sub.Period = new DateTime(int.Parse(period.Substring(0, 4)), int.Parse(period.Substring(4, 2)), int.Parse(period.Substring(6, 2)));
 
-                sub.XBRLInstance = fields[fieldNames.IndexOf("instance")];
+            sub.Detail = fields[fieldNames.IndexOf("period")] == "1";
 
-                sub.NumberOfCIKs = int.Parse(fields[fieldNames.IndexOf("nciks")]);
+            sub.XBRLInstance = fields[fieldNames.IndexOf("instance")];
 
-                string value = fields[fieldNames.IndexOf("aciks")];
-                sub.AdditionalCIKs = String.IsNullOrEmpty(value) ? null : value;
+            sub.NumberOfCIKs = int.Parse(fields[fieldNames.IndexOf("nciks")]);
 
-                value = fields[fieldNames.IndexOf("pubfloatusd")];
-                sub.PublicFloatUSD = string.IsNullOrEmpty(value) ? (float?)null : float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
+            string value = fields[fieldNames.IndexOf("aciks")];
+            sub.AdditionalCIKs = String.IsNullOrEmpty(value) ? null : value;
 
-                string floatdate = fields[fieldNames.IndexOf("floatdate")];
-                sub.FloatDate = String.IsNullOrEmpty(floatdate) ? (DateTime?)null : new DateTime(int.Parse(floatdate.Substring(0, 4)), int.Parse(floatdate.Substring(4, 2)), int.Parse(floatdate.Substring(6, 2)));
+            value = fields[fieldNames.IndexOf("pubfloatusd")];
+            sub.PublicFloatUSD = string.IsNullOrEmpty(value) ? (float?)null : float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
 
-                value = fields[fieldNames.IndexOf("floataxis")];
-                sub.FloatAxis = String.IsNullOrEmpty(value) ? null : value;
+            string floatdate = fields[fieldNames.IndexOf("floatdate")];
+            sub.FloatDate = String.IsNullOrEmpty(floatdate) ? (DateTime?)null : new DateTime(int.Parse(floatdate.Substring(0, 4)), int.Parse(floatdate.Substring(4, 2)), int.Parse(floatdate.Substring(6, 2)));
 
-                value = fields[fieldNames.IndexOf("floatmems")];
-                sub.FloatMems = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
+            value = fields[fieldNames.IndexOf("floataxis")];
+            sub.FloatAxis = String.IsNullOrEmpty(value) ? null : value;
 
-                sub.LineNumber = lineNumber;
-            }
+            value = fields[fieldNames.IndexOf("floatmems")];
+            sub.FloatMems = string.IsNullOrEmpty(value) ? (int?)null : int.Parse(value);
+
+            sub.LineNumber = lineNumber;
+            
             return sub;
         }
 
@@ -124,6 +121,26 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public override string GetKey(List<string> fieldNames, List<string> fields)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
         {
             throw new NotImplementedException();
         }

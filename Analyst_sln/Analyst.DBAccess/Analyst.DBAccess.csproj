@@ -74,6 +74,7 @@
     <Compile Include="Contexts\AnalystContextInitializer.cs" />
     <Compile Include="Contexts\AnalystRepository.cs" />
     <Compile Include="Contexts\InitialLoader.cs" />
+    <Compile Include="Contexts\SQLAnalystRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +121,7 @@
     <Content Include="scripts_queries\duplicated analys num record.sql" />
     <Content Include="scripts_queries\duplicated analys tag record.sql" />
     <Content Include="scripts_queries\duplicated analys txt record.sql" />
+    <Content Include="scripts_queries\performance analysis presentations.sql" />
     <Content Include="scripts_queries\recreation_script.sql" />
     <Content Include="scripts\create SP_EDGARDATASETTAGS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

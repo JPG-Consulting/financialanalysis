@@ -52,3 +52,30 @@ print 'assigning db_owner to analyst_usr'
 EXEC sp_addrolemember N'db_owner', N'analyst_usr'
 
 print 'end'
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+--delete all tables instead of recraete the entire DB
+/*
+[dbo].[EdgarDatasetPresentations]
+[dbo].[EdgarDatasetRenders]
+[dbo].[EdgarDatasetCalculations]
+[dbo].[EdgarDatasetTexts]
+[dbo].[EdgarDatasetNumbers]
+[dbo].[EdgarDatasetTags]
+[dbo].[EdgarDatasetDimensions]
+[dbo].[EdgarDatasetSubmissions]
+[dbo].[EdgarDatasets]
+[dbo].[Registrants]
+[dbo].[SECForms]
+[dbo].[SICs]
+[dbo].[Log]
+[dbo].[__MigrationHistory]
+
+--faltan todos los SP
+*/
+
+
+
+
+
+

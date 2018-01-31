@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using log4net;
 using Analyst.Domain.Edgar;
+using System.Data;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -47,7 +48,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetNumber Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
+        public override EdgarDatasetNumber Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             /*
             Ejemplo
@@ -140,6 +141,32 @@ namespace Analyst.Services.EdgarDatasetServices
             string Version = fields[fieldNames.IndexOf("version")];
             
             return ADSH + TagStr + Version;
+        }
+
+        public override ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
+        {
+            List<int> missing;
+            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            {
+                missing = repo.GetMissingLines(datasetId, "EdgarDatasetNumbers", totalLines);
+            }
+            ConcurrentBag<int> bag = new ConcurrentBag<int>(missing);
+            return bag;
+        }
+
+        public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        {
+            throw new NotImplementedException();
         }
     }
 }

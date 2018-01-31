@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,9 +19,8 @@ namespace Analyst.Services.EdgarDatasetServices
     public interface IEdgarDatasetBaseService<T>: IDisposable where T :class, IEdgarDatasetFile
     {
         ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId);
-        void Process(EdgarTaskState state, bool processInParallel, string fileToProcess, string fieldToUpdate);
-
-        void WriteMissingLines(EdgarDataset ds, string table);
+        void Process(EdgarTaskState state,bool processBulk, bool processInParallel, string fileToProcess, string fieldToUpdate);
+       
     }
 
     public abstract class EdgarDatasetBaseService<T>: IEdgarDatasetBaseService<T> where T:class,IEdgarDatasetFile
@@ -55,111 +55,33 @@ namespace Analyst.Services.EdgarDatasetServices
             return ret;
         }
 
-        public void WriteMissingLines(EdgarDataset ds, string table)
-        {
-            string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
-            string filepath = cacheFolder + ds.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\" + table + ".tsv";
-            string[] allLines = File.ReadAllLines(filepath);
-            string[] missing = new string[allLines.Length];
-            string header = allLines[0];
-            missing[0] = header;
+ 
 
-            List<int> missingLinenumbers = GetMissingLines(ds.Id, table);
-            List<string> fieldNames = header.Split('\t').ToList();
-            int i = 1;//first line,index 0, is the header
-            int j = 0;
-            while(j < missingLinenumbers.Count && i<allLines.Length)
-            {
-                if (i+1 == missingLinenumbers[j])
-                {
-                    missing[i] = allLines[i];
-                    j++;
-                }
-                else
-                    missing[i] = "";
-                i++;
-            }
-
-
-            StreamWriter sw = File.CreateText(filepath + "_missing_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv");
-            foreach (string s in missing)
-            {
-                sw.WriteLine(s);
-            }
-            sw.Close();
-
-        }
-
-        private List<int> GetMissingLines(int id, string table)
-        {
-            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
-            {
-                return repo.GetMissingLines(id, table);
-            }
-        }
-
-        public virtual void Process(EdgarTaskState state,bool processInParallel, string fileToProcess,string fieldToUpdate)
+        public virtual void Process(EdgarTaskState state, bool processBulk, bool processInParallel, string fileToProcess,string fieldToUpdate)
         {
             try
             {
                 Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN process");
-                if (!IsAlreadyProcessed(state.Dataset, fieldToUpdate))
+                int processedLines;
+                if (!IsAlreadyProcessed(state.Dataset, fieldToUpdate,out processedLines))
                 {
                     string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
-                    string filepath = cacheFolder + state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\" + fileToProcess;
+                    string tsvFileName = state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\" + fileToProcess;
+                    string filepath = cacheFolder + tsvFileName;
                     string[] allLines = File.ReadAllLines(filepath);
                     string header = allLines[0];
 
-                    UpdateTotal(state,fieldToUpdate, allLines.Length - 1);
+                    UpdateTotalField(state,fieldToUpdate, allLines.Length - 1);
 
-                    ConcurrentDictionary<string, int> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
-                    /*
-                    getasconcurrent puede traer todos y es muy pesado
-
-                    Opcion 1:
-                        seguir usandolo 
-                        ConcurrentDictionary<string, int> existing = this.GetAsConcurrent(state.Dataset.Id);//go to DB once and check item per item to exists to avoid duplicates, process can be stopped and resumed
-
-                    Opcion 2:
-                        usar la query de numeros para traer los EXISTENTES (linenumber != null en vez linenumber is null)
-                            where 1=1
-                                ?? (linnumber is null ?? @filter ='missing)
-                                ?? (linnumber is not null ?? @filter = 'existing')
-                        
-                        creo un array del tamaño total y uso el numero de linea como indice,
-                        es decir, regenero el total pero con null en los no procesados
-                        vuelvo a recorrer el array
-                        solo habria que agregar la validacion: allLines[i] != null
-
-                    ------------------------------------------------------------------------------------
-                    lo del filtro, lo puedo replicar para los get...keys porque son todos iguales
-                    seria un union gigantesco
-                    */
-
-                    ConcurrentDictionary<int, string> failedLines = new ConcurrentDictionary<int, string>();
-                    if (processInParallel && allLines.Length > 1)
-                    {
-                        //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
-
-                        // Partition the entire source array.
-                        OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(1, allLines.Length);
-
-                        // Loop over the partitions in parallel.
-                        Parallel.ForEach(rangePartitioner, (range, loopState) =>
-                        {
-                            ProcessRange(fileToProcess, state, range, allLines, header, existing, failedLines);
-                        });
-                        
-                    }
+                    if (processBulk)
+                        ProcessBulk(fileToProcess,fieldToUpdate, state, allLines, header);
                     else
-                    {
-                        ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header, existing, failedLines);
-                    }
-                    WriteFailedLines(filepath, header, failedLines,allLines.Length);
+                        ProcessLineByLine(processedLines,fileToProcess, fieldToUpdate, state, allLines, header,cacheFolder,tsvFileName, processInParallel);
                 }
                 else
                 {
+                    state.FileNameToReprocess = null;
                     Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- The complete file is already processed");
                 }
                 
@@ -173,12 +95,82 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 state.ResultOk = false;
                 state.Exception = new EdgarDatasetException(fileToProcess,ex);
+                Log.Fatal("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Error: " + ex.Message, ex);
             }
         }
 
-        private void UpdateTotal(EdgarTaskState state,string fieldToUpdate,int value)
+        public void ProcessLineByLine(int processedLines, string fileToProcess, string fieldToUpdate, EdgarTaskState state, string[] allLines,string header, string cacheFolder, string tsvFileName,bool processInParallel)
         {
-            string field = "Total" + fieldToUpdate;
+            ConcurrentBag<int> missing;
+            if (processedLines == 0)
+            {
+                missing = null;
+            }
+            else
+            {
+                missing = GetMissingLines(state.Dataset.Id, allLines.Length - 1);
+            }
+
+            ConcurrentDictionary<int, string> failedLines = new ConcurrentDictionary<int, string>();
+            if (processInParallel && allLines.Length > 1)
+            {
+                //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/custom-partitioners-for-plinq-and-tpl?view=netframework-4.5.2
+
+                // Partition the entire source array.
+                OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(1, allLines.Length);
+
+                // Loop over the partitions in parallel.
+                Parallel.ForEach(rangePartitioner, (range, loopState) =>
+                {
+                    ProcessRange(fileToProcess, state, range, allLines, header, missing, failedLines);
+                });
+
+            }
+            else
+            {
+                ProcessRange(fileToProcess, state, new Tuple<int, int>(1, allLines.Length), allLines, header, missing, failedLines);
+            }
+            state.FileNameToReprocess = WriteFailedLines(cacheFolder, tsvFileName, header, failedLines, allLines.Length);
+
+        }
+
+        private void ProcessBulk(string fileToProcess,string fieldToUpdate, EdgarTaskState state, string[] allLines, string header)
+        {
+            //https://msdn.microsoft.com/en-us/library/ex21zs8x(v=vs.110).aspx
+            //https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/transaction-and-bulk-copy-operations
+            using (SQLAnalystRepository repo = new SQLAnalystRepository(new AnalystContext()))
+            {
+                DataTable dt = GetEmptyDataTable(repo);
+                List<string> fieldNames = header.Split('\t').ToList();
+                //first line is the header
+                for (int i=1;i<allLines.Length;i++)
+                {
+                    string line = allLines[i];
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        List<string> fields = line.Split('\t').ToList();
+                        DataRow dr = dt.NewRow();
+                        Parse(fieldNames,fields, i + 1, dr,state.Dataset.Id);
+                        dt.Rows.Add(dr);
+                    }
+                }
+                BulkCopy(repo, dt);
+                UpdateProcessed(state, fieldToUpdate, dt.Rows.Count);
+            }
+        }
+
+        private void UpdateProcessed(EdgarTaskState state, string fieldToUpdate, int value)
+        {
+            UpdateField("Processed", fieldToUpdate, state, value);
+        }
+
+        private void UpdateTotalField(EdgarTaskState state, string fieldToUpdate, int value)
+        {
+            UpdateField("Total", fieldToUpdate, state, value);
+        }
+        private void UpdateField(string prefix, string fieldToUpdate, EdgarTaskState state, int value)
+        {
+            string field = prefix + fieldToUpdate;
             int currentValue = (int)state.Dataset.GetType().GetProperty(field).GetValue(state.Dataset);
             if (currentValue == 0)
             {
@@ -187,11 +179,14 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        private void WriteFailedLines(string filepath, string header, ConcurrentDictionary<int,string> failedLines,int totalLines)
+
+        private string WriteFailedLines(string folder,string fileName, string header, ConcurrentDictionary<int,string> failedLines,int totalLines)
         {
+            string newFileName = null;
             if(failedLines.Count > 0)
             {
-                StreamWriter sw = File.CreateText(filepath + "_failed_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv");
+                newFileName = fileName + "_failed_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv";
+                StreamWriter sw = File.CreateText(folder + newFileName);
                 sw.WriteLine(header);
                 for(int i=1;i<totalLines;i++)
                 {
@@ -204,20 +199,21 @@ namespace Analyst.Services.EdgarDatasetServices
                 }
                 sw.Close();
             }
+            return newFileName;
         }
 
-        private bool IsAlreadyProcessed(EdgarDataset ds, string fieldToUpdate)
+        private bool IsAlreadyProcessed(EdgarDataset ds, string fieldToUpdate, out int processed)
         {
             using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
             {
                 int savedInDb = repo.GetCount<T>();
-                int processed = (int)ds.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(ds);
+                processed = (int)ds.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(ds);
                 int total = (int)ds.GetType().GetProperty("Total" + fieldToUpdate).GetValue(ds);
                 return savedInDb == processed && processed == total && total != 0;
             }
         }
 
-        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header, ConcurrentDictionary<string, int> existing,ConcurrentDictionary<int,string> failedLines)
+        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header,ConcurrentBag<int> missing, ConcurrentDictionary<int,string> failedLines)
         {
             Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
             string rangeMsg = "Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- range: " + range.Item1 + " to " + range.Item2;
@@ -245,14 +241,28 @@ namespace Analyst.Services.EdgarDatasetServices
                     {
                         try
                         {
-                            Log.Debug(rangeMsg + " -- parsing[" + i.ToString() + "]: " + line);
-                            line = allLines[i];
-                            if (!string.IsNullOrEmpty(line))
+                            if (missing == null || missing.Contains(i+1))
                             {
-                                List<string> fields = line.Split('\t').ToList();
-                                T file = Parse(repo, fieldNames, fields, i + 1, existing);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
-                                Add(repo, state.Dataset, file);
+                                Log.Debug(rangeMsg + " -- parsing[" + i.ToString() + "]: " + line);
+                                line = allLines[i];
+                                if (!string.IsNullOrEmpty(line))
+                                {
+                                    List<string> fields = line.Split('\t').ToList();
+                                    T file = Parse(repo, fieldNames, fields, i + 1);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
+                                    Add(repo, state.Dataset, file);
+                                    int result;
+                                    missing.TryTake(out result);
+                                }
                             }
+                            else
+                            {
+                                if(missing.IsEmpty)
+                                {
+                                    Log.Info(rangeMsg + " -- missing collection is empty");
+                                    break;
+                                }
+                            }
+
                         }
                         catch(Exception ex)
                         {
@@ -286,13 +296,20 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public abstract void Add(IAnalystRepository repo, EdgarDataset dataset, T file);
-        public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing);
+
+        public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber);
      
         public abstract IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId);
 
         public abstract string GetKey(List<string> fieldNames, List<string> fields);
 
-        
+        public abstract void BulkCopy(SQLAnalystRepository repo, DataTable dt);
+
+        public abstract DataTable GetEmptyDataTable(SQLAnalystRepository repo);
+
+        public abstract void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId);
+
+        public abstract ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines);
 
         public void Dispose()
         {

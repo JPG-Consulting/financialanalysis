@@ -58,7 +58,7 @@ namespace Analyst.DBAccess.Contexts
         void Add(EdgarDataset dataset, EdgarDatasetText file);
         
         void UpdateEdgarDataset(EdgarDataset dataset, string v);
-        List<int> GetMissingLines(int id, string table);
+        List<int> GetMissingLines(int datasetId, string table, int totalLines);
         void EnablePresentationIndexes(bool enable);
     }
 
@@ -203,11 +203,12 @@ namespace Analyst.DBAccess.Contexts
         {
             return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_PRESENTATION_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
         }
-        public List<int> GetMissingLines(int id, string table)
+        public List<int> GetMissingLines(int datasetId, string table,int totalLines)
         {
-            SqlParameter paramid = new SqlParameter("@datasetid", id);
+            SqlParameter paramid = new SqlParameter("@datasetid", datasetId);
             SqlParameter paramtable = new SqlParameter("@table", table);
-            return Context.Database.SqlQuery<int>("exec GET_MISSING_LINE_NUMBERS @datasetid,@table", paramid, paramtable).ToList();
+            SqlParameter paramTotal = new SqlParameter("@totallines", totalLines);
+            return Context.Database.SqlQuery<int>("exec GET_MISSING_LINE_NUMBERS @datasetid,@table,@totalLines", paramid, paramtable,paramTotal).ToList();
         }
 
         private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity

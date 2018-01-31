@@ -12,6 +12,7 @@ using System.Web.Hosting;
 using System.Collections.Concurrent;
 using log4net;
 using Analyst.Domain.Edgar;
+using System.Data;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -47,7 +48,7 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override EdgarDatasetTag Parse(IAnalystRepository repository,List<string> fieldNames, List<string> fields, int linenumber, ConcurrentDictionary<string, int> existing)
+        public override EdgarDatasetTag Parse(IAnalystRepository repository,List<string> fieldNames, List<string> fields, int linenumber)
         {
             /*
             File content:
@@ -62,39 +63,32 @@ namespace Analyst.Services.EdgarDatasetServices
             string version = fields[fieldNames.IndexOf("version")];
 
             EdgarDatasetTag tag;
-            if(existing.ContainsKey(strTag+version))
-                tag = repository.GetTag(strTag, version);
-            else
-            {
-                tag = new EdgarDatasetTag();
-                tag.Tag = strTag;
-                tag.Version = version;
-                string value = fields[fieldNames.IndexOf("custom")];
-                tag.Custom = value == "1" ? true : false;
-                value = fields[fieldNames.IndexOf("abstract")];
-                tag.Abstract = value == "1" ? true : false;
-                value = fields[fieldNames.IndexOf("datatype")];
-                tag.Datatype = string.IsNullOrEmpty(value) ? null : value;
-                value = fields[fieldNames.IndexOf("iord")];
-                tag.ValueType = string.IsNullOrEmpty(value) ? (char?)null : value[0];
-                value = fields[fieldNames.IndexOf("crdr")];
-                tag.NaturalAccountingBalance = string.IsNullOrEmpty(value) ? (char?)null : value[0];
-                value = fields[fieldNames.IndexOf("tlabel")];
-                tag.LabelText = string.IsNullOrEmpty(value) ? null : value;
-                value = fields[fieldNames.IndexOf("doc")];
-                tag.Documentation = string.IsNullOrEmpty(value) ? null : value;
-                tag.LineNumber = linenumber;
-            }
+            tag = new EdgarDatasetTag();
+            tag.Tag = strTag;
+            tag.Version = version;
+            string value = fields[fieldNames.IndexOf("custom")];
+            tag.Custom = value == "1" ? true : false;
+            value = fields[fieldNames.IndexOf("abstract")];
+            tag.Abstract = value == "1" ? true : false;
+            value = fields[fieldNames.IndexOf("datatype")];
+            tag.Datatype = string.IsNullOrEmpty(value) ? null : value;
+            value = fields[fieldNames.IndexOf("iord")];
+            tag.ValueType = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+            value = fields[fieldNames.IndexOf("crdr")];
+            tag.NaturalAccountingBalance = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+            value = fields[fieldNames.IndexOf("tlabel")];
+            tag.LabelText = string.IsNullOrEmpty(value) ? null : value;
+            value = fields[fieldNames.IndexOf("doc")];
+            tag.Documentation = string.IsNullOrEmpty(value) ? null : value;
+            tag.LineNumber = linenumber;
+            
             return tag;
 
         }
 
         public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetTag file)
         {
-            if (file.Id == 0)
-            {
-                repo.AddTag(dataset, file);
-            }
+            repo.AddTag(dataset, file);
         }
 
         public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
@@ -103,6 +97,26 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public override string GetKey(List<string> fieldNames, List<string> fields)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
         {
             throw new NotImplementedException();
         }

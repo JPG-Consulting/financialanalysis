@@ -30,11 +30,10 @@ namespace Analyst.Services.EdgarDatasetServices
         EdgarDataset GetDataset(int id);
         bool IsRunning(int id);
         void ProcessDataset(int id);
-        void WriteMissingFiles(int datasetID, string table);
     }
     public class EdgarDatasetService: IEdgarDatasetService
     {
-
+        public const int MAX_TRIALS = 5;
         private static ConcurrentDictionary<int, Task> datasetsInProcess = new ConcurrentDictionary<int,Task>();
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly bool allowProcess;
@@ -205,17 +204,17 @@ namespace Analyst.Services.EdgarDatasetServices
 
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  submissionService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
-                submissionService.Process(stateSubs, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")//false --> to avoid to have too many threads
+                submissionService.Process(stateSubs,false, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")//false --> to avoid to have too many threads
             ));
 
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  tagService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
-                tagService.Process(stateTag,true, EdgarDatasetTag.FILE_NAME,"Tags")
+                tagService.Process(stateTag,false,true, EdgarDatasetTag.FILE_NAME,"Tags")
             ));
 
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  dimensionService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
-                dimensionService.Process(stateDim,false, EdgarDatasetDimension.FILE_NAME,"Dimensions")//false --> to avoid to have too many threads
+                dimensionService.Process(stateDim,false,false, EdgarDatasetDimension.FILE_NAME,"Dimensions")//false --> to avoid to have too many threads
             ));
             
             Task.WaitAll(tasks.ToArray());
@@ -234,7 +233,7 @@ namespace Analyst.Services.EdgarDatasetServices
             calcService.Tags = tags;
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  calcService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
-                calcService.Process(stateCalc, false, EdgarDatasetCalculation.FILE_NAME, "Calculations")) //false --> to avoid to have too many threads
+                calcService.Process(stateCalc,false, false, EdgarDatasetCalculation.FILE_NAME, "Calculations")) //false --> to avoid to have too many threads
             );
 
             //process text file
@@ -244,9 +243,15 @@ namespace Analyst.Services.EdgarDatasetServices
             textService.Submissions = subs;
             textService.Tags = tags;
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  textService.Process(...)");
-            tasks.Add(Task.Factory.StartNew(() => 
-                textService.Process(stateText, true, EdgarDatasetText.FILE_NAME, "Texts"))
-            );
+            tasks.Add(Task.Factory.StartNew(() =>
+            { 
+                textService.Process(stateText, false, true, EdgarDatasetText.FILE_NAME, "Texts");
+                for (int i = 0; i < MAX_TRIALS; i++)
+                {
+                    if(!string.IsNullOrEmpty(stateText.FileNameToReprocess))
+                        textService.Process(stateText, false, true, stateText.FileNameToReprocess, "Texts");
+                }
+            }));
             
             //Process num file
             EdgarTaskState stateNum = new EdgarTaskState(EdgarDatasetNumber.FILE_NAME, ds, repo);
@@ -256,7 +261,7 @@ namespace Analyst.Services.EdgarDatasetServices
             numService.Tags = tags;
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  numService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 
-                numService.Process(stateNum, true,EdgarDatasetNumber.FILE_NAME,"Numbers"))
+                numService.Process(stateNum,false, false,EdgarDatasetNumber.FILE_NAME,"Numbers"))
             );
 
             Task.WaitAll(tasks.ToArray());
@@ -278,7 +283,11 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 renderingService.Subs = subs;
                 log.Info("Datasetid " + ds.Id.ToString() + " -- starting  renderingService.Process(...)");
-                renderingService.Process(stateRen, true, EdgarDatasetRender.FILE_NAME, "Renders");//Presentations has a relationship to renders
+                //Presentations has a relationship to renders
+                if (ConfigurationManager.AppSettings["run_ren_bulk"] == "true")
+                    renderingService.Process(stateRen,true, true, EdgarDatasetRender.FILE_NAME, "Renders");
+                else
+                    renderingService.Process(stateRen, false, true, EdgarDatasetRender.FILE_NAME, "Renders");
                 presentationService.Subs = subs;
                 presentationService.Tags = tags;
                 log.Info("Datasetid " + ds.Id.ToString() + " -- loading all rens for presentationService.Process(...)");
@@ -286,10 +295,17 @@ namespace Analyst.Services.EdgarDatasetServices
                 presentationService.Nums = nums;
                 presentationService.Texts = texts;
                 log.Info("Datasetid " + ds.Id.ToString() + " -- starting  presentationService.Process(...)");
-                if(ConfigurationManager.AppSettings["run_pre_in_parallel"] == "true")
-                    presentationService.Process(statePre, true, EdgarDatasetPresentation.FILE_NAME, "Presentations"); //parallel execution
+                if (ConfigurationManager.AppSettings["run_pre_bulk"] == "true")
+                {
+                    presentationService.Process(statePre,true,false, EdgarDatasetPresentation.FILE_NAME, "Presentations");
+                }
                 else
-                    presentationService.Process(statePre, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");//sequential execution
+                {
+                    if (ConfigurationManager.AppSettings["run_pre_in_parallel"] == "true")
+                        presentationService.Process(statePre,false, true, EdgarDatasetPresentation.FILE_NAME, "Presentations"); //parallel execution
+                    else
+                        presentationService.Process(statePre,false, false, EdgarDatasetPresentation.FILE_NAME, "Presentations");//sequential execution
+                }
             }
             ));
             Task.WaitAll(tasks.ToArray());
@@ -326,13 +342,6 @@ namespace Analyst.Services.EdgarDatasetServices
                 repository = new AnalystRepository(new AnalystContext());
                 throw edex;
             }
-        }
-
-
-        public void WriteMissingFiles(int datasetID, string table)
-        {
-            EdgarDataset ds = GetDataset(datasetID);
-            numService.WriteMissingLines(ds, table);
         }
 
         public void Dispose()

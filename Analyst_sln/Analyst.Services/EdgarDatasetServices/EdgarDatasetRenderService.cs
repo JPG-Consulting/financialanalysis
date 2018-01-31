@@ -8,6 +8,7 @@ using Analyst.DBAccess.Contexts;
 using System.Collections.Concurrent;
 using log4net;
 using Analyst.Domain.Edgar;
+using System.Data;
 
 namespace Analyst.Services.EdgarDatasetServices
 {
@@ -36,7 +37,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset,file);
         }
 
-        public override EdgarDatasetRender Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber, ConcurrentDictionary<string, int> existing)
+        public override EdgarDatasetRender Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             /*
             adsh	report	rfile	menucat	shortname	longname	roleuri	parentroleuri	parentreport	ultparentrpt
@@ -70,6 +71,45 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
         public override string GetKey(List<string> fieldNames, List<string> fields)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        {
+            repo.BulkCopyRenders(dt);
+        }
+
+        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        {
+            return repo.GetEmptyRenderDataTable();
+        }
+
+        public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
+        {
+            
+            string adsh = fields[fieldNames.IndexOf("adsh")];
+            dr["SubmissionId"] = Subs[adsh];
+            dr["Report"] = Convert.ToInt32(fields[fieldNames.IndexOf("report")]);
+            string value = "";
+            //dr["RenderFile"] = fields[fieldNames.IndexOf("rfile")][0];//char datatypes are not mapped directly, it has to be mapped using string or fluent
+            dr["MenuCategory"] = fields[fieldNames.IndexOf("menucat")];
+            dr["ShortName"] = fields[fieldNames.IndexOf("shortname")];
+            dr["LongName"] = fields[fieldNames.IndexOf("longname")];
+            dr["RoleURI"] = fields[fieldNames.IndexOf("roleuri")];
+            dr["ParentRoleURI"] = fields[fieldNames.IndexOf("parentroleuri")];
+            value = fields[fieldNames.IndexOf("parentreport")];
+            if (!string.IsNullOrEmpty(value))
+                dr["ParentReport"] = Convert.ToInt32(value);
+            value = fields[fieldNames.IndexOf("ultparentrpt")];
+            if (!string.IsNullOrEmpty(value))
+                dr["UltimateParentReport"] = Convert.ToInt32(value);
+            dr["DatasetId"] = edgarDatasetId;
+            dr["LineNumber"] = lineNumber;
+
+        }
+
+        public override ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
         {
             throw new NotImplementedException();
         }
