@@ -11,8 +11,10 @@ namespace Analyst.DBAccess.Contexts
 {
     public class SQLAnalystRepository : AnalystRepository
     {
+        private log4net.ILog log;
         public SQLAnalystRepository(AnalystContext context) : base(context)
         {
+            log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
 
 
@@ -43,19 +45,25 @@ namespace Analyst.DBAccess.Contexts
         private void BulkCopy(string tableName, DataTable dt)
         {
             string strSize = ConfigurationManager.AppSettings["bulk_batch_size"];
-            int iSize;
+            string strTimeout = ConfigurationManager.AppSettings["bulk_timeout"];
+            int temp;
             
             using (SqlConnection conn = CreateBulkConnection())
             {
                 conn.Open();
                 using (SqlBulkCopy bulkCopy = new SqlBulkCopy(conn))
                 {
+                    if (int.TryParse(strTimeout, out temp))
+                        bulkCopy.BulkCopyTimeout = temp;
+                    else
+                        bulkCopy.BulkCopyTimeout = 60 * 60;//1 hour by default
+                    bulkCopy.SqlRowsCopied += BulkCopy_SqlRowsCopied;
                     bulkCopy.DestinationTableName = "dbo." + tableName;
 
                     try
                     {
-                        if (int.TryParse(strSize, out iSize))
-                            bulkCopy.BatchSize = iSize;
+                        if (int.TryParse(strSize, out temp))
+                            bulkCopy.BatchSize = temp;
                         bulkCopy.WriteToServer(dt);
                     }
                     catch (Exception ex)
@@ -69,6 +77,11 @@ namespace Analyst.DBAccess.Contexts
                 }
             }
 
+        }
+
+        private void BulkCopy_SqlRowsCopied(object sender, SqlRowsCopiedEventArgs e)
+        {
+            log.Info("Rows copied: " + e.RowsCopied);
         }
 
         public DataTable GetEmptyPresentationDataTable()

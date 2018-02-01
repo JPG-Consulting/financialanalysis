@@ -120,7 +120,7 @@ namespace Analyst.Services.EdgarDatasetServices
             throw new NotImplementedException();
         }
         
-        public override void Process(EdgarTaskState state, bool processBulk,bool processInParallel, string fileToProcess, string fieldToUpdate)
+        public void Process2(EdgarTaskState state, bool processBulk,bool processInParallel, string fileToProcess, string fieldToUpdate)
         {
             using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
             {
