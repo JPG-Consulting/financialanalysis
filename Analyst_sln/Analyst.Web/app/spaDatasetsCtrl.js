@@ -80,12 +80,18 @@ function spaDatasetsCtrl($scope, $interval, serv) {
     }
 
     var processDatasetCallbackError = function (data, status, header, config) {
-        $scope.model.errorMessage =
-            "Message: " + data.data.Message + "<br>" +
-            "Message detail: " + data.data.MessageDetail + "<br>" +
-            "status: " + status + "<br>" +
-            "headers: " + header + "<br>" +
-            "config: " + config;
+        if (data.data != undefined) {
+            $scope.model.errorMessage =
+                "Message: " + data.data.Message + "<br>" +
+                "Message detail: " + data.data.MessageDetail + "<br>" +
+                "status: " + status + "<br>" +
+                "headers: " + header + "<br>" +
+                "config: " + config;
+        }
+        else
+        {
+            $scope.model.errorMessage = data;
+        }
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////
 

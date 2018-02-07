@@ -1,13 +1,13 @@
 ﻿function edgarServ($http) {
     
-    var URL_SERVICE = "edgar_api/datasets/all"
-
+    var URL_GET_ALL = "edgar_api/datasets/all"
+    var URL_PROCESS = "edgar_api/datasets/process";
     ////////////////////////////////
     //Private
     var getPromise = function () {
         var promise = $http({
             method: "GET",
-            url: URL_SERVICE,
+            url: URL_GET_ALL,
             cache: false
         });
         promise.success(
@@ -45,7 +45,7 @@
         //post:
         //http://localhost:1326/edgar_api/datasets/process?id=201901
 
-        var url = '/edgar_api/datasets/process';
+        
         /*
         var req = {
             method: 'POST',
@@ -59,7 +59,7 @@
         $http(req).then(callbackSuccess, callbackError);
         */
 
-        $http.post(url, '"' + id + '"').success(callbackSuccess).error(callbackError);
+        $http.post(URL_PROCESS, '"' + id + '"').success(callbackSuccess).error(callbackError);
     };
 
 

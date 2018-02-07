@@ -19,7 +19,7 @@ namespace Analyst.Windows
     public partial class Form1 : Form
     {
         private const int SECONDS_REFRESH = 1;
-        private int? datasetIdInProcess;
+
         private BindingSource bindingSourceDatasets;
         private BindingSource bindingSourceDatasetInProcess;
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();

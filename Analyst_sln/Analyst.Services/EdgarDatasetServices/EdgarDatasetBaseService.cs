@@ -134,6 +134,17 @@ namespace Analyst.Services.EdgarDatasetServices
 
         }
 
+        public ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
+        {
+            List<int> missing;
+            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            {
+                missing = GetMissingLinesByTable(repo,datasetId, totalLines);
+            }
+            ConcurrentBag<int> bag = new ConcurrentBag<int>(missing);
+            return bag;
+        }
+
         private void ProcessBulk(string fileToProcess,string fieldToUpdate, EdgarTaskState state, string[] allLines, string header)
         {
             //https://msdn.microsoft.com/en-us/library/ex21zs8x(v=vs.110).aspx
@@ -241,17 +252,23 @@ namespace Analyst.Services.EdgarDatasetServices
                     {
                         try
                         {
+                            //It will be processed if:
+                            //it's the first time (missing == null) 
+                            //or it's processed again and line wasn't processed the firs time (missing.Contains(i+1))
                             if (missing == null || missing.Contains(i+1))
                             {
                                 Log.Debug(rangeMsg + " -- parsing[" + i.ToString() + "]: " + line);
                                 line = allLines[i];
-                                if (!string.IsNullOrEmpty(line))
+                                if (!string.IsNullOrEmpty(line))//files with error lines has an empty line for processed lines
                                 {
                                     List<string> fields = line.Split('\t').ToList();
                                     T file = Parse(repo, fieldNames, fields, i + 1);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
                                     Add(repo, state.Dataset, file);
-                                    int result;
-                                    missing.TryTake(out result);
+                                    if (missing != null)
+                                    {
+                                        int result;
+                                        missing.TryTake(out result);
+                                    }
                                 }
                             }
                             else
@@ -309,7 +326,10 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public abstract void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId);
 
-        public abstract ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines);
+
+
+        public abstract List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines);
+        
 
         public void Dispose()
         {

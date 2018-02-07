@@ -109,9 +109,9 @@ namespace Analyst.Services.EdgarDatasetServices
 
         }
 
-        public override ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
+        public override List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines)
         {
-            throw new NotImplementedException();
+            return repo.GetMissingLines(datasetId,"EdgarDatasetRenders", totalLines);
         }
     }
 }

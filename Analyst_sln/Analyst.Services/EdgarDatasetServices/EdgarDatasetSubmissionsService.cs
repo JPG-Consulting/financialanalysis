@@ -140,9 +140,9 @@ namespace Analyst.Services.EdgarDatasetServices
             throw new NotImplementedException();
         }
 
-        public override ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
+        public override List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines)
         {
-            throw new NotImplementedException();
+            return repo.GetMissingLines(datasetId,"EdgarDatasetSubmissions", totalLines);
         }
     }
 }

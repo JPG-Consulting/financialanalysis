@@ -143,15 +143,9 @@ namespace Analyst.Services.EdgarDatasetServices
             return ADSH + TagStr + Version;
         }
 
-        public override ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
+        public override List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines)
         {
-            List<int> missing;
-            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
-            {
-                missing = repo.GetMissingLines(datasetId, "EdgarDatasetNumbers", totalLines);
-            }
-            ConcurrentBag<int> bag = new ConcurrentBag<int>(missing);
-            return bag;
+            return repo.GetMissingLines(datasetId,"EdgarDatasetNumbers", totalLines);
         }
 
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)

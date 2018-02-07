@@ -143,8 +143,6 @@ namespace Analyst.DBAccess.Contexts
                 .HasForeignKey(fk => fk.DimensionId)
                 .WillCascadeOnDelete(false);
 
-            
-
         }
 
 

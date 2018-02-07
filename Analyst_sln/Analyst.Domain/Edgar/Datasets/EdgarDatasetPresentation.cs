@@ -74,8 +74,13 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public bool Negating { get; set; }
 
-        public char RenderFile { get; set; }
+        public char RenderFile {
+            get { return RenderFileStr[0]; }
+            set { RenderFileStr = value.ToString(); }
+        }
 
+        [StringLength(1)]
+        public string RenderFileStr { get; set; }
 
         public string Key
         {

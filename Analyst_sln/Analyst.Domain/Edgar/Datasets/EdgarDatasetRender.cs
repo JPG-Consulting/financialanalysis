@@ -37,8 +37,16 @@ namespace Analyst.Domain.Edgar.Datasets
         /// <summary>
         /// The type of interactive data file rendered on the EDGAR website, H = .htm file, X = .xml file.
         /// </summary>
+        public char RenderFile
+        {
+            get { return RenderFileStr[0]; }
+            set { RenderFileStr = value.ToString(); }
+        }
+
         [Required]
-        public char RenderFile { get; set; }
+        [StringLength(1)]
+        public string RenderFileStr { get; set; }
+
 
         /// <summary>
         /// If available, one of the menu categories as computed by the renderer: 

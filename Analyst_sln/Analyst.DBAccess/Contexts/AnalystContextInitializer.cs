@@ -37,7 +37,7 @@ namespace Analyst.DBAccess.Contexts
 
             context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Tag NVARCHAR(256) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
             context.Database.ExecuteSqlCommand("ALTER TABLE EdgarDatasetTags ALTER COLUMN Version NVARCHAR(20) COLLATE SQL_Latin1_General_CP1_CS_AS NOT NULL");
-            context.Database.ExecuteSqlCommand("CREATE UNIQUE INDEX IX_TagVersion ON EdgarDatasetTags (Tag, Version)");
+            context.Database.ExecuteSqlCommand("CREATE UNIQUE INDEX IX_TagVersion ON EdgarDatasetTags (Tag, Version,DatasetId)");
             context.Database.ExecuteSqlCommand(GetTextScript("alter column ADSH.sql"));
 
 

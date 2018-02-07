@@ -14,7 +14,7 @@ select id,
 	,cast(iif(totalnumbers != 0 ,cast(processednumbers as float)/cast(totalnumbers as float) *100,0)as nvarchar) + '%' nums
 	,cast(iif(TotalCalculations != 0 ,cast(ProcessedCalculations as float)/cast(TotalCalculations as float) *100,0)as nvarchar) + '%' calcs
 	,cast(iif(TotalTexts != 0 ,cast(ProcessedTexts as float)/cast(TotalTexts as float) *100,0)as nvarchar) + '%' texts
-from EdgarDatasets where id =@datasetid;
+from EdgarDatasets where id in(201701,201604);
 
 --select * from EdgarDatasets where id=@datasetid;
 
@@ -36,6 +36,8 @@ where 1=1
 	--and level in ('ERROR','FATAL')
 	--and level = 'INFO'
 	--and message like '%process dim.tsv%'
+	--and Logger= 'EdgarDatasetDimensionService'
+	--and Logger= 'EdgarDatasetTagService'
 	--AND Logger = 'EdgarDatasetNumService'
 	--and Logger = 'EdgarDatasetTextService'
 	--and id >= 20559
