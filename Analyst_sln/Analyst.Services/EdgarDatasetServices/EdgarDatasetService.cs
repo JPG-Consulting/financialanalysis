@@ -141,8 +141,13 @@ namespace Analyst.Services.EdgarDatasetServices
 
                         //Load Submissions, Tags and Dimensions
                         EdgarTaskState[] states = LoadSubTagDim(ds, repository);
-                        ManageErrors(states);
-
+                        bool ok = ManageErrors(states);
+                        ds = repository.GetDataset(id);//get updated status
+                        if (!ok || ds.ProcessedSubmissions != ds.TotalSubmissions || ds.ProcessedTags != ds.TotalTags || ds.ProcessedDimensions != ds.TotalDimensions)
+                        {
+                            log.Fatal("Process of sub, tags or dims failed, process can't continue");
+                            return;
+                        }
                         //Retrieve all tags, submissions and dimensions to fill the relationship
                         //Load Calculations, Texts and Numbers
                         log.Info("Datasetid " + id.ToString() + " -- loading all tags for LoadCalTxtNum(...)");
@@ -153,8 +158,14 @@ namespace Analyst.Services.EdgarDatasetServices
                         ConcurrentDictionary<string, int> dims = dimensionService.GetAsConcurrent(id);
                         log.Info("Datasetid " + id.ToString() + " -- Starting LoadCalTxtNum(...)");
                         states = LoadCalTxtNum(ds, repository, subs, tags, dims);
-                        ManageErrors(states);
-                        log.Info("Datasetid " + id.ToString() + " -- releasing memory for dims");
+                        ok = ManageErrors(states);
+                        ds = repository.GetDataset(id);//get updated status
+                        if (!ok || ds.ProcessedCalculations != ds.TotalCalculations || ds.ProcessedTexts != ds.TotalTexts || ds.ProcessedNumbers != ds.TotalNumbers)
+                        {
+                            log.Fatal("Process of cal, text or nums failed, process can't continue");
+                            return;
+                        }
+                        log.Info("Datasetid " + id.ToString() + " -- releasing dims");
                         dims = null;
 
                         //Load Presentations and Renders
@@ -315,10 +326,12 @@ namespace Analyst.Services.EdgarDatasetServices
 
         /// <summary>
         /// Takes all exceptions of states and it throws them to Run(..) method
+        /// Return false is process can't continue
         /// </summary>
         /// <param name="states"></param>
-        private void ManageErrors(EdgarTaskState[] states)
+        private bool ManageErrors(EdgarTaskState[] states)
         {
+            bool ok = true; 
             EdgarException edex = null;
             for (int i = 0; i < states.Length; i++)
             {
@@ -330,9 +343,13 @@ namespace Analyst.Services.EdgarDatasetServices
                     {
                         edex.AddInnerException(states[i].Exception);
                         log.Fatal("Datasetid " + states[i].Dataset.Id.ToString() + " -- " + states[i].ProcessName + ": " + states[i].Exception.Message, states[i].Exception);
+
                     }
                     else
+                    {
                         log.Fatal("Datasetid " + states[i].Dataset.Id.ToString() + "-- " + states[i].ProcessName + ": It failed but theres is NonSerializedAttribute excpetion");
+                    }
+                    ok = false;
                 }
             }
             if (edex != null)
@@ -342,6 +359,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 repository = new AnalystRepository(new AnalystContext());
                 throw edex;
             }
+            return ok;
         }
 
         public void Dispose()

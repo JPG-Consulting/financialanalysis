@@ -76,14 +76,5 @@ BEGIN
 				and not exists (select ds.LineNumber from EdgarDatasetTexts ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		end
-	else if @table = 'EdgarDatasetNumbers'
-		BEGIN
-			SELECT  Number
-			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
-				and not exists (select ds.LineNumber from EdgarDatasetNumbers ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
-			order by Number
-		END
 	;
 END
