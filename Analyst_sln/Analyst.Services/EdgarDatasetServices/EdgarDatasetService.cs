@@ -214,14 +214,19 @@ namespace Analyst.Services.EdgarDatasetServices
             IList<Task> tasks = new List<Task>();
 
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  submissionService.Process(...)");
-            tasks.Add(Task.Factory.StartNew(() => 
+            tasks.Add(Task.Factory.StartNew(() =>
                 submissionService.Process(stateSubs,false, false, EdgarDatasetSubmission.FILE_NAME, "Submissions")//false --> to avoid to have too many threads
             ));
 
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  tagService.Process(...)");
-            tasks.Add(Task.Factory.StartNew(() => 
-                tagService.Process(stateTag,false,true, EdgarDatasetTag.FILE_NAME,"Tags")
-            ));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                if (ConfigurationManager.AppSettings["run_tag_in_parallel"] == "true")
+                    tagService.Process(stateTag, false, true, EdgarDatasetTag.FILE_NAME, "Tags");
+                else
+                    tagService.Process(stateTag, false, false, EdgarDatasetTag.FILE_NAME, "Tags");
+
+            }));
 
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  dimensionService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() => 

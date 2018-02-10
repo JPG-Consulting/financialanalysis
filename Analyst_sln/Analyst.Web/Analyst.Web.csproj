@@ -211,7 +211,7 @@
     <Content Include="spa_screen_analyze_trade.html" />
     <Content Include="scripts\angular.min.js.map" />
     <Content Include="Views\Edgar\Home.cshtml" />
-    <None Include="Properties\PublishProfiles\analyst local.pubxml" />
+    <None Include="Properties\PublishProfiles\localhost.pubxml" />
     <None Include="Views\Edgar\readme.cshtml" />
     <Content Include="spa_datasets.html" />
     <Content Include="scripts\angular-mocks.js" />

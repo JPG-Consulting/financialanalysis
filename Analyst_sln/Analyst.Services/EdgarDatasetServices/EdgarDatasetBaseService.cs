@@ -264,19 +264,6 @@ namespace Analyst.Services.EdgarDatasetServices
                                     List<string> fields = line.Split('\t').ToList();
                                     T file = Parse(repo, fieldNames, fields, i + 1);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
                                     Add(repo, state.Dataset, file);
-                                    if (missing != null)
-                                    {
-                                        int result;
-                                        missing.TryTake(out result);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if(missing.IsEmpty)
-                                {
-                                    Log.Info(rangeMsg + " -- missing collection is empty");
-                                    break;
                                 }
                             }
 

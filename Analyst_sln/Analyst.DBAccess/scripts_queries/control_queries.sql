@@ -6,14 +6,15 @@ set @datasetid = 201701;
 --estado de la ejecucion
 
 select id,
-	cast(iif(totalsubmissions != 0, cast(processedsubmissions as float)/cast(totalsubmissions as float) *100,0) as nvarchar) + '% (' + cast((totalsubmissions-processedsubmissions) as nvarchar) +')' subs
+	cast(iif(totalsubmissions != 0, cast(processedsubmissions as float)/cast(totalsubmissions as float) *100,0) as nvarchar) + '% (pending: ' + cast((totalsubmissions-processedsubmissions) as nvarchar) +')' subs
 	,cast(iif(TotalTags != 0, cast(ProcessedTags as float)/cast(TotalTags as float)*100,0) as nvarchar) + '% (' + cast((TotalTags-ProcessedTags) as nvarchar) +')'  tags
-	,cast(iif(TotalDimensions != 0 ,cast(ProcessedDimensions as float)/cast(TotalDimensions as float) *100,0)as nvarchar) + '% (' + cast((TotalDimensions-ProcessedDimensions) as nvarchar) +')'  dims
-	,cast(iif(totalrenders != 0 ,cast(processedrenders as float)/cast(totalrenders as float) *100,0)as nvarchar) + '% (' + cast((totalrenders-processedrenders) as nvarchar) +')' ren
-	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '% (' + cast((totalpresentations-processedpresentations) as nvarchar) +')' pre
-	,cast(iif(totalnumbers != 0 ,cast(processednumbers as float)/cast(totalnumbers as float) *100,0)as nvarchar) + '% (' + cast((totalnumbers-processednumbers) as nvarchar) +')' nums
-	,cast(iif(TotalCalculations != 0 ,cast(ProcessedCalculations as float)/cast(TotalCalculations as float) *100,0)as nvarchar) + '% (' + cast((TotalCalculations-ProcessedCalculations) as nvarchar) +')'  calcs
-	,cast(iif(TotalTexts != 0 ,cast(ProcessedTexts as float)/cast(TotalTexts as float) *100,0)as nvarchar) + '% (' + cast((TotalTexts-ProcessedTexts) as nvarchar) +')' texts
+	,cast(iif(TotalDimensions != 0 ,cast(ProcessedDimensions as float)/cast(TotalDimensions as float) *100,0)as nvarchar) + '% (pending: ' + cast((TotalDimensions-ProcessedDimensions) as nvarchar) +')'  dims
+	,cast(iif(totalnumbers != 0 ,cast(processednumbers as float)/cast(totalnumbers as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalnumbers-processednumbers) as nvarchar) +')' nums
+	,cast(iif(TotalCalculations != 0 ,cast(ProcessedCalculations as float)/cast(TotalCalculations as float) *100,0)as nvarchar) + '% (pending: ' + cast((TotalCalculations-ProcessedCalculations) as nvarchar) +')'  calcs
+	,cast(iif(TotalTexts != 0 ,cast(ProcessedTexts as float)/cast(TotalTexts as float) *100,0)as nvarchar) + '% (pending: ' + cast((TotalTexts-ProcessedTexts) as nvarchar) +')' texts
+	,cast(iif(totalrenders != 0 ,cast(processedrenders as float)/cast(totalrenders as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalrenders-processedrenders) as nvarchar) +')' ren
+	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalpresentations-processedpresentations) as nvarchar) +')' pre
+
 from EdgarDatasets where id in(201701,201604);
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -37,7 +38,9 @@ where 1=1
 	--AND Logger = 'EdgarDatasetNumService'
 	--and Logger = 'EdgarDatasetTextService'
 	--and id >= ?
-order by Logger,date asc
+order by date asc
+--order by Logger,date asc
+--order by Logger,message,date asc
 --order by message,date asc
 ;
 
@@ -45,7 +48,7 @@ order by Logger,date asc
 
 /*
 delete from [dbo].[Log] 
-where id <= 580
+where id <= 2221370
 where level='DEBUG';
 */
 

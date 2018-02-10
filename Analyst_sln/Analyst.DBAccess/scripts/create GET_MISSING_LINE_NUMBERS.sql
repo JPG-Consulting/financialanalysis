@@ -8,8 +8,7 @@ BEGIN
 		begin
 			SELECT  Number
 			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
+			where n.Number <=  @totallines+1 and n.Number > 1 --first line is the header
 				and not exists (select ds.LineNumber from EdgarDatasetCalculations ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		end
@@ -17,8 +16,7 @@ BEGIN
 		BEGIN
 			SELECT  Number
 			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
+			where n.Number <=  @totallines+1 and n.Number > 1 --first line is the header
 				and not exists (select ds.LineNumber from EdgarDatasetDimensions ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		END
@@ -26,8 +24,7 @@ BEGIN
 		BEGIN
 			SELECT  Number
 			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
+			where n.Number <=  @totallines+1 and n.Number > 1 --first line is the header
 				and not exists (select ds.LineNumber from EdgarDatasetNumbers ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		end
@@ -35,8 +32,7 @@ BEGIN
 		BEGIN
 			SELECT  Number
 			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
+			where n.Number <=  @totallines+1 and n.Number > 1 --first line is the header
 				and not exists (select ds.LineNumber from EdgarDatasetPresentations ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		end
@@ -44,8 +40,7 @@ BEGIN
 		BEGIN
 			SELECT  Number
 			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
+			where n.Number <=  @totallines+1 and n.Number > 1 --first line is the header
 				and not exists (select ds.LineNumber from EdgarDatasetRenders ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		end
@@ -53,8 +48,7 @@ BEGIN
 		BEGIN
 			SELECT  Number
 			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
+			where n.Number <=  @totallines +1 and n.Number > 1 --first line is the header
 				and not exists (select ds.LineNumber from EdgarDatasetSubmissions ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		end
@@ -62,8 +56,7 @@ BEGIN
 		BEGIN
 			SELECT  Number
 			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
+			where n.Number <=  @totallines +1 and n.Number > 1 --first line is the header
 				and not exists (select ds.LineNumber from EdgarDatasetTags ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		end
@@ -71,8 +64,7 @@ BEGIN
 		BEGIN
 			SELECT  Number
 			FROM Numbers n 
-			where n.Number <=  @totallines 
-				and n.Number > 1 --first line is the header
+			where n.Number <=  @totallines+1 and n.Number > 1 --first line is the header
 				and not exists (select ds.LineNumber from EdgarDatasetTexts ds where ds.DatasetId = @datasetid and ds.LineNumber = n.Number)
 			order by Number
 		end
