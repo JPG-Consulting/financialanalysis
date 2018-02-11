@@ -92,6 +92,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="queries\01st approach to balance.sql" />
+    <Content Include="queries\control_queries.sql" />
+    <Content Include="queries\duplicated analys num record.sql" />
+    <Content Include="queries\duplicated analys tag record.sql" />
+    <Content Include="queries\duplicated analys txt record.sql" />
+    <Content Include="queries\missing analysis num records.sql" />
+    <Content Include="queries\performance analysis presentations.sql" />
+    <Content Include="queries\recreation_script.sql" />
     <Content Include="scripts\alter column ADSH.sql" />
     <Content Include="scripts\create GET_MISSING_LINE_NUMBERS.sql" />
     <Content Include="scripts\create SP_DISABLE_PRESENTATION_INDEXES.sql" />
@@ -119,14 +127,7 @@
     <Content Include="scripts\create SP_GET_TAGS_KEYS.sql" />
     <Content Include="scripts\create SP_GET_TEXT_KEYS.sql" />
     <Content Include="scripts\create table LOG.sql" />
-    <Content Include="scripts_queries\01st approach to balance.sql" />
-    <Content Include="scripts_queries\control_queries.sql" />
     <Content Include="scripts\create table numbers.sql" />
-    <Content Include="scripts_queries\duplicated analys num record.sql" />
-    <Content Include="scripts_queries\duplicated analys tag record.sql" />
-    <Content Include="scripts_queries\duplicated analys txt record.sql" />
-    <Content Include="scripts_queries\performance analysis presentations.sql" />
-    <Content Include="scripts_queries\recreation_script.sql" />
     <Content Include="scripts\create SP_EDGARDATASETTAGS_INSERT.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
