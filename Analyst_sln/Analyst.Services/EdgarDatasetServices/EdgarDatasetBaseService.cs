@@ -62,7 +62,7 @@ namespace Analyst.Services.EdgarDatasetServices
             try
             {
                 Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN process");
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN PROCESS");
                 int processedLines;
                 if (!IsAlreadyProcessed(state.Dataset, fieldToUpdate,out processedLines))
                 {
@@ -88,7 +88,7 @@ namespace Analyst.Services.EdgarDatasetServices
                 watch.Stop();
                 TimeSpan ts = watch.Elapsed;
                 string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- time: " + elapsedTime);
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- END PROCESS -- time: " + elapsedTime);
                 state.ResultOk = true;
             }
             catch (Exception ex)
@@ -149,10 +149,15 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             //https://msdn.microsoft.com/en-us/library/ex21zs8x(v=vs.110).aspx
             //https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/transaction-and-bulk-copy-operations
+
+            Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN BULK PROCESS");
             using (SQLAnalystRepository repo = new SQLAnalystRepository(new AnalystContext()))
             {
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Retrieving structure");
                 DataTable dt = GetEmptyDataTable(repo);
                 List<string> fieldNames = header.Split('\t').ToList();
+
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Creating DataTable");
                 //first line is the header
                 for (int i=1;i<allLines.Length;i++)
                 {
@@ -165,8 +170,11 @@ namespace Analyst.Services.EdgarDatasetServices
                         dt.Rows.Add(dr);
                     }
                 }
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Starting bulk copy");
                 BulkCopy(repo, dt);
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Bulk copy finished, updating dataset status");
                 UpdateProcessed(state, fieldToUpdate, dt.Rows.Count);
+                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- END BULK PROCESS");
             }
         }
 

@@ -11,15 +11,11 @@ namespace Analyst.DBAccess.Contexts
 {
     public class SQLAnalystRepository : AnalystRepository
     {
-        private log4net.ILog log;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        
         public SQLAnalystRepository(AnalystContext context) : base(context)
         {
-            log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-
-
-
-
 
         private DataTable GetEmptyDataTable(string tableName)
         {
@@ -47,32 +43,40 @@ namespace Analyst.DBAccess.Contexts
             string strSize = ConfigurationManager.AppSettings["bulk_batch_size"];
             string strTimeout = ConfigurationManager.AppSettings["bulk_timeout"];
             int temp;
-            
+            log.Info("Table " + tableName + " -- Starting bulk copy process");
             using (SqlConnection conn = CreateBulkConnection())
             {
                 conn.Open();
                 using (SqlBulkCopy bulkCopy = new SqlBulkCopy(conn))
                 {
+                    log.Info("Table " + tableName + " -- configuring");
                     if (int.TryParse(strTimeout, out temp))
                         bulkCopy.BulkCopyTimeout = temp;
                     else
                         bulkCopy.BulkCopyTimeout = 60 * 60;//1 hour by default
-                    bulkCopy.SqlRowsCopied += BulkCopy_SqlRowsCopied;
                     bulkCopy.DestinationTableName = "dbo." + tableName;
+                    if (int.TryParse(strSize, out temp))
+                        bulkCopy.BatchSize = temp;
+                    else
+                        bulkCopy.BatchSize = 10000;//default value
+                    bulkCopy.SqlRowsCopied += BulkCopy_SqlRowsCopied;
+                    bulkCopy.NotifyAfter = bulkCopy.BatchSize;
 
                     try
                     {
-                        if (int.TryParse(strSize, out temp))
-                            bulkCopy.BatchSize = temp;
+                        log.Info("Table " + tableName + " -- Starting bulk copy");
                         bulkCopy.WriteToServer(dt);
+                        log.Info("Table " + tableName + " -- bulk copy ended");
                     }
                     catch (Exception ex)
                     {
+                        log.Fatal("Table " + tableName + " -- Error: " + ex.Message,ex);
                         throw ex;
                     }
                     finally
                     {
                         conn.Close();
+                        log.Info("Table " + tableName + " -- bulk copy process ended");
                     }
                 }
             }
