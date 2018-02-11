@@ -27,6 +27,7 @@ GO
 */
 CREATE PROCEDURE dbo.SP_EDGARDATASETRENDERS_INSERT
 	@Report int
+	,@RenderFile nvarchar(1)
 	,@MenuCategory nvarchar(20)
 	,@ShortName nvarchar(255)
 	,@LongName nvarchar(max)
@@ -54,6 +55,7 @@ BEGIN
 		Begin transaction;
 			INSERT INTO [dbo].[EdgarDatasetRenders]
 				   ([Report]
+				   ,[RenderFileStr]
 				   ,[MenuCategory]
 				   ,[ShortName]
 				   ,[LongName]
@@ -67,6 +69,7 @@ BEGIN
 			 VALUES
 				   (
 					@Report
+					,@RenderFile
 					,@MenuCategory
 					,@ShortName
 					,@LongName
