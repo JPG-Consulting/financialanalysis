@@ -369,6 +369,7 @@ namespace Analyst.DBAccess.Contexts
         public void Add(EdgarDataset ds,EdgarDatasetRender ren)
         {
             SqlParameter Report = new SqlParameter("@Report", ren.Report);
+            SqlParameter RenderFile = new SqlParameter("@RenderFile", ren.RenderFileStr);
             SqlParameter MenuCategory = new SqlParameter("@MenuCategory", ren.MenuCategory);
             SqlParameter ShortName = new SqlParameter("@ShortName", ren.ShortName);
             SqlParameter LongName = new SqlParameter("@LongName", ren.LongName);
@@ -398,7 +399,7 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter lineNumber = new SqlParameter("@LineNumber", ren.LineNumber);
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETRENDERS_INSERT " +
-                "@Report, @MenuCategory, @ShortName, @LongName, @Roleuri, @ParentRoleuri, @ParentReport, @UltimateParentReport, @Submission_Id, @DataSetId, @LineNumber",
+                "@Report, @RenderFile, @MenuCategory, @ShortName, @LongName, @Roleuri, @ParentRoleuri, @ParentReport, @UltimateParentReport, @Submission_Id, @DataSetId, @LineNumber",
                 Report, MenuCategory, ShortName, LongName, Roleuri, ParentRoleuri, ParentReport, UltimateParentReport, Submission_Id, DataSetId, lineNumber
                 );
         }
@@ -409,6 +410,7 @@ namespace Analyst.DBAccess.Contexts
             SqlParameter Line = new SqlParameter("@Line", pre.Line);
             SqlParameter FinancialStatement = new SqlParameter("@FinancialStatement", pre.FinancialStatement);
             SqlParameter Inpth = new SqlParameter("@Inpth", pre.Inpth);
+            SqlParameter RenderFile = new SqlParameter("@RenderFile", pre.RenderFileStr);
             SqlParameter PreferredLabelXBRLLinkRole = new SqlParameter("@PreferredLabelXBRLLinkRole", pre.PreferredLabelXBRLLinkRole);
             SqlParameter PreferredLabel = new SqlParameter("@PreferredLabel", pre.PreferredLabel);
             SqlParameter Negating = new SqlParameter("@Negating", pre.Negating);
@@ -436,7 +438,7 @@ namespace Analyst.DBAccess.Contexts
                 adsh_tag_version.Value = DBNull.Value;
 
             Context.Database.ExecuteSqlCommand("exec SP_EDGARDATASETPRESENTATIONS_INSERT " +
-                "@ReportNumber, @Line, @FinancialStatement, @Inpth, @PreferredLabelXBRLLinkRole, @PreferredLabel, @Negating, @LineNumber, @DataSetId, @Submission_Id, @Tag_Id, @Number_Id, @Text_Id, @Render_Id, @adsh_tag_version",
+                "@ReportNumber, @Line, @FinancialStatement, @Inpth,@RenderFile, @PreferredLabelXBRLLinkRole, @PreferredLabel, @Negating,@LineNumber, @DataSetId, @Submission_Id, @Tag_Id, @Number_Id, @Text_Id, @Render_Id, @adsh_tag_version",
                 ReportNumber, Line, FinancialStatement, Inpth, PreferredLabelXBRLLinkRole, PreferredLabel, Negating, LineNumber, DataSetId, Submission_Id, Tag_Id, Number_Id, Text_Id, Render_Id, adsh_tag_version);
         }
 

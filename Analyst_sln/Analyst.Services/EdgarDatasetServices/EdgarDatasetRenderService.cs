@@ -50,6 +50,7 @@ namespace Analyst.Services.EdgarDatasetServices
             ren.Report = Convert.ToInt32(fields[fieldNames.IndexOf("report")]);
             string value = "";
             ren.RenderFile = fields[fieldNames.IndexOf("rfile")][0];
+            ren.RenderFileStr = ren.RenderFile.ToString(); 
             ren.MenuCategory = fields[fieldNames.IndexOf("menucat")];
             ren.ShortName = fields[fieldNames.IndexOf("shortname")];
             ren.LongName = fields[fieldNames.IndexOf("longname")];
@@ -92,7 +93,7 @@ namespace Analyst.Services.EdgarDatasetServices
             dr["SubmissionId"] = Subs[adsh];
             dr["Report"] = Convert.ToInt32(fields[fieldNames.IndexOf("report")]);
             string value = "";
-            //dr["RenderFile"] = fields[fieldNames.IndexOf("rfile")][0];//char datatypes are not mapped directly, it has to be mapped using string or fluent
+            dr["RenderFileStr"] = fields[fieldNames.IndexOf("rfile")][0];
             dr["MenuCategory"] = fields[fieldNames.IndexOf("menucat")];
             dr["ShortName"] = fields[fieldNames.IndexOf("shortname")];
             dr["LongName"] = fields[fieldNames.IndexOf("longname")];

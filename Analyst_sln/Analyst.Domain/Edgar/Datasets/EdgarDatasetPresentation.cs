@@ -50,6 +50,14 @@ namespace Analyst.Domain.Edgar.Datasets
         /// </summary>
         public bool Inpth { get; set; }
 
+        public char RenderFile
+        {
+            get { return RenderFileStr[0]; }
+            set { RenderFileStr = value.ToString(); }
+        }
+
+        [StringLength(1)]
+        public string RenderFileStr { get; set; }
 
 
         /// <summary>
@@ -74,14 +82,7 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public bool Negating { get; set; }
 
-        public char RenderFile {
-            get { return RenderFileStr[0]; }
-            set { RenderFileStr = value.ToString(); }
-        }
-
-        [StringLength(1)]
-        public string RenderFileStr { get; set; }
-
+        
         public string Key
         {
             get
