@@ -19,9 +19,9 @@ namespace Analyst.DBAccess.Contexts
     {
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
 
-        IList<T> Get<T>() where T:IEdgarEntity;
+        IList<T> Get<T>() where T: class, IEdgarEntity;
         
-        int GetCount<T>() where T : IEdgarEntity;
+        int GetCount<T>(int datasetId) where T : class, IEdgarDatasetFile;
 
         int GetDatasetsCount();
         int GetSECFormsCount();
@@ -158,13 +158,13 @@ namespace Analyst.DBAccess.Contexts
 
         }
 
-        public IList<TEntity> Get<TEntity>() where TEntity : IEdgarEntity
+        public IList<TEntity> Get<TEntity>() where TEntity :class, IEdgarEntity
         {
             return GetQuery<TEntity>().ToList<TEntity>();
         }
-        public int GetCount<TEntity>() where TEntity : IEdgarEntity
+        public int GetCount<TEntity>(int datasetId) where TEntity :class, IEdgarDatasetFile
         {
-            return GetQuery<TEntity>().Count();
+            return GetQuery<TEntity>().Where(x => x.DatasetId == datasetId).Count();
         }
 
         public IList<EdgarTuple> GetCalculationKeys(int datasetId)
@@ -211,7 +211,7 @@ namespace Analyst.DBAccess.Contexts
             return Context.Database.SqlQuery<int>("exec GET_MISSING_LINE_NUMBERS @datasetid,@table,@totalLines", paramid, paramtable,paramTotal).ToList();
         }
 
-        private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : IEdgarEntity
+        private ObjectQuery<TEntity> GetQuery<TEntity>() where TEntity : class, IEdgarEntity
         {
             string key = typeof(TEntity).Name;
             IObjectContextAdapter adapter = (IObjectContextAdapter)Context;

@@ -100,10 +100,12 @@ function spaDatasetsCtrl($scope, $interval, serv) {
         var iValue = parseInt(value);
         if (iValue == 100)
             return { color: 'green' };
-        else if (0 < iValue && iValue < 100)
-            return { color: 'red' };
-        else
+        else if (0.0001 < iValue && iValue < 100)
+            return { color: 'blue' };
+        else if (iValue == 0 || isNaN(iValue))
             return { color: 'grey' };
+        else
+            return { color: 'red' };
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -225,7 +225,7 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
             {
-                int savedInDb = repo.GetCount<T>();
+                int savedInDb = repo.GetCount<T>(ds.Id);
                 processed = (int)ds.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(ds);
                 int total = (int)ds.GetType().GetProperty("Total" + fieldToUpdate).GetValue(ds);
                 return savedInDb == processed && processed == total && total != 0;

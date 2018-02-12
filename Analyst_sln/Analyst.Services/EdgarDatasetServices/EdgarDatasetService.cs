@@ -142,7 +142,7 @@ namespace Analyst.Services.EdgarDatasetServices
                         //Load Submissions, Tags and Dimensions
                         EdgarTaskState[] states = LoadSubTagDim(ds, repository);
                         bool ok = ManageErrors(states);
-                        ds = repository.GetDataset(id);//get updated status
+                        log.Info(string.Format("Datasetid {0} -- Variables after LoadSubTagDim(..): ManageErrors: {1}; Submissions: {2}/{3}; Tags: {4}/{5}; Dimensions: {6}/{7}", id, ok, ds.ProcessedSubmissions, ds.TotalSubmissions, ds.ProcessedTags, ds.TotalTags, ds.ProcessedDimensions, ds.TotalDimensions));
                         if (!ok || ds.ProcessedSubmissions != ds.TotalSubmissions || ds.ProcessedTags != ds.TotalTags || ds.ProcessedDimensions != ds.TotalDimensions)
                         {
                             log.Fatal("Process of sub, tags or dims failed, process can't continue");
@@ -159,7 +159,7 @@ namespace Analyst.Services.EdgarDatasetServices
                         log.Info("Datasetid " + id.ToString() + " -- Starting LoadCalTxtNum(...)");
                         states = LoadCalTxtNum(ds, repository, subs, tags, dims);
                         ok = ManageErrors(states);
-                        ds = repository.GetDataset(id);//get updated status
+                        log.Info(string.Format("Datasetid {0} -- Variables after LoadCalTxtNum(..): ManageErrors: {1}; Calculations: {2}/{3}; Texts: {4}/{5}; Numbers: {6}/{7}", id, ok, ds.ProcessedCalculations,ds.TotalCalculations, ds.ProcessedTexts, ds.TotalTexts, ds.ProcessedNumbers, ds.TotalNumbers));
                         if (!ok || ds.ProcessedCalculations != ds.TotalCalculations || ds.ProcessedTexts != ds.TotalTexts || ds.ProcessedNumbers != ds.TotalNumbers)
                         {
                             log.Fatal("Process of cal, text or nums failed, process can't continue");
@@ -176,7 +176,7 @@ namespace Analyst.Services.EdgarDatasetServices
                         log.Info("Datasetid " + id.ToString() + " -- Starting LoadRenPre(...)");
                         states = LoadRenPre(ds, repository, subs, tags, nums, txts);
                         ManageErrors(states);
-
+                        log.Info(string.Format("Datasetid {0} -- Variables after LoadRenPre(..): ManageErrors: {1}; Reners: {2}/{3}; Presentations: {4}/{5}", id, ok, ds.ProcessedRenders, ds.TotalRenders, ds.ProcessedPresentations, ds.TotalPresentations));
                         ////END PROCESS
                         //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
