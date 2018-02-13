@@ -15,7 +15,7 @@ select id,
 	,cast(iif(totalrenders != 0 ,cast(processedrenders as float)/cast(totalrenders as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalrenders-processedrenders) as nvarchar) +')' ren
 	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalpresentations-processedpresentations) as nvarchar) +')' pre
 
-from EdgarDatasets where id in(201701,201604);
+from EdgarDatasets where id in(201604,201701,201702);
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Para revisar performance
@@ -37,43 +37,56 @@ where 1=1
 	--and logger <> 'EdgarDatasetTagService'
 	--AND Logger = 'EdgarDatasetNumService'
 	--and Logger = 'EdgarDatasetTextService'
-	--and id >= ?
-order by date asc
---order by Logger,date asc
+	--and id >= 2221700
+--order by date asc
+order by Logger,date asc
 --order by Logger,message,date asc
 --order by message,date asc
 ;
 
---select distinct exception from Log;
 
 /*
+--clear log
 delete from [dbo].[Log] 
 where id <= 2221370
 where level='DEBUG';
 */
 
---check missing
 /*
+--clear presentations
+update EdgarDatasets set ProcessedPresentations = 0 where id=201701
+delete from EdgarDatasetPresentations where datasetid=201701
+*/
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--CHECKS
+
+/*
+--check missing presentations
+declare @existentes int
+declare @total int
+declare @dataset int = 201701
+select @existentes = count(1) from EdgarDatasetPresentations where datasetid=@dataset
+select @total = TotalPresentations from EdgarDatasets where id=@dataset
+select @dataset periodo, @total total,@existentes existentes, @total-@existentes faltantes
+*/
+
+
+/*
+--check missing tags
 declare @total int
 select @total=TotalTags from EdgarDatasets where id=201604
 exec GET_MISSING_LINE_NUMBERS 201604,'EdgarDatasetTags',@total
 */
---------------------------------------------------------------------------------------------------------------------------------------------------------
---CHECKS
+
 /*
---sec forms: son 144, mas los 7 duplicados son los 151 que deberian ser
+--sec forms: should be 144, plus 7 duplicated, it is the 151
 select count(1) from secforms; 
 
---deberian ser ???
-select count(1) from sics;
-
-
---check de duplicados
+--duplicated check in dimensions
 select name,count(1) cant from [dbo].[registrants] group by name having count(1) > 1;
 select DimensionH,count(1) cant from [dbo].[EdgarDatasetDimensions]  group by DimensionH having count(1) > 1;
-
 */
-
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 
