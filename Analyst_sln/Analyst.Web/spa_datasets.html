@@ -59,7 +59,7 @@
                     </tr>
               
                     <tr ng-repeat="dataset in model.datasets | limitTo:pagingSettings.pageLimit:pagingSettings.offset" ng-click="selectDataset(dataset.id);">
-                        <td>{{dataset.Year }} - {{dataset.Quarter}}</td>
+                        <td>{{dataset.Year }}Q{{dataset.Quarter}}</td>
                         <td>
                             <span ng-style="progressNumberStyle(dataset.ProcessedSubmissions / dataset.TotalSubmissions * 100)">
                                 {{ dataset.TotalSubmissions == 0 ? 0.00 : dataset.ProcessedSubmissions / dataset.TotalSubmissions * 100 | number: 4 }} %

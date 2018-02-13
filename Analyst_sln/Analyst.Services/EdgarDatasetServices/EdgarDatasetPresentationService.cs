@@ -120,19 +120,6 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             throw new NotImplementedException();
         }
-        
-        public void Process2(EdgarTaskState state, bool processBulk,bool processInParallel, string fileToProcess, string fieldToUpdate)
-        {
-            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
-            {
-                repo.EnablePresentationIndexes(false);
-            }
-            base.Process(state,processBulk, processInParallel, fileToProcess, fieldToUpdate);
-            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
-            {
-                repo.EnablePresentationIndexes(true);
-            }
-        }
 
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
         {

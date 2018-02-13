@@ -54,13 +54,15 @@ namespace Analyst.DBAccess.Contexts
                         bulkCopy.BulkCopyTimeout = temp;
                     else
                         bulkCopy.BulkCopyTimeout = 60 * 60;//1 hour by default
-                    bulkCopy.DestinationTableName = "dbo." + tableName;
+                    
                     if (int.TryParse(strSize, out temp))
                         bulkCopy.BatchSize = temp;
                     else
                         bulkCopy.BatchSize = 10000;//default value
                     bulkCopy.SqlRowsCopied += BulkCopy_SqlRowsCopied;
                     bulkCopy.NotifyAfter = bulkCopy.BatchSize;
+
+                    bulkCopy.DestinationTableName = "dbo." + tableName;
 
                     try
                     {
@@ -85,7 +87,8 @@ namespace Analyst.DBAccess.Contexts
 
         private void BulkCopy_SqlRowsCopied(object sender, SqlRowsCopiedEventArgs e)
         {
-            log.Info("Rows copied: " + e.RowsCopied);
+            SqlBulkCopy copier = sender as SqlBulkCopy;
+            log.Info("Rows copied in " + copier.DestinationTableName + ": " + e.RowsCopied);
         }
 
         public DataTable GetEmptyPresentationDataTable()

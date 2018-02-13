@@ -63,8 +63,8 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN PROCESS");
-                int processedLines;
-                if (!IsAlreadyProcessed(state.Dataset, fieldToUpdate,out processedLines))
+                int savedInDb;
+                if (!IsAlreadyProcessed(state, fieldToUpdate,out savedInDb))
                 {
                     string cacheFolder = ConfigurationManager.AppSettings["cache_folder"];
                     string tsvFileName = state.Dataset.RelativePath.Replace("/", "\\").Replace(".zip", "") + "\\" + fileToProcess;
@@ -74,10 +74,20 @@ namespace Analyst.Services.EdgarDatasetServices
 
                     UpdateTotalField(state,fieldToUpdate, allLines.Length - 1);
 
-                    if (processBulk)
-                        ProcessBulk(fileToProcess,fieldToUpdate, state, allLines, header);
+                    ConcurrentBag<int> missing;
+                    if (savedInDb == 0)
+                    {
+                        missing = null;
+                    }
                     else
-                        ProcessLineByLine(processedLines,fileToProcess, fieldToUpdate, state, allLines, header,cacheFolder,tsvFileName, processInParallel);
+                    {
+                        missing = GetMissingLines(state.Dataset.Id, allLines.Length - 1);
+                    }
+
+                    if (processBulk)
+                        ProcessBulk(missing,fileToProcess,fieldToUpdate, state, allLines, header);
+                    else
+                        ProcessLineByLine(missing,fileToProcess, fieldToUpdate, state, allLines, header,cacheFolder,tsvFileName, processInParallel);
                 }
                 else
                 {
@@ -99,17 +109,8 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-        public void ProcessLineByLine(int processedLines, string fileToProcess, string fieldToUpdate, EdgarTaskState state, string[] allLines,string header, string cacheFolder, string tsvFileName,bool processInParallel)
+        public void ProcessLineByLine(ConcurrentBag<int> missing, string fileToProcess, string fieldToUpdate, EdgarTaskState state, string[] allLines,string header, string cacheFolder, string tsvFileName,bool processInParallel)
         {
-            ConcurrentBag<int> missing;
-            if (processedLines == 0)
-            {
-                missing = null;
-            }
-            else
-            {
-                missing = GetMissingLines(state.Dataset.Id, allLines.Length - 1);
-            }
 
             ConcurrentDictionary<int, string> failedLines = new ConcurrentDictionary<int, string>();
             if (processInParallel && allLines.Length > 1)
@@ -145,7 +146,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return bag;
         }
 
-        private void ProcessBulk(string fileToProcess,string fieldToUpdate, EdgarTaskState state, string[] allLines, string header)
+        private void ProcessBulk(ConcurrentBag<int> missing,string fileToProcess,string fieldToUpdate, EdgarTaskState state, string[] allLines, string header)
         {
             //https://msdn.microsoft.com/en-us/library/ex21zs8x(v=vs.110).aspx
             //https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/transaction-and-bulk-copy-operations
@@ -161,24 +162,27 @@ namespace Analyst.Services.EdgarDatasetServices
                 //first line is the header
                 for (int i=1;i<allLines.Length;i++)
                 {
-                    string line = allLines[i];
-                    if (!string.IsNullOrEmpty(line))
+                    if (missing == null || missing.Contains(i + 1))
                     {
-                        List<string> fields = line.Split('\t').ToList();
-                        DataRow dr = dt.NewRow();
-                        Parse(fieldNames,fields, i + 1, dr,state.Dataset.Id);
-                        dt.Rows.Add(dr);
+                        string line = allLines[i];
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            List<string> fields = line.Split('\t').ToList();
+                            DataRow dr = dt.NewRow();
+                            Parse(fieldNames, fields, i + 1, dr, state.Dataset.Id);
+                            dt.Rows.Add(dr);
+                        }
                     }
                 }
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Starting bulk copy");
                 BulkCopy(repo, dt);
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Bulk copy finished, updating dataset status");
-                UpdateProcessed(state, fieldToUpdate, dt.Rows.Count);
+                UpdateProcessedField(state, fieldToUpdate, dt.Rows.Count);
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- END BULK PROCESS");
             }
         }
 
-        private void UpdateProcessed(EdgarTaskState state, string fieldToUpdate, int value)
+        private void UpdateProcessedField(EdgarTaskState state, string fieldToUpdate, int value)
         {
             UpdateField("Processed", fieldToUpdate, state, value);
         }
@@ -221,13 +225,15 @@ namespace Analyst.Services.EdgarDatasetServices
             return newFileName;
         }
 
-        private bool IsAlreadyProcessed(EdgarDataset ds, string fieldToUpdate, out int processed)
+        private bool IsAlreadyProcessed(EdgarTaskState state, string fieldToUpdate, out int savedInDb)
         {
             using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
             {
-                int savedInDb = repo.GetCount<T>(ds.Id);
-                processed = (int)ds.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(ds);
-                int total = (int)ds.GetType().GetProperty("Total" + fieldToUpdate).GetValue(ds);
+                savedInDb = repo.GetCount<T>(state.Dataset.Id);
+                int processed = (int)state.Dataset.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(state.Dataset);
+                if (savedInDb != processed)
+                    UpdateProcessedField(state, fieldToUpdate, savedInDb);
+                int total = (int)state.Dataset.GetType().GetProperty("Total" + fieldToUpdate).GetValue(state.Dataset);
                 return savedInDb == processed && processed == total && total != 0;
             }
         }
