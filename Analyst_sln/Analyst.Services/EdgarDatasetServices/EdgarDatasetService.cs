@@ -286,7 +286,7 @@ namespace Analyst.Services.EdgarDatasetServices
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  numService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                bool parallel = ConfigurationManager.AppSettings["run_pre_in_parallel"] == "true";
+                bool parallel = ConfigurationManager.AppSettings["run_num_in_parallel"] == "true";
                 numService.Process(stateNum, false, parallel, EdgarDatasetNumber.FILE_NAME, "Numbers");
             }));
 
