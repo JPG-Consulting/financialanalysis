@@ -38,7 +38,6 @@ namespace Analyst.Services.EdgarDatasetServices
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly bool allowProcess;
 
-        private IAnalystRepository repository;
         private IEdgarDatasetSubmissionsService submissionService;
         private IEdgarDatasetTagService tagService;
         private IEdgarDatasetNumService numService;
@@ -47,9 +46,8 @@ namespace Analyst.Services.EdgarDatasetServices
         private IEdgarDatasetPresentationService presentationService;
         private IEdgarDatasetCalculationService calcService;
         private IEdgarDatasetTextService textService;
-        public EdgarDatasetService(IAnalystRepository repository, IEdgarDatasetSubmissionsService submissionService, IEdgarDatasetTagService tagService, IEdgarDatasetNumService numService, IEdgarDatasetDimensionService dimensionService, IEdgarDatasetRenderService renderingService,IEdgarDatasetPresentationService presentationService,IEdgarDatasetCalculationService calcService, IEdgarDatasetTextService textService)
+        public EdgarDatasetService( IEdgarDatasetSubmissionsService submissionService, IEdgarDatasetTagService tagService, IEdgarDatasetNumService numService, IEdgarDatasetDimensionService dimensionService, IEdgarDatasetRenderService renderingService,IEdgarDatasetPresentationService presentationService,IEdgarDatasetCalculationService calcService, IEdgarDatasetTextService textService)
         {
-            this.repository = repository;
             this.submissionService = submissionService;
             this.tagService = tagService;
             this.numService = numService;
@@ -63,7 +61,6 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public EdgarDatasetService(IAnalystRepository repository)
         {
-            this.repository = repository;
             allowProcess = false;
         }
 
@@ -74,14 +71,22 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public IList<EdgarDataset> GetDatasets()
         {
-            IList<EdgarDataset> datasets = repository.Get<EdgarDataset>();
-            return datasets;
+            using (IAnalystRepository repository = CreateRepository())
+            {
+                IList<EdgarDataset> datasets = repository.Get<EdgarDataset>();
+                return datasets;
+            }
         }
+
+
 
         public EdgarDataset GetDataset(int id)
         {
-            EdgarDataset ds = repository.GetDataset(id);
-            return ds;
+            using (IAnalystRepository repository = CreateRepository())
+            {
+                EdgarDataset ds = repository.GetDataset(id);
+                return ds;
+            }
         }
 
         public bool IsRunning(int id)
@@ -130,65 +135,68 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 try
                 {
-                    EdgarDataset ds = repository.GetDataset(id);
-                    if (ds != null)
+                    using (IAnalystRepository repository = CreateRepository())
                     {
-
-                        //////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        ////BEGIN PROCESS
-                        Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-                        log.Info("Datasetid " + id.ToString() + " -- BEGIN dataset process");
-
-                        //Load Submissions, Tags and Dimensions
-                        EdgarTaskState[] states = LoadSubTagDim(ds, repository);
-                        bool ok = ManageErrors(states);
-                        log.Info(string.Format("Datasetid {0} -- Variables after LoadSubTagDim(..): ManageErrors: {1}; Submissions: {2}/{3}; Tags: {4}/{5}; Dimensions: {6}/{7}", id, ok, ds.ProcessedSubmissions, ds.TotalSubmissions, ds.ProcessedTags, ds.TotalTags, ds.ProcessedDimensions, ds.TotalDimensions));
-                        if (!ok || ds.ProcessedSubmissions != ds.TotalSubmissions || ds.ProcessedTags != ds.TotalTags || ds.ProcessedDimensions != ds.TotalDimensions)
+                        EdgarDataset ds = repository.GetDataset(id);
+                        if (ds != null)
                         {
-                            log.Fatal("Process of sub, tags or dims failed, process can't continue");
-                            return;
+
+                            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            ////BEGIN PROCESS
+                            Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
+                            log.Info("Datasetid " + id.ToString() + " -- BEGIN dataset process");
+
+                            //Load Submissions, Tags and Dimensions
+                            EdgarTaskState[] states = LoadSubTagDim(ds, repository);
+                            bool ok = ManageErrors(states);
+                            log.Info(string.Format("Datasetid {0} -- Variables after LoadSubTagDim(..): ManageErrors: {1}; Submissions: {2}/{3}; Tags: {4}/{5}; Dimensions: {6}/{7}", id, ok, ds.ProcessedSubmissions, ds.TotalSubmissions, ds.ProcessedTags, ds.TotalTags, ds.ProcessedDimensions, ds.TotalDimensions));
+                            if (!ok || ds.ProcessedSubmissions != ds.TotalSubmissions || ds.ProcessedTags != ds.TotalTags || ds.ProcessedDimensions != ds.TotalDimensions)
+                            {
+                                log.Fatal("Process of sub, tags or dims failed, process can't continue");
+                                return;
+                            }
+                            //Retrieve all tags, submissions and dimensions to fill the relationship
+                            //Load Calculations, Texts and Numbers
+                            log.Info("Datasetid " + id.ToString() + " -- loading all tags for LoadCalTxtNum(...)");
+                            ConcurrentDictionary<string, int> tags = tagService.GetAsConcurrent(id);
+                            log.Info("Datasetid " + id.ToString() + " -- loading all subs for LoadCalTxtNum(...)");
+                            ConcurrentDictionary<string, int> subs = submissionService.GetAsConcurrent(id);
+                            log.Info("Datasetid " + id.ToString() + " -- loading all dims for LoadCalTxtNum(...)");
+                            ConcurrentDictionary<string, int> dims = dimensionService.GetAsConcurrent(id);
+                            log.Info("Datasetid " + id.ToString() + " -- Starting LoadCalTxtNum(...)");
+                            states = LoadCalTxtNum(ds, repository, subs, tags, dims);
+                            ok = ManageErrors(states);
+                            log.Info(string.Format("Datasetid {0} -- Variables after LoadCalTxtNum(..): ManageErrors: {1}; Calculations: {2}/{3}; Texts: {4}/{5}; Numbers: {6}/{7}", id, ok, ds.ProcessedCalculations, ds.TotalCalculations, ds.ProcessedTexts, ds.TotalTexts, ds.ProcessedNumbers, ds.TotalNumbers));
+                            if (!ok || ds.ProcessedCalculations != ds.TotalCalculations || ds.ProcessedTexts != ds.TotalTexts || ds.ProcessedNumbers != ds.TotalNumbers)
+                            {
+                                log.Fatal("Process of cal, text or nums failed, process can't continue");
+                                return;
+                            }
+                            log.Info("Datasetid " + id.ToString() + " -- releasing dims");
+                            dims = null;
+
+                            //Load Presentations and Renders
+                            log.Info("Datasetid " + id.ToString() + " -- loading all nums for LoadRenPre(...)");
+                            ConcurrentDictionary<string, int> nums = numService.GetAsConcurrent(id);
+                            log.Info("Datasetid " + id.ToString() + " -- loading all txt for LoadRenPre(...)");
+                            ConcurrentDictionary<string, int> txts = textService.GetAsConcurrent(id);
+                            log.Info("Datasetid " + id.ToString() + " -- Starting LoadRenPre(...)");
+                            states = LoadRenPre(ds, repository, subs, tags, nums, txts);
+                            ManageErrors(states);
+                            log.Info(string.Format("Datasetid {0} -- Variables after LoadRenPre(..): ManageErrors: {1}; Reners: {2}/{3}; Presentations: {4}/{5}", id, ok, ds.ProcessedRenders, ds.TotalRenders, ds.ProcessedPresentations, ds.TotalPresentations));
+                            ////END PROCESS
+                            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                            watch.Stop();
+                            TimeSpan ts = watch.Elapsed;
+                            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                            log.Info("Datasetid " + id.ToString() + " -- END dataset process -- time: " + elapsedTime);
+
                         }
-                        //Retrieve all tags, submissions and dimensions to fill the relationship
-                        //Load Calculations, Texts and Numbers
-                        log.Info("Datasetid " + id.ToString() + " -- loading all tags for LoadCalTxtNum(...)");
-                        ConcurrentDictionary<string, int> tags = tagService.GetAsConcurrent(id);
-                        log.Info("Datasetid " + id.ToString() + " -- loading all subs for LoadCalTxtNum(...)");
-                        ConcurrentDictionary<string, int> subs = submissionService.GetAsConcurrent(id);
-                        log.Info("Datasetid " + id.ToString() + " -- loading all dims for LoadCalTxtNum(...)");
-                        ConcurrentDictionary<string, int> dims = dimensionService.GetAsConcurrent(id);
-                        log.Info("Datasetid " + id.ToString() + " -- Starting LoadCalTxtNum(...)");
-                        states = LoadCalTxtNum(ds, repository, subs, tags, dims);
-                        ok = ManageErrors(states);
-                        log.Info(string.Format("Datasetid {0} -- Variables after LoadCalTxtNum(..): ManageErrors: {1}; Calculations: {2}/{3}; Texts: {4}/{5}; Numbers: {6}/{7}", id, ok, ds.ProcessedCalculations,ds.TotalCalculations, ds.ProcessedTexts, ds.TotalTexts, ds.ProcessedNumbers, ds.TotalNumbers));
-                        if (!ok || ds.ProcessedCalculations != ds.TotalCalculations || ds.ProcessedTexts != ds.TotalTexts || ds.ProcessedNumbers != ds.TotalNumbers)
+                        else
                         {
-                            log.Fatal("Process of cal, text or nums failed, process can't continue");
-                            return;
+                            log.Fatal("Datasetid " + id.ToString() + " does not exists");
                         }
-                        log.Info("Datasetid " + id.ToString() + " -- releasing dims");
-                        dims = null;
-
-                        //Load Presentations and Renders
-                        log.Info("Datasetid " + id.ToString() + " -- loading all nums for LoadRenPre(...)");
-                        ConcurrentDictionary<string, int> nums = numService.GetAsConcurrent(id);
-                        log.Info("Datasetid " + id.ToString() + " -- loading all txt for LoadRenPre(...)");
-                        ConcurrentDictionary<string, int> txts = textService.GetAsConcurrent(id);
-                        log.Info("Datasetid " + id.ToString() + " -- Starting LoadRenPre(...)");
-                        states = LoadRenPre(ds, repository, subs, tags, nums, txts);
-                        ManageErrors(states);
-                        log.Info(string.Format("Datasetid {0} -- Variables after LoadRenPre(..): ManageErrors: {1}; Reners: {2}/{3}; Presentations: {4}/{5}", id, ok, ds.ProcessedRenders, ds.TotalRenders, ds.ProcessedPresentations, ds.TotalPresentations));
-                        ////END PROCESS
-                        //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                        watch.Stop();
-                        TimeSpan ts = watch.Elapsed;
-                        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
-                        log.Info("Datasetid " + id.ToString() + " -- END dataset process -- time: " + elapsedTime);
-
-                    }
-                    else
-                    {
-                        log.Fatal("Datasetid " + id.ToString() + " does not exists");
                     }
                 }
                 catch(Exception ex)
@@ -237,19 +245,19 @@ namespace Analyst.Services.EdgarDatasetServices
             return states.ToArray();
         }
 
-        private EdgarTaskState[] LoadCalTxtNum(EdgarDataset ds,IAnalystRepository repo,ConcurrentDictionary<string,int> subs,ConcurrentDictionary<string,int> tags,ConcurrentDictionary<string,int> dims)
+        private EdgarTaskState[] LoadCalTxtNum(EdgarDataset ds, IAnalystRepository repo, ConcurrentDictionary<string, int> subs, ConcurrentDictionary<string, int> tags, ConcurrentDictionary<string, int> dims)
         {
             List<EdgarTaskState> states = new List<EdgarTaskState>();
             List<Task> tasks = new List<Task>();
-            
+
             //process calc file
             EdgarTaskState stateCalc = new EdgarTaskState(EdgarDatasetCalculation.FILE_NAME, ds, repo);
             states.Add(stateCalc);
             calcService.Submissions = subs;
             calcService.Tags = tags;
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  calcService.Process(...)");
-            tasks.Add(Task.Factory.StartNew(() => 
-                calcService.Process(stateCalc,false, false, EdgarDatasetCalculation.FILE_NAME, "Calculations")) //false --> to avoid to have too many threads
+            tasks.Add(Task.Factory.StartNew(() =>
+                calcService.Process(stateCalc, false, false, EdgarDatasetCalculation.FILE_NAME, "Calculations")) //false --> to avoid to have too many threads
             );
 
             //process text file
@@ -260,15 +268,15 @@ namespace Analyst.Services.EdgarDatasetServices
             textService.Tags = tags;
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  textService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() =>
-            { 
+            {
                 textService.Process(stateText, false, true, EdgarDatasetText.FILE_NAME, "Texts");
                 for (int i = 0; i < MAX_TRIALS; i++)
                 {
-                    if(!string.IsNullOrEmpty(stateText.FileNameToReprocess))
+                    if (!string.IsNullOrEmpty(stateText.FileNameToReprocess))
                         textService.Process(stateText, false, true, stateText.FileNameToReprocess, "Texts");
                 }
             }));
-            
+
             //Process num file
             EdgarTaskState stateNum = new EdgarTaskState(EdgarDatasetNumber.FILE_NAME, ds, repo);
             states.Add(stateNum);
@@ -276,9 +284,11 @@ namespace Analyst.Services.EdgarDatasetServices
             numService.Submissions = subs;
             numService.Tags = tags;
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  numService.Process(...)");
-            tasks.Add(Task.Factory.StartNew(() => 
-                numService.Process(stateNum,false, false,EdgarDatasetNumber.FILE_NAME,"Numbers"))
-            );
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                bool parallel = ConfigurationManager.AppSettings["run_pre_in_parallel"] == "true";
+                numService.Process(stateNum, false, parallel, EdgarDatasetNumber.FILE_NAME, "Numbers");
+            }));
 
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
@@ -327,7 +337,10 @@ namespace Analyst.Services.EdgarDatasetServices
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
-
+        private IAnalystRepository CreateRepository()
+        {
+            return new AnalystRepository(new AnalystContext());
+        }
 
         /// <summary>
         /// Takes all exceptions of states and it throws them to Run(..) method
@@ -359,9 +372,6 @@ namespace Analyst.Services.EdgarDatasetServices
             }
             if (edex != null)
             {
-                //reset status   
-                repository.Dispose();
-                repository = new AnalystRepository(new AnalystContext());
                 throw edex;
             }
             return ok;
@@ -369,14 +379,13 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public void Dispose()
         {
+            log.Info("Destroying EdgarDatasetService");
             //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-cancellation?view=netframework-4.5.2
             //TODO: Cancel all tasks
             foreach (Task process in datasetsInProcess.Values.ToList())
             {
                 
             }
-            if(repository!=null)
-                repository.Dispose();
             if(submissionService != null)
                 submissionService.Dispose();
             if(tagService != null)

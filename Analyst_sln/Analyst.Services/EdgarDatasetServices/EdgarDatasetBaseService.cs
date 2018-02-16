@@ -152,7 +152,7 @@ namespace Analyst.Services.EdgarDatasetServices
             //https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/transaction-and-bulk-copy-operations
 
             Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN BULK PROCESS");
-            using (SQLAnalystRepository repo = new SQLAnalystRepository(new AnalystContext()))
+            using (SQLAnalystRepository repo = new SQLAnalystRepository())
             {
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Retrieving structure");
                 DataTable dt = GetEmptyDataTable(repo);

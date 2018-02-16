@@ -110,7 +110,7 @@ namespace Analyst.Windows
             IEdgarDatasetCalculationService calcService = new EdgarDatasetCalculationService();
             IEdgarDatasetTextService textService = new EdgarDatasetTextService();
 
-            IEdgarDatasetService edgarDatasetService = new EdgarDatasetService(repository, submissionService, tagService, numService, dimensionService, renderingService, presentationService, calcService, textService);
+            IEdgarDatasetService edgarDatasetService = new EdgarDatasetService( submissionService, tagService, numService, dimensionService, renderingService, presentationService, calcService, textService);
             return edgarDatasetService;
         }
 
