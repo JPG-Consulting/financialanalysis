@@ -9,7 +9,7 @@ function spaDatasetsCtrl($scope, $interval, serv) {
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //Timer
     var stop;
-    var seconds = 1;
+    var seconds = 5;
     $scope.startMonitorinDatasets_click = function () {
         $scope.model.message = "mostrar datasets";
         

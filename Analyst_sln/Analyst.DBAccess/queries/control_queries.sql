@@ -15,7 +15,7 @@ select id,
 	,cast(iif(totalrenders != 0 ,cast(processedrenders as float)/cast(totalrenders as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalrenders-processedrenders) as nvarchar) +')' ren
 	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalpresentations-processedpresentations) as nvarchar) +')' pre
 
-from EdgarDatasets where id in(201604,201701,201702);
+from EdgarDatasets where id in(201604,201701,201702,201703,201704);
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Para revisar performance
@@ -37,7 +37,7 @@ where 1=1
 	--and logger <> 'EdgarDatasetTagService'
 	--AND Logger = 'EdgarDatasetNumService'
 	--and Logger = 'EdgarDatasetTextService'
-	--and id >= 2221700
+	and id >= 257
 --order by date asc
 order by Logger,date asc
 --order by Logger,message,date asc
@@ -48,14 +48,19 @@ order by Logger,date asc
 /*
 --clear log
 delete from [dbo].[Log] 
-where id <= 2221370
-where level='DEBUG';
+where id <= 384
+--where level='DEBUG'
+where level='INFO';
 */
 
 /*
 --clear presentations
 update EdgarDatasets set ProcessedPresentations = 0 where id=201701
 delete from EdgarDatasetPresentations where datasetid=201701
+
+--clear numbers
+update EdgarDatasets set ProcessedNumbers = 0 where id=201704
+delete from EdgarDatasetNumbers where datasetid=201704
 */
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------

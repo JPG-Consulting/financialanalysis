@@ -73,8 +73,17 @@ namespace Analyst.Services.EdgarDatasetServices
                 pre.Line = Convert.ToInt32(line);
                 pre.FinancialStatement = fields[fieldNames.IndexOf("stmt")];
                 pre.Inpth = fields[fieldNames.IndexOf("inpth")] == "1";
-                pre.RenderFile = fields[fieldNames.IndexOf("rfile")][0];
-                pre.RenderFileStr = fields[fieldNames.IndexOf("rfile")];
+                int index = fieldNames.IndexOf("rfile");
+                if (index >= 0)
+                {
+                    pre.RenderFile = fields[fieldNames.IndexOf("rfile")][0];
+                    pre.RenderFileStr = fields[fieldNames.IndexOf("rfile")];
+                }
+                else
+                {
+                    pre.RenderFileStr = null;
+                    pre.RenderFile = char.MinValue;
+                }
                 string tag = fields[fieldNames.IndexOf("tag")];
                 string version = fields[fieldNames.IndexOf("version")];
                 if(Tags.ContainsKey(tag+version))
@@ -143,7 +152,11 @@ namespace Analyst.Services.EdgarDatasetServices
                 dr["Line"] = Convert.ToInt32(line);
                 dr["FinancialStatement"] = fields[fieldNames.IndexOf("stmt")];
                 dr["Inpth"] = fields[fieldNames.IndexOf("inpth")] == "1";
-                dr["RenderFileStr"] = fields[fieldNames.IndexOf("rfile")][0];
+                int index = fieldNames.IndexOf("rfile");
+                if (index >= 0)
+                    dr["RenderFileStr"] = fields[index][0];
+                else
+                    dr["RenderFileStr"] = DBNull.Value;
                 string tag = fields[fieldNames.IndexOf("tag")];
                 string version = fields[fieldNames.IndexOf("version")];
                 if (Tags.ContainsKey(tag + version))
