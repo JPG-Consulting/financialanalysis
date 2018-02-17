@@ -12,6 +12,7 @@ namespace Analyst.DBAccess.Contexts
     //public class AnalystContextInitializer : DropCreateDatabaseIfModelChanges<AnalystContext>
     public class AnalystContextInitializer: CreateDatabaseIfNotExists<AnalystContext>
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         protected override void Seed(AnalystContext context)
         {
             base.Seed(context);

@@ -9,10 +9,14 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    public class SQLAnalystRepository:IDisposable
+    public class SQLAnalystRepository:AnalystRepository,IDisposable
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public SQLAnalystRepository():base(new AnalystContext())
+        {
+
+        }
 
         private DataTable GetEmptyDataTable(string tableName)
         {
@@ -106,9 +110,17 @@ namespace Analyst.DBAccess.Contexts
             BulkCopy("EdgarDatasetRenders", dt);
         }
 
-        public void Dispose()
+
+
+        public void BulkCopyNumbers(DataTable dt)
         {
-            
+            BulkCopy("EdgarDatasetNumbers", dt);
         }
+
+        public DataTable GetEmptyNumbersDataTable()
+        {
+            return GetEmptyDataTable("EdgarDatasetNumbers");
+        }
+
     }
 }

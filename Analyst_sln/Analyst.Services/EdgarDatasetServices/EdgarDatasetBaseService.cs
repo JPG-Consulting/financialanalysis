@@ -210,12 +210,15 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 newFileName = fileName + "_failed_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv";
                 StreamWriter sw = File.CreateText(folder + newFileName);
+                //The first line is the header (line 0)
+                //The second line is the firs row (line 1)
                 sw.WriteLine(header);
-                for(int i=1;i<totalLines;i++)
+                for(int i=1;i<=totalLines; i++)
                 {
-                    if (failedLines.ContainsKey(i + 1))
+                    int lineNumber = i + 1;
+                    if (failedLines.ContainsKey(lineNumber))
                     {
-                        sw.WriteLine(failedLines[i + 1]);
+                        sw.WriteLine(failedLines[lineNumber]);
                     }
                     else
                         sw.WriteLine("");
@@ -261,11 +264,12 @@ namespace Analyst.Services.EdgarDatasetServices
                     List<string> fieldNames = header.Split('\t').ToList();
                     List<Exception> exceptions = new List<Exception>();
                     string line = null;
-                    
+                    int lineNumber = 0;
                     for (int i = range.Item1; i < range.Item2; i++)
                     {
                         try
                         {
+                            lineNumber = i + 1;//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
                             //It will be processed if:
                             //it's the first time (missing == null) 
                             //or it's processed again and line wasn't processed the firs time (missing.Contains(i+1))
@@ -275,8 +279,9 @@ namespace Analyst.Services.EdgarDatasetServices
                                 line = allLines[i];
                                 if (!string.IsNullOrEmpty(line))//files with error lines has an empty line for processed lines
                                 {
+
                                     List<string> fields = line.Split('\t').ToList();
-                                    T file = Parse(repo, fieldNames, fields, i + 1);//i+1: indexes starts with 0 but header is line 1 and the first row is line 2
+                                    T file = Parse(repo, fieldNames, fields, lineNumber);
                                     Add(repo, state.Dataset, file);
                                 }
                             }
@@ -284,11 +289,11 @@ namespace Analyst.Services.EdgarDatasetServices
                         }
                         catch(Exception ex)
                         {
-                            EdgarLineException elex = new EdgarLineException(fileName, i, ex);
+                            EdgarLineException elex = new EdgarLineException(fileName, lineNumber, ex);
                             exceptions.Add(elex);
-                            failedLines.TryAdd(i,line);
-                            Log.Error(rangeMsg + " -- line[" + i.ToString() + "]: " + line);
-                            Log.Error(rangeMsg + " -- line[" + i.ToString() + "]: " + ex.Message, elex);
+                            failedLines.TryAdd(lineNumber, line);
+                            Log.Error(rangeMsg + " -- line[" + lineNumber.ToString() + "]: " + line);
+                            Log.Error(rangeMsg + " -- line[" + lineNumber.ToString() + "]: " + ex.Message, elex);
                             if (exceptions.Count > MaxErrorsAllowed)
                             {
                                 Log.Fatal(rangeMsg + " -- line[" + i.ToString() + "]: max errors allowed reached", ex);

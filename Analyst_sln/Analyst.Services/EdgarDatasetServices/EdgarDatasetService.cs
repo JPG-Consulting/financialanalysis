@@ -286,8 +286,14 @@ namespace Analyst.Services.EdgarDatasetServices
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  numService.Process(...)");
             tasks.Add(Task.Factory.StartNew(() =>
             {
-                bool parallel = ConfigurationManager.AppSettings["run_num_in_parallel"] == "true";
-                numService.Process(stateNum, false, parallel, EdgarDatasetNumber.FILE_NAME, "Numbers");
+                if(ConfigurationManager.AppSettings["run_num_bulk"] == "true")
+                    numService.Process(stateNum, true, false, EdgarDatasetNumber.FILE_NAME, "Numbers");
+                else
+                {
+                    bool parallel = ConfigurationManager.AppSettings["run_num_in_parallel"] == "true";
+                    numService.Process(stateNum, false, parallel, EdgarDatasetNumber.FILE_NAME, "Numbers");
+                }
+
             }));
 
             Task.WaitAll(tasks.ToArray());
