@@ -60,17 +60,21 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
         {
-            throw new NotImplementedException();
+            dr["DimensionH"] = fields[fieldNames.IndexOf("dimhash")]; ;
+            dr["Segments"] = fields[fieldNames.IndexOf("segments")];
+            dr["SegmentTruncated"] = !(fields[fieldNames.IndexOf("segt")] == "0");
+            dr["LineNumber"] = lineNumber;
+            dr["DatasetId"] = edgarDatasetId;
         }
 
         public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
         {
-            throw new NotImplementedException();
+            repo.BulkCopyDimensions(dt);
         }
 
         public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
         {
-            throw new NotImplementedException();
+            return repo.GetEmptyDimensionsDataTable();
         }
 
         public override List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines)

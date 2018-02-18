@@ -115,6 +115,7 @@ namespace Analyst.Services.EdgarDatasetServices
                             datasetsInProcess[id] = null;
                             Run(id);
                         }
+                        log.Info("Datasetid " + id.ToString() + " -- It's in progress");
                     }
                     else
                         Run(id);
@@ -124,6 +125,7 @@ namespace Analyst.Services.EdgarDatasetServices
             }
             else
             {
+                log.Info("Datasetid " + id.ToString() + " -- It isn't able to run (allowprocess=" + allowProcess.ToString() + ")");
                 throw new ApplicationException("This service doesn't allow process, you have to use other constructor");
             }
         }
@@ -237,9 +239,13 @@ namespace Analyst.Services.EdgarDatasetServices
             }));
 
             log.Info("Datasetid " + ds.Id.ToString() + " -- starting  dimensionService.Process(...)");
-            tasks.Add(Task.Factory.StartNew(() => 
-                dimensionService.Process(stateDim,false,false, EdgarDatasetDimension.FILE_NAME,"Dimensions")//false --> to avoid to have too many threads
-            ));
+            tasks.Add(Task.Factory.StartNew(() =>
+            {
+                if (ConfigurationManager.AppSettings["run_dim_bulk"] == "true")
+                    dimensionService.Process(stateDim, true, false, EdgarDatasetDimension.FILE_NAME, "Dimensions");
+                else
+                    dimensionService.Process(stateDim, false, false, EdgarDatasetDimension.FILE_NAME, "Dimensions");
+            }));
             
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();

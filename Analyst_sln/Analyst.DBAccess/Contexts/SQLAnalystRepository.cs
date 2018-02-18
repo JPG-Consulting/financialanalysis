@@ -92,6 +92,16 @@ namespace Analyst.DBAccess.Contexts
             log.Info("Rows copied in " + copier.DestinationTableName + ": " + e.RowsCopied);
         }
 
+        public DataTable GetEmptyDimensionsDataTable()
+        {
+            return GetEmptyDataTable("EdgarDatasetDimensions");
+        }
+
+        public void BulkCopyDimensions(DataTable dt)
+        {
+            BulkCopy("EdgarDatasetDimensions", dt);
+        }
+
         public DataTable GetEmptyPresentationDataTable()
         {
             return GetEmptyDataTable("EdgarDatasetPresentations");

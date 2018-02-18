@@ -88,6 +88,10 @@ namespace Analyst.Services.EdgarDatasetServices
                         ProcessBulk(missing,fileToProcess,fieldToUpdate, state, allLines, header);
                     else
                         ProcessLineByLine(missing,fileToProcess, fieldToUpdate, state, allLines, header,cacheFolder,tsvFileName, processInParallel);
+
+                    Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Process finished, updating dataset status");
+                    savedInDb = state.DatasetSharedRepo.GetCount<T>(state.Dataset.Id);
+                    UpdateProcessedField(state, fieldToUpdate, savedInDb);
                 }
                 else
                 {
@@ -176,8 +180,6 @@ namespace Analyst.Services.EdgarDatasetServices
                 }
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Starting bulk copy");
                 BulkCopy(repo, dt);
-                Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Bulk copy finished, updating dataset status");
-                UpdateProcessedField(state, fieldToUpdate, dt.Rows.Count);
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- END BULK PROCESS");
             }
         }
@@ -195,11 +197,8 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             string field = prefix + fieldToUpdate;
             int currentValue = (int)state.Dataset.GetType().GetProperty(field).GetValue(state.Dataset);
-            if (currentValue == 0)
-            {
-                state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset, value);
-                state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, field);
-            }
+            state.Dataset.GetType().GetProperty(field).SetValue(state.Dataset, value);
+            state.DatasetSharedRepo.UpdateEdgarDataset(state.Dataset, field);
         }
 
 
