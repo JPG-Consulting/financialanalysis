@@ -92,6 +92,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="queries\queries for errors\check for processed.sql" />
     <Content Include="queries\queries for reports\01st approach to balance.sql" />
     <Content Include="queries\control_queries.sql" />
     <Content Include="queries\queries for errors\duplicated analys num record.sql" />
