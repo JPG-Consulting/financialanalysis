@@ -37,9 +37,9 @@ where 1=1
 	--and logger <> 'EdgarDatasetTagService'
 	--AND Logger = 'EdgarDatasetNumService'
 	--and Logger = 'EdgarDatasetTextService'
-	and id >= 257
+	and id >= 735
 --order by date asc
-order by Logger,date asc
+order by Logger, date asc
 --order by Logger,message,date asc
 --order by message,date asc
 ;
@@ -48,7 +48,7 @@ order by Logger,date asc
 /*
 --clear log
 delete from [dbo].[Log] 
-where id <= 384
+--where id <= 384
 --where level='DEBUG'
 where level='INFO';
 */
