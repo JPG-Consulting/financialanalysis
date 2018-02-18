@@ -50,57 +50,13 @@ select
 from EdgarDatasetSubmissions subs
 	inner join Registrants r on subs.RegistrantId = r.Id
 	left join EdgarDatasetRenders ren on ren.SubmissionId = subs.Id
-	left join EdgarDatasetPresentations pre on ren.Id = pre.RenderId
+	left join EdgarDatasetPresentations pre on ren.Id = pre.RenderId and pre.SubmissionId = sub.Id
 where r.CIK = @cik
 	and subs.DatasetId = @period
 order by ren.Report,pre.Line
 */
 
 
---numbers, but it only shows an old period
-/*
-select 
-	r.Name,r.CIK,sub.DatasetId,sub.period
-	,case form.Code
-		when '10-Q' then 'Quarterly data'
-		when '10-K' then 'Annual data'
-		else form.code + ' -- ' + form.Description
-	 end as form
-	,ren.Report,ren.MenuCategory,ren.ShortName,ren.RenderFileStr
-	,pre.ReportNumber,pre.FinancialStatement,pre.Line,pre.PreferredLabel,pre.Negating
-	--,pre.ADSH_Tag_Version--raw data
-	,tag.LabelText
-	--,tags.Documentation --explanaition of tag
-	,cast(
-		case 
-			when num.DatavalueEnddate is not null then num.DatavalueEnddate
-			when num.DatavalueEnddate is null and txt.DatavalueEnddate is not null then num.DatavalueEnddate
-			else null
-		 end 
-		 as date) as datavalueenddate
-	,case 
-		when num.Value is not null
-			then CONCAT(format(num.Value,'0,000.##'),' ',num.UnitOfMeasure)
-		when num.Value is null and txt.Value is not null 
-			then txt.Value
-		else null
-	end as value
-	,num.Decimals
-from EdgarDatasetSubmissions sub
-	inner join Registrants r on sub.RegistrantId = r.Id
-	inner join SECForms form on sub.SECFormId = form.Id
-	left join EdgarDatasetRenders ren on ren.SubmissionId = sub.Id
-	left join EdgarDatasetPresentations pre on ren.Id = pre.RenderId
-	left join EdgarDatasetTags tag on tag.Id = pre.TagId
-	left join EdgarDatasetNumbers num on num.Id = pre.NumberId
-	left join EdgarDatasetTexts txt on txt.Id = pre.TextId
-where r.CIK = @cik
-	and sub.DatasetId = @period
-	--and ren.MenuCategory =  'Cover'
-	and (ren.MenuCategory = 'Statements' or ren.MenuCategory = 'S')--depends on the company
-	and pre.FinancialStatement = 'IS' --(CP = Cover Page, BS = Balance Sheet, IS = Income Statement, CF = Cash Flow, EQ = Equity, CI = Comprehensive Income, UN = Unclassifiable Statement).
-order by ren.Report,pre.Line
-*/
 
 
 --numbers v2
@@ -136,7 +92,8 @@ select
 	*/
 	,dim.Segments
 	,'nums------>' tabla
-	,cast(num.DatavalueEndDate as Date) fecha,num.value,num.UnitOfMeasure,num.CountOfNumberOfQuarters,num.IPRX,num.FootNote,num.FootLength,num.NumberOfDimensions,num.CoRegistrant,num.durp,num.datp,num.Decimals
+	,cast(num.DatavalueEndDate as Date) fecha,format(iif(pre.Negating=1,-1,1) * num.value,'0,000') as value,num.UnitOfMeasure
+	,num.CountOfNumberOfQuarters,num.IPRX,num.FootNote,num.FootLength,num.NumberOfDimensions,num.CoRegistrant,num.durp,num.datp,num.Decimals
 	,'text------>' tabla
 	,txt.*
 from EdgarDatasetSubmissions sub
@@ -159,8 +116,7 @@ where r.CIK = @cik
 	--and ren.MenuCategory =  'Cover'
 	and (ren.MenuCategory = 'Statements' or ren.MenuCategory = 'S')--depends on the company
 	and pre.FinancialStatement = 'IS' --(CP = Cover Page, BS = Balance Sheet, IS = Income Statement, CF = Cash Flow, EQ = Equity, CI = Comprehensive Income, UN = Unclassifiable Statement).
-	--and tag.LabelText='Revenues'
-	and pre.PreferredLabel = 'Total net sales'
 	and num.CountOfNumberOfQuarters = 1 --Three Months Ended
 	--and nums.CountOfNumberOfQuarters = 3 --Nine Months Ended
-order by ren.Report,pre.Line,num.DatavalueEnddate,dim.Segments,num.NumberOfDimensions
+	and dim.Segments is null --if dimension is null, it's the main current statement; if dimension is not null, the it's a detail of the item (for instance: net sales by region or net sales by segment, etc)
+order by ren.Report,num.DatavalueEnddate,pre.Line,dim.Segments,num.NumberOfDimensions
