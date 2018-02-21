@@ -5,40 +5,40 @@ As investor, I want to see estimation of stock valuations
 	
 	
 1. Milestones	
-	[ ] Data sources
-		[x] Edgar Datasets
-		[ ] Current files
-			[ ] Edgar Indexes
-			[ ] Download current submissions on demand (documental DB)
-		[ ] Prices
-	[ ] Show raw balances
-		[ ] Estimate standard Income statement
-		[ ] Historical Income statment
-		[ ] Historical cash flow
-		[ ] Homogeneizar lo mas posibles dichos estados financieros, empezar con version tentativa:
+	* [ ] Data sources
+		* [x] Edgar Datasets
+		* [ ] Current files
+			* [ ] Edgar Indexes
+			* [ ] Download current submissions on demand (documental DB)
+		* [ ] Prices
+	* [ ] Show raw balances
+		* [ ] Estimate standard Income statement
+		* [ ] Historical Income statment
+		* [ ] Historical cash flow
+		* [ ] Homogeneizar lo mas posibles dichos estados financieros, empezar con version tentativa:
 			* Ventas - CMV = Gs Brutos
 			* GS Brutos - GsComer - GsAdmin - OtrosGastos = EBITDA
 			* EBITDA - Amortizaciones = EBIT
 			* EBIT - Intereses = EBT
 			* EBT - Taxes = RdoNeto
-	[ ] FCFF
-		[ ] Project cash flows
-			[ ] Sales
-			[ ] Lot of accounting work
-			[ ] ...
-		[ ] Estimate WACC
-			[ ] Estimate E/D proportion (assumption: historical proportion will continue)
-			[ ] Estimate tax rate
-			[ ] Estimate kd
-				[ ] Long term dept
-				[ ] Interests
-			[ ] Estimate ke
-				[ ] rf --> 10y Bond
-				[ ] rm-rf = 5.5% (Damodaran)
-				[ ] Prices
-	[ ] Multiple
-		[ ] With Prices and earnings, P/E can be estimated
-		[ ] What other multiple?
+	* [ ] FCFF
+		* [ ] Project cash flows
+			* [ ] Sales
+			* [ ] Lot of accounting work
+			* [ ] ...
+		* [ ] Estimate WACC
+			* [ ] Estimate E/D proportion (assumption: historical proportion will continue)
+			* [ ] Estimate tax rate
+			* [ ] Estimate kd
+				* [ ] Long term dept
+				* [ ] Interests
+			* [ ] Estimate ke
+				* [ ] rf --> 10y Bond
+				* [ ] rm-rf = 5.5% (Damodaran)
+				* [ ] Prices
+	* [ ] Multiple
+		* [ ] With Prices and earnings, P/E can be estimated
+		* [ ] What other multiple?
 
 2. Pending tasks:
 	1. unit test
