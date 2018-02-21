@@ -1,37 +1,55 @@
-Falta:
-	Backend
-		* Solo quedaria procesar el pre.tsv para que procese un dataset completo
-		* crear backend con angular:
-			- que en la misma pagina pueda ver
-				estado de datasets --> debe tener un timer
-				sics
-				forms
-				registrants
-			- login con token
-			- Api controller:
-				andan ok
-					http://localhost:1326/edgar_api/datasets/all
-					http://localhost:1326/edgar_api/datasets/getdetails?id=201701
-					http://localhost:1326/edgar_api/secforms
-					http://localhost:1326/edgar_api/sics
-		* que si el archivo no esta avise, no son tantos como para automatizar la descarga
-		* que haga unzip y cree la carpeta correspondiente
-		
-	Frontend
-		1) armar los estados financieros historicos
-			Estado de resultados
-			Flujo de fondos
-		2) Bajar precios del dia
-		3) si esta 1 y 2 puedo: calcular P/E (historico)
-		4) homogeneizar lo mas posibles dichos estados financieros, empezar con version tentativa:
+Objective
+	As investor, I want to see estimation of stock valuations
+
+	
+	
+1. Milestones	
+	1. [ ] Data sources
+		1. [x] Edgar Datasets
+		2. [ ] Current files
+			1. [ ] Edgar Indexes
+			2. [ ] Download current submissions on demand (documental DB)
+		3. [ ] Prices
+	2. [ ] Show raw balances
+		1. [ ] Estimate standard Income statement
+		2. [ ] Historical Income statment
+		3. [ ] Historical cash flow
+		4. Homogeneizar lo mas posibles dichos estados financieros, empezar con version tentativa:
 			Ventas - CMV = Gs Brutos
 			GS Brutos - GsComer - GsAdmin - OtrosGastos = EBITDA
 			EBITDA - Amortizaciones = EBIT
 			EBIT - Intereses = EBT
 			EBT - Taxes = RdoNeto
-		5) Pensar que otros multiplos puedo calcular
+	3. [ ] FCFF
+		1. [ ] Project cash flows
+			1. [ ] Sales
+			2. Lot of accounting work
+			3. ...
+		2. [ ] Estimate WACC
+			1. [ ] Estimate E/D proportion (assumption: historical proportion will continue)
+			2. [ ] Estimate tax rate
+			3. [ ] Estimate kd
+				1. [ ] Long term dept
+				2. [ ] Interests
+			4. [ ] Estimate ke
+				1. [ ] rf --> 10y Bond
+				2. [ ] rm-rf = 5.5% (Damodaran)
+				3. [ ] Prices
+	4. [ ] Multiple
+		1. [ ] With Prices and earnings, P/E can be estimated
+		2. [ ] What other multiple?
 
-		10) Used frameworks:
+2. Pending tasks:
+	1. unit test
+	2. Backend
+		1. Login with token
+		2. que si el archivo no esta avise, no son tantos como para automatizar la descarga
+		3. que haga unzip y cree la carpeta correspondiente
+		
+	3. Frontend
+		1. Pending tasks?
+
+		2. Used frameworks:
 			Angular 
 				version 1.4.9
 
@@ -49,4 +67,5 @@ Falta:
 				version 2.0
 				It is used for unit testing
 			
-
+3. Links
+	https://guides.github.com/features/mastering-markdown/
