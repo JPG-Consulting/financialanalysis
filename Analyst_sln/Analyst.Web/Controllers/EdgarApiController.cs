@@ -46,6 +46,15 @@ namespace Analyst.Web.Controllers
             return Ok(ds);
         }
 
+        [HttpPost]
+        [Route("datasets/process", Name = "processds")]
+        public IHttpActionResult ProcessDataset([FromBody]int id)
+        {
+            datasetService.ProcessDataset(id);
+            IList<EdgarDataset> datasets = datasetService.GetDatasets();
+            return Ok(datasets);
+        }
+
         [HttpGet]
         [Route("secforms")]
         [ResponseType(typeof(IList<SECForm>))]
@@ -64,13 +73,14 @@ namespace Analyst.Web.Controllers
             return Ok(sics);
         }
 
-        [HttpPost]
-        [Route("datasets/process", Name = "processds")]
-        public IHttpActionResult ProcessDataset([FromBody]int id)
+        [HttpGet]
+        [Route("registrants")]
+        [ResponseType(typeof(IList<Registrant>))]
+        public IHttpActionResult GetRegistrants()
         {
-            datasetService.ProcessDataset(id);
-            IList<EdgarDataset> datasets = datasetService.GetDatasets();
-            return Ok(datasets);
+            IList<Registrant> registrants = edgarService.GetRegistrants();
+            return Ok(registrants);
         }
+        
     }
 }

@@ -15,7 +15,7 @@ select id,
 	,cast(iif(totalrenders != 0 ,cast(processedrenders as float)/cast(totalrenders as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalrenders-processedrenders) as nvarchar) +')' ren
 	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalpresentations-processedpresentations) as nvarchar) +')' pre
 
-from EdgarDatasets where id in(201604,201701,201702,201703,201704);
+from EdgarDatasets where id in(201603,201604,201701,201702,201703,201704);
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Para revisar performance
@@ -37,7 +37,8 @@ where 1=1
 	--and logger <> 'EdgarDatasetTagService'
 	--AND Logger = 'EdgarDatasetNumService'
 	--and Logger = 'EdgarDatasetTextService'
-	and id >= 735
+	and (Logger = 'Analyst.Services.EdgarDatasetServices.EdgarDatasetService' or Exception is not null)
+	--and id >= 735
 --order by date asc
 order by Logger, date asc
 --order by Logger,message,date asc

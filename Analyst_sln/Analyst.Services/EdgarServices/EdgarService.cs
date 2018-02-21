@@ -19,6 +19,7 @@ namespace Analyst.Services.EdgarServices
     {
         IList<SECForm> GetSECForms();
         IList<SIC> GetSICs();
+        IList<Registrant> GetRegistrants();
     }
 
     public class EdgarService : IEdgarService
@@ -43,8 +44,14 @@ namespace Analyst.Services.EdgarServices
             return sics;
         }
 
+        public IList<Registrant> GetRegistrants()
+        {
+            //IList<Registrant> registrants = repository.Get<Registrant>();
+            //return registrants;
+            throw new NotImplementedException();
+        }
 
-        
+
     }
 
     

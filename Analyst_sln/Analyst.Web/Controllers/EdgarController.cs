@@ -39,6 +39,14 @@ namespace Analyst.Web.Controllers
         }
 
         [HttpGet]
+        [Route("datasets/all")]
+        public ActionResult GetDatasets()
+        {
+            IList<EdgarDataset> datasets = datasetService.GetDatasets();
+            return View("Datasets", datasets);
+        }
+
+        [HttpGet]
         [Route("secforms")]
         public ActionResult GetSecForms()
         {
@@ -55,11 +63,12 @@ namespace Analyst.Web.Controllers
         }
 
         [HttpGet]
-        [Route("datasets/all")]
-        public ActionResult GetDatasets()
+        [Route("registrants")]
+        public ActionResult GetRegistrants()
         {
-            IList<EdgarDataset> datasets = datasetService.GetDatasets();
-            return View("Datasets",datasets);
+            IList<Registrant> registrants = edgarService.GetRegistrants();
+            return View(registrants);
         }
+
     }
 }
