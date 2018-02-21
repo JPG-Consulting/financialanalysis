@@ -1,5 +1,6 @@
-Objective
-	As investor, I want to see estimation of stock valuations
+# Objective
+
+As investor, I want to see estimation of stock valuations
 
 	
 	
