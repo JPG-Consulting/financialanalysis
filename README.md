@@ -68,4 +68,9 @@ Objective
 				It is used for unit testing
 			
 3. Links
+	* Markdowns
 	https://guides.github.com/features/mastering-markdown/
+	
+	* Edgar Financial Statement and Notes Data Sets
+	https://www.sec.gov/dera/data/financial-statement-and-notes-data-set.html
+	
