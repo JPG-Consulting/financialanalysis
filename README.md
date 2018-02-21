@@ -1,10 +1,12 @@
-# Objective
+# Analyst
+
+## Objective
 
 As investor, I want to see estimation of stock valuations
 
 	
 	
-1. Milestones	
+## Milestones	
 	* [ ] Data sources
 		* [x] Edgar Datasets
 		* [ ] Current files
@@ -40,7 +42,7 @@ As investor, I want to see estimation of stock valuations
 		* [ ] With Prices and earnings, P/E can be estimated
 		* [ ] What other multiple?
 
-2. Pending tasks:
+## Pending tasks:
 	1. unit test
 	2. Backend
 		1. Login with token
@@ -48,7 +50,7 @@ As investor, I want to see estimation of stock valuations
 		3. que haga unzip y cree la carpeta correspondiente
 		
 	3. Frontend
-		1. Pending tasks?
+		1. Frontend pending tasks?
 
 		2. Used frameworks:
 			* Angular 
@@ -68,7 +70,7 @@ As investor, I want to see estimation of stock valuations
 				* version 2.0
 				* It is used for unit testing
 			
-3. Links
+## Links
 	* Markdowns: 
 	
 	https://guides.github.com/features/mastering-markdown/
