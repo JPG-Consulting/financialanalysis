@@ -36,7 +36,6 @@ namespace Analyst.Services.EdgarDatasetServices
         public const int MAX_TRIALS = 5;
         private static ConcurrentDictionary<int, Task> datasetsInProcess = new ConcurrentDictionary<int,Task>();
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly bool allowProcess;
 
         private IEdgarDatasetSubmissionsService submissionService;
         private IEdgarDatasetTagService tagService;
@@ -73,17 +72,7 @@ namespace Analyst.Services.EdgarDatasetServices
             this.presentationService = new EdgarDatasetPresentationService();
             this.calcService = new EdgarDatasetCalculationService();
             this.textService = new EdgarDatasetTextService();
-            allowProcess = true;
-        }
 
-        public EdgarDatasetService(IAnalystEdgarDatasetsRepository repository)
-        {
-            allowProcess = false;
-        }
-
-        public static IEdgarDatasetService CreateOnlyForRetrieval()
-        {
-            return new EdgarDatasetService(new AnalystEdgarDatasetsRepository());
         }
 
         public IList<EdgarDataset> GetDatasets()
@@ -118,33 +107,26 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             //https://stackify.com/log4net-guide-dotnet-logging/
             log.Info("Datasetid " + id.ToString() + " -- Requested");
-            if (allowProcess)
+            if (datasetsInProcess.ContainsKey(id))
             {
-                if (datasetsInProcess.ContainsKey(id))
+                Task t = datasetsInProcess[id];
+                //TODO: how to control that task finished ok and there is no need to rerun?
+                if (t != null)
                 {
-                    Task t = datasetsInProcess[id];
-                    //TODO: how to control that task finished ok and there is no need to rerun?
-                    if (t != null)
+                    if (t.Status != TaskStatus.Running)
                     {
-                        if (t.Status != TaskStatus.Running)
-                        {
-                            t.Dispose();
-                            datasetsInProcess[id] = null;
-                            Run(id);
-                        }
-                        log.Info("Datasetid " + id.ToString() + " -- It's in progress");
-                    }
-                    else
+                        t.Dispose();
+                        datasetsInProcess[id] = null;
                         Run(id);
+                    }
+                    log.Info("Datasetid " + id.ToString() + " -- It's in progress");
                 }
                 else
                     Run(id);
             }
             else
-            {
-                log.Info("Datasetid " + id.ToString() + " -- It isn't able to run (allowprocess=" + allowProcess.ToString() + ")");
-                throw new ApplicationException("This service doesn't allow process, you have to use other constructor");
-            }
+                Run(id);
+
         }
 
         private void Run(int id)

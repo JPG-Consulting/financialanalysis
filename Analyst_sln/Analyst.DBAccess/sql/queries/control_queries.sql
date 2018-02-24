@@ -15,7 +15,7 @@ select id,
 	,cast(iif(totalrenders != 0 ,cast(processedrenders as float)/cast(totalrenders as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalrenders-processedrenders) as nvarchar) +')' ren
 	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalpresentations-processedpresentations) as nvarchar) +')' pre
 
-from EdgarDatasets where id in(201603,201604,201701,201702,201703,201704);
+from EdgarDatasets where id in(201602,201603,201604,201701,201702,201703,201704);
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Para revisar performance

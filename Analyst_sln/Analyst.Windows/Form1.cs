@@ -44,7 +44,7 @@ namespace Analyst.Windows
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            using (IEdgarDatasetService edsserv = EdgarDatasetService.CreateOnlyForRetrieval())
+            using (IEdgarDatasetService edsserv = new EdgarDatasetService())
             {
                 int id = Convert.ToInt32(lblDatasetInProcess.Text);
                 EdgarDataset ds = edsserv.GetDataset(id);
@@ -100,24 +100,14 @@ namespace Analyst.Windows
 
         private IEdgarDatasetService CreateEdgarDatasetService()
         {
-            IAnalystEdgarDatasetsRepository repository = new AnalystEdgarDatasetsRepository();
-            IEdgarDatasetSubmissionsService submissionService = new EdgarDatasetSubmissionsService();
-            IEdgarDatasetTagService tagService = new EdgarDatasetTagService();
-            IEdgarDatasetNumService numService = new EdgarDatasetNumService();
-            IEdgarDatasetDimensionService dimensionService = new EdgarDatasetDimensionService();
-            IEdgarDatasetRenderService renderingService = new EdgarDatasetRenderService();
-            IEdgarDatasetPresentationService presentationService = new EdgarDatasetPresentationService();
-            IEdgarDatasetCalculationService calcService = new EdgarDatasetCalculationService();
-            IEdgarDatasetTextService textService = new EdgarDatasetTextService();
-
-            IEdgarDatasetService edgarDatasetService = new EdgarDatasetService( submissionService, tagService, numService, dimensionService, renderingService, presentationService, calcService, textService);
+            IEdgarDatasetService edgarDatasetService = new EdgarDatasetService();
             return edgarDatasetService;
         }
 
         private void LoadDatasets()
         {
             IList<EdgarDataset> datasets;
-            using (IEdgarDatasetService dsServ = EdgarDatasetService.CreateOnlyForRetrieval())
+            using (IEdgarDatasetService dsServ = new EdgarDatasetService())
             {
                 datasets = dsServ.GetDatasets();
             }
