@@ -100,7 +100,7 @@ namespace Analyst.Windows
 
         private IEdgarDatasetService CreateEdgarDatasetService()
         {
-            IAnalystRepository repository = new AnalystRepository(new AnalystContext());
+            IAnalystEdgarDatasetsRepository repository = new AnalystEdgarDatasetsRepository();
             IEdgarDatasetSubmissionsService submissionService = new EdgarDatasetSubmissionsService();
             IEdgarDatasetTagService tagService = new EdgarDatasetTagService();
             IEdgarDatasetNumService numService = new EdgarDatasetNumService();

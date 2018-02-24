@@ -46,6 +46,9 @@ namespace Analyst.Services.EdgarDatasetServices
         private IEdgarDatasetPresentationService presentationService;
         private IEdgarDatasetCalculationService calcService;
         private IEdgarDatasetTextService textService;
+
+        /*
+         * We will create everything for any new execution
         public EdgarDatasetService( IEdgarDatasetSubmissionsService submissionService, IEdgarDatasetTagService tagService, IEdgarDatasetNumService numService, IEdgarDatasetDimensionService dimensionService, IEdgarDatasetRenderService renderingService,IEdgarDatasetPresentationService presentationService,IEdgarDatasetCalculationService calcService, IEdgarDatasetTextService textService)
         {
             this.submissionService = submissionService;
@@ -58,20 +61,34 @@ namespace Analyst.Services.EdgarDatasetServices
             this.textService = textService;
             allowProcess = true;
         }
+        */
 
-        public EdgarDatasetService(IAnalystRepository repository)
+        public EdgarDatasetService()
+        {
+            this.submissionService = new EdgarDatasetSubmissionsService();
+            this.tagService = new EdgarDatasetTagService();
+            this.numService = new EdgarDatasetNumService();
+            this.dimensionService = new EdgarDatasetDimensionService();
+            this.renderingService = new EdgarDatasetRenderService();
+            this.presentationService = new EdgarDatasetPresentationService();
+            this.calcService = new EdgarDatasetCalculationService();
+            this.textService = new EdgarDatasetTextService();
+            allowProcess = true;
+        }
+
+        public EdgarDatasetService(IAnalystEdgarDatasetsRepository repository)
         {
             allowProcess = false;
         }
 
         public static IEdgarDatasetService CreateOnlyForRetrieval()
         {
-            return new EdgarDatasetService(new AnalystRepository(new AnalystContext()));
+            return new EdgarDatasetService(new AnalystEdgarDatasetsRepository());
         }
 
         public IList<EdgarDataset> GetDatasets()
         {
-            using (IAnalystRepository repository = CreateRepository())
+            using (IAnalystEdgarDatasetsRepository repository = CreateRepository())
             {
                 IList<EdgarDataset> datasets = repository.Get<EdgarDataset>();
                 return datasets;
@@ -82,7 +99,7 @@ namespace Analyst.Services.EdgarDatasetServices
 
         public EdgarDataset GetDataset(int id)
         {
-            using (IAnalystRepository repository = CreateRepository())
+            using (IAnalystEdgarDatasetsRepository repository = CreateRepository())
             {
                 EdgarDataset ds = repository.GetDataset(id);
                 return ds;
@@ -137,7 +154,7 @@ namespace Analyst.Services.EdgarDatasetServices
             {
                 try
                 {
-                    using (IAnalystRepository repository = CreateRepository())
+                    using (IAnalystEdgarDatasetsRepository repository = CreateRepository())
                     {
                         EdgarDataset ds = repository.GetDataset(id);
                         if (ds != null)
@@ -211,7 +228,7 @@ namespace Analyst.Services.EdgarDatasetServices
             datasetsInProcess.TryAdd(id, t);
         }
 
-        private EdgarTaskState[] LoadSubTagDim(EdgarDataset ds, IAnalystRepository repo)
+        private EdgarTaskState[] LoadSubTagDim(EdgarDataset ds, IAnalystEdgarDatasetsRepository repo)
         {
             List<EdgarTaskState> states = new List<EdgarTaskState>();
             EdgarTaskState stateSubs, stateTag, stateDim;
@@ -251,7 +268,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return states.ToArray();
         }
 
-        private EdgarTaskState[] LoadCalTxtNum(EdgarDataset ds, IAnalystRepository repo, ConcurrentDictionary<string, int> subs, ConcurrentDictionary<string, int> tags, ConcurrentDictionary<string, int> dims)
+        private EdgarTaskState[] LoadCalTxtNum(EdgarDataset ds, IAnalystEdgarDatasetsRepository repo, ConcurrentDictionary<string, int> subs, ConcurrentDictionary<string, int> tags, ConcurrentDictionary<string, int> dims)
         {
             List<EdgarTaskState> states = new List<EdgarTaskState>();
             List<Task> tasks = new List<Task>();
@@ -306,7 +323,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return states.ToArray();
         }
 
-        private EdgarTaskState[] LoadRenPre(EdgarDataset ds, IAnalystRepository repo, ConcurrentDictionary<string, int> subs, ConcurrentDictionary<string, int> tags,ConcurrentDictionary<string, int> nums,ConcurrentDictionary<string, int> texts)
+        private EdgarTaskState[] LoadRenPre(EdgarDataset ds, IAnalystEdgarDatasetsRepository repo, ConcurrentDictionary<string, int> subs, ConcurrentDictionary<string, int> tags,ConcurrentDictionary<string, int> nums,ConcurrentDictionary<string, int> texts)
         {
             List<EdgarTaskState> states = new List<EdgarTaskState>();
             List<Task> tasks = new List<Task>();
@@ -349,9 +366,9 @@ namespace Analyst.Services.EdgarDatasetServices
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
-        private IAnalystRepository CreateRepository()
+        private IAnalystEdgarDatasetsRepository CreateRepository()
         {
-            return new AnalystRepository(new AnalystContext());
+            return new AnalystEdgarDatasetsRepository();
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    public class AnalystContext : DbContext
+    internal class AnalystContext : DbContext
     {
 
         static AnalystContext()

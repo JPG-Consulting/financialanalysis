@@ -40,12 +40,12 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetText file)
+        public override void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, EdgarDatasetText file)
         {
             repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetText Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetText Parse(IAnalystEdgarDatasetsRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             /*
             adsh	tag	version	ddate	qtrs	iprx	lang	dcml	durp	datp	dimh	dimn	coreg	escaped	srclen	txtlen	footnote	footlen	context	value
@@ -92,7 +92,7 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
 
-        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetTextKeys(datasetId);
         }
@@ -107,17 +107,17 @@ namespace Analyst.Services.EdgarDatasetServices
             throw new NotImplementedException();
         }
 
-        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
         {
             throw new NotImplementedException();
         }
 
-        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
         {
             throw new NotImplementedException();
         }
 
-        public override List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines)
+        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
         {
             return repo.GetMissingLines(datasetId,"EdgarDatasetTexts", totalLines);
         }

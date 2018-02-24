@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Analyst.DBAccess.Contexts
 {
     //public class AnalystContextInitializer : DropCreateDatabaseIfModelChanges<AnalystContext>
-    public class AnalystContextInitializer: CreateDatabaseIfNotExists<AnalystContext>
+    internal class AnalystContextInitializer: CreateDatabaseIfNotExists<AnalystContext>
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         protected override void Seed(AnalystContext context)
@@ -63,7 +63,7 @@ namespace Analyst.DBAccess.Contexts
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_TEXT_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create table LOG.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create table numbers.sql"));
-            InitialLoader.LoadInitialData(new AnalystRepository(context));
+            InitialLoader.LoadInitialData(new AnalystEdgarDatasetsRepository(context));
         }
 
         private string GetTextScript(string scriptFileName)

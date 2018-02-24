@@ -17,15 +17,15 @@ namespace Analyst.Services.EdgarDatasetServices
         private EdgarDataset ds;
         public EdgarDataset Dataset { get { return ds; } }
 
-        private IAnalystRepository dsRepo;
-        public IAnalystRepository DatasetSharedRepo { get { return dsRepo; } }
+        private IAnalystEdgarDatasetsRepository dsRepo;
+        public IAnalystEdgarDatasetsRepository DatasetSharedRepo { get { return dsRepo; } }
 
         private string processName;
         public string ProcessName { get { return processName; } }
 
         public string FileNameToReprocess { get; set; }
 
-        public EdgarTaskState(string processName ,EdgarDataset ds,IAnalystRepository dsRepo)
+        public EdgarTaskState(string processName ,EdgarDataset ds,IAnalystEdgarDatasetsRepository dsRepo)
         {
             this.ds = ds;
             this.dsRepo = dsRepo;

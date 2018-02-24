@@ -44,7 +44,7 @@ namespace Analyst.Services.EdgarDatasetServices
         public ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId)
         {
             ConcurrentDictionary<string, int> ret = new ConcurrentDictionary<string, int>();
-            using (IAnalystRepository repository = new AnalystRepository(new AnalystContext()))
+            using (IAnalystEdgarDatasetsRepository repository = new AnalystEdgarDatasetsRepository())
             {
                 IList<EdgarTuple> keysId = GetKeys(repository, datasetId);
                 foreach (EdgarTuple t in keysId)
@@ -142,7 +142,7 @@ namespace Analyst.Services.EdgarDatasetServices
         public ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
         {
             List<int> missing;
-            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsRepository())
             {
                 missing = GetMissingLinesByTable(repo,datasetId, totalLines);
             }
@@ -156,7 +156,7 @@ namespace Analyst.Services.EdgarDatasetServices
             //https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/transaction-and-bulk-copy-operations
 
             Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN BULK PROCESS");
-            using (SQLAnalystRepository repo = new SQLAnalystRepository())
+            using (SQLAnalystEdgarDatasetsRepository repo = new SQLAnalystEdgarDatasetsRepository())
             {
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Retrieving structure");
                 DataTable dt = GetEmptyDataTable(repo);
@@ -229,7 +229,7 @@ namespace Analyst.Services.EdgarDatasetServices
 
         private bool IsAlreadyProcessed(EdgarTaskState state, string fieldToUpdate, out int savedInDb)
         {
-            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsRepository())
             {
                 savedInDb = repo.GetCount<T>(state.Dataset.Id);
                 int processed = (int)state.Dataset.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(state.Dataset);
@@ -253,7 +253,7 @@ namespace Analyst.Services.EdgarDatasetServices
             https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
             solution: only 1 context for the entiry partition --> works
             */
-            using (IAnalystRepository repo = new AnalystRepository(new AnalystContext()))
+            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsRepository())
             {
                 //It improves performance
                 //https://msdn.microsoft.com/en-us/library/jj556205(v=vs.113).aspx
@@ -317,23 +317,23 @@ namespace Analyst.Services.EdgarDatasetServices
 
         }
 
-        public abstract void Add(IAnalystRepository repo, EdgarDataset dataset, T file);
+        public abstract void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, T file);
 
-        public abstract T Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber);
+        public abstract T Parse(IAnalystEdgarDatasetsRepository repository, List<string> fieldNames, List<string> fields, int lineNumber);
      
-        public abstract IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId);
+        public abstract IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId);
 
         public abstract string GetKey(List<string> fieldNames, List<string> fields);
 
-        public abstract void BulkCopy(SQLAnalystRepository repo, DataTable dt);
+        public abstract void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt);
 
-        public abstract DataTable GetEmptyDataTable(SQLAnalystRepository repo);
+        public abstract DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo);
 
         public abstract void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId);
 
 
 
-        public abstract List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines);
+        public abstract List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines);
         
 
         public void Dispose()

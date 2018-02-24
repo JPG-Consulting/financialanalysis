@@ -48,11 +48,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -202,18 +202,20 @@
   <ItemGroup>
     <Content Include="app\angular-simple-pagination.js" />
     <Content Include="app\edgarApp.js" />
-    <Content Include="app\spaDatasetsCtrl.js" />
+    <Content Include="app\spaEdgarCtrl.js" />
+    <Content Include="app\spaEdgarDatasetsCtrl.js" />
     <Content Include="app\edgarServ.js" />
     <Content Include="Global.asax" />
     <Content Include="config\log4net\debug.config" />
     <Content Include="index.html" />
-    <Content Include="spa_datasets_unittests.html" />
+    <Content Include="spa_edgar.html" />
+    <Content Include="spa_edgardatasets_unittests.html" />
     <Content Include="spa_screen_analyze_trade.html" />
     <Content Include="scripts\angular.min.js.map" />
-    <Content Include="Views\Edgar\Home.cshtml" />
+    <Content Include="Views\EdgarDatasets\Home.cshtml" />
     <None Include="Properties\PublishProfiles\localhost.pubxml" />
-    <None Include="Views\Edgar\readme.cshtml" />
-    <Content Include="spa_datasets.html" />
+    <None Include="Views\EdgarDatasets\readme.cshtml" />
+    <Content Include="spa_edgardatasets.html" />
     <Content Include="scripts\angular-mocks.js" />
     <Content Include="scripts\angular.js" />
     <Content Include="scripts\angular.min.js" />
@@ -221,7 +223,7 @@
     <Content Include="styles\bootstrap.min.css" />
     <Content Include="styles\global.css" />
     <Content Include="styles\tests_style.css" />
-    <Content Include="Views\Edgar\readme.css" />
+    <Content Include="Views\EdgarDatasets\readme.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -230,8 +232,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfiguration\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\EdgarApiController.cs" />
-    <Compile Include="Controllers\EdgarController.cs" />
+    <Compile Include="Controllers\Backend\EdgarDatasetsApiController.cs" />
+    <Compile Include="Controllers\Backend\EdgarDatasetsController.cs" />
+    <Compile Include="Controllers\Frontend\EdgarApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -243,9 +246,10 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Edgar\Datasets.cshtml" />
-    <Content Include="Views\Edgar\SECForms.cshtml" />
-    <Content Include="Views\Edgar\SICs.cshtml" />
+    <Content Include="Views\EdgarDatasets\Datasets.cshtml" />
+    <Content Include="Views\EdgarDatasets\SECForms.cshtml" />
+    <Content Include="Views\EdgarDatasets\SICs.cshtml" />
+    <Content Include="Views\EdgarDatasets\Registrants.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

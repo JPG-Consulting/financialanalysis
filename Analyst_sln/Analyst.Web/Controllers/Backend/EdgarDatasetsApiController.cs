@@ -15,14 +15,14 @@ using System.Web.Http.Description;
 namespace Analyst.Web.Controllers
 { 
 
-    [RoutePrefix("edgar_api")]
-    public class EdgarApiController : ApiController
+    [RoutePrefix("edgardatasetsapi")]
+    public class EdgarDatasetsApiController : ApiController
     {
         
         private IEdgarService edgarService;
         private IEdgarDatasetService datasetService;
 
-        public EdgarApiController(IEdgarService edgarService,IEdgarDatasetService datasetService)
+        public EdgarDatasetsApiController(IEdgarService edgarService,IEdgarDatasetService datasetService)
         {
             this.edgarService = edgarService;
             this.datasetService = datasetService;

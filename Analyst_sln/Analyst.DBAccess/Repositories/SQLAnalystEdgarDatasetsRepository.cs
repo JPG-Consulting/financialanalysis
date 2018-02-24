@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    public class SQLAnalystRepository:AnalystRepository,IDisposable
+    public class SQLAnalystEdgarDatasetsRepository : AnalystEdgarDatasetsRepository, IDisposable
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public SQLAnalystRepository():base(new AnalystContext())
+        public SQLAnalystEdgarDatasetsRepository():base()
         {
 
         }

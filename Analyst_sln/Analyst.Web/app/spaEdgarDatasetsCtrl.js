@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////////////////////////
 //Controller
 
-function spaDatasetsCtrl($scope, $interval, serv) {
+function spaEdgarDatasetsCtrl($scope, $interval, serv) {
     $scope.model = new Object();
 
     $scope.model.Title = "EDGAR datasets status";

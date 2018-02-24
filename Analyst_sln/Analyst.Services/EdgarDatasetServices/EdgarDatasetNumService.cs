@@ -40,7 +40,7 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetNumber file)
+        public override void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, EdgarDatasetNumber file)
         {
             file.SubmissionId = Submissions[file.ADSH];
             file.TagId = Tags[file.TagCompoundKey];
@@ -48,7 +48,7 @@ namespace Analyst.Services.EdgarDatasetServices
             repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetNumber Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetNumber Parse(IAnalystEdgarDatasetsRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             /*
             Ejemplo
@@ -101,7 +101,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return number;
         }
 
-        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetNumberKeys(datasetId);
         }
@@ -143,7 +143,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return ADSH + TagStr + Version;
         }
 
-        public override List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines)
+        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
         {
             return repo.GetMissingLines(datasetId,"EdgarDatasetNumbers", totalLines);
         }
@@ -212,12 +212,12 @@ namespace Analyst.Services.EdgarDatasetServices
 
         }
 
-        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
         {
             repo.BulkCopyNumbers(dt);
         }
 
-        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
         {
             return repo.GetEmptyNumbersDataTable();
         }

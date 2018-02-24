@@ -5,8 +5,9 @@ var edgarApp = angular.module('edgarApp', []);
 
 edgarApp.service('edgarServ', ['$http', edgarServ]);
 
-edgarApp.controller('spaDatasetsCtrl', spaDatasetsCtrl);
-spaDatasetsCtrl.$inject = ['$scope', '$interval', 'edgarServ'];
+edgarApp.controller('spaEdgarDatasetsCtrl', spaEdgarDatasetsCtrl);
+spaEdgarDatasetsCtrl.$inject = ['$scope', '$interval', 'edgarServ'];
 
 
-
+edgarApp.controller('spaEdgarCtrl', spaEdgarCtrl);
+spaEdgarCtrl.$inject = ['$scope', '$interval', 'edgarServ'];

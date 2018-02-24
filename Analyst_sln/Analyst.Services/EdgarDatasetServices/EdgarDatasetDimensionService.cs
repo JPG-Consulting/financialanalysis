@@ -31,12 +31,12 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetDimension file)
+        public override void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, EdgarDatasetDimension file)
         {
             repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetDimension Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetDimension Parse(IAnalystEdgarDatasetsRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             string dimhash = fields[fieldNames.IndexOf("dimhash")];
             EdgarDatasetDimension dim;
@@ -48,7 +48,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return dim;
         }
 
-        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetDimensionKeys(datasetId);
         }
@@ -67,17 +67,17 @@ namespace Analyst.Services.EdgarDatasetServices
             dr["DatasetId"] = edgarDatasetId;
         }
 
-        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
         {
             repo.BulkCopyDimensions(dt);
         }
 
-        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
         {
             return repo.GetEmptyDimensionsDataTable();
         }
 
-        public override List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines)
+        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
         {
             return repo.GetMissingLines(datasetId,"EdgarDatasetDimensions", totalLines);
         }

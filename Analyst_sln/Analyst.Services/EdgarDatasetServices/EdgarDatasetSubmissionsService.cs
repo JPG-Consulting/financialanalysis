@@ -33,12 +33,12 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override void Add(IAnalystRepository repo, EdgarDataset dataset, EdgarDatasetSubmission file)
+        public override void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, EdgarDatasetSubmission file)
         {
             repo.Add(dataset, file);
         }
 
-        public override EdgarDatasetSubmission Parse(IAnalystRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
+        public override EdgarDatasetSubmission Parse(IAnalystEdgarDatasetsRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
         {
             //Example
             //adsh	cik	name	sic	countryba	stprba	cityba	zipba	bas1	bas2	baph	countryma	stprma	cityma	zipma	mas1	mas2	countryinc	stprinc	ein	former	changed	afs	wksi	fye	form	period	fy	fp	filed	accepted	prevrpt	detail	instance	nciks	aciks	pubfloatusd	floatdate	floataxis	floatmems
@@ -84,7 +84,7 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
 
-        private Registrant ParseRegistrant(IAnalystRepository repository,string cik, List<string> fieldNames, List<string> fields)
+        private Registrant ParseRegistrant(IAnalystEdgarDatasetsRepository repository,string cik, List<string> fieldNames, List<string> fields)
         {
             Registrant r = repository.GetRegistrant(cik);
             if (r == null)
@@ -115,7 +115,7 @@ namespace Analyst.Services.EdgarDatasetServices
         }
 
 
-        public override IList<EdgarTuple> GetKeys(IAnalystRepository repository, int datasetId)
+        public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetSubmissionKeys(datasetId);
         }
@@ -130,17 +130,17 @@ namespace Analyst.Services.EdgarDatasetServices
             throw new NotImplementedException();
         }
 
-        public override void BulkCopy(SQLAnalystRepository repo, DataTable dt)
+        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
         {
             throw new NotImplementedException();
         }
 
-        public override DataTable GetEmptyDataTable(SQLAnalystRepository repo)
+        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
         {
             throw new NotImplementedException();
         }
 
-        public override List<int> GetMissingLinesByTable(IAnalystRepository repo, int datasetId, int totalLines)
+        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
         {
             return repo.GetMissingLines(datasetId,"EdgarDatasetSubmissions", totalLines);
         }

@@ -15,7 +15,7 @@ using System.Configuration;
 
 namespace Analyst.DBAccess.Contexts
 {
-    public interface IAnalystRepository:IDisposable
+    public interface IAnalystEdgarDatasetsRepository : IDisposable
     {
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
 
@@ -62,12 +62,16 @@ namespace Analyst.DBAccess.Contexts
         void EnablePresentationIndexes(bool enable);
     }
 
-    public class AnalystRepository : IAnalystRepository
+    public class AnalystEdgarDatasetsRepository : IAnalystEdgarDatasetsRepository
     {
         public const int DEFAULT_CONN_TIMEOUT = 180;
         private AnalystContext Context;
 
-        public AnalystRepository(AnalystContext context)
+        public AnalystEdgarDatasetsRepository():this(new AnalystContext())
+        {
+        }
+        
+        internal AnalystEdgarDatasetsRepository(AnalystContext context)
         {
             this.Context = context;
             int timeout;
@@ -78,6 +82,7 @@ namespace Analyst.DBAccess.Contexts
             this.Context.Database.CommandTimeout = timeout;
         }
 
+        
 
 
         public bool ContextConfigurationAutoDetectChangesEnabled

@@ -16,14 +16,14 @@ namespace Analyst.DBAccess.Contexts
     /// </summary>
     public class InitialLoader
     {
-        internal static void LoadInitialData(IAnalystRepository repository)
+        internal static void LoadInitialData(IAnalystEdgarDatasetsRepository repository)
         {
             LoadSECForms(repository);
             LoadSICs(repository);
             LoadInitialDatasets(repository);
         }
 
-        private static void LoadSICs(IAnalystRepository repository)
+        private static void LoadSICs(IAnalystEdgarDatasetsRepository repository)
         {
             if(repository.GetSICCount() == 0)
             {
@@ -475,7 +475,7 @@ namespace Analyst.DBAccess.Contexts
             }
         }
 
-        private static void LoadInitialDatasets(IAnalystRepository repository)
+        private static void LoadInitialDatasets(IAnalystEdgarDatasetsRepository repository)
         {
             if (repository.GetDatasetsCount() == 0)
             {
@@ -500,7 +500,7 @@ namespace Analyst.DBAccess.Contexts
             }
         }
 
-        private static void LoadSECForms(IAnalystRepository repository)
+        private static void LoadSECForms(IAnalystEdgarDatasetsRepository repository)
         {
             if (repository.GetSECFormsCount() == 0)
             {

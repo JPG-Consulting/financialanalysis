@@ -11,13 +11,13 @@ using System.Web.Mvc;
 namespace Analyst.Web.Controllers
 {
     [RoutePrefix("edgar")]
-    public class EdgarController : Controller
+    public class EdgarDatasetsController : Controller
     {
 
         private IEdgarService edgarService;
         private IEdgarDatasetService datasetService;
 
-        public EdgarController(IEdgarService edgarService, IEdgarDatasetService datasetService)
+        public EdgarDatasetsController(IEdgarService edgarService, IEdgarDatasetService datasetService)
         {
             this.edgarService = edgarService;
             this.datasetService = datasetService;
@@ -59,15 +59,15 @@ namespace Analyst.Web.Controllers
         public ActionResult GetSICs()
         {
             IList<SIC> sics = edgarService.GetSICs();
-            return View("SICs",sics);
+            return View("SICs", sics);
         }
 
         [HttpGet]
         [Route("registrants")]
         public ActionResult GetRegistrants()
         {
-            IList<Registrant> registrants = edgarService.GetRegistrants();
-            return View(registrants);
+            IList<Registrant> registrants = edgarService.GetCompanies();
+            return View("Registrants",registrants);
         }
 
     }
