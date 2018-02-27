@@ -46,22 +46,6 @@ namespace Analyst.Services.EdgarDatasetServices
         private IEdgarDatasetCalculationService calcService;
         private IEdgarDatasetTextService textService;
 
-        /*
-         * We will create everything for any new execution
-        public EdgarDatasetService( IEdgarDatasetSubmissionsService submissionService, IEdgarDatasetTagService tagService, IEdgarDatasetNumService numService, IEdgarDatasetDimensionService dimensionService, IEdgarDatasetRenderService renderingService,IEdgarDatasetPresentationService presentationService,IEdgarDatasetCalculationService calcService, IEdgarDatasetTextService textService)
-        {
-            this.submissionService = submissionService;
-            this.tagService = tagService;
-            this.numService = numService;
-            this.dimensionService = dimensionService;
-            this.renderingService = renderingService;
-            this.presentationService = presentationService;
-            this.calcService = calcService;
-            this.textService = textService;
-            allowProcess = true;
-        }
-        */
-
         public EdgarDatasetService()
         {
             this.submissionService = new EdgarDatasetSubmissionsService();
@@ -174,6 +158,7 @@ namespace Analyst.Services.EdgarDatasetServices
                                 return;
                             }
                             log.Info("Datasetid " + id.ToString() + " -- releasing dims");
+                            dims.Clear(); 
                             dims = null;
 
                             //Load Presentations and Renders
@@ -187,6 +172,11 @@ namespace Analyst.Services.EdgarDatasetServices
                             log.Info(string.Format("Datasetid {0} -- Variables after LoadRenPre(..): ManageErrors: {1}; Reners: {2}/{3}; Presentations: {4}/{5}", id, ok, ds.ProcessedRenders, ds.TotalRenders, ds.ProcessedPresentations, ds.TotalPresentations));
                             ////END PROCESS
                             //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            subs.Clear();subs = null;
+                            tags.Clear(); tags = null;
+                            nums.Clear();nums = null;
+                            txts.Clear();txts = null;
+                            GC.Collect();//force GC
 
                             watch.Stop();
                             TimeSpan ts = watch.Elapsed;
@@ -278,7 +268,10 @@ namespace Analyst.Services.EdgarDatasetServices
                 for (int i = 0; i < MAX_TRIALS; i++)
                 {
                     if (!string.IsNullOrEmpty(stateText.FileNameToReprocess))
+                    {
+                        string filee = stateText.FileNameToReprocess.Split('\\').Last();
                         textService.Process(stateText, false, true, stateText.FileNameToReprocess, "Texts");
+                    }
                 }
             }));
 

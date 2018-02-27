@@ -15,7 +15,7 @@ select id,
 	,cast(iif(totalrenders != 0 ,cast(processedrenders as float)/cast(totalrenders as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalrenders-processedrenders) as nvarchar) +')' ren
 	,cast(iif(totalpresentations != 0,cast(processedpresentations as float)/cast(totalpresentations as float) *100,0)as nvarchar) + '% (pending: ' + cast((totalpresentations-processedpresentations) as nvarchar) +')' pre
 
-from EdgarDatasets where id in(201602,201603,201604,201701,201702,201703,201704);
+from EdgarDatasets where id in(201601,201602,201603,201604,201701,201702,201703,201704);
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --Para revisar performance
@@ -27,31 +27,15 @@ select
 	*
 from [dbo].[Log] 
 where 1=1
-	--AND cast([Date] as date) >= cast(SYSDATETIME() as date)
-	--and Level <> 'DEBUG'
-	--and level in ('ERROR','FATAL')
-	--and level = 'INFO'
-	--and message like '%process dim.tsv%'
-	--and Logger = 'EdgarDatasetDimensionService'
-	--and Logger = 'EdgarDatasetTagService'
-	--and logger <> 'EdgarDatasetTagService'
-	--AND Logger = 'EdgarDatasetNumService'
-	--and Logger = 'EdgarDatasetTextService'
-	and (Logger = 'Analyst.Services.EdgarDatasetServices.EdgarDatasetService' or Exception is not null)
-	--and id >= 735
+	--and (Logger = 'Analyst.Services.EdgarDatasetServices.EdgarDatasetService' or Exception is not null)
 --order by date asc
 order by Logger, date asc
---order by Logger,message,date asc
---order by message,date asc
 ;
 
 
 /*
 --clear log
 delete from [dbo].[Log] 
---where id <= 384
---where level='DEBUG'
-where level='INFO';
 */
 
 /*
@@ -62,36 +46,33 @@ delete from EdgarDatasetPresentations where datasetid=201701
 --clear numbers
 update EdgarDatasets set ProcessedNumbers = 0 where id=201704
 delete from EdgarDatasetNumbers where datasetid=201704
+
+--clear text
+update EdgarDatasets set ProcessedTexts = 0 where id=201601
+delete from EdgarDatasetTexts where datasetid=201601
 */
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
 --CHECKS
 
-/*
---check missing presentations
-declare @existentes int
 declare @total int
-declare @dataset int = 201701
-select @existentes = count(1) from EdgarDatasetPresentations where datasetid=@dataset
-select @total = TotalPresentations from EdgarDatasets where id=@dataset
-select @dataset periodo, @total total,@existentes existentes, @total-@existentes faltantes
-*/
+declare @processed int
+declare @indb int
 
-
+USE [Analyst]
+GO
 /*
---check missing tags
-declare @total int
-select @total=TotalTags from EdgarDatasets where id=201604
-exec GET_MISSING_LINE_NUMBERS 201604,'EdgarDatasetTags',@total
-*/
-
-/*
---sec forms: should be 144, plus 7 duplicated, it is the 151
-select count(1) from secforms; 
-
---duplicated check in dimensions
-select name,count(1) cant from [dbo].[registrants] group by name having count(1) > 1;
-select DimensionH,count(1) cant from [dbo].[EdgarDatasetDimensions]  group by DimensionH having count(1) > 1;
+SELECT [Id]
+      ,[TotalSubmissions],[ProcessedSubmissions]
+      ,[TotalTags],[ProcessedTags]
+      ,[TotalNumbers],[ProcessedNumbers]
+      ,[ProcessedDimensions],[TotalDimensions]
+      ,[ProcessedRenders],[TotalRenders]
+      ,[ProcessedPresentations],[TotalPresentations]
+      ,[ProcessedCalculations],[TotalCalculations]
+      ,[ProcessedTexts],[TotalTexts]
+	FROM [dbo].[EdgarDatasets]
+	where TotalSubmissions > 0
 */
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
