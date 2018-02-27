@@ -2,6 +2,7 @@
     
     var URL_GET_ALL_DATASETS = "edgardatasetsapi/datasets/all"
     var URL_PROCESS_DATASET = "edgardatasetsapi/datasets/process";
+    var URL_GET_REGISTRANTS = "askedgarapi/companies"
     ////////////////////////////////
     //Private
     var getPromise = function (pUrl) {
@@ -41,7 +42,7 @@
     };
 
     this.getRegistrants = function (successCallback, errorCallback) {
-        getPromise(URL_GET_ALL_DATASETS).then
+        getPromise(URL_GET_REGISTRANTS).then
         (
             function success(response) {
                 successCallback(response.data);

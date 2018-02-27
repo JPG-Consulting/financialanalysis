@@ -24,14 +24,14 @@
     </header>
     <form name="myForm" ng-controller="spaEdgarCtrl">
         <main class="container">
-            <h1>Message: {{ model.message }}</h1>
-            <br />
-            <div>{{model.errorMessage}}</div>
-            <br />
+            <secion class="col">
+                <h1>Message: {{ model.message }}</h1>
+                <br />
+                <div>{{model.errorMessage}}</div>
+                <br />
+            </secion>
             <hr />
             <section class="col pt-5">
-                <input type="button" ng-click="showDatasets_click()" value="Start monitoring datasets" />
-                <br />
                 <a href="edgar/datasets/readme">EDGAR Dataset Readme --> It's the explanation of all source files</a>
                 <br />
                 <a href="edgar/secforms">SEC Forms</a>
@@ -40,15 +40,45 @@
                 <br />
                 <a href="edgar/registrants">Registrants</a>
             </section>
-            <section>
+            <hr />
+            <section class="col">
                 Analisis
                 <ul>
                     <li>partir de un set reducido de compañias</li>
                     <li>listar el analisis para cada una</li>
                 </ul>
             </section>
+            <hr />
+            <section class="col">
+                <h1>Available companies</h1>
+                <input type="button" ng-click="showCompanies_click()" value="Show companies" />
+                <br />
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th ng-repeat="(header, value) in model.companies[0]">
+                                {{header}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in model.companies">
+                            <td>
+                                <input type="checkbox" ng-check="chkCompany_onclick()" />
+                            </td>
+                            <td ng-repeat="cell in row">
+                                {{cell}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <hr />
             <section class="col">
                 <!-- https://stackoverflow.com/questions/22877811/displaying-dynamic-json-in-angularjs">json to table with angular -->
+                <input type="button" ng-click="showDatasets_click()" value="Show available datasets" />
+                <br />
                 <table class="table table-hover">
                     <thead>
                         <tr>
