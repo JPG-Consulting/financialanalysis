@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="edgarApp">
+<head>
+    <meta charset="UTF-8">
+    <title>{{model.Title}}</title>
+    <script src="~/scripts/angular.js"></script>
+    <script src="~/app/edgarServ.js"></script>
+    <script src="~/app/spaEdgarCtrl.js"></script>
+    <script src="~/app/spaEdgarDatasetsCtrl.js"></script>
+    <!--<script src="app/angular-simple-pagination.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="~/styles/global.css">
+    <link rel="stylesheet" type="text/css" href="~/styles/angular-simple-pagination.css" />
+    <link rel="stylesheet" href="~/styles/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+</head>
+<body>
+    <script src="~/app/edgarApp.js"></script>
+    <header>
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand">
+                <span class="navbar-text"> Ask Edgar  </span>
+            </a>
+        </nav>
+    </header>
+    <form name="myForm" ng-controller="spaEdgarCtrl">
+        <main class="container">
+            <secion class="col">
+                <h1>Message: {{ model.message }}</h1>
+                <br />
+                <div>{{model.errorMessage}}</div>
+                <br />
+            </secion>
+            <hr />
+            <section class="col pt-5">
+                <a href="edgar/datasets/readme">EDGAR Dataset Readme --> It's the explanation of all source files</a>
+                <br />
+                <a href="edgar/secforms">SEC Forms</a>
+                <br />
+                <a href="edgar/sics">SIC Codes</a>
+                <br />
+                <a href="edgar/registrants">Registrants</a>
+            </section>
+            <hr />
+            <section class="col">
+                Analisis
+                <ul>
+                    <li>partir de un set reducido de compañias</li>
+                    <li>listar el analisis para cada una</li>
+                </ul>
+            </section>
+            <hr />
+            <section class="col">
+                <h1>Available companies</h1>
+                <input type="button" ng-click="showCompanies_click()" value="Show companies" />
+                <br />
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th ng-repeat="(header, value) in model.companies[0]">
+                                {{header}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in model.companies">
+                            <td>
+                                <input type="checkbox" ng-check="chkCompany_onclick()" />
+                            </td>
+                            <td ng-repeat="cell in row">
+                                {{cell}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <hr />
+            <section class="col">
+                <!-- https://stackoverflow.com/questions/22877811/displaying-dynamic-json-in-angularjs">json to table with angular -->
+                <input type="button" ng-click="showDatasets_click()" value="Show available datasets" />
+                <br />
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="(header, value) in model.resultData[0]">
+                                {{header}}
+                            </th>
+                        </tr>
+                    </thead>  
+                    <tbody>
+                        <tr ng-repeat="row in model.resultData">
+                            <td ng-repeat="cell in row">
+                                {{cell}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre>{{model.statusMessage}}</pre>
+                <br />
+                <div style="height:300px;width:700px;overflow-y:scroll" ng-show="false">
+                    <pre>raw data = {{model.resultData | json}}</pre>
+                </div>
+                <br />
+            </section>
+        </main>
+    </form>
+</body>
+</html>

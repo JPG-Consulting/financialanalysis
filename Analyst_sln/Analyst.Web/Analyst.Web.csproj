@@ -208,14 +208,13 @@
     <Content Include="Global.asax" />
     <Content Include="config\log4net\debug.config" />
     <Content Include="index.html" />
-    <Content Include="spa_edgar.html" />
-    <Content Include="spa_edgardatasets_unittests.html" />
-    <Content Include="spa_screen_analyze_trade.html" />
+    <Content Include="ViewsSPA\spa_edgar.html" />
+    <Content Include="ViewsSPA\spa_edgardatasets_unittests.html" />
     <Content Include="scripts\angular.min.js.map" />
     <Content Include="Views\EdgarDatasets\Home.cshtml" />
     <None Include="Properties\PublishProfiles\localhost.pubxml" />
     <None Include="Views\EdgarDatasets\readme.cshtml" />
-    <Content Include="spa_edgardatasets.html" />
+    <Content Include="ViewsSPA\spa_edgardatasets.html" />
     <Content Include="scripts\angular-mocks.js" />
     <Content Include="scripts\angular.js" />
     <Content Include="scripts\angular.min.js" />
@@ -232,9 +231,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfiguration\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\Backend\EdgarDatasetsApiController.cs" />
-    <Compile Include="Controllers\Backend\EdgarDatasetsController.cs" />
-    <Compile Include="Controllers\Frontend\EdgarApiController.cs" />
+    <Compile Include="Controllers\Edgar\EdgarDatasetsApiController.cs" />
+    <Compile Include="Controllers\Edgar\EdgarDatasetsController.cs" />
+    <Compile Include="Controllers\Edgar\EdgarApiController.cs" />
+    <Compile Include="Controllers\ScreenAnalyzeTradeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -250,6 +250,9 @@
     <Content Include="Views\EdgarDatasets\SECForms.cshtml" />
     <Content Include="Views\EdgarDatasets\SICs.cshtml" />
     <Content Include="Views\EdgarDatasets\Registrants.cshtml" />
+    <Content Include="Views\ScreenAnalyzeTrade\ScreenAnalyzeTradeLayout.cshtml" />
+    <Content Include="Views\ScreenAnalyzeTrade\Start.cshtml" />
+    <Content Include="Views\ScreenAnalyzeTrade\Screen.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -258,6 +261,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\ScreenAnalyzeTrade\" />
     <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>

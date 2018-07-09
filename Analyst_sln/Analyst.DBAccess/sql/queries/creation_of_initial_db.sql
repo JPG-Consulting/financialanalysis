@@ -18,13 +18,13 @@ print 'Creating Analyst'
 create database Analyst
 ON   
 	( NAME = Analyst_dat,  
-		FILENAME = 'E:\_analyst\DB\Analyst_dat.mdf',  
+		FILENAME = 'E:\_analyst\DB\Analyst\Analyst_dat.mdf',  
 		SIZE = 20000MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 2000MB )  
 	LOG ON  
 	( NAME = Analyst_log,  
-		FILENAME = 'E:\_analyst\DB\Analyst_log.ldf',  
+		FILENAME = 'E:\_analyst\DB\Analyst\Analyst_log.ldf',  
 		SIZE = 1000MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 5000MB ) ; 
