@@ -8,12 +8,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Analyst.Web.Controllers
+namespace Analyst.Web.Controllers.Edgar.Datasets
 {
-    [RoutePrefix("edgar")]
+    [RoutePrefix("edgar/datasets")]
     public class EdgarDatasetsController : Controller
     {
-
+        private const string VIEW_ROOT_PATH = "~/Views/Edgar/Datasets/";
         private IEdgarService edgarService;
         private IEdgarDatasetService datasetService;
 
@@ -27,23 +27,15 @@ namespace Analyst.Web.Controllers
         [Route("home")]
         public ActionResult Index()
         {
-            return View("Home");
+            return View(VIEW_ROOT_PATH + "Home.cshtml");
         }
 
 
         [HttpGet]
-        [Route("datasets/readme")]
+        [Route("readme")]
         public ActionResult Readme()
         {
-            return View("readme");
-        }
-
-        [HttpGet]
-        [Route("datasets/all")]
-        public ActionResult GetDatasets()
-        {
-            IList<EdgarDataset> datasets = datasetService.GetDatasets();
-            return View("Datasets", datasets);
+            return View(VIEW_ROOT_PATH + "readme.cshtml");
         }
 
         [HttpGet]
@@ -51,7 +43,7 @@ namespace Analyst.Web.Controllers
         public ActionResult GetSecForms()
         {
             IList<SECForm> forms = edgarService.GetSECForms();
-            return View("SECForms",forms);
+            return View(VIEW_ROOT_PATH + "SECForms.cshtml", forms);
         }
 
         [HttpGet]
@@ -59,7 +51,7 @@ namespace Analyst.Web.Controllers
         public ActionResult GetSICs()
         {
             IList<SIC> sics = edgarService.GetSICs();
-            return View("SICs", sics);
+            return View(VIEW_ROOT_PATH + "SICs.cshtml", sics);
         }
 
         [HttpGet]
@@ -67,7 +59,14 @@ namespace Analyst.Web.Controllers
         public ActionResult GetRegistrants()
         {
             IList<Registrant> registrants = edgarService.GetCompanies();
-            return View("Registrants",registrants);
+            return View(VIEW_ROOT_PATH + "Registrants.cshtml", registrants);
+        }
+
+        [HttpGet]
+        [Route("process")]
+        public ActionResult Process()
+        {
+            return View(VIEW_ROOT_PATH + "ProcessDatasets.cshtml");
         }
 
     }

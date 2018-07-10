@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -200,29 +201,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app\angular-simple-pagination.js" />
-    <Content Include="app\edgarApp.js" />
-    <Content Include="app\spaEdgarCtrl.js" />
-    <Content Include="app\spaEdgarDatasetsCtrl.js" />
-    <Content Include="app\edgarServ.js" />
+    <Content Include="scripts\3rdpartylibraries\angular-simple-pagination.js" />
+    <Content Include="scripts\edgar\common\edgarApp.js" />
+    <Content Include="scripts\edgar\askedgar\askedgarcontroller.js" />
+    <Content Include="scripts\edgar\datasets\edgardatasetscontroller.js" />
+    <Content Include="scripts\edgar\common\edgarServ.js" />
     <Content Include="Global.asax" />
     <Content Include="config\log4net\debug.config" />
     <Content Include="index.html" />
-    <Content Include="ViewsSPA\spa_edgar.html" />
-    <Content Include="ViewsSPA\spa_edgardatasets_unittests.html" />
-    <Content Include="scripts\angular.min.js.map" />
-    <Content Include="Views\EdgarDatasets\Home.cshtml" />
+    <Content Include="Views\Edgar\AskEdgar\Home.cshtml" />
+    <None Include="Views\Edgar\Datasets\ProcessDatasets_unittests.cshtml" />
+    <Content Include="scripts\common\angular.min.js.map" />
+    <Content Include="Views\Edgar\Datasets\Home.cshtml" />
     <None Include="Properties\PublishProfiles\localhost.pubxml" />
-    <None Include="Views\EdgarDatasets\readme.cshtml" />
-    <Content Include="ViewsSPA\spa_edgardatasets.html" />
-    <Content Include="scripts\angular-mocks.js" />
-    <Content Include="scripts\angular.js" />
-    <Content Include="scripts\angular.min.js" />
+    <None Include="Views\Edgar\Datasets\readme.cshtml" />
+    <None Include="Views\Edgar\Datasets\ProcessDatasets.cshtml" />
+    <Content Include="scripts\common\angular-mocks.js" />
+    <Content Include="scripts\common\angular.js" />
+    <Content Include="scripts\common\angular.min.js" />
     <Content Include="styles\angular-simple-pagination.css" />
     <Content Include="styles\bootstrap.min.css" />
     <Content Include="styles\global.css" />
     <Content Include="styles\tests_style.css" />
-    <Content Include="Views\EdgarDatasets\readme.css" />
+    <Content Include="Views\Edgar\Datasets\readme.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -231,10 +232,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfiguration\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\Edgar\EdgarDatasetsApiController.cs" />
-    <Compile Include="Controllers\Edgar\EdgarDatasetsController.cs" />
-    <Compile Include="Controllers\Edgar\EdgarApiController.cs" />
-    <Compile Include="Controllers\ScreenAnalyzeTradeController.cs" />
+    <Compile Include="Controllers\Edgar\Datasets\EdgarDatasetsApiController.cs" />
+    <Compile Include="Controllers\Edgar\Datasets\EdgarDatasetsController.cs" />
+    <Compile Include="Controllers\Edgar\AskEdgar\AskEdgarController.cs" />
+    <Compile Include="Controllers\ScreenAnalyzeTrade\ScreenAnalyzeTradeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -246,10 +247,9 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\EdgarDatasets\Datasets.cshtml" />
-    <Content Include="Views\EdgarDatasets\SECForms.cshtml" />
-    <Content Include="Views\EdgarDatasets\SICs.cshtml" />
-    <Content Include="Views\EdgarDatasets\Registrants.cshtml" />
+    <Content Include="Views\Edgar\Datasets\SECForms.cshtml" />
+    <Content Include="Views\Edgar\Datasets\SICs.cshtml" />
+    <Content Include="Views\Edgar\Datasets\Registrants.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\ScreenAnalyzeTradeLayout.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Start.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Screen.cshtml" />
@@ -260,10 +260,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\ScreenAnalyzeTrade\" />
-    <Folder Include="Views\Home\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Analyst.DBAccess\Analyst.DBAccess.csproj">
       <Project>{11e25a3a-3ce3-4ead-a12b-5682d9cdb937}</Project>

@@ -1,28 +1,40 @@
-﻿<!DOCTYPE html>
+﻿@{
+    Layout = null;
+}
+
+@helper Scripts_Angular(){
+    <script src="~/scripts/common/angular.js"></script>
+    <script src="~/scripts/edgar/common/edgarServ.js"></script>
+    <script src="~/scripts/edgar/datasets/edgardatasetscontroller.js"></script>
+    <script src="~/scripts/edgar/askedgar/askedgarcontroller.js"></script>
+    <!--<script src="app/angular-simple-pagination.js"></script>-->
+}
+@helper Script_AngularApp(){
+    <script src="~/scripts/edgar/common/edgarApp.js"></script>
+}
+
+
+<!DOCTYPE html>
 <html lang="en" ng-app="edgarApp">
 <head>
     <meta charset="UTF-8">
+    @Scripts_Angular()
     <title>{{model.Title}}</title>
-    <script src="~/scripts/angular.js"></script>
-    <script src="~/app/edgarServ.js"></script>
-    <script src="~/app/spaEdgarCtrl.js"></script>
-    <script src="~/app/spaEdgarDatasetsCtrl.js"></script>
-    <!--<script src="app/angular-simple-pagination.js"></script>-->
     <link rel="stylesheet" type="text/css" href="~/styles/global.css">
     <link rel="stylesheet" type="text/css" href="~/styles/angular-simple-pagination.css" />
     <link rel="stylesheet" href="~/styles/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
 </head>
 <body>
-    <script src="app/edgarApp.js"></script>
+    @Script_AngularApp()
     <header>
         <nav class="navbar navbar-light bg-light">
             <a class="navbar-brand">
-                <span class="navbar-text"> Backend  </span>
+                <span class="navbar-text"> Edgar Datasets  </span>
             </a>
         </nav>
     </header>
-    <form name="myForm" ng-controller="spaEdgarDatasetsCtrl">
+    <form name="myForm" ng-controller="edgardatasetscontroller">
         <main class="container">
             <h1>Message: {{ model.message }}</h1>
             <br />
@@ -36,14 +48,15 @@
                 <br />
                 <input type="button" ng-click="showDatasets_click()" value="Show datasets" />
                 <br />
-
-                <a href="edgar/datasets/readme">EDGAR Dataset Readme --> It's the explanation of all source files</a>
+                <a href="https://www.sec.gov/dera/data/financial-statement-and-notes-data-set.html" target="_blank">Financial Statement and Notes Data Sets</a>
                 <br />
-                <a href="edgar/secforms">SEC Forms</a>
+                <a href="readme" target="_blank">EDGAR Dataset Readme --> It's the explanation of all source files</a>
                 <br />
-                <a href="edgar/sics">SIC Codes</a>
+                <a href="secforms" target="_blank">SEC Forms</a>
                 <br />
-                <a href="edgar/registrants">Registrants</a>
+                <a href="sics" target="_blank">SIC Codes</a>
+                <br />
+                <a href="registrants" target="_blank">Registrants</a>
             </section>
             <!--<section class="col" ng-show="monitoringDatasets">-->
             <section class="col">
@@ -60,7 +73,7 @@
                         <td><strong>Presentations</strong></td>
                         <td><strong>Run</strong></td>
                     </tr>
-              
+
                     <tr ng-repeat="dataset in model.datasets | limitTo:pagingSettings.pageLimit:pagingSettings.offset" ng-click="selectDataset(dataset.id);">
                         <td>{{dataset.Year }}Q{{dataset.Quarter}}</td>
                         <td>
@@ -70,38 +83,38 @@
                         </td>
                         <td>
                             <span ng-style="progressNumberStyle(dataset.ProcessedTags / dataset.TotalTags * 100)">
-                                  {{ dataset.TotalTags == 0 ? 0.00 : dataset.ProcessedTags / dataset.TotalTags * 100 | number: 4 }} %
-                                </span>
+                                {{ dataset.TotalTags == 0 ? 0.00 : dataset.ProcessedTags / dataset.TotalTags * 100 | number: 4 }} %
+                            </span>
                         </td>
                         <td>
                             <span ng-style="progressNumberStyle(dataset.ProcessedDimensions / dataset.TotalDimensions * 100)">
-                                  {{ dataset.TotalDimensions == 0 ? 0.00 : dataset.ProcessedDimensions / dataset.TotalDimensions * 100 | number: 4 }} %
-                                </span>
+                                {{ dataset.TotalDimensions == 0 ? 0.00 : dataset.ProcessedDimensions / dataset.TotalDimensions * 100 | number: 4 }} %
+                            </span>
                         </td>
                         <td>
                             <span ng-style="progressNumberStyle(dataset.ProcessedNumbers / dataset.TotalNumbers * 100 )">
-                                  {{ dataset.TotalNumbers == 0 ? 0.00 : dataset.ProcessedNumbers / dataset.TotalNumbers * 100 | number: 4 }} %
-                                </span>
+                                {{ dataset.TotalNumbers == 0 ? 0.00 : dataset.ProcessedNumbers / dataset.TotalNumbers * 100 | number: 4 }} %
+                            </span>
                         </td>
                         <td>
                             <span ng-style="progressNumberStyle(dataset.ProcessedCalculations / dataset.TotalCalculations * 100)">
-                                  {{ dataset.TotalCalculations == 0 ? 0.00 : dataset.ProcessedCalculations / dataset.TotalCalculations * 100 | number: 4 }} %
-                                </span>
+                                {{ dataset.TotalCalculations == 0 ? 0.00 : dataset.ProcessedCalculations / dataset.TotalCalculations * 100 | number: 4 }} %
+                            </span>
                         </td>
                         <td>
                             <span ng-style="progressNumberStyle(dataset.ProcessedTexts / dataset.TotalTexts * 100 )">
-                                  {{ dataset.TotalTexts == 0 ? 0.00 : dataset.ProcessedTexts / dataset.TotalTexts * 100 | number: 4 }} %
-                                </span>
+                                {{ dataset.TotalTexts == 0 ? 0.00 : dataset.ProcessedTexts / dataset.TotalTexts * 100 | number: 4 }} %
+                            </span>
                         </td>
                         <td>
                             <span ng-style="progressNumberStyle(dataset.ProcessedRenders / dataset.TotalRenders * 100)">
-                                  {{ dataset.TotalRenders == 0 ? 0.00 : dataset.ProcessedRenders / dataset.TotalRenders * 100 | number: 4 }} %
-                                </span>
+                                {{ dataset.TotalRenders == 0 ? 0.00 : dataset.ProcessedRenders / dataset.TotalRenders * 100 | number: 4 }} %
+                            </span>
                         </td>
                         <td>
                             <span ng-style="progressNumberStyle(dataset.ProcessedPresentations / dataset.TotalPresentations * 100)">
-                                  {{ dataset.TotalPresentations == 0 ? 0.00 : dataset.ProcessedPresentations / dataset.TotalPresentations * 100 | number: 4 }} %
-                                </span>
+                                {{ dataset.TotalPresentations == 0 ? 0.00 : dataset.ProcessedPresentations / dataset.TotalPresentations * 100 | number: 4 }} %
+                            </span>
                         </td>
                         <td>
                             <div ng-show="!dataset.IsComplete">

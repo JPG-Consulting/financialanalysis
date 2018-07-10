@@ -15,7 +15,7 @@ using System.Web.Http.Description;
 namespace Analyst.Web.Controllers
 { 
 
-    [RoutePrefix("edgardatasetsapi")]
+    [RoutePrefix("edgar/datasets/api")]
     public class EdgarDatasetsApiController : ApiController
     {
         
@@ -29,7 +29,7 @@ namespace Analyst.Web.Controllers
         }
 
         [HttpGet]
-        [Route("datasets/all")]
+        [Route("all")]
         [ResponseType(typeof(IList<EdgarDataset>))]
         public IHttpActionResult GetAllDatasets()
         {
@@ -38,7 +38,7 @@ namespace Analyst.Web.Controllers
         }
 
         [HttpGet]
-        [Route("datasets/getdetails")]
+        [Route("getdetails")]
         [ResponseType(typeof(EdgarDataset))]
         public IHttpActionResult GetDatasetDetails(int id)
         {
@@ -47,7 +47,7 @@ namespace Analyst.Web.Controllers
         }
 
         [HttpPost]
-        [Route("datasets/process", Name = "processds")]
+        [Route("process", Name = "processds")]
         public IHttpActionResult ProcessDataset([FromBody]int id)
         {
             datasetService.ProcessDataset(id);
