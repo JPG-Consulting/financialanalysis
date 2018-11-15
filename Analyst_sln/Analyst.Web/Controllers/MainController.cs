@@ -6,16 +6,16 @@ using System.Web.Mvc;
 
 namespace Analyst.Web.Controllers
 {
-    [RoutePrefix("screenanalyzetrade")]
-    public class ScreenAnalyzeTradeController : Controller
+    [RoutePrefix("")]
+    public class MainController : Controller
     {
-
         [HttpGet]
         [Route("home")]
+        [Route("index")]
+        [Route("")]
         public ActionResult Index()
         {
-            ViewBag.asdf = "Server time: " + DateTime.Now.ToString();
-            return View("Start");
+            return View("~/Views/Index.cshtml");
         }
     }
 }

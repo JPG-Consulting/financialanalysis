@@ -1,8 +1,9 @@
 ﻿@model IEnumerable<Analyst.Domain.Edgar.Registrant>
 
 @{
-    Layout = null;
+    Layout = "~/Views/Edgar/_EdgarLayout.cshtml";
 }
+
 
 <!DOCTYPE html>
 
@@ -43,42 +44,43 @@
             </th>
             <th></th>
         </tr>
-    
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CIK)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CountryBA)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CityBA)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CountryInc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeIdentificationNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FilerStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.WellKnownSeasonedIssuer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FiscalYearEndDate)
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { id=item.Id })
-            </td>
-        </tr>
-    }
-    
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CIK)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CountryBA)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CityBA)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CountryInc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeIdentificationNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FilerStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WellKnownSeasonedIssuer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FiscalYearEndDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                </td>
+            </tr>
+        }
+
     </table>
 </body>
 </html>

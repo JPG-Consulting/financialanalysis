@@ -208,7 +208,6 @@
     <Content Include="scripts\edgar\common\edgarServ.js" />
     <Content Include="Global.asax" />
     <Content Include="config\log4net\debug.config" />
-    <Content Include="index.html" />
     <Content Include="Views\Edgar\AskEdgar\Home.cshtml" />
     <None Include="Views\Edgar\Datasets\ProcessDatasets_unittests.cshtml" />
     <Content Include="scripts\common\angular.min.js.map" />
@@ -235,6 +234,7 @@
     <Compile Include="Controllers\Edgar\Datasets\EdgarDatasetsApiController.cs" />
     <Compile Include="Controllers\Edgar\Datasets\EdgarDatasetsController.cs" />
     <Compile Include="Controllers\Edgar\AskEdgar\AskEdgarController.cs" />
+    <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\ScreenAnalyzeTrade\ScreenAnalyzeTradeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -250,9 +250,12 @@
     <Content Include="Views\Edgar\Datasets\SECForms.cshtml" />
     <Content Include="Views\Edgar\Datasets\SICs.cshtml" />
     <Content Include="Views\Edgar\Datasets\Registrants.cshtml" />
-    <Content Include="Views\ScreenAnalyzeTrade\ScreenAnalyzeTradeLayout.cshtml" />
+    <Content Include="Views\ScreenAnalyzeTrade\_ScreenAnalyzeTradeLayout.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Start.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Screen.cshtml" />
+    <Content Include="Views\_MainLayout.cshtml" />
+    <Content Include="Views\Index.cshtml" />
+    <Content Include="Views\Edgar\_EdgarLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,15 +1,18 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Edgar/_EdgarLayout.cshtml";
 }
 
-@helper Scripts_Angular(){
+
+@helper Scripts_Angular()
+{
     <script src="~/scripts/common/angular.js"></script>
     <script src="~/scripts/edgar/common/edgarServ.js"></script>
     <script src="~/scripts/edgar/datasets/edgardatasetscontroller.js"></script>
     <script src="~/scripts/edgar/askedgar/askedgarcontroller.js"></script>
     <!--<script src="app/angular-simple-pagination.js"></script>-->
 }
-@helper Script_AngularApp(){
+@helper Script_AngularApp()
+{
     <script src="~/scripts/edgar/common/edgarApp.js"></script>
 }
 
