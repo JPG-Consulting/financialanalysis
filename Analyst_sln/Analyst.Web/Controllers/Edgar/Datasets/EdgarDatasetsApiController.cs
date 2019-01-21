@@ -29,7 +29,7 @@ namespace Analyst.Web.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
+        [Route("alldatasets")]
         [ResponseType(typeof(IList<EdgarDataset>))]
         public IHttpActionResult GetAllDatasets()
         {
@@ -37,23 +37,15 @@ namespace Analyst.Web.Controllers
             return Ok(datasets);
         }
 
-        [HttpGet]
-        [Route("getdetails")]
-        [ResponseType(typeof(EdgarDataset))]
-        public IHttpActionResult GetDatasetDetails(int id)
-        {
-            EdgarDataset ds = datasetService.GetDataset(id);
-            return Ok(ds);
-        }
-
         [HttpPost]
-        [Route("process", Name = "processds")]
+        [Route("processdataset", Name = "processds")]
         public IHttpActionResult ProcessDataset([FromBody]int id)
         {
             datasetService.ProcessDataset(id);
             IList<EdgarDataset> datasets = datasetService.GetDatasets();
             return Ok(datasets);
         }
+
 
         [HttpGet]
         [Route("secforms")]

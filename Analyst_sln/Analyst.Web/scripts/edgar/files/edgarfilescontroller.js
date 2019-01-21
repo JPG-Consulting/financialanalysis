@@ -1,44 +1,45 @@
 ﻿///////////////////////////////////////////////////////////////////////////////////
 //Controller
 
-function edgardatasetscontroller($scope, $interval, serv) {
+function edgarfilescontroller($scope, $interval, serv) {
     $scope.model = new Object();
 
-    $scope.model.Title = "EDGAR datasets status";
-    
+    $scope.model.Title = "EDGAR files status";
+
+
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //Timer
     var stop;
     var seconds = 5;
-    $scope.startMonitorinDatasets_click = function () {
-        $scope.model.message = "mostrar datasets";
-        
+    $scope.startMonitoringIndexes_click = function () {
+        $scope.model.message = "mostrar listado de master.idx";
+
         // Don't start a new fight if we are already fighting
         if (angular.isDefined(stop))
             return;
-        $scope.model.monitoringDatasets = true;
+        $scope.model.monitoringIndexes = true;
         stop = $interval(function () {
-            serv.getDatasets(
+            serv.getIndexes(
                 //sucess callback
-                function (rawDatasets) {
-                    $scope.model.datasets = rawDatasets;
-                    $scope.model.datasetsMessage = "Executing at: " + (new Date());
+                function (rawIndexes) {
+                    $scope.model.indexes = rawIndexes;
+                    $scope.model.indexesMessage = "Executing at: " + (new Date());
                 },
                 //error callback
                 function (response) {
-                    $scope.message = "Error startMonitorinDatasets_click";
+                    $scope.message = "Error startMonitoringIndexes_click";
                     $scope.model.errorMessage = response.data;
                 }
             );
-            
+
         }, seconds * 1000);
     }
 
-    $scope.stopMonitorinDatasets_click = function () {
+    $scope.stopMonitorinIndexes_click = function () {
         if (angular.isDefined(stop)) {
             $interval.cancel(stop);
             stop = undefined;
-            $scope.model.monitoringDatasets = false;
+            $scope.model.monitoringIndexes = false;
         }
     }
 
@@ -49,37 +50,34 @@ function edgardatasetscontroller($scope, $interval, serv) {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //Show datasets
-    $scope.showDatasets_click = function()
-    {
-        serv.getDatasets(
-                //sucess callback
-                function (rawDatasets) {
-                    $scope.model.datasets = rawDatasets;
-                    $scope.model.datasetsMessage = "Executing at: " + (new Date());
-                },
-                //error callback
-                function (response) {
-                    $scope.model.message = "Error in showDatasets_click";
-                    $scope.model.errorMessage = response.data;
-                }
-            );
+    $scope.showFullIndexes_click = function () {
+        serv.getFullIndexes(
+            //sucess callback
+            function (rawIndexes) {
+                $scope.model.indexes = rawIndexes;
+                $scope.model.indexesMessage = "Executing at: " + (new Date());
+            },
+            //error callback
+            function (response) {
+                $scope.model.message = "Error in showIndexes_click";
+                $scope.model.errorMessage = response.data;
+            }
+        );
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
-    //Process datasets
-    $scope.processDataset_click = function (dsId) {
-        $scope.model.message = "get dataset id: " + dsId;
-        serv.processDataset(dsId, processDatasetCallbackSuccess, processDatasetCallbackError);
+    //Process indexes
+    $scope.processFullIndex_click = function (year, quarter) {
+        $scope.model.message = "get index year: " + year + ", quarter: " + quarter;
+        serv.processFullIndex(year, quarter, processIndexCallbackSuccess, processIndexCallbackError);
     }
 
-    var processDatasetCallbackSuccess = function (data, status, headers, config) {
-        //alert("processDataset_sucesscallback: " + data);
-        //$scope.model.message = data;
+    var processIndexCallbackSuccess = function (data, status, headers, config) {
         $scope.model.message = "Process started";
-        $scope.model.datasets = data;
+        $scope.model.indexes = data;
     }
 
-    var processDatasetCallbackError = function (data, status, header, config) {
+    var processIndexCallbackError = function (data, status, header, config) {
         if (data.data != undefined) {
             $scope.model.errorMessage =
                 "Message: " + data.data.Message + "<br>" +
@@ -88,14 +86,15 @@ function edgardatasetscontroller($scope, $interval, serv) {
                 "headers: " + header + "<br>" +
                 "config: " + config;
         }
-        else
-        {
+        else {
             $scope.model.errorMessage = data;
         }
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////
+    //auxiliary functions
 
-    
+    //example:
+    /*
     $scope.progressNumberStyle = function (value) {
         var iValue = parseInt(value);
         if (iValue == 100)
@@ -107,6 +106,7 @@ function edgardatasetscontroller($scope, $interval, serv) {
         else
             return { color: 'red' };
     }
+    */
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //Paging
@@ -122,5 +122,5 @@ function edgardatasetscontroller($scope, $interval, serv) {
     setPaging(0);
     */
 
-    $scope.model.message = "Edgar Datasets Controller initialized";
+    $scope.model.message = "Edgar Files Controller initialized";
 }

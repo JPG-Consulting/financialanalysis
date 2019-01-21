@@ -10,3 +10,6 @@ edgardatasetscontroller.$inject = ['$scope', '$interval', 'edgarServ'];
 
 edgarApp.controller('askedgarcontroller', askedgarcontroller);
 askedgarcontroller.$inject = ['$scope', '$interval', 'edgarServ'];
+
+edgarApp.controller('edgarfilescontroller', edgarfilescontroller);
+edgarfilescontroller.$inject = ['$scope', '$interval', 'edgarServ'];

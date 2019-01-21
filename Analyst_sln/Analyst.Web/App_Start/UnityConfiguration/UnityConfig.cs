@@ -3,6 +3,7 @@ using Analyst.DBAccess.Repositories;
 using Analyst.Services;
 using Analyst.Services.EdgarDatasetServices;
 using Analyst.Services.EdgarServices;
+using Analyst.Services.EdgarServices.EdgarIndexesServices;
 using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,10 @@ namespace Analyst.Web.App_Start.UnityConfiguration
             container.RegisterType<IEdgarDatasetPresentationService, EdgarDatasetPresentationService>();
             container.RegisterType<IEdgarDatasetCalculationService, EdgarDatasetCalculationService>();
             container.RegisterType<IEdgarDatasetTextService, EdgarDatasetTextService>();
-        }
+            container.RegisterType<IEdgarMasterIndexService, EdgarMasterIndexService>();
+            container.RegisterType<IEdgarWebClient, EdgarWebClient>();
+            container.RegisterType<IEdgarFileParser, EdgarFileParser>();
+    }
     }
 }
  

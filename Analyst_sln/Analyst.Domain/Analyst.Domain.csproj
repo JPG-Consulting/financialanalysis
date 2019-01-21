@@ -83,6 +83,10 @@
     <Compile Include="Edgar\Datasets\IEdgarDatasetFile.cs" />
     <Compile Include="Edgar\Exceptions\EdgarException.cs" />
     <Compile Include="Edgar\Exceptions\EdgarLineException.cs" />
+    <Compile Include="Edgar\Indexes\IndexBase.cs" />
+    <Compile Include="Edgar\Indexes\IndexEntry.cs" />
+    <Compile Include="Edgar\Indexes\MasterDailyIndex.cs" />
+    <Compile Include="Edgar\Indexes\MasterFullIndex.cs" />
     <Compile Include="Edgar\MutualFund.cs" />
     <Compile Include="Edgar\Registrant.cs" />
     <Compile Include="Edgar\SECForm.cs" />

@@ -201,6 +201,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="favicon.ico" />
     <Content Include="scripts\3rdpartylibraries\angular-simple-pagination.js" />
     <Content Include="scripts\edgar\common\edgarApp.js" />
     <Content Include="scripts\edgar\askedgar\askedgarcontroller.js" />
@@ -208,10 +209,11 @@
     <Content Include="scripts\edgar\common\edgarServ.js" />
     <Content Include="Global.asax" />
     <Content Include="config\log4net\debug.config" />
-    <Content Include="Views\Edgar\AskEdgar\Home.cshtml" />
+    <Content Include="scripts\edgar\files\edgarfilescontroller.js" />
+    <Content Include="Views\Edgar\AskEdgar\AskEdgarHome.cshtml" />
     <None Include="Views\Edgar\Datasets\ProcessDatasets_unittests.cshtml" />
     <Content Include="scripts\common\angular.min.js.map" />
-    <Content Include="Views\Edgar\Datasets\Home.cshtml" />
+    <Content Include="Views\Edgar\Home.cshtml" />
     <None Include="Properties\PublishProfiles\localhost.pubxml" />
     <None Include="Views\Edgar\Datasets\readme.cshtml" />
     <None Include="Views\Edgar\Datasets\ProcessDatasets.cshtml" />
@@ -232,8 +234,9 @@
     <Compile Include="App_Start\UnityConfiguration\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\Edgar\Datasets\EdgarDatasetsApiController.cs" />
-    <Compile Include="Controllers\Edgar\Datasets\EdgarDatasetsController.cs" />
+    <Compile Include="Controllers\Edgar\EdgarController.cs" />
     <Compile Include="Controllers\Edgar\AskEdgar\AskEdgarController.cs" />
+    <Compile Include="Controllers\Edgar\Files\EdgarFilesApiController.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\ScreenAnalyzeTrade\ScreenAnalyzeTradeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -247,15 +250,16 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Edgar\Datasets\SECForms.cshtml" />
-    <Content Include="Views\Edgar\Datasets\SICs.cshtml" />
-    <Content Include="Views\Edgar\Datasets\Registrants.cshtml" />
+    <Content Include="Views\Edgar\RelatedData\SECForms.cshtml" />
+    <Content Include="Views\Edgar\RelatedData\SICs.cshtml" />
+    <Content Include="Views\Edgar\RelatedData\Registrants.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\_ScreenAnalyzeTradeLayout.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Start.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Screen.cshtml" />
     <Content Include="Views\_MainLayout.cshtml" />
     <Content Include="Views\Index.cshtml" />
     <Content Include="Views\Edgar\_EdgarLayout.cshtml" />
+    <Content Include="Views\Edgar\Files\EdgarFilesHome.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

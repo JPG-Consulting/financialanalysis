@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace Analyst.Web.Controllers.Frontend
 {
-    [RoutePrefix("askedgar")]
+    [RoutePrefix("edgar/askedgar")]
     public class AskEdgarController : Controller
     {
         private const string VIEW_ROOT_PATH = "~/Views/Edgar/AskEdgar/";
@@ -17,7 +17,7 @@ namespace Analyst.Web.Controllers.Frontend
         [Route("home")]
         public ActionResult Index()
         {
-            return View(VIEW_ROOT_PATH + "Home.cshtml");
+            return View(VIEW_ROOT_PATH + "AskEdgarHome.cshtml");
         }
     }
 }

@@ -64,19 +64,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EdgarDatasetServices\EdgarDatasetCalculationService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetDimensionService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetPresentationService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetRenderService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetTextService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetBaseService.cs" />
+    <Compile Include="Datasources\EdgarDatasource.cs" />
+    <Compile Include="Datasources\IDatasource.cs" />
+    <Compile Include="Datasources\MorningstarDatasource.cs" />
+    <Compile Include="Datasources\YahooDatasource.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetCalculationService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetDimensionService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetPresentationService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetRenderService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetTextService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetBaseService.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\Codecs.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\EdgarFileParser.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\EdgarMasterIndexService.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\EdgarWebClient.cs" />
     <Compile Include="EdgarServices\EdgarService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarTaskState.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetNumService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarTaskState.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetNumService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetSubmissionsService.cs" />
-    <Compile Include="EdgarDatasetServices\EdgarDatasetTagService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetSubmissionsService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetTagService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Analyst.DBAccess\Analyst.DBAccess.csproj">
@@ -93,6 +101,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\" />
+    <Folder Include="EdgarServices\EdgarDatasetServices\StandardProcessStrategy\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
