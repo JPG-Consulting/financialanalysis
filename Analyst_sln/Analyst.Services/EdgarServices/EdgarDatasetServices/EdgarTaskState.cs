@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Analyst.DBAccess.Contexts;
+using Analyst.DBAccess.Repositories;
 
 namespace Analyst.Services.EdgarDatasetServices
 {

@@ -12,13 +12,12 @@ using System.Collections.Concurrent;
 using log4net;
 using System.Globalization;
 using System.Data;
+using Analyst.Services.EdgarServices.EdgarDatasetServices.Interfaces;
+using Analyst.DBAccess.Repositories;
 
-namespace Analyst.Services.EdgarDatasetServices
+namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
 {
-    public interface IEdgarDatasetSubmissionsService : IEdgarDatasetBaseService<EdgarDatasetSubmission>
-    {
 
-    }
     public class EdgarDatasetSubmissionsService: EdgarDatasetBaseService<EdgarDatasetSubmission>, IEdgarDatasetSubmissionsService
     {
         private readonly ILog log;
@@ -118,26 +117,6 @@ namespace Analyst.Services.EdgarDatasetServices
         public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetSubmissionKeys(datasetId);
-        }
-
-        public override string GetKey(List<string> fieldNames, List<string> fields)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
-        {
-            throw new NotImplementedException();
         }
 
         public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)

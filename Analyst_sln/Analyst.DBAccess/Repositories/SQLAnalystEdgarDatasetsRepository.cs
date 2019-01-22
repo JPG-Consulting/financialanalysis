@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Analyst.DBAccess.Contexts
+namespace Analyst.DBAccess.Repositories
 {
     public class SQLAnalystEdgarDatasetsRepository : AnalystEdgarDatasetsRepository, IDisposable
     {

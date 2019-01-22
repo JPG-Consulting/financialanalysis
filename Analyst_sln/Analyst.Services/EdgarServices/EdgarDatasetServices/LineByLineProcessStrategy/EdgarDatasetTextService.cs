@@ -10,17 +10,12 @@ using System.Globalization;
 using log4net;
 using Analyst.Domain.Edgar;
 using System.Data;
+using Analyst.Services.EdgarServices.EdgarDatasetServices.Interfaces;
+using Analyst.DBAccess.Repositories;
 
-namespace Analyst.Services.EdgarDatasetServices
+namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
 {
-    public interface IEdgarDatasetTextService: IEdgarDatasetBaseService<EdgarDatasetText>
-    {
-        ConcurrentDictionary<string, int> Submissions { get; set; }
-        ConcurrentDictionary<string, int> Tags { get; set; }
 
-        ConcurrentDictionary<string, int> Dimensions { get; set; }
-
-    }
     public class EdgarDatasetTextService : EdgarDatasetBaseService<EdgarDatasetText>, IEdgarDatasetTextService
     {
         public ConcurrentDictionary<string, int> Submissions { get; set; }
@@ -97,26 +92,7 @@ namespace Analyst.Services.EdgarDatasetServices
             return repository.GetTextKeys(datasetId);
         }
 
-        public override string GetKey(List<string> fieldNames, List<string> fields)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
         {
             return repo.GetMissingLines(datasetId,"EdgarDatasetTexts", totalLines);

@@ -1,25 +1,45 @@
-﻿using System;
+﻿using Analyst.Domain.Edgar.Datasets;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Analyst.Domain.Edgar.Indexes
 {
-
-    public abstract class IndexBase<T> 
+    [Serializable]
+    [DataContract]
+    public abstract class IndexBase<T> : IEdgarEntity
     {
-        public ushort Year { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+        public abstract string Key { get; }
+
+        [Required]
+        [DataMember]
+        public int Year { get; set; }
+
+        [Required]
+        [DataMember]
         public Quarter Quarter { get; set; }
-        public string RelativeURL { get; set; }//TODO: no mappear
+
+        [NotMapped]
+        public string RelativeURL { get; set; }
 
 
         /// <summary>
         /// It indicates if all the forms of this index are stored (and ready to query) or not
         /// </summary>
+        [DataMember]
         public bool IsComplete { get; set; }
 
-        public Dictionary<T, IndexEntry> Entries { get; set; }
+        public IList<IndexEntry> Entries { get; set; }
+        
     }
 }

@@ -12,10 +12,11 @@ using System.Linq.Expressions;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data;
 using System.Configuration;
+using Analyst.DBAccess.Contexts;
 
-namespace Analyst.DBAccess.Contexts
+namespace Analyst.DBAccess.Repositories
 {
-    public interface IAnalystEdgarDatasetsRepository : IDisposable
+    public interface IAnalystEdgarDatasetsRepository : IAnalystEdgarBaseRepository, IDisposable
     {
         bool ContextConfigurationAutoDetectChangesEnabled { get; set; }
 
@@ -24,8 +25,8 @@ namespace Analyst.DBAccess.Contexts
         int GetCount<T>(int datasetId) where T : class, IEdgarDatasetFile;
 
         int GetDatasetsCount();
-        int GetSECFormsCount();
-        int GetSICCount();
+        
+        
         EdgarDataset GetDataset(int id);
         Registrant GetRegistrant(string cik);
         SECForm GetSECForm(string code);
@@ -43,8 +44,7 @@ namespace Analyst.DBAccess.Contexts
         IList<EdgarTuple> GetSubmissionKeys(int datasetId);
         IList<EdgarTuple> GetRendersKeys(int datasetId);
         IList<EdgarTuple> GetPresentationsKeys(int datasetId);
-        void Add(SECForm sECForm);
-        void Add(SIC sic);
+
         void Add(Registrant r);
         void Add(EdgarDataset ds);
         void Add(EdgarDataset ds, EdgarDatasetSubmission sub);
@@ -65,13 +65,20 @@ namespace Analyst.DBAccess.Contexts
     public class AnalystEdgarDatasetsRepository : IAnalystEdgarDatasetsRepository
     {
         public const int DEFAULT_CONN_TIMEOUT = 180;
-        private AnalystContext Context;
+        private EdgarDatasetsContext Context;
 
-        public AnalystEdgarDatasetsRepository():this(new AnalystContext())
+        public bool ContextConfigurationAutoDetectChangesEnabled
+        {
+            get { return Context.Configuration.AutoDetectChangesEnabled; }
+            set { Context.Configuration.AutoDetectChangesEnabled = value; }
+        }
+
+        #region Constructors
+        public AnalystEdgarDatasetsRepository():this(new EdgarDatasetsContext())
         {
         }
         
-        internal AnalystEdgarDatasetsRepository(AnalystContext context)
+        internal AnalystEdgarDatasetsRepository(EdgarDatasetsContext context)
         {
             this.Context = context;
             int timeout;
@@ -81,15 +88,8 @@ namespace Analyst.DBAccess.Contexts
                 timeout = Convert.ToInt32(ConfigurationManager.AppSettings["ef_conn_timeout"]);
             this.Context.Database.CommandTimeout = timeout;
         }
+        #endregion
 
-        
-
-
-        public bool ContextConfigurationAutoDetectChangesEnabled
-        {
-            get { return Context.Configuration.AutoDetectChangesEnabled; }
-            set { Context.Configuration.AutoDetectChangesEnabled = value; }
-        }
 
         #region Get methods
         public int GetDatasetsCount()

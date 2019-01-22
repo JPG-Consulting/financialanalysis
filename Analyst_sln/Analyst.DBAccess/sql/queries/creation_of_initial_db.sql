@@ -1,37 +1,4 @@
 
-DECLARE @dbname nvarchar(128)
-SET @dbname = N'Analyst'
-
-use [master];
-IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = @dbname OR name = @dbname)))
-	begin
-		PRINT 'Droping Analyst';
-		drop database Analyst;
-	end
-else
-	begin
-		print 'analyst does not exist';
-	end
-
-use [master];
-print 'Creating Analyst'
-create database Analyst
-ON   
-	( NAME = Analyst_dat,  
-		FILENAME = 'E:\_analyst\DB\Analyst\Analyst_dat.mdf',  
-		SIZE = 20000MB,  
-		MAXSIZE = UNLIMITED,  
-		FILEGROWTH = 2000MB )  
-	LOG ON  
-	( NAME = Analyst_log,  
-		FILENAME = 'E:\_analyst\DB\Analyst\Analyst_log.ldf',  
-		SIZE = 1000MB,  
-		MAXSIZE = UNLIMITED,  
-		FILEGROWTH = 5000MB ) ; 
-go
-
---[]
-
 /*
 use [master];
 go
@@ -41,19 +8,57 @@ create login analyst_usr with password = 'asdf0001';
 go
 */
 
-use [Analyst];
+-----------------------------------------------------------------------------------------------------------------------------
+--DB: Analyst_EdgarDatasets
+/*
+DECLARE @dbname nvarchar(128)
+SET @dbname = N'Analyst_EdgarDatasets'
+
+use [master];
+
+
+
+IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = @dbname OR name = @dbname)))
+	begin
+		PRINT 'Droping Analyst_EdgarDatasets';
+		drop database Analyst_EdgarDatasets;
+	end
+else
+	begin
+		print 'Analyst_EdgarDatasets does not exist';
+	end
+
+use [master];
+print 'Creating Analyst_EdgarDatasets'
+create database Analyst_EdgarDatasets
+ON   
+	( NAME = Analyst_EdgarDatasets_dat,  
+		FILENAME = 'C:\_analyst\DB\Analyst\Analyst_EdgarDatasets_dat.mdf',  
+		SIZE = 20000MB,  
+		MAXSIZE = UNLIMITED,  
+		FILEGROWTH = 2000MB )  
+	LOG ON  
+	( NAME = Analyst_EdgarDatasets_log,  
+		FILENAME = 'C:\_analyst\DB\Analyst\Analyst_EdgarDatasets_log.ldf',  
+		SIZE = 1000MB,  
+		MAXSIZE = UNLIMITED,  
+		FILEGROWTH = 5000MB ) ; 
 go
-print 'creating user in DB Analyst'
+
+
+use [Analyst_EdgarDatasets];
+go
+print 'creating user in DB Analyst_EdgarDatasets'
 create user analyst_usr for login analyst_usr;
 go
 
-use [Analyst];
+use [Analyst_EdgarDatasets];
 print 'assigning db_owner to analyst_usr'
 EXEC sp_addrolemember N'db_owner', N'analyst_usr'
 
 print 'end'
--------------------------------------------------------------------------------------------------------------------------------------------------
-
+*/
+-----------------------------------------------------
 --delete all tables instead of recraete the entire DB
 /*
 [dbo].[EdgarDatasetPresentations]
@@ -73,9 +78,64 @@ print 'end'
 
 --faltan todos los SP
 */
+-----------------------------------------------------
 
+-----------------------------------------------------------------------------------------------------------------------------
+--DB: Analyst_EdgarFiles
 
+DECLARE @dbname nvarchar(128)
+SET @dbname = N'Analyst_EdgarFiles'
 
+use [master];
 
+--create login analyst_usr with password = 'asdf0001';
 
+IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = @dbname OR name = @dbname)))
+	begin
+		PRINT 'Droping Analyst_EdgarFiles';
+		drop database Analyst_EdgarFiles;
+	end
+else
+	begin
+		print 'Analyst_EdgarFiles does not exist';
+	end
 
+use [master];
+print 'Creating Analyst_EdgarFiles'
+create database Analyst_EdgarFiles
+ON   
+	( NAME = Analyst_EdgarFiles_dat,  
+		FILENAME = 'C:\_analyst\DB\Analyst\Analyst_EdgarFiles_dat.mdf',  
+		SIZE = 1000MB,  
+		MAXSIZE = UNLIMITED,  
+		FILEGROWTH = 2000MB )  
+	LOG ON  
+	( NAME = Analyst_EdgarDatasets_log,  
+		FILENAME = 'C:\_analyst\DB\Analyst\Analyst_EdgarFiles_log.ldf',  
+		SIZE = 100MB,  
+		MAXSIZE = UNLIMITED,  
+		FILEGROWTH = 5000MB ) ; 
+go
+
+--[]
+
+/*
+use [master];
+go
+drop user analyst_usr
+go
+create login analyst_usr with password = 'asdf0001';
+go
+*/
+
+use [Analyst_EdgarFiles];
+go
+print 'creating user in DB Analyst_EdgarFiles'
+create user analyst_usr for login analyst_usr;
+go
+
+use [Analyst_EdgarFiles];
+print 'assigning db_owner to analyst_usr'
+EXEC sp_addrolemember N'db_owner', N'analyst_usr'
+
+print 'end'

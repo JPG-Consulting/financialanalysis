@@ -1,4 +1,5 @@
-﻿using Analyst.Domain;
+﻿using Analyst.DBAccess.Contexts;
+using Analyst.Domain;
 using Analyst.Domain.Edgar.Indexes;
 using System;
 using System.Collections.Generic;
@@ -19,34 +20,18 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
 
     public class EdgarWebClient: IEdgarWebClient
     {
-        /*
-            Four types of indexes are available:
-            * company — sorted by company name
-            * form — sorted by form type
-            * master — sorted by CIK number
-            * XBRL — list of submissions containing XBRL financial files, sorted by CIK number; these include Voluntary Filer Program submissions
-            The company, form, and master indexes contain the same information sorted differently.
-        */
-
-        // Full index url example: https://www.sec.gov/Archives/edgar/full-index/2018/QTR4/master.idx
-        // Daily index url example: https://www.sec.gov/Archives/edgar/daily-index/2019/QTR1/master.20190118.idx 
-
-
-        public const string BASE_URL = "https://www.sec.gov";
-        public const string FULL_INDEX_BASE_URL = BASE_URL + "/Archives/edgar/full-index/{0}/{1}/{2}.idx";
-        public const string DAILY_INDEX_BASE_URL = BASE_URL + "/Archives/edgar/daily-index/{0}/{1}/{2}.{3}.idx";
-
+       
         public readonly HttpClient httpClient;
 
         public EdgarWebClient()
         {
             httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri(BASE_URL);
+            httpClient.BaseAddress = new Uri(EdgarInitialLoader.SEC_BASE_URL);
         }
 
         public bool DownloadMasterIndex(ushort year, Quarter q, out string content)
         {
-            string url = string.Format(FULL_INDEX_BASE_URL,year.ToString(),q.ToString(),"master");
+            string url = string.Format(EdgarInitialLoader.FULL_INDEX_BASE_URL,year.ToString(),q.ToString(),"master");
 
             using (HttpResponseMessage response = httpClient.GetAsync(url).Result)
             {
@@ -57,7 +42,7 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
 
         public string GetFullIndexUrl(ushort year, Quarter quarter, string indexType)
         {
-            return string.Format(FULL_INDEX_BASE_URL, year, quarter, indexType);
+            return EdgarInitialLoader.GetFullIndexUrl(year, quarter, indexType);
         }
     }
 }

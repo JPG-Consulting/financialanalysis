@@ -74,10 +74,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contexts\AnalystContext.cs" />
-    <Compile Include="Contexts\AnalystContextInitializer.cs" />
+    <Compile Include="Contexts\EdgarDatasetsContext.cs" />
+    <Compile Include="Contexts\EdgarDatasetsContextInitializer.cs" />
+    <Compile Include="Contexts\EdgarFilesContext.cs" />
+    <Compile Include="Contexts\EdgarFilesContextInitializer.cs" />
+    <Compile Include="Repositories\IAnalystEdgarBaseRepository.cs" />
     <Compile Include="Repositories\AnalystEdgarDatasetsRepository.cs" />
-    <Compile Include="Contexts\InitialLoader.cs" />
+    <Compile Include="Contexts\EdgarInitialLoader.cs" />
+    <Compile Include="Repositories\AnalystEdgarFilesRepository.cs" />
     <Compile Include="Repositories\AnalystEdgarRepository.cs" />
     <Compile Include="Repositories\SQLAnalystEdgarDatasetsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

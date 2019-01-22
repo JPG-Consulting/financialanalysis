@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Analyst.DBAccess.Repositories;
 using Analyst.Domain.Edgar.Indexes;
 
 namespace Analyst.Services.EdgarServices.EdgarIndexesServices
@@ -24,6 +25,12 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
 
     public class EdgarFileParser: IEdgarFileParser
     {
+        private IAnalystEdgarFilesRepository edgarFileRepository;
+        public EdgarFileParser(IAnalystEdgarFilesRepository repo)
+        {
+            this.edgarFileRepository = repo;
+        }
+
         public bool CreateSubDocuments(string content, string localPath, List<TipoSubArchivo> tipos,out List<string> files,out List<string> errors)
         {
             errors = new List<string>();
@@ -245,8 +252,9 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             //entry.OriginalLine = line;
             string[] fields = line.Split('|');
             entry.CIK = int.Parse(fields[0]);
-            //entry.Company = fields[1];
-            //entry.FormType = fields[2];
+            //entry.Company = edgarFileRepository.GetRegistrant(entry.CIK,fields[1]);//It will retrieved when saved
+            entry.CompanyName = fields[1];
+            entry.FormType = edgarFileRepository.GetSECForm(fields[2]);
             int year = Convert.ToInt32(fields[3].Split('-')[0]);
             int month = Convert.ToInt32(fields[3].Split('-')[1]);
             int day = Convert.ToInt32(fields[3].Split('-')[2]);

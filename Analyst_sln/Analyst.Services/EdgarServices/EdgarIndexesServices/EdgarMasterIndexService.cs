@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Analyst.DBAccess.Repositories;
 using Analyst.Domain;
 using Analyst.Domain.Edgar.Indexes;
 
@@ -25,37 +26,28 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
     ///   compiling filings from the beginning of the current quarter through the previous business day.
     ///   At the end of the quarter, the full index is rolled into a static quarterly index.
     /// Note: It doesn't make sense to download daily index from closed quarters because all of them (all daily index for each day of the same quarter) will be included in the full-index
+    /// Four types of indexes are available:
+    /// * company — sorted by company name
+    /// * form — sorted by form type
+    /// * master — sorted by CIK number
+    /// * XBRL — list of submissions containing XBRL financial files, sorted by CIK number; these include Voluntary Filer Program submissions
+    /// The company, form, and master indexes contain the same information sorted differently.
     /// </summary>
     public class EdgarMasterIndexService : IEdgarMasterIndexService
     {
-
-
         private IEdgarWebClient webClient;
         private IEdgarFileParser parser;
-        public EdgarMasterIndexService(IEdgarWebClient webClient, IEdgarFileParser parser)
+        private IAnalystEdgarFilesRepository edgarFilesRepository;
+        public EdgarMasterIndexService(IEdgarWebClient webClient, IEdgarFileParser parser,IAnalystEdgarFilesRepository edgarFilesRepository)
         {
             this.webClient = webClient;
             this.parser = parser;
+            this.edgarFilesRepository = edgarFilesRepository;
         }
 
         public IList<MasterFullIndex> GetAllFullIndexes()
         {
-            IList<MasterFullIndex> indexes = new List<MasterFullIndex>();
-            for (ushort i = 1993; i <= 2018; i++)
-            {
-                for (ushort q = (ushort)Quarter.QTR1; q <= (ushort)Quarter.QTR4; q++)
-                {
-                    MasterFullIndex index = new MasterFullIndex()
-                    {
-                        Year = i,
-                        Quarter = (Quarter)q,
-                        RelativeURL = webClient.GetFullIndexUrl(i, (Quarter)q, "master"),
-                        IsComplete = false
-                    };
-                    indexes.Add(index);
-                }
-            }
-            return indexes;
+            return edgarFilesRepository.GetFullIndexes();
         }
 
         public MasterFullIndex ProcessDailyIndex(ushort year, ushort quarter, uint date)
@@ -68,34 +60,21 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             MasterFullIndex index;
             Quarter q = (Quarter)quarter;
             
-            if (GetDailyIndexFromDB(year, q, out index))
+            index = GetFullIndexFromDB(year, q);
+            if (index != null && index.IsComplete)
                 return index;
 
-            String content;
-            if (GetDailyIndexFromFileSystemCache(year, q, out content))
+            string content;            
+            if (GetFullIndexFromWeb(year, q, out content))
             {
-                index = new MasterFullIndex();
-                index.Quarter = q;
-                index.Year = year;
+                if (index == null)
+                {
+                    index = new MasterFullIndex();
+                    index.Quarter = q;
+                    index.Year = year;
+                }
                 IList<IndexEntry> entries = parser.ParseMasterIndex(content);
-                foreach (IndexEntry entry in entries)
-                    index.Entries.Add(entry.CIK, entry);
-                SaveDailyIndexToDB(index);
-                return index;
-            }
-
-            
-            if (GetDailyIndexFromWeb(year, q, out content))
-            {
-                SaveIndexToFileSystemCache(year,q,content);
-                index = new MasterFullIndex();
-                index.Quarter = q;
-                index.Year = year;
-                IList<IndexEntry> entries = parser.ParseMasterIndex(content);
-                index.Entries = new Dictionary<int, IndexEntry>(entries.Count);
-                foreach (IndexEntry entry in entries)
-                    index.Entries.Add(entry.CIK, entry);
-                SaveDailyIndexToDB(index);
+                SaveIndexEntriesToDB(index,entries);
                 return index;
             }
             else
@@ -105,36 +84,23 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
         }
 
         
-        private bool GetDailyIndexFromDB(ushort year, Quarter q, out MasterFullIndex index)
+        private MasterFullIndex GetFullIndexFromDB(ushort year, Quarter q)
         {
-            //TODO: Guardar indice en BD para consulta de reportes
-            index = null;
-            return false;
+            return edgarFilesRepository.GetFullIndex(year, q);
         }
 
-        private bool GetDailyIndexFromFileSystemCache(ushort year, Quarter q,  out string content)
+        private bool GetFullIndexFromWeb(ushort year, Quarter q, out string file)
         {
-            //TODO: Analizar si vale la pena guardarlo en disco para procesarlo despues
-            content = null;
-            return false;
-        }
-
-        private void SaveDailyIndexToDB(MasterFullIndex index)
-        {
-            //TODO: Implementar el guardado en BD
-        }
-
-        private void SaveIndexToFileSystemCache(ushort year, Quarter q, string content)
-        {
-            //TODO: Analizar si vale la pena guardarlo en disco para procesarlo despues
-        }
-
-
-        private bool GetDailyIndexFromWeb(ushort year, Quarter q,out string file)
-        {
-            bool ret = webClient.DownloadMasterIndex(year, q,out file);
+            bool ret = webClient.DownloadMasterIndex(year, q, out file);
             return ret;
         }
+
+        private void SaveIndexEntriesToDB(MasterFullIndex index, IList<IndexEntry> entries)
+        {
+            edgarFilesRepository.SaveIndexEntries(index, entries);
+        }
+
+        
 
         
 

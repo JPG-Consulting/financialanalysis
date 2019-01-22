@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,9 +17,11 @@ namespace Analyst.Domain.Edgar.Indexes
     /// 
     /// The key is the CIK number
     /// </summary>
+    [Serializable]
+    [DataContract]
     public class MasterFullIndex:IndexBase<int>
     {
-
+        public override string Key { get { return Year.ToString() + Quarter.ToString(); } }
 
     }
 }

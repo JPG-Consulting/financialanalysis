@@ -10,13 +10,12 @@ using System.Threading.Tasks;
 using log4net;
 using Analyst.Domain.Edgar;
 using System.Data;
+using Analyst.Services.EdgarServices.EdgarDatasetServices.Interfaces;
+using Analyst.DBAccess.Repositories;
 
-namespace Analyst.Services.EdgarDatasetServices
+namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 {
-    public interface IEdgarDatasetDimensionService : IEdgarDatasetBaseService<EdgarDatasetDimension>
-    {
-        
-    }
+
     public class EdgarDatasetDimensionService : EdgarDatasetBaseService<EdgarDatasetDimension>, IEdgarDatasetDimensionService
     {
         private readonly ILog log;
@@ -31,33 +30,12 @@ namespace Analyst.Services.EdgarDatasetServices
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
-        public override void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, EdgarDatasetDimension file)
-        {
-            repo.Add(dataset, file);
-        }
-
-        public override EdgarDatasetDimension Parse(IAnalystEdgarDatasetsRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
-        {
-            string dimhash = fields[fieldNames.IndexOf("dimhash")];
-            EdgarDatasetDimension dim;
-            dim = new EdgarDatasetDimension();
-            dim.DimensionH = dimhash;
-            dim.Segments = fields[fieldNames.IndexOf("segments")];
-            dim.SegmentTruncated = !(fields[fieldNames.IndexOf("segt")] == "0");
-            dim.LineNumber = lineNumber;
-            return dim;
-        }
 
         public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetDimensionKeys(datasetId);
         }
-
-        public override string GetKey(List<string> fieldNames, List<string> fields)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
         {
             dr["DimensionH"] = fields[fieldNames.IndexOf("dimhash")]; ;

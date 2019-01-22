@@ -9,14 +9,11 @@ using System.Collections.Concurrent;
 using log4net;
 using Analyst.Domain.Edgar;
 using System.Data;
+using Analyst.Services.EdgarServices.EdgarDatasetServices.Interfaces;
+using Analyst.DBAccess.Repositories;
 
-namespace Analyst.Services.EdgarDatasetServices
+namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 {
-    public interface IEdgarDatasetCalculationService: IEdgarDatasetBaseService<EdgarDatasetCalculation>
-    {
-        ConcurrentDictionary<string, int> Submissions { get; set; }
-        ConcurrentDictionary<string, int> Tags { get; set; }
-    }
     public class EdgarDatasetCalculationService : EdgarDatasetBaseService<EdgarDatasetCalculation>, IEdgarDatasetCalculationService
     {
 
@@ -36,48 +33,9 @@ namespace Analyst.Services.EdgarDatasetServices
             log = log4net.LogManager.GetLogger(this.GetType().Name);
         }
 
-        public override void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, EdgarDatasetCalculation file)
-        {
-            repo.Add(dataset,file);
-        }
-
-        public override EdgarDatasetCalculation Parse(IAnalystEdgarDatasetsRepository repository, List<string> fieldNames, List<string> fields, int lineNumber)
-        {
-            try
-            {
-                EdgarDatasetCalculation calc = new EdgarDatasetCalculation();
-
-                string adsh = fields[fieldNames.IndexOf("adsh")];
-                calc.SubmissionId = Submissions[adsh];
-
-                calc.SequentialNumberForGrouping = Convert.ToInt16(fields[fieldNames.IndexOf("grp")]);
-                calc.SequentialNumberForArc = Convert.ToInt16(fields[fieldNames.IndexOf("arc")]);
-
-                string pTag = fields[fieldNames.IndexOf("ptag")];
-                string pVersion = fields[fieldNames.IndexOf("pversion")];
-                calc.ParentTagId = Tags[pTag + pVersion];
-
-                string cTag = fields[fieldNames.IndexOf("ctag")];
-                string cVersion = fields[fieldNames.IndexOf("cversion")];
-                calc.ChildTagId = Tags[cTag + cVersion];
-
-                calc.LineNumber= lineNumber;
-                return calc;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetCalculationKeys(datasetId);
-        }
-
-        public override string GetKey(List<string> fieldNames, List<string> fields)
-        {
-            throw new NotImplementedException();
         }
 
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)

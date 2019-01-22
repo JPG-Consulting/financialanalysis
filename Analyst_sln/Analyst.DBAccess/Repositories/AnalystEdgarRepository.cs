@@ -14,10 +14,10 @@ namespace Analyst.DBAccess.Repositories
     }
     public class AnalystEdgarRepository: IAnalystEdgarRepository
     {
-        AnalystContext context;
+        EdgarDatasetsContext context;
         public AnalystEdgarRepository()
         {
-            context = new AnalystContext();
+            context = new EdgarDatasetsContext();
         }
 
         public IList<Registrant> GetCompanies()
