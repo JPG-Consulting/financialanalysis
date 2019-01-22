@@ -61,8 +61,9 @@ namespace Analyst.Web.App_Start.UnityConfiguration
             container.RegisterType<IEdgarService, EdgarService>();
             container.RegisterType<IEdgarDatasetService, EdgarDatasetService>();
             container.RegisterType<IAnalystEdgarRepository, AnalystEdgarRepository>();
-            container.RegisterType<IAnalystEdgarDatasetsRepository, AnalystEdgarDatasetsRepository>();
-            container.RegisterType<IAnalystEdgarFilesRepository, AnalystEdgarFilesRepository>();
+            container.RegisterType<IAnalystEdgarDatasetsRepository, AnalystEdgarDatasetsEFRepository>();
+            container.RegisterType<IAnalystEdgarFilesRepository, AnalystEdgarFilesEFRepository>();
+            container.RegisterType<IAnalystEdgarFilesBulkRepository, AnalystEdgarFilesBulkRepository>();
             /*
             container.RegisterType<IEdgarDatasetSubmissionsService, EdgarDatasetSubmissionsService>();
             container.RegisterType<IEdgarDatasetTagService, EdgarDatasetTagService>();

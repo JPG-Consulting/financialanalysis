@@ -25,7 +25,7 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             //https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/transaction-and-bulk-copy-operations
 
             Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- BEGIN BULK PROCESS");
-            using (SQLAnalystEdgarDatasetsRepository repo = new SQLAnalystEdgarDatasetsRepository())
+            using (IAnalystEdgarDatasetsBulkRepository repo = new AnalystEdgarDatasetsBulkRepository())
             {
                 Log.Info("Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- Retrieving structure");
                 DataTable dt = GetEmptyDataTable(repo);
@@ -53,9 +53,9 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             }
         }
 
-        public abstract void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt);
+        public abstract void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt);
 
-        public abstract DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo);
+        public abstract DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo);
 
         public abstract void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId);
 

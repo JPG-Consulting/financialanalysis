@@ -37,17 +37,19 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
     {
         private IEdgarWebClient webClient;
         private IEdgarFileParser parser;
-        private IAnalystEdgarFilesRepository edgarFilesRepository;
-        public EdgarMasterIndexService(IEdgarWebClient webClient, IEdgarFileParser parser,IAnalystEdgarFilesRepository edgarFilesRepository)
+        private IAnalystEdgarFilesRepository edgarFilesRepo;
+        private IAnalystEdgarFilesBulkRepository edgarFilesBulkRepo;
+        public EdgarMasterIndexService(IEdgarWebClient webClient, IEdgarFileParser parser,IAnalystEdgarFilesRepository edgarFilesRepository, IAnalystEdgarFilesBulkRepository edgarFilesBulkRepository)
         {
             this.webClient = webClient;
             this.parser = parser;
-            this.edgarFilesRepository = edgarFilesRepository;
+            this.edgarFilesRepo = edgarFilesRepository;
+            this.edgarFilesBulkRepo = edgarFilesBulkRepository;
         }
 
         public IList<MasterFullIndex> GetAllFullIndexes()
         {
-            return edgarFilesRepository.GetFullIndexes();
+            return edgarFilesRepo.GetFullIndexes();
         }
 
         public MasterFullIndex ProcessDailyIndex(ushort year, ushort quarter, uint date)
@@ -74,6 +76,8 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
                     index.Year = year;
                 }
                 IList<IndexEntry> entries = parser.ParseMasterIndex(content);
+                index.TotalLines = entries.Count;
+                edgarFilesRepo.Update(index, "TotalLines");
                 SaveIndexEntriesToDB(index,entries);
                 return index;
             }
@@ -86,7 +90,7 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
         
         private MasterFullIndex GetFullIndexFromDB(ushort year, Quarter q)
         {
-            return edgarFilesRepository.GetFullIndex(year, q);
+            return edgarFilesRepo.GetFullIndex(year, q);
         }
 
         private bool GetFullIndexFromWeb(ushort year, Quarter q, out string file)
@@ -97,7 +101,15 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
 
         private void SaveIndexEntriesToDB(MasterFullIndex index, IList<IndexEntry> entries)
         {
-            edgarFilesRepository.SaveIndexEntries(index, entries);
+            edgarFilesBulkRepo.SaveIndexEntries(index, entries);
+            long dbRowsCopied = edgarFilesRepo.GetIndexEntriesCount(index);
+            index.ProcessedLines = dbRowsCopied;
+            edgarFilesRepo.Update(index, "ProcessedLines");
+            if(index.ProcessedLines == index.TotalLines)
+            {
+                index.IsComplete = true;
+                edgarFilesRepo.Update(index, "IsComplete");
+            }
         }
 
         

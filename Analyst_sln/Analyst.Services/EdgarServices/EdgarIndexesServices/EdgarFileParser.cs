@@ -252,9 +252,10 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             //entry.OriginalLine = line;
             string[] fields = line.Split('|');
             entry.CIK = int.Parse(fields[0]);
-            //entry.Company = edgarFileRepository.GetRegistrant(entry.CIK,fields[1]);//It will retrieved when saved
+            entry.Company = edgarFileRepository.GetRegistrant(entry.CIK,fields[1]);
             entry.CompanyName = fields[1];
             entry.FormType = edgarFileRepository.GetSECForm(fields[2]);
+            entry.FormTypeId = entry.FormType.Id;
             int year = Convert.ToInt32(fields[3].Split('-')[0]);
             int month = Convert.ToInt32(fields[3].Split('-')[1]);
             int day = Convert.ToInt32(fields[3].Split('-')[2]);

@@ -39,6 +39,12 @@ namespace Analyst.Domain.Edgar.Indexes
         [DataMember]
         public bool IsComplete { get; set; }
 
+        [DataMember]
+        public long TotalLines { get; set; }
+        
+        [DataMember]
+        public long ProcessedLines { get; set; }
+
         public IList<IndexEntry> Entries { get; set; }
         
     }

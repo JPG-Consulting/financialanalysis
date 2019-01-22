@@ -19,7 +19,7 @@ function edgarfilescontroller($scope, $interval, serv) {
             return;
         $scope.model.monitoringIndexes = true;
         stop = $interval(function () {
-            serv.getIndexes(
+            serv.getFullIndexes(
                 //sucess callback
                 function (rawIndexes) {
                     $scope.model.indexes = rawIndexes;
@@ -93,8 +93,6 @@ function edgarfilescontroller($scope, $interval, serv) {
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //auxiliary functions
 
-    //example:
-    /*
     $scope.progressNumberStyle = function (value) {
         var iValue = parseInt(value);
         if (iValue == 100)
@@ -106,7 +104,6 @@ function edgarfilescontroller($scope, $interval, serv) {
         else
             return { color: 'red' };
     }
-    */
 
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //Paging

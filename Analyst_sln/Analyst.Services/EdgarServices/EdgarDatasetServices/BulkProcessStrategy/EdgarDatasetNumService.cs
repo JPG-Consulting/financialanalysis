@@ -111,12 +111,12 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 
         }
 
-        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
+        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
         {
             repo.BulkCopyNumbers(dt);
         }
 
-        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
+        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
         {
             return repo.GetEmptyNumbersDataTable();
         }

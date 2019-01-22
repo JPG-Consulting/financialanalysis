@@ -17,7 +17,7 @@ namespace Analyst.DBAccess.Contexts
         {
             base.Seed(context);
 
-            IAnalystEdgarFilesRepository repo = new AnalystEdgarFilesRepository(context);
+            IAnalystEdgarFilesRepository repo = new AnalystEdgarFilesEFRepository(context);
             EdgarInitialLoader.LoadInitialData(repo);
             EdgarInitialLoader.LoadInitialFullIndexes(repo);
         }

@@ -83,7 +83,7 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
             https://social.msdn.microsoft.com/Forums/en-US/e5cb847c-1d77-4cd0-abb7-b61890d99fae/multithreading-and-the-entity-framework?forum=adodotnetentityframework
             solution: only 1 context for the entiry partition --> works
             */
-            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsRepository())
+            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsEFRepository())
             {
                 //It improves performance
                 //https://msdn.microsoft.com/en-us/library/jj556205(v=vs.113).aspx

@@ -64,6 +64,7 @@
                         <td><strong>Link</strong></td>
                         <td><strong>Status</strong></td>
                         <td><strong>See files</strong></td>
+                        <!--<td><string>Message</string></td>-->
                     </tr>
                     <tr ng-repeat="index in model.indexes | limitTo:pagingSettings.pageLimit:pagingSettings.offset" ng-click="selectIndex(index.id);">
                         <td>{{index.Year }} / Q{{index.Quarter}}</td>
@@ -71,13 +72,11 @@
                             aca va un link para abrir el archivo master.idx
                         </td>
                         <td>
-                            aca va el estado del indice (si cargo todos los forms o no)
-                        </td>
-                        <td>
-                            aca va un link para habilitar la consulta de los archivos de ese indice
-                        </td>
+                            <span ng-style="progressNumberStyle(index.ProcessedLines / index.TotalLines * 100)">
+                                {{ index.TotalLines == 0 ? 0.00 : index.ProcessedLines / index.TotalLines * 100 | number:2 }} % ({{index.ProcessedLines}}/{{index.TotalLines}})
+                                <br />
 
-                        <td>
+                            </span>
                             <div ng-show="!index.IsComplete">
                                 <input type="button" value="Run" ng-click="processFullIndex_click(index.Year,index.Quarter)" />
                             </div>
@@ -86,8 +85,9 @@
                             </div>
                         </td>
                         <td>
-                            <div id="lblMsg{{index.Id}}"></div>
+                            aca va un link para habilitar la consulta de los archivos de ese indice
                         </td>
+                        <!--<td><div id="lblMsg{{index.Id}}">{{index.Id}}</div></td>-->
                     </tr>
                 </table>
                 <pre>{{model.indexesMessage}}</pre>

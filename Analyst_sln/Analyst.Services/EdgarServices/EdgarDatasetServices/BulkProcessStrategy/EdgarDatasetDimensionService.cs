@@ -45,12 +45,12 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             dr["DatasetId"] = edgarDatasetId;
         }
 
-        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
+        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
         {
             repo.BulkCopyDimensions(dt);
         }
 
-        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
+        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
         {
             return repo.GetEmptyDimensionsDataTable();
         }

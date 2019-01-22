@@ -339,7 +339,7 @@ namespace Analyst.Services.EdgarDatasetServices
         }
         private IAnalystEdgarDatasetsRepository CreateRepository()
         {
-            return new AnalystEdgarDatasetsRepository();
+            return new AnalystEdgarDatasetsEFRepository();
         }
 
         /// <summary>

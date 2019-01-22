@@ -37,12 +37,12 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             return repository.GetRendersKeys(datasetId);
         }
 
-        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
+        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
         {
             repo.BulkCopyRenders(dt);
         }
 
-        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
+        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
         {
             return repo.GetEmptyRenderDataTable();
         }

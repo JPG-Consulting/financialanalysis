@@ -64,7 +64,7 @@ namespace Analyst.DBAccess.Contexts
             context.Database.ExecuteSqlCommand(GetTextScript("create SP_GET_TEXT_KEYS.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create table LOG.sql"));
             context.Database.ExecuteSqlCommand(GetTextScript("create table numbers.sql"));
-            IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsRepository(context);
+            IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsEFRepository(context);
             EdgarInitialLoader.LoadInitialData(repo);
             EdgarInitialLoader.LoadInitialDatasets(repo);
         }

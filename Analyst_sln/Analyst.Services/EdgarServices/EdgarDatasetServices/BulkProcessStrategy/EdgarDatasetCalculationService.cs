@@ -43,12 +43,12 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             throw new NotImplementedException();
         }
 
-        public override void BulkCopy(SQLAnalystEdgarDatasetsRepository repo, DataTable dt)
+        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
         {
             throw new NotImplementedException();
         }
 
-        public override DataTable GetEmptyDataTable(SQLAnalystEdgarDatasetsRepository repo)
+        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
         {
             throw new NotImplementedException();
         }

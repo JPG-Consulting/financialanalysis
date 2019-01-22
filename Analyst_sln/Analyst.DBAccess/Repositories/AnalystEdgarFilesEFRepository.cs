@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -16,16 +17,19 @@ namespace Analyst.DBAccess.Repositories
         void Add(MasterFullIndex index);
         IList<MasterFullIndex> GetFullIndexes();
         MasterFullIndex GetFullIndex(ushort year, Quarter q);
-        void SaveIndexEntries(MasterFullIndex index, IList<IndexEntry> entries);
         SECForm GetSECForm(string code);
         Company GetRegistrant(int cik, string name);
-        
+        void Update(MasterFullIndex index, string property);
+        long GetIndexEntriesCount(MasterFullIndex index);
     }
 
-    public class AnalystEdgarFilesRepository : IAnalystEdgarFilesRepository
+    public class AnalystEdgarFilesEFRepository : IAnalystEdgarFilesRepository
     {
         public const int DEFAULT_CONN_TIMEOUT = 180;
         private EdgarFilesContext Context;
+
+        private ConcurrentDictionary<string, SECForm> secFormsCache = new ConcurrentDictionary<string, SECForm>();
+        private ConcurrentDictionary<int, Company> registrantsCache = new ConcurrentDictionary<int, Company>();
 
         public bool ContextConfigurationAutoDetectChangesEnabled
         {
@@ -33,11 +37,11 @@ namespace Analyst.DBAccess.Repositories
             set { Context.Configuration.AutoDetectChangesEnabled = value; }
         }
 
-        public AnalystEdgarFilesRepository() : this(new EdgarFilesContext())
+        public AnalystEdgarFilesEFRepository() : this(new EdgarFilesContext())
         {
         }
 
-        internal AnalystEdgarFilesRepository(EdgarFilesContext context)
+        internal AnalystEdgarFilesEFRepository(EdgarFilesContext context)
         {
             this.Context = context;
             int timeout;
@@ -46,6 +50,12 @@ namespace Analyst.DBAccess.Repositories
             else
                 timeout = Convert.ToInt32(ConfigurationManager.AppSettings["ef_conn_timeout"]);
             this.Context.Database.CommandTimeout = timeout;
+        }
+
+        public void Dispose()
+        {
+            if (this.Context != null)
+                this.Context.Dispose();
         }
 
         public void Add(SECForm sf)
@@ -76,8 +86,16 @@ namespace Analyst.DBAccess.Repositories
             return Context.SICs.Count();
         }
 
+        public long GetIndexEntriesCount(MasterFullIndex index)
+        {
+            return Context.IndexEntries.Where(entry => entry.MasterIndexId == index.Id).Count();
+        }
+
         public SECForm GetSECForm(string code)
         {
+            if (secFormsCache.ContainsKey(code))
+                return secFormsCache[code];
+
             SECForm form = Context.SECForms.Where(x => x.Code == code).SingleOrDefault();
             if (form == null)
             {
@@ -85,11 +103,15 @@ namespace Analyst.DBAccess.Repositories
                 Context.SECForms.Add(form);
                 Context.SaveChanges();
             }
+            secFormsCache.TryAdd(code, form);
             return form;
         }
 
         public Company GetRegistrant(int cik,string name)
         {
+            if (registrantsCache.ContainsKey(cik))
+                return registrantsCache[cik];
+
             Company c = (Company)Context.Registrants.Where(x => x.CIK == cik).SingleOrDefault();
             if(c==null)
             {
@@ -97,6 +119,7 @@ namespace Analyst.DBAccess.Repositories
                 Context.Registrants.Add(c);
                 Context.SaveChanges();
             }
+            registrantsCache.TryAdd(cik, c);
             return c;
         }
 
@@ -110,28 +133,13 @@ namespace Analyst.DBAccess.Repositories
             return Context.MasterFullIndexes.Where(index => index.Year == year && index.Quarter == quarter).SingleOrDefault();
         }
 
-        public void SaveIndexEntries(MasterFullIndex index, IList<IndexEntry> entries)
-        {
-            foreach(IndexEntry entry in entries)
-            {
-                entry.MasterIndex = index;
-                entry.MasterIndexId = index.Id;
-                entry.Company = GetRegistrant(entry.CIK, entry.CompanyName);
-                Context.Registrants.Attach(entry.Company);
-                Context.SECForms.Attach(entry.FormType);
-                Context.IndexEntries.Add(entry);
-                Context.SaveChanges();
-            }
-            index.IsComplete = true;
-            Context.SaveChanges();
-        }
-
-        public void Dispose()
-        {
-            if (this.Context != null)
-                this.Context.Dispose();
-        }
-
         
+
+        public void Update(MasterFullIndex index, string property)
+        {
+            Context.Entry<MasterFullIndex>(index).Property(property).IsModified = true;
+            Context.SaveChanges();
+
+        }
     }
 }
