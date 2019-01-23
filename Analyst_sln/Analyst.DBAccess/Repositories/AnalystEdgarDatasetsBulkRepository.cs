@@ -10,6 +10,18 @@ using Analyst.Domain.Edgar;
 
 namespace Analyst.DBAccess.Repositories
 {
+    public enum DatasetsTables
+    {
+        //Submissions=0,
+        //Tags,
+        //Dimensions,
+        Calculations=3,
+        Texts,
+        Numbers,
+        Renders,
+        Presentations
+    }
+
     public interface IAnalystEdgarDatasetsBulkRepository : IDisposable
     {
         DataTable GetEmptyDimensionsDataTable();
@@ -20,6 +32,7 @@ namespace Analyst.DBAccess.Repositories
         DataTable GetEmptyPresentationDataTable();
         DataTable GetEmptyRenderDataTable();
         void BulkCopyRenders(DataTable dt);
+        void DeleteAllRows(int id, DatasetsTables file);
     }
 
     public class AnalystEdgarDatasetsBulkRepository : BulkRepositoryBase,IAnalystEdgarDatasetsBulkRepository
@@ -77,6 +90,41 @@ namespace Analyst.DBAccess.Repositories
         public void BulkCopyNumbers(DataTable dt)
         {
             BulkCopy("EdgarDatasetNumbers", dt);
+        }
+
+        public void DeleteAllRows(int id, DatasetsTables table)
+        {
+            using (SqlConnection conn = CreateBulkConnection())
+            {
+                try
+                { 
+                    conn.Open();
+                    DeleteAllRows(id, table,conn);
+                    UpdateDatasetStatus(id, table,conn);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        private void DeleteAllRows(int id, DatasetsTables table, SqlConnection conn)
+        {
+            SqlCommand comm = new SqlCommand();
+            comm.CommandText = "delete from EdgarDataset" + Enum.GetName(typeof(DatasetsTables), table) + " where DatasetId = " + id;
+            comm.CommandType = CommandType.Text;
+            comm.Connection = conn;
+            comm.ExecuteNonQuery();
+        }
+
+        private void UpdateDatasetStatus(int id, DatasetsTables table, SqlConnection conn)
+        {
+            SqlCommand comm = new SqlCommand();
+            comm.CommandText = "update EdgarDatasets set Processed" + Enum.GetName(typeof(DatasetsTables), table) + " = 0 where Id = " + id;
+            comm.CommandType = CommandType.Text;
+            comm.Connection = conn;
+            comm.ExecuteNonQuery();
         }
 
         public void Dispose()

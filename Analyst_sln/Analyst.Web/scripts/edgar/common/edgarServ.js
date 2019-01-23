@@ -2,6 +2,7 @@
     
     var URL_GET_ALL_DATASETS = "api/alldatasets"
     var URL_PROCESS_DATASET = "api/processdataset";
+    var URL_DELETE_DATASET_FILE = "api/deletedataset";
     var URL_GET_REGISTRANTS = "askedgarapi/companies";
     var URL_GET_ALL_FULL_INDEXES = "api/allfullindexes";
     var URL_PROCESS_FULL_INDEX = "api/processfullindex";
@@ -48,6 +49,11 @@
     this.processDataset = function (id, callbackSuccess, callbackError) {
         $http.post(URL_PROCESS_DATASET, '"' + id + '"').success(callbackSuccess).error(callbackError);
     };
+
+    this.deleteDataset = function (id, file, callbackSuccess, callbackError) {
+        var data = { 'id': id, 'file': file };
+        $http.post(URL_DELETE_DATASET_FILE, data).success(callbackSuccess).error(callbackError);
+    }
 
     ////////////////////////////////
     //Public - Ask Edgar

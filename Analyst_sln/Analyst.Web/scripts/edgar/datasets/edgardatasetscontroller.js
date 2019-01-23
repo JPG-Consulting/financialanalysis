@@ -69,7 +69,18 @@ function edgardatasetscontroller($scope, $interval, serv) {
     //Process datasets
     $scope.processDataset_click = function (dsId) {
         $scope.model.message = "get dataset id: " + dsId;
-        serv.processDataset(dsId, processDatasetCallbackSuccess, processDatasetCallbackError);
+        serv.processDataset(dsId, processDatasetCallbackSuccess, callbackError);
+    }
+
+    $scope.deleteDataset_click = function (file, dsId) {
+        if (confirm("Desea eliminar el archivo '" + file + "' del dataset " + dsId)) {
+            serv.deleteDataset(dsId, file, deleteDatasetCallbackSuccess, callbackError);
+        }
+    }
+
+    var deleteDatasetCallbackSuccess = function (data, status, headers, config) {
+        $scope.model.message = "Dataset deleted";
+        $scope.model.datasets = data;
     }
 
     var processDatasetCallbackSuccess = function (data, status, headers, config) {
@@ -79,7 +90,7 @@ function edgardatasetscontroller($scope, $interval, serv) {
         $scope.model.datasets = data;
     }
 
-    var processDatasetCallbackError = function (data, status, header, config) {
+    var callbackError = function (data, status, header, config) {
         if (data.data != undefined) {
             $scope.model.errorMessage =
                 "Message: " + data.data.Message + "<br>" +

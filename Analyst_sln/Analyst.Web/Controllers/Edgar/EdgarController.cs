@@ -35,7 +35,7 @@ namespace Analyst.Web.Controllers.Edgar.Datasets
         [Route("datasets/process")]
         public ActionResult IndexDatasets()
         {
-            return View(VIEW_ROOT_PATH + "Process/ProcessDatasets.cshtml");
+            return View(VIEW_ROOT_PATH + "Datasets/ProcessDatasets.cshtml");
         }
 
 

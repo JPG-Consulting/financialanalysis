@@ -38,7 +38,7 @@ namespace Analyst.Web.Controllers
         }
 
         [HttpPost]
-        [Route("processdataset", Name = "processds")]
+        [Route("processdataset", Name = "processdataset")]
         public IHttpActionResult ProcessDataset([FromBody]int id)
         {
             datasetService.ProcessDataset(id);
@@ -46,6 +46,14 @@ namespace Analyst.Web.Controllers
             return Ok(datasets);
         }
 
+        [HttpPost]
+        [Route("deletedataset",Name ="deletedataset")]
+        public IHttpActionResult DeleteDataset(DatasetAndIdParameters parameters)
+        {
+            datasetService.DeleteDatasetFile(parameters.id, parameters.file);
+            IList<EdgarDataset> datasets = datasetService.GetDatasets();
+            return Ok(datasets);
+        }
 
         [HttpGet]
         [Route("secforms")]
@@ -73,6 +81,11 @@ namespace Analyst.Web.Controllers
             IList<Registrant> registrants = edgarService.GetRegistrants();
             return Ok(registrants);
         }
-        
+
+        public class DatasetAndIdParameters
+        {
+            public int id { get; set; }
+            public string file { get; set; }
+        }
     }
 }

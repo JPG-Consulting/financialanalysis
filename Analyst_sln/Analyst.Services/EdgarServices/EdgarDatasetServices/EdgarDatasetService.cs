@@ -32,6 +32,7 @@ namespace Analyst.Services.EdgarDatasetServices
         EdgarDataset GetDataset(int id);
         bool IsRunning(int id);
         void ProcessDataset(int id);
+        void DeleteDatasetFile(int id, string file);
     }
     public class EdgarDatasetService: IEdgarDatasetService
     {
@@ -48,8 +49,12 @@ namespace Analyst.Services.EdgarDatasetServices
         private IEdgarDatasetCalculationService calcService;
         private IEdgarDatasetTextService textService;
 
-        public EdgarDatasetService()
+        IAnalystEdgarDatasetsBulkRepository datasetsBulkRepo;
+
+        public EdgarDatasetService(IAnalystEdgarDatasetsBulkRepository datasetsBulkRepo)
         {
+            this.datasetsBulkRepo = datasetsBulkRepo;
+
             if (ConfigurationManager.AppSettings["EdgarDatasetProcess"] == "bulk")
             {
                 this.submissionService = new LineByLineProcessStrategy.EdgarDatasetSubmissionsService(); //new BulkProcessStrategy.EdgarDatasetSubmissionsService();//TODO: pending to implement
@@ -83,8 +88,6 @@ namespace Analyst.Services.EdgarDatasetServices
             }
         }
 
-
-
         public EdgarDataset GetDataset(int id)
         {
             using (IAnalystEdgarDatasetsRepository repository = CreateRepository())
@@ -92,6 +95,24 @@ namespace Analyst.Services.EdgarDatasetServices
                 EdgarDataset ds = repository.GetDataset(id);
                 return ds;
             }
+        }
+
+        public void DeleteDatasetFile(int id, string file)
+        {
+            DatasetsTables table;
+            if (file == "numbers")
+                table = DatasetsTables.Numbers;
+            else if (file == "calculations")
+                table = DatasetsTables.Calculations;
+            else if (file == "texts")
+                table = DatasetsTables.Texts;
+            else if (file == "renders")
+                table = DatasetsTables.Renders;
+            else if (file == "presentations")
+                table = DatasetsTables.Presentations;
+            else
+                throw new InvalidOperationException("Can't delete " + file);
+            datasetsBulkRepo.DeleteAllRows(id, table);
         }
 
         public bool IsRunning(int id)
@@ -116,19 +137,19 @@ namespace Analyst.Services.EdgarDatasetServices
                     {
                         t.Dispose();
                         datasetsInProcess[id] = null;
-                        Run(id);
+                        ProcessDatasetTask(id);
                     }
                     log.Info("Datasetid " + id.ToString() + " -- It's in progress");
                 }
                 else
-                    Run(id);
+                    ProcessDatasetTask(id);
             }
             else
-                Run(id);
+                ProcessDatasetTask(id);
 
         }
 
-        private void Run(int id)
+        private void ProcessDatasetTask(int id)
         {
             //https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/task-based-asynchronous-programming?view=netframework-4.5.2
             Task t = new Task(() =>
@@ -337,6 +358,7 @@ namespace Analyst.Services.EdgarDatasetServices
             Task.WaitAll(tasks.ToArray());
             return states.ToArray();
         }
+
         private IAnalystEdgarDatasetsRepository CreateRepository()
         {
             return new AnalystEdgarDatasetsEFRepository();
