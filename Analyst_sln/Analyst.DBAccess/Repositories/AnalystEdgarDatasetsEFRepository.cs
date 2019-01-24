@@ -55,7 +55,7 @@ namespace Analyst.DBAccess.Repositories
         void Add(EdgarDataset dataset, EdgarDatasetText file);
         
         void UpdateEdgarDataset(EdgarDataset dataset, string property);
-        List<int> GetMissingLines(int datasetId, string table, int totalLines);
+        List<int> GetMissingLines(int datasetId, DatasetsTables table, int totalLines);
         void EnablePresentationIndexes(bool enable);
     }
 
@@ -205,10 +205,12 @@ namespace Analyst.DBAccess.Repositories
         {
             return Context.Database.SqlQuery<EdgarTuple>("exec SP_GET_PRESENTATION_KEYS @datasetid", new SqlParameter("@datasetid", datasetId)).ToList();
         }
-        public List<int> GetMissingLines(int datasetId, string table,int totalLines)
+
+        public List<int> GetMissingLines(int datasetId, DatasetsTables table, int totalLines)
         {
+            string tableName = "EdgarDataset" + Enum.GetName(typeof(DatasetsTables),table);
             SqlParameter paramid = new SqlParameter("@datasetid", datasetId);
-            SqlParameter paramtable = new SqlParameter("@table", table);
+            SqlParameter paramtable = new SqlParameter("@table", tableName);
             SqlParameter paramTotal = new SqlParameter("@totallines", totalLines);
             return Context.Database.SqlQuery<int>("exec GET_MISSING_LINE_NUMBERS @datasetid,@table,@totalLines", paramid, paramtable,paramTotal).ToList();
         }

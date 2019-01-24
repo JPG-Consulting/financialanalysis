@@ -26,6 +26,8 @@ namespace Analyst.Services.EdgarServices.EdgarDatasetServices
         private const int DEFAULT_MAX_ERRORS_ALLOWED = int.MaxValue;
         protected abstract log4net.ILog Log { get; }
 
+        protected abstract DatasetsTables RelatedTable { get; }
+
         protected int MaxErrorsAllowed
         {
             get
@@ -106,12 +108,37 @@ namespace Analyst.Services.EdgarServices.EdgarDatasetServices
             }
         }
 
+        protected string WriteFailedLines(string folder, string fileName, string header, ConcurrentDictionary<int, string> failedLines, int totalLines)
+        {
+            string newFileName = null;
+            if (failedLines.Count > 0)
+            {
+                newFileName = fileName + "_failed_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv";
+                StreamWriter sw = File.CreateText(folder + newFileName);
+                //The first line is the header (line 0)
+                //The second line is the firs row (line 1)
+                sw.WriteLine(header);
+                for (int i = 1; i <= totalLines; i++)
+                {
+                    int lineNumber = i + 1;
+                    if (failedLines.ContainsKey(lineNumber))
+                    {
+                        sw.WriteLine(failedLines[lineNumber]);
+                    }
+                    else
+                        sw.WriteLine("");
+                }
+                sw.Close();
+            }
+            return newFileName;
+        }
+
         private ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
         {
             List<int> missing;
             using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsEFRepository())
             {
-                missing = GetMissingLinesByTable(repo, datasetId, totalLines);
+                missing = repo.GetMissingLines(datasetId, RelatedTable, totalLines);
             }
             ConcurrentBag<int> bag = new ConcurrentBag<int>(missing);
             return bag;
@@ -154,7 +181,6 @@ namespace Analyst.Services.EdgarServices.EdgarDatasetServices
 
         public abstract IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId);
 
-        public abstract List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines);
         #endregion
 
         public void Dispose()

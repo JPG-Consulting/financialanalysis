@@ -35,6 +35,8 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
 
     public class EdgarDatasetTagService : EdgarDatasetBaseService<EdgarDatasetTag>, IEdgarDatasetTagService
     {
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Tags; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -93,11 +95,6 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
         public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetTagsKeys(datasetId);
-        }
-
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId,"EdgarDatasetTags", totalLines);
         }
     }
 }

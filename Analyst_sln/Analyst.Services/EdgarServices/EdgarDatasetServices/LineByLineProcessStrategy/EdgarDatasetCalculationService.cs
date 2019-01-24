@@ -17,9 +17,10 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
 
     public class EdgarDatasetCalculationService : EdgarDatasetBaseService<EdgarDatasetCalculation>, IEdgarDatasetCalculationService
     {
-
         public ConcurrentDictionary<string, int> Submissions { get; set; }
         public ConcurrentDictionary<string, int> Tags { get; set; }
+
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Calculations; } }
 
         private readonly ILog log;
         protected override ILog Log
@@ -55,6 +56,9 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
                 string pVersion = fields[fieldNames.IndexOf("pversion")];
                 calc.ParentTagId = Tags[pTag + pVersion];
 
+                //Indicates a weight of -1 (TRUE if the arc is negative), but typically +1 (FALSE).
+                calc.Negative = fields[fieldNames.IndexOf("negative")] == "-1" ? true : false;
+
                 string cTag = fields[fieldNames.IndexOf("ctag")];
                 string cVersion = fields[fieldNames.IndexOf("cversion")];
                 calc.ChildTagId = Tags[cTag + cVersion];
@@ -71,12 +75,6 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
         public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetCalculationKeys(datasetId);
-        }
-
-        
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId, "EdgarDatasetCalculations", totalLines);
         }
     }
 }

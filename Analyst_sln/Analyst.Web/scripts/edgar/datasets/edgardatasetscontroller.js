@@ -68,7 +68,7 @@ function edgardatasetscontroller($scope, $interval, serv) {
     //////////////////////////////////////////////////////////////////////////////////////////////////
     //Process datasets
     $scope.processDataset_click = function (dsId) {
-        $scope.model.message = "get dataset id: " + dsId;
+        $scope.model.message = "processing dataset id: " + dsId;
         serv.processDataset(dsId, processDatasetCallbackSuccess, callbackError);
     }
 
@@ -79,14 +79,12 @@ function edgardatasetscontroller($scope, $interval, serv) {
     }
 
     var deleteDatasetCallbackSuccess = function (data, status, headers, config) {
-        $scope.model.message = "Dataset deleted";
+        alert("Dataset deleted");
         $scope.model.datasets = data;
     }
 
     var processDatasetCallbackSuccess = function (data, status, headers, config) {
-        //alert("processDataset_sucesscallback: " + data);
-        //$scope.model.message = data;
-        $scope.model.message = "Process started";
+        alert("Process started");
         $scope.model.datasets = data;
     }
 

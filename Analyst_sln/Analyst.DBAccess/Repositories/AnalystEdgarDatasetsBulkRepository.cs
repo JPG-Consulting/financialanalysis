@@ -12,10 +12,10 @@ namespace Analyst.DBAccess.Repositories
 {
     public enum DatasetsTables
     {
-        //Submissions=0,
-        //Tags,
-        //Dimensions,
-        Calculations=3,
+        Submissions=0,
+        Tags,
+        Dimensions,
+        Calculations,
         Texts,
         Numbers,
         Renders,
@@ -24,15 +24,9 @@ namespace Analyst.DBAccess.Repositories
 
     public interface IAnalystEdgarDatasetsBulkRepository : IDisposable
     {
-        DataTable GetEmptyDimensionsDataTable();
-        void BulkCopyDimensions(DataTable dt);
-        void BulkCopyNumbers(DataTable dt);
-        DataTable GetEmptyNumbersDataTable();
-        void BulkCopyPresentations(DataTable dt);
-        DataTable GetEmptyPresentationDataTable();
-        DataTable GetEmptyRenderDataTable();
-        void BulkCopyRenders(DataTable dt);
         void DeleteAllRows(int id, DatasetsTables file);
+        DataTable GetEmptyDataTable(DatasetsTables relatedTable);
+        void BulkCopyTable(DatasetsTables table, DataTable dt);
     }
 
     public class AnalystEdgarDatasetsBulkRepository : BulkRepositoryBase,IAnalystEdgarDatasetsBulkRepository
@@ -52,44 +46,14 @@ namespace Analyst.DBAccess.Repositories
             return new SqlConnection(connSettings.ConnectionString);
         }
         
-        public DataTable GetEmptyDimensionsDataTable()
+        public DataTable GetEmptyDataTable(DatasetsTables table)
         {
-            return GetEmptyDataTable("EdgarDatasetDimensions");
+            return GetEmptyDataTable("EdgarDataset" + Enum.GetName(typeof(DatasetsTables), table));
         }
 
-        public void BulkCopyDimensions(DataTable dt)
+        public void BulkCopyTable(DatasetsTables table,DataTable dt)
         {
-            BulkCopy("EdgarDatasetDimensions", dt);
-        }
-
-        public DataTable GetEmptyPresentationDataTable()
-        {
-            return GetEmptyDataTable("EdgarDatasetPresentations");
-        }
-
-        public void BulkCopyPresentations(DataTable dt)
-        {
-            BulkCopy("EdgarDatasetPresentations", dt);
-        }
-
-        public DataTable GetEmptyRenderDataTable()
-        {
-            return GetEmptyDataTable("EdgarDatasetRenders");
-        }
-
-        public void BulkCopyRenders(DataTable dt)
-        {
-            BulkCopy("EdgarDatasetRenders", dt);
-        }
-
-        public DataTable GetEmptyNumbersDataTable()
-        {
-            return GetEmptyDataTable("EdgarDatasetNumbers");
-        }
-
-        public void BulkCopyNumbers(DataTable dt)
-        {
-            BulkCopy("EdgarDatasetNumbers", dt);
+            BulkCopy("EdgarDataset" + Enum.GetName(typeof(DatasetsTables), table), dt);
         }
 
         public void DeleteAllRows(int id, DatasetsTables table)

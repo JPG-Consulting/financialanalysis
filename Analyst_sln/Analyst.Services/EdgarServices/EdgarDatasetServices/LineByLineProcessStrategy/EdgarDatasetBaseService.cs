@@ -45,35 +45,10 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
 
         }
 
-        private string WriteFailedLines(string folder,string fileName, string header, ConcurrentDictionary<int,string> failedLines,int totalLines)
-        {
-            string newFileName = null;
-            if(failedLines.Count > 0)
-            {
-                newFileName = fileName + "_failed_" + DateTime.Now.ToString("yyyyMMddmmss") + ".tsv";
-                StreamWriter sw = File.CreateText(folder + newFileName);
-                //The first line is the header (line 0)
-                //The second line is the firs row (line 1)
-                sw.WriteLine(header);
-                for(int i=1;i<=totalLines; i++)
-                {
-                    int lineNumber = i + 1;
-                    if (failedLines.ContainsKey(lineNumber))
-                    {
-                        sw.WriteLine(failedLines[lineNumber]);
-                    }
-                    else
-                        sw.WriteLine("");
-                }
-                sw.Close();
-            }
-            return newFileName;
-        }
-
-        protected void ProcessRange(string fileName,EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header,ConcurrentBag<int> missing, ConcurrentDictionary<int,string> failedLines)
+        protected void ProcessRange(string fileToProcess, EdgarTaskState state, Tuple<int, int> range, string[] allLines, string header,ConcurrentBag<int> missing, ConcurrentDictionary<int,string> failedLines)
         {
             Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-            string rangeMsg = "Datasetid " + state.Dataset.Id.ToString() + " -- " + fileName + " -- range: " + range.Item1 + " to " + range.Item2;
+            string rangeMsg = "Datasetid " + state.Dataset.Id.ToString() + " -- " + fileToProcess + " -- range: " + range.Item1 + " to " + range.Item2;
             Log.Info(rangeMsg + " -- BEGIN");
 
             /*
@@ -118,7 +93,7 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
                         }
                         catch(Exception ex)
                         {
-                            EdgarLineException elex = new EdgarLineException(fileName, lineNumber, ex);
+                            EdgarLineException elex = new EdgarLineException(fileToProcess, lineNumber, ex);
                             exceptions.Add(elex);
                             failedLines.TryAdd(lineNumber, line);
                             Log.Error(rangeMsg + " -- line[" + lineNumber.ToString() + "]: " + line);
@@ -126,7 +101,7 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
                             if (exceptions.Count > MaxErrorsAllowed)
                             {
                                 Log.Fatal(rangeMsg + " -- line[" + i.ToString() + "]: max errors allowed reached", ex);
-                                throw new EdgarDatasetException(fileName, exceptions);
+                                throw new EdgarDatasetException(fileToProcess, exceptions);
                             }
                             
                         }
@@ -150,9 +125,6 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
         public abstract void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, T file);
 
         public abstract T Parse(IAnalystEdgarDatasetsRepository repository, List<string> fieldNames, List<string> fields, int lineNumber);
-
-
-        
 
     }
 }

@@ -24,6 +24,8 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
         public ConcurrentDictionary<string, int> Tags { get; set; }
         public ConcurrentDictionary<string, int> Dimensions { get; set; }
 
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Numbers; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -40,11 +42,6 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
         public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)
         {
             return repository.GetNumberKeys(datasetId);
-        }
-
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId,"EdgarDatasetNumbers", totalLines);
         }
 
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
@@ -109,16 +106,6 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             //if (!Dimensions.ContainsKey(dimh)) throw new KeyNotFoundException("Dimensions[" + dimh + "]");
             dr["DimensionId"] = Dimensions[dimh];
 
-        }
-
-        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
-        {
-            repo.BulkCopyNumbers(dt);
-        }
-
-        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
-        {
-            return repo.GetEmptyNumbersDataTable();
         }
     }
 }

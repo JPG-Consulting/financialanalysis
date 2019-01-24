@@ -10,7 +10,7 @@ go
 
 -----------------------------------------------------------------------------------------------------------------------------
 --DB: Analyst_EdgarDatasets
-/*
+
 DECLARE @dbname nvarchar(128)
 SET @dbname = N'Analyst_EdgarDatasets'
 
@@ -33,13 +33,13 @@ print 'Creating Analyst_EdgarDatasets'
 create database Analyst_EdgarDatasets
 ON   
 	( NAME = Analyst_EdgarDatasets_dat,  
-		FILENAME = 'C:\_analyst\DB\Analyst\Analyst_EdgarDatasets_dat.mdf',  
+		FILENAME = 'C:\_analyst\DB\Analyst\dev\Analyst_EdgarDatasets_dat.mdf',  
 		SIZE = 20000MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 2000MB )  
 	LOG ON  
 	( NAME = Analyst_EdgarDatasets_log,  
-		FILENAME = 'C:\_analyst\DB\Analyst\Analyst_EdgarDatasets_log.ldf',  
+		FILENAME = 'C:\_analyst\DB\Analyst\dev\Analyst_EdgarDatasets_log.ldf',  
 		SIZE = 1000MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 5000MB ) ; 
@@ -57,7 +57,7 @@ print 'assigning db_owner to analyst_usr'
 EXEC sp_addrolemember N'db_owner', N'analyst_usr'
 
 print 'end'
-*/
+
 -----------------------------------------------------
 --delete all tables instead of recraete the entire DB
 /*
@@ -105,13 +105,13 @@ print 'Creating Analyst_EdgarFiles'
 create database Analyst_EdgarFiles
 ON   
 	( NAME = Analyst_EdgarFiles_dat,  
-		FILENAME = 'C:\_analyst\DB\Analyst\Analyst_EdgarFiles_dat.mdf',  
+		FILENAME = 'C:\_analyst\DB\Analyst\dev\Analyst_EdgarFiles_dat.mdf',  
 		SIZE = 1000MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 2000MB )  
 	LOG ON  
 	( NAME = Analyst_EdgarDatasets_log,  
-		FILENAME = 'C:\_analyst\DB\Analyst\Analyst_EdgarFiles_log.ldf',  
+		FILENAME = 'C:\_analyst\DB\Analyst\dev\Analyst_EdgarFiles_log.ldf',  
 		SIZE = 100MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 5000MB ) ; 

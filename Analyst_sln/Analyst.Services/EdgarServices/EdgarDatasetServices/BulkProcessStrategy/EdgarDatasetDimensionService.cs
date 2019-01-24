@@ -18,6 +18,8 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 
     public class EdgarDatasetDimensionService : EdgarDatasetBaseService<EdgarDatasetDimension>, IEdgarDatasetDimensionService
     {
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Dimensions; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -26,6 +28,7 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
                 return log;
             }
         }
+
         public EdgarDatasetDimensionService()
         {
             log = log4net.LogManager.GetLogger(this.GetType().Name);
@@ -43,21 +46,6 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             dr["SegmentTruncated"] = !(fields[fieldNames.IndexOf("segt")] == "0");
             dr["LineNumber"] = lineNumber;
             dr["DatasetId"] = edgarDatasetId;
-        }
-
-        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
-        {
-            repo.BulkCopyDimensions(dt);
-        }
-
-        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
-        {
-            return repo.GetEmptyDimensionsDataTable();
-        }
-
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId,"EdgarDatasetDimensions", totalLines);
         }
     }
 }

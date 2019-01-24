@@ -17,6 +17,8 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
 {
     public class EdgarDatasetDimensionService : EdgarDatasetBaseService<EdgarDatasetDimension>, IEdgarDatasetDimensionService
     {
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Dimensions; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -51,9 +53,5 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
             return repository.GetDimensionKeys(datasetId);
         }
 
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId,"EdgarDatasetDimensions", totalLines);
-        }
     }
 }

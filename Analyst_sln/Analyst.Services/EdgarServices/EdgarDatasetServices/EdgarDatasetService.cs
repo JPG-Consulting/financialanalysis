@@ -57,14 +57,14 @@ namespace Analyst.Services.EdgarDatasetServices
 
             if (ConfigurationManager.AppSettings["EdgarDatasetProcess"] == "bulk")
             {
-                this.submissionService = new LineByLineProcessStrategy.EdgarDatasetSubmissionsService(); //new BulkProcessStrategy.EdgarDatasetSubmissionsService();//TODO: pending to implement
-                this.tagService = new LineByLineProcessStrategy.EdgarDatasetTagService(); //new BulkProcessStrategy.EdgarDatasetTagService();//TODO: pending to implement
+                this.submissionService = new LineByLineProcessStrategy.EdgarDatasetSubmissionsService(); //no need to implement BulkProcessStrategy.EdgarDatasetSubmissionsService();
+                this.tagService = new LineByLineProcessStrategy.EdgarDatasetTagService(); //no need to implement BulkProcessStrategy.EdgarDatasetTagService();
                 this.numService = new BulkProcessStrategy.EdgarDatasetNumService();
                 this.dimensionService = new BulkProcessStrategy.EdgarDatasetDimensionService();
                 this.renderingService = new BulkProcessStrategy.EdgarDatasetRenderService();
                 this.presentationService = new BulkProcessStrategy.EdgarDatasetPresentationService();
-                this.calcService = new LineByLineProcessStrategy.EdgarDatasetCalculationService(); //new BulkProcessStrategy.EdgarDatasetCalculationService();//TODO: pending to implement
-                this.textService = new LineByLineProcessStrategy.EdgarDatasetTextService(); //new BulkProcessStrategy.EdgarDatasetTextService();//TODO: pending to implement
+                this.calcService = new BulkProcessStrategy.EdgarDatasetCalculationService();
+                this.textService = new BulkProcessStrategy.EdgarDatasetTextService();
             }
             else
             {

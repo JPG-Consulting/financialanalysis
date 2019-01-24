@@ -19,6 +19,8 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 {
     public class EdgarDatasetSubmissionsService: EdgarDatasetBaseService<EdgarDatasetSubmission>, IEdgarDatasetSubmissionsService
     {
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Submissions; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -42,19 +44,5 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             throw new NotImplementedException();
         }
 
-        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId,"EdgarDatasetSubmissions", totalLines);
-        }
     }
 }

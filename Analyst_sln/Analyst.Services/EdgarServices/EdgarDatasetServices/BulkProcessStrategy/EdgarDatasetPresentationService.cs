@@ -25,6 +25,8 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
         public ConcurrentDictionary<string, int> Nums { get; set; }
         public ConcurrentDictionary<string, int> Texts { get; set; }
 
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Presentations; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -104,21 +106,6 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             {
                 throw ex;
             }
-        }
-
-        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
-        {
-            repo.BulkCopyPresentations(dt);
-        }
-
-        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
-        {
-            return repo.GetEmptyPresentationDataTable();
-        }
-
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId,"EdgarDatasetPresentations", totalLines);
         }
 
     }

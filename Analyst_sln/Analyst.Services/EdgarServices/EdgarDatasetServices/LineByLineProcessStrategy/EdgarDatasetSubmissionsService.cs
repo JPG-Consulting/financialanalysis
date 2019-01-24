@@ -20,6 +20,8 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
 
     public class EdgarDatasetSubmissionsService: EdgarDatasetBaseService<EdgarDatasetSubmission>, IEdgarDatasetSubmissionsService
     {
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Submissions; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -119,9 +121,5 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
             return repository.GetSubmissionKeys(datasetId);
         }
 
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId,"EdgarDatasetSubmissions", totalLines);
-        }
     }
 }

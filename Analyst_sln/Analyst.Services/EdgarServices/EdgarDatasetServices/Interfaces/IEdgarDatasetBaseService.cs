@@ -16,7 +16,5 @@ namespace Analyst.Services.EdgarServices.EdgarDatasetServices.Interfaces
         void ProcessFile(ConcurrentBag<int> missing, string fileToProcess, string fieldToUpdate, EdgarTaskState state, string[] allLines, string header, string cacheFolder, string tsvFileName, bool processInParallel);
 
         IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId);
-
-        List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines);
     }
 }

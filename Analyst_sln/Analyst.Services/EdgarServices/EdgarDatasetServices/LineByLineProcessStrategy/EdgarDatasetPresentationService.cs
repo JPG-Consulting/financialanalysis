@@ -25,6 +25,8 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
         public ConcurrentDictionary<string, int> Nums { get; set; }
         public ConcurrentDictionary<string, int> Texts { get; set; }
 
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Presentations; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -119,13 +121,5 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
         {
             return repository.GetPresentationsKeys(datasetId);
         }
-
-        
-        
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId,"EdgarDatasetPresentations", totalLines);
-        }
-
     }
 }

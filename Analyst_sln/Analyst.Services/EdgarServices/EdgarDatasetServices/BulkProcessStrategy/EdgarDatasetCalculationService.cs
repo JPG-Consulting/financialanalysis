@@ -20,6 +20,8 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
         public ConcurrentDictionary<string, int> Submissions { get; set; }
         public ConcurrentDictionary<string, int> Tags { get; set; }
 
+        protected override DatasetsTables RelatedTable { get { return DatasetsTables.Calculations; } }
+
         private readonly ILog log;
         protected override ILog Log
         {
@@ -40,22 +42,31 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                string adsh = fields[fieldNames.IndexOf("adsh")];
+                dr["SubmissionId"] = Submissions[adsh];
 
-        public override void BulkCopy(IAnalystEdgarDatasetsBulkRepository repo, DataTable dt)
-        {
-            throw new NotImplementedException();
-        }
+                dr["SequentialNumberForGrouping"] = Convert.ToInt16(fields[fieldNames.IndexOf("grp")]);
+                dr["SequentialNumberForArc"] = Convert.ToInt16(fields[fieldNames.IndexOf("arc")]);
 
-        public override DataTable GetEmptyDataTable(IAnalystEdgarDatasetsBulkRepository repo)
-        {
-            throw new NotImplementedException();
-        }
+                //Indicates a weight of -1 (TRUE if the arc is negative), but typically +1 (FALSE).
+                dr["Negative"] = fields[fieldNames.IndexOf("negative")] == "-1" ? true : false;
 
-        public override List<int> GetMissingLinesByTable(IAnalystEdgarDatasetsRepository repo, int datasetId, int totalLines)
-        {
-            return repo.GetMissingLines(datasetId, "EdgarDatasetCalculations", totalLines);
+                string pTag = fields[fieldNames.IndexOf("ptag")];
+                string pVersion = fields[fieldNames.IndexOf("pversion")];
+                dr["ParentTagId"] = Tags[pTag + pVersion];
+
+                string cTag = fields[fieldNames.IndexOf("ctag")];
+                string cVersion = fields[fieldNames.IndexOf("cversion")];
+                dr["ChildTagId"] = Tags[cTag + cVersion];
+
+                dr["LineNumber"] = lineNumber;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
