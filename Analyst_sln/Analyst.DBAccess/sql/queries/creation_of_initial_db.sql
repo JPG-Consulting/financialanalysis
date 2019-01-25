@@ -12,7 +12,7 @@ go
 --DB: Analyst_EdgarDatasets
 
 DECLARE @dbname nvarchar(128)
-SET @dbname = N'Analyst_EdgarDatasets'
+SET @dbname = N'Analyst_EdgarDatasets_dev'
 
 use [master];
 
@@ -30,29 +30,29 @@ else
 
 use [master];
 print 'Creating Analyst_EdgarDatasets'
-create database Analyst_EdgarDatasets
+create database Analyst_EdgarDatasets_dev
 ON   
 	( NAME = Analyst_EdgarDatasets_dat,  
-		FILENAME = 'C:\_analyst\DB\Analyst\dev\Analyst_EdgarDatasets_dat.mdf',  
-		SIZE = 20000MB,  
+		FILENAME = 'C:\_analyst\DB\dev\Analyst_EdgarDatasets_dat.mdf',  
+		SIZE = 5000MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 2000MB )  
 	LOG ON  
 	( NAME = Analyst_EdgarDatasets_log,  
-		FILENAME = 'C:\_analyst\DB\Analyst\dev\Analyst_EdgarDatasets_log.ldf',  
+		FILENAME = 'C:\_analyst\DB\dev\Analyst_EdgarDatasets_log.ldf',  
 		SIZE = 1000MB,  
 		MAXSIZE = UNLIMITED,  
-		FILEGROWTH = 5000MB ) ; 
+		FILEGROWTH = 1000MB ) ; 
 go
 
 
-use [Analyst_EdgarDatasets];
+use [Analyst_EdgarDatasets_dev];
 go
 print 'creating user in DB Analyst_EdgarDatasets'
 create user analyst_usr for login analyst_usr;
 go
 
-use [Analyst_EdgarDatasets];
+use [Analyst_EdgarDatasets_dev];
 print 'assigning db_owner to analyst_usr'
 EXEC sp_addrolemember N'db_owner', N'analyst_usr'
 
@@ -93,7 +93,7 @@ use [master];
 IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = @dbname OR name = @dbname)))
 	begin
 		PRINT 'Droping Analyst_EdgarFiles';
-		drop database Analyst_EdgarFiles;
+		drop database Analyst_EdgarFiles_dev;
 	end
 else
 	begin
@@ -102,16 +102,16 @@ else
 
 use [master];
 print 'Creating Analyst_EdgarFiles'
-create database Analyst_EdgarFiles
+create database Analyst_EdgarFiles_dev
 ON   
 	( NAME = Analyst_EdgarFiles_dat,  
-		FILENAME = 'C:\_analyst\DB\Analyst\dev\Analyst_EdgarFiles_dat.mdf',  
+		FILENAME = 'C:\_analyst\DB\dev\Analyst_EdgarFiles_dat.mdf',  
 		SIZE = 1000MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 2000MB )  
 	LOG ON  
 	( NAME = Analyst_EdgarDatasets_log,  
-		FILENAME = 'C:\_analyst\DB\Analyst\dev\Analyst_EdgarFiles_log.ldf',  
+		FILENAME = 'C:\_analyst\DB\dev\Analyst_EdgarFiles_log.ldf',  
 		SIZE = 100MB,  
 		MAXSIZE = UNLIMITED,  
 		FILEGROWTH = 5000MB ) ; 
@@ -128,13 +128,13 @@ create login analyst_usr with password = 'asdf0001';
 go
 */
 
-use [Analyst_EdgarFiles];
+use [Analyst_EdgarFiles_dev];
 go
 print 'creating user in DB Analyst_EdgarFiles'
 create user analyst_usr for login analyst_usr;
 go
 
-use [Analyst_EdgarFiles];
+use [Analyst_EdgarFiles_dev];
 print 'assigning db_owner to analyst_usr'
 EXEC sp_addrolemember N'db_owner', N'analyst_usr'
 

@@ -1,6 +1,7 @@
 ﻿using Analyst.DBAccess.Contexts;
 using Analyst.DBAccess.Repositories;
 using Analyst.Services;
+using Analyst.Services.AnalysisProcesses.ScreenAnalyzeTrade;
 using Analyst.Services.EdgarDatasetServices;
 using Analyst.Services.EdgarServices;
 using Analyst.Services.EdgarServices.EdgarIndexesServices;
@@ -79,6 +80,8 @@ namespace Analyst.Web.App_Start.UnityConfiguration
             container.RegisterType<IEdgarMasterIndexService, EdgarMasterIndexService>();
             container.RegisterType<IEdgarWebClient, EdgarWebClient>();
             container.RegisterType<IEdgarFileParser, EdgarFileParser>();
+
+            container.RegisterType<IExcelManager, ExcelManager>();
     }
     }
 }
