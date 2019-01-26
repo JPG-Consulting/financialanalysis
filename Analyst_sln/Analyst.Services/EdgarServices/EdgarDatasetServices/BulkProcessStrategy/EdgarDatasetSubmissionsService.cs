@@ -41,6 +41,7 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
         {
+            //There is no need to implement, line by line strategy is faster enough
             throw new NotImplementedException();
         }
 

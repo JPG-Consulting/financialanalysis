@@ -11,6 +11,7 @@ using Analyst.Domain.Edgar;
 using System.Data;
 using Analyst.Services.EdgarServices.EdgarDatasetServices.Interfaces;
 using Analyst.DBAccess.Repositories;
+using Analyst.Services.EdgarServices.EdgarDatasetServices;
 
 namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 {
@@ -55,11 +56,16 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
 
                 string pTag = fields[fieldNames.IndexOf("ptag")];
                 string pVersion = fields[fieldNames.IndexOf("pversion")];
-                dr["ParentTagId"] = Tags[pTag + pVersion];
+                if (Tags.ContainsKey(pTag + pVersion))
+                    dr["ParentTagId"] = Tags[pTag + pVersion];
+                else
+                    throw new InvalidLineException($"Key {pTag}|{pVersion} is not present in the Tags dictionary, line number: {lineNumber}");
 
                 string cTag = fields[fieldNames.IndexOf("ctag")];
                 string cVersion = fields[fieldNames.IndexOf("cversion")];
                 dr["ChildTagId"] = Tags[cTag + cVersion];
+
+                dr["DatasetId"] = edgarDatasetId;
 
                 dr["LineNumber"] = lineNumber;
             }

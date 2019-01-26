@@ -85,6 +85,7 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             dr["Context"] = fields[fieldNames.IndexOf("context")];
             dr["Value"] = fields[fieldNames.IndexOf("value")];
             dr["LineNumber"] = lineNumber;
+            dr["DatasetId"] = edgarDatasetId;
         }
 
         

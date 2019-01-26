@@ -84,7 +84,7 @@ print 'end'
 --DB: Analyst_EdgarFiles
 
 DECLARE @dbname nvarchar(128)
-SET @dbname = N'Analyst_EdgarFiles'
+SET @dbname = N'Analyst_EdgarFiles_dev'
 
 use [master];
 

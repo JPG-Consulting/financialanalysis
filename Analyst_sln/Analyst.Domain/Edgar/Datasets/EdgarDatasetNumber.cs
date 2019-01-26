@@ -64,8 +64,6 @@ namespace Analyst.Domain.Edgar.Datasets
         /// and closeness of the duration to a multiple of three months. 
         /// See fields dcml, durp and datp.
         /// </summary>
-        //[Key]
-        [Required]
         public short IPRX { get; set; }
 
 
@@ -107,7 +105,6 @@ namespace Analyst.Domain.Edgar.Datasets
         /// The difference between the reported fact duration and the quarter duration (qtrs), expressed as a fraction of 1.  
         /// For example, a fact with duration of 120 days rounded to a 91-day quarter has a durp value of 29/91 = +0.3187.
         /// </summary>
-        [Required]
         public float durp { get; set; }
 
 
@@ -115,14 +112,12 @@ namespace Analyst.Domain.Edgar.Datasets
         /// The difference between the reported fact date and the month-end rounded date (ddate), expressed as a fraction of 1. 
         /// For example, a fact reported for 29/Dec, with ddate rounded to 31/Dec, has a datp value of minus 2/31 = -0.0645.
         /// </summary>
-        [Required]
         public float datp { get; set; }
 
 
         /// <summary>
         /// The value of the fact "decimals" attribute, with INF represented by 32767.
         /// </summary>
-        [Required]
         public int Decimals { get; set; }
 
         #region Not mapped fields

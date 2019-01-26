@@ -53,49 +53,78 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             0000846913-16-000146	WeightedAverageNumberOfSharesRestrictedStock	us-gaap/2015	20150930	1	shares	0x00000000	0	0.0000		0	0		0.0027400255	0.0	-3
             */
             String value = "";
-            
+
+            string adsh = fields[fieldNames.IndexOf("adsh")];
+
+            string tag = fields[fieldNames.IndexOf("tag")];
+
+            string version = fields[fieldNames.IndexOf("version")];
+
             value = fields[fieldNames.IndexOf("ddate")];
             dr["DatavalueEnddate"] = new DateTime(int.Parse(value.Substring(0, 4)), int.Parse(value.Substring(4, 2)), int.Parse(value.Substring(6, 2)));
+
             value = fields[fieldNames.IndexOf("qtrs")];
             dr["CountOfNumberOfQuarters"] = Convert.ToInt32(value);
+
             dr["UnitOfMeasure"] = fields[fieldNames.IndexOf("uom")];
-            
+
+            string dimh = fields[fieldNames.IndexOf("dimh")];
+            //if (!Dimensions.ContainsKey(dimh)) throw new KeyNotFoundException("Dimensions[" + dimh + "]");
+            dr["DimensionId"] = Dimensions[dimh];
+
             value = fields[fieldNames.IndexOf("iprx")];
-            dr["IPRX"] = Convert.ToInt16(value);
+            if (string.IsNullOrEmpty(value))
+                dr["IPRX"] = DBNull.Value;
+            else
+                dr["IPRX"] = Convert.ToInt16(value);
+
             value = fields[fieldNames.IndexOf("value")];
             if (String.IsNullOrEmpty(value))
                 dr["Value"] = DBNull.Value;
             else
                 dr["Value"] = double.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
+
             value = fields[fieldNames.IndexOf("footnote")];
             if (string.IsNullOrEmpty(value))
                 dr["FootNote"] = DBNull.Value;
             else
                 dr["FootNote"] = value;
+
             value = fields[fieldNames.IndexOf("footlen")];
             dr["FootLength"] = Convert.ToInt16(value);
+
             value = fields[fieldNames.IndexOf("dimn")];
             dr["NumberOfDimensions"] = Convert.ToInt16(value);
+
             value = fields[fieldNames.IndexOf("coreg")];
             if (string.IsNullOrEmpty(value))
                 dr["CoRegistrant"] = DBNull.Value;
             else
                 dr["CoRegistrant"] = value;
-            value = fields[fieldNames.IndexOf("durp")];
-            dr["durp"] = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
-            value = fields[fieldNames.IndexOf("datp")];
-            dr["datp"] = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
-            value = fields[fieldNames.IndexOf("dcml")];
-            dr["Decimals"] = Convert.ToInt32(value);
-            
-            dr["LineNumber"] = lineNumber;
 
+            value = fields[fieldNames.IndexOf("durp")];
+            if (string.IsNullOrEmpty(value))
+                dr["durp"] = DBNull.Value;
+            else
+                dr["durp"] = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
+
+            value = fields[fieldNames.IndexOf("datp")];
+            if (string.IsNullOrEmpty(value))
+                dr["datp"] = DBNull.Value;
+            else
+                dr["datp"] = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
+
+            value = fields[fieldNames.IndexOf("dcml")];
+            if (string.IsNullOrEmpty(value))
+                dr["Decimals"] = DBNull.Value;
+            else
+                dr["Decimals"] = Convert.ToInt32(value);
+            
             dr["DatasetId"] = edgarDatasetId;
 
-            string adsh  = fields[fieldNames.IndexOf("adsh")];
-            string tag = fields[fieldNames.IndexOf("tag")];
-            string version = fields[fieldNames.IndexOf("version")];
-            string dimh = fields[fieldNames.IndexOf("dimh")];
+            dr["LineNumber"] = lineNumber;
+
+
 
             //if (!Submissions.ContainsKey(adsh)) throw new KeyNotFoundException("Submissions[" + adsh + "]");
             dr["SubmissionId"] = Submissions[adsh];
@@ -103,8 +132,7 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
             //if (!Tags.ContainsKey(tag + version)) throw new KeyNotFoundException("Tags[" + tag + version + "]");
             dr["TagId"] = Tags[tag + version];
 
-            //if (!Dimensions.ContainsKey(dimh)) throw new KeyNotFoundException("Dimensions[" + dimh + "]");
-            dr["DimensionId"] = Dimensions[dimh];
+            
 
         }
     }

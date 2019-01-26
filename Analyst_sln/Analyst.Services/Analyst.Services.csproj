@@ -96,6 +96,7 @@
     <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetSubmissionsService.cs" />
     <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetTagService.cs" />
     <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetTextService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\InvalidLineException.cs" />
     <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetCalculationService.cs" />
     <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetDimensionService.cs" />
     <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetPresentationService.cs" />
