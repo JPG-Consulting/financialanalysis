@@ -10,26 +10,23 @@ go
 
 -----------------------------------------------------------------------------------------------------------------------------
 --DB: Analyst_EdgarDatasets
+use [master];
 
 DECLARE @dbname nvarchar(128)
 SET @dbname = N'Analyst_EdgarDatasets_dev'
 
-use [master];
-
-
-
 IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = @dbname OR name = @dbname)))
 	begin
-		PRINT 'Droping Analyst_EdgarDatasets';
-		drop database Analyst_EdgarDatasets;
+		PRINT 'Droping ' +@dbname;
+		drop database Analyst_EdgarDatasets_dev;
 	end
 else
 	begin
-		print 'Analyst_EdgarDatasets does not exist';
+		print @dbname +' does not exist';
 	end
 
-use [master];
-print 'Creating Analyst_EdgarDatasets'
+
+print 'Creating '+@dbname;
 create database Analyst_EdgarDatasets_dev
 ON   
 	( NAME = Analyst_EdgarDatasets_dat,  
@@ -47,17 +44,17 @@ go
 
 
 use [Analyst_EdgarDatasets_dev];
-go
-print 'creating user in DB Analyst_EdgarDatasets'
-create user analyst_usr for login analyst_usr;
-go
+DECLARE @dbname nvarchar(128)
+SET @dbname = N'Analyst_EdgarDatasets_dev'
 
-use [Analyst_EdgarDatasets_dev];
+print N'creating user in DB ' + @dbname;
+create user analyst_usr for login analyst_usr;
+
 print 'assigning db_owner to analyst_usr'
 EXEC sp_addrolemember N'db_owner', N'analyst_usr'
 
-print 'end'
-
+print 'end'+@dbname
+go
 -----------------------------------------------------
 --delete all tables instead of recraete the entire DB
 /*
@@ -92,16 +89,16 @@ use [master];
 
 IF (EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE ('[' + name + ']' = @dbname OR name = @dbname)))
 	begin
-		PRINT 'Droping Analyst_EdgarFiles';
+		PRINT 'Droping '+@dbname;
 		drop database Analyst_EdgarFiles_dev;
 	end
 else
 	begin
-		print 'Analyst_EdgarFiles does not exist';
+		print @dbname+' does not exist';
 	end
 
-use [master];
-print 'Creating Analyst_EdgarFiles'
+
+print 'Creating '+@dbname
 create database Analyst_EdgarFiles_dev
 ON   
 	( NAME = Analyst_EdgarFiles_dat,  
@@ -117,25 +114,18 @@ ON
 		FILEGROWTH = 5000MB ) ; 
 go
 
---[]
-
-/*
-use [master];
-go
-drop user analyst_usr
-go
-create login analyst_usr with password = 'asdf0001';
-go
-*/
 
 use [Analyst_EdgarFiles_dev];
-go
-print 'creating user in DB Analyst_EdgarFiles'
+
+DECLARE @dbname nvarchar(128)
+SET @dbname = N'Analyst_EdgarFiles_dev'
+
+print 'creating user in DB '+@dbname
 create user analyst_usr for login analyst_usr;
-go
 
 use [Analyst_EdgarFiles_dev];
 print 'assigning db_owner to analyst_usr'
 EXEC sp_addrolemember N'db_owner', N'analyst_usr'
 
-print 'end'
+print 'end'+@dbname
+go

@@ -43,7 +43,7 @@ BEGIN
 			   ,@ParentTagId
 			   ,@ChildTagId);
 
-	update EdgarDatasets set ProcessedCalculations = TotalCalculations where id = 201504;
+	update EdgarDatasets set ProcessedCalculations = ProcessedCalculations + 1 where id = 201504;
 	commit tran t1
 end
 GO
