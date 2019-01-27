@@ -24,8 +24,7 @@ namespace Analyst.DBAccess.Contexts
             //this.Configuration.ProxyCreationEnabled = false;
         }
 
-        public virtual DbSet<MasterFullIndex> MasterFullIndexes { get; set; }
-        public virtual DbSet<MasterDailyIndex> MasterDailyIndexes { get; set; }
+        public virtual DbSet<MasterIndex> MasterIndexes { get; set; }
         public virtual DbSet<IndexEntry> IndexEntries { get; set; }
         public virtual DbSet<SECForm> SECForms { get; set; }
         public virtual DbSet<SIC> SICs { get; set; }
@@ -34,19 +33,6 @@ namespace Analyst.DBAccess.Contexts
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<MasterFullIndex>().Map(m =>
-            {
-                m.MapInheritedProperties();
-                m.ToTable("MasterFullIndexes");
-            });
-
-            modelBuilder.Entity<MasterDailyIndex>().Map(m =>
-            {
-                m.MapInheritedProperties();
-                m.ToTable("MasterDailyIndexes");
-            });
-
             
             modelBuilder.Entity<IndexEntry>()
                 .HasRequired(entry => entry.FormType)

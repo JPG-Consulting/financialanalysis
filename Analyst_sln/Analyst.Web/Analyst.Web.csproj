@@ -215,8 +215,8 @@
     <Content Include="scripts\common\angular.min.js.map" />
     <Content Include="Views\Edgar\Home.cshtml" />
     <None Include="Properties\PublishProfiles\localhost.pubxml" />
-    <None Include="Views\Edgar\Datasets\readme.cshtml" />
-    <None Include="Views\Edgar\Datasets\ProcessDatasets.cshtml" />
+    <Content Include="Views\Edgar\Datasets\readme.cshtml" />
+    <Content Include="Views\Edgar\Datasets\ProcessDatasets.cshtml" />
     <Content Include="scripts\common\angular-mocks.js" />
     <Content Include="scripts\common\angular.js" />
     <Content Include="scripts\common\angular.min.js" />

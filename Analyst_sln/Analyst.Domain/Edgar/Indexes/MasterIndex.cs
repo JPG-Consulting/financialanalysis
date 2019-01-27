@@ -13,13 +13,22 @@ namespace Analyst.Domain.Edgar.Indexes
 {
     [Serializable]
     [DataContract]
-    public abstract class IndexBase<T> : IEdgarEntity
+    public class MasterIndex : IEdgarEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public abstract string Key { get; }
+        public string Key
+        {
+            get
+            {
+                if (IndexDate.HasValue)
+                    return Year.ToString() + Quarter.ToString();
+                else
+                    return Year.ToString() + Quarter.ToString() + IndexDate.Value.ToString("yyyyMMdd");
+            }
+        }
 
         [Required]
         [DataMember]
@@ -29,8 +38,11 @@ namespace Analyst.Domain.Edgar.Indexes
         [DataMember]
         public Quarter Quarter { get; set; }
 
-        [NotMapped]
-        public string RelativeURL { get; set; }
+        /// <summary>
+        /// If IndexDate is null, it's a quarter full index
+        /// If IndexDate has a value, it's a daily index
+        /// </summary>
+        public DateTime? IndexDate { get; }
 
 
         /// <summary>

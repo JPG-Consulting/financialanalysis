@@ -11,6 +11,7 @@
     <AssemblyName>Analyst.Services</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -107,6 +108,7 @@
     <Compile Include="EdgarServices\EdgarIndexesServices\EdgarFileParser.cs" />
     <Compile Include="EdgarServices\EdgarIndexesServices\EdgarMasterIndexService.cs" />
     <Compile Include="EdgarServices\EdgarIndexesServices\EdgarWebClient.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\InvalidFormatException.cs" />
     <Compile Include="EdgarServices\EdgarService.cs" />
     <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetService.cs" />
     <Compile Include="EdgarServices\EdgarDatasetServices\EdgarTaskState.cs" />

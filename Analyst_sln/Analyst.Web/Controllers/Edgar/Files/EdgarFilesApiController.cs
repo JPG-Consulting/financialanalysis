@@ -31,16 +31,16 @@ namespace Analyst.Web.Controllers.Edgar.Files
         [Route("dailyindex")]
         public IHttpActionResult GetDailyIndex(ushort year,ushort quarter, uint date)
         {
-            MasterFullIndex index = indexService.ProcessDailyIndex(year, quarter, date);
+            MasterIndex index = indexService.ProcessDailyIndex(year, quarter, date);
             return Ok(index);
         }
 
         [HttpGet]
-        [Route("allfullindexes")]
-        [ResponseType(typeof(IList<MasterFullIndex>))]
-        public IHttpActionResult GetAllFullIndexes()
+        [Route("fullindexes")]
+        [ResponseType(typeof(IList<MasterIndex>))]
+        public IHttpActionResult GetFullIndexes()
         {
-            IList<MasterFullIndex> indexes = indexService.GetAllFullIndexes();
+            IList<MasterIndex> indexes = indexService.GetFullIndexes();
             return Ok(indexes);
         }
 
@@ -48,8 +48,8 @@ namespace Analyst.Web.Controllers.Edgar.Files
         [Route("processfullindex")]
         public IHttpActionResult ProcessFullIndex(ProcessFullIndexParameter param)
         {
-            MasterFullIndex index = indexService.ProcessFullIndex((ushort)param.year, (ushort)param.quarter);
-            IList<MasterFullIndex> indexes = indexService.GetAllFullIndexes();
+            MasterIndex index = indexService.ProcessFullIndex((ushort)param.year, (ushort)param.quarter);
+            IList<MasterIndex> indexes = indexService.GetFullIndexes();
             return Ok(indexes);
         }
 

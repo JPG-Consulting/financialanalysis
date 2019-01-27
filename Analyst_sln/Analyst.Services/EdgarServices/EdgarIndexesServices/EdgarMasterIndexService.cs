@@ -13,9 +13,9 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
 {
     public interface IEdgarMasterIndexService
     {
-        MasterFullIndex ProcessDailyIndex(ushort year, ushort quarter, uint date);
-        MasterFullIndex ProcessFullIndex(ushort year, ushort quarter);
-        IList<MasterFullIndex> GetAllFullIndexes();
+        MasterIndex ProcessDailyIndex(ushort year, ushort quarter, uint date);
+        MasterIndex ProcessFullIndex(ushort year, ushort quarter);
+        IList<MasterIndex> GetFullIndexes();
     }
 
 
@@ -47,19 +47,19 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             this.edgarFilesBulkRepo = edgarFilesBulkRepository;
         }
 
-        public IList<MasterFullIndex> GetAllFullIndexes()
+        public IList<MasterIndex> GetFullIndexes()
         {
             return edgarFilesRepo.GetFullIndexes();
         }
 
-        public MasterFullIndex ProcessDailyIndex(ushort year, ushort quarter, uint date)
+        public MasterIndex ProcessDailyIndex(ushort year, ushort quarter, uint date)
         {
             throw new NotImplementedException();
         }
 
-        public MasterFullIndex ProcessFullIndex(ushort year, ushort quarter)
+        public MasterIndex ProcessFullIndex(ushort year, ushort quarter)
         {
-            MasterFullIndex index;
+            MasterIndex index;
             Quarter q = (Quarter)quarter;
             
             index = GetFullIndexFromDB(year, q);
@@ -71,7 +71,7 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             {
                 if (index == null)
                 {
-                    index = new MasterFullIndex();
+                    index = new MasterIndex();
                     index.Quarter = q;
                     index.Year = year;
                 }
@@ -88,7 +88,7 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
         }
 
         
-        private MasterFullIndex GetFullIndexFromDB(ushort year, Quarter q)
+        private MasterIndex GetFullIndexFromDB(ushort year, Quarter q)
         {
             return edgarFilesRepo.GetFullIndex(year, q);
         }
@@ -99,7 +99,7 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             return ret;
         }
 
-        private void SaveIndexEntriesToDB(MasterFullIndex index, IList<IndexEntry> entries)
+        private void SaveIndexEntriesToDB(MasterIndex index, IList<IndexEntry> entries)
         {
             edgarFilesBulkRepo.SaveIndexEntries(index, entries);
             long dbRowsCopied = edgarFilesRepo.GetIndexEntriesCount(index);

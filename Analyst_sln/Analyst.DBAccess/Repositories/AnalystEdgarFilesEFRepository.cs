@@ -14,13 +14,13 @@ namespace Analyst.DBAccess.Repositories
 {
     public interface IAnalystEdgarFilesRepository: IAnalystEdgarBaseRepository, IDisposable
     {
-        void Add(MasterFullIndex index);
-        IList<MasterFullIndex> GetFullIndexes();
-        MasterFullIndex GetFullIndex(ushort year, Quarter q);
+        void Add(MasterIndex index);
+        IList<MasterIndex> GetFullIndexes();
+        MasterIndex GetFullIndex(ushort year, Quarter q);
         SECForm GetSECForm(string code);
         Company GetRegistrant(int cik, string name);
-        void Update(MasterFullIndex index, string property);
-        long GetIndexEntriesCount(MasterFullIndex index);
+        void Update(MasterIndex index, string property);
+        long GetIndexEntriesCount(MasterIndex index);
     }
 
     public class AnalystEdgarFilesEFRepository : IAnalystEdgarFilesRepository
@@ -70,9 +70,9 @@ namespace Analyst.DBAccess.Repositories
             Context.SaveChanges();
         }
 
-        public void Add(MasterFullIndex index)
+        public void Add(MasterIndex index)
         {
-            Context.MasterFullIndexes.Add(index);
+            Context.MasterIndexes.Add(index);
             Context.SaveChanges();
         }
 
@@ -86,7 +86,7 @@ namespace Analyst.DBAccess.Repositories
             return Context.SICs.Count();
         }
 
-        public long GetIndexEntriesCount(MasterFullIndex index)
+        public long GetIndexEntriesCount(MasterIndex index)
         {
             return Context.IndexEntries.Where(entry => entry.MasterIndexId == index.Id).Count();
         }
@@ -123,21 +123,21 @@ namespace Analyst.DBAccess.Repositories
             return c;
         }
 
-        public IList<MasterFullIndex> GetFullIndexes()
+        public IList<MasterIndex> GetFullIndexes()
         {
-            return Context.MasterFullIndexes.ToList();
+            return Context.MasterIndexes.ToList();
         }
 
-        public MasterFullIndex GetFullIndex(ushort year, Quarter quarter)
+        public MasterIndex GetFullIndex(ushort year, Quarter quarter)
         {
-            return Context.MasterFullIndexes.Where(index => index.Year == year && index.Quarter == quarter).SingleOrDefault();
+            return Context.MasterIndexes.Where(index => index.Year == year && index.Quarter == quarter).SingleOrDefault();
         }
 
         
 
-        public void Update(MasterFullIndex index, string property)
+        public void Update(MasterIndex index, string property)
         {
-            Context.Entry<MasterFullIndex>(index).Property(property).IsModified = true;
+            Context.Entry<MasterIndex>(index).Property(property).IsModified = true;
             Context.SaveChanges();
 
         }

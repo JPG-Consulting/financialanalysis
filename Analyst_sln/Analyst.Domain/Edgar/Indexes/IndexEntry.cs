@@ -55,7 +55,7 @@ namespace Analyst.Domain.Edgar.Indexes
         public string RelativeURL { get; set; }
 
         [Required]
-        public MasterFullIndex MasterIndex { get; set; }
+        public MasterIndex MasterIndex { get; set; }
         public int MasterIndexId { get; set; }
 
     }

@@ -230,21 +230,23 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
 
             bool isData = false;
             List<IndexEntry> files = new List<IndexEntry>();
+            int i = 1;
             while (!sr.EndOfStream)
             {
                 string line = sr.ReadLine();
                 if (isData)
                 {
-                    IndexEntry entry = ParseMasterIndexLine(line);
+                    IndexEntry entry = ParseMasterIndexLine(line,i);
                     files.Add(entry);
                 }
                 if (line == "--------------------------------------------------------------------------------")
                     isData = true;
+                i++;
             }
             return files;
         }
 
-        private IndexEntry ParseMasterIndexLine(string line)
+        private IndexEntry ParseMasterIndexLine(string line,int lineNumber)
         {
             //Example
             //1163302|UNITED STATES STEEL CORP|10-Q|2016-07-27|edgar/data/1163302/0001163302-16-000134.txt
@@ -256,10 +258,20 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             entry.CompanyName = fields[1];
             entry.FormType = edgarFileRepository.GetSECForm(fields[2]);
             entry.FormTypeId = entry.FormType.Id;
-            int year = Convert.ToInt32(fields[3].Split('-')[0]);
-            int month = Convert.ToInt32(fields[3].Split('-')[1]);
-            int day = Convert.ToInt32(fields[3].Split('-')[2]);
-            entry.DateFiled = new DateTime(year, month, day);
+            string format;
+            if (fields[3].Length == 10)
+            {
+                format = "yyyy-MM-dd";
+            }
+            else if(fields[3].Length == 8)
+            {
+                format = "yyyyMMdd";
+            }
+            else
+            {
+                throw new InvalidFormatException($"Date of line {lineNumber} is not valid: {line}");
+            }
+            entry.DateFiled = DateTime.ParseExact(fields[3], format, null);
             entry.RelativeURL = fields[4];
             return entry;
         }

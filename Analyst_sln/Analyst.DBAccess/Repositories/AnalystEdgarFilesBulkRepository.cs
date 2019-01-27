@@ -12,7 +12,7 @@ namespace Analyst.DBAccess.Repositories
 {
     public interface IAnalystEdgarFilesBulkRepository
     {
-        long SaveIndexEntries(MasterFullIndex index, IList<IndexEntry> entries);
+        long SaveIndexEntries(MasterIndex index, IList<IndexEntry> entries);
     }
 
     public class AnalystEdgarFilesBulkRepository: BulkRepositoryBase,IAnalystEdgarFilesBulkRepository
@@ -20,7 +20,7 @@ namespace Analyst.DBAccess.Repositories
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         protected override log4net.ILog Log { get { return log; } }
 
-        public long SaveIndexEntries(MasterFullIndex index, IList<IndexEntry> entries)
+        public long SaveIndexEntries(MasterIndex index, IList<IndexEntry> entries)
         {
             string tableName = "IndexEntries";
             DataTable dt = GetEmptyDataTable(tableName);

@@ -675,11 +675,10 @@ namespace Analyst.DBAccess.Contexts
             {
                 for (ushort q = (ushort)Quarter.QTR1; q <= (ushort)Quarter.QTR4; q++)
                 {
-                    MasterFullIndex index = new MasterFullIndex()
+                    MasterIndex index = new MasterIndex()
                     {
                         Year = i,
                         Quarter = (Quarter)q,
-                        RelativeURL = GetFullIndexUrl(i, (Quarter)q, "master"),
                         IsComplete = false
                     };
                     repository.Add(index);
