@@ -20,9 +20,6 @@ namespace Analyst.Domain.Edgar.Datasets
         [Key]
         public int Id { get; set; }
 
-
-
-        
         /// <summary>
         /// The end date for the data value, rounded to the nearest month end.
         /// DATE (yyyymmdd)
@@ -42,7 +39,6 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public int CountOfNumberOfQuarters { get; set; }
 
-
         /// <summary>
         /// UOM
         /// The unit of measure for the value.
@@ -53,8 +49,6 @@ namespace Analyst.Domain.Edgar.Datasets
         [StringLength(20)]
         public string UnitOfMeasure { get; set; }
 
-       
-
         /// <summary>
         /// A positive integer to distinguish different reported facts 
         /// that otherwise would have the same primary key.  
@@ -64,8 +58,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// and closeness of the duration to a multiple of three months. 
         /// See fields dcml, durp and datp.
         /// </summary>
-        public short IPRX { get; set; }
-
+        public short? IPRX { get; set; }
 
         /// <summary>
         /// The value. This is not scaled, it is as found in the Interactive Data file, but is rounded to four digits to the right of the decimal point.
@@ -92,7 +85,6 @@ namespace Analyst.Domain.Edgar.Datasets
         [Required]
         public short NumberOfDimensions { get; set; }
 
-
         /// <summary>
         /// If specified, indicates a specific co-registrant, the parent company, or other entity (e.g., guarantor).  
         /// NULL indicates the consolidated entity.  
@@ -105,20 +97,20 @@ namespace Analyst.Domain.Edgar.Datasets
         /// The difference between the reported fact duration and the quarter duration (qtrs), expressed as a fraction of 1.  
         /// For example, a fact with duration of 120 days rounded to a 91-day quarter has a durp value of 29/91 = +0.3187.
         /// </summary>
-        public float durp { get; set; }
+        public float? Durp { get; set; }
 
 
         /// <summary>
         /// The difference between the reported fact date and the month-end rounded date (ddate), expressed as a fraction of 1. 
         /// For example, a fact reported for 29/Dec, with ddate rounded to 31/Dec, has a datp value of minus 2/31 = -0.0645.
         /// </summary>
-        public float datp { get; set; }
+        public float? Datp { get; set; }
 
 
         /// <summary>
         /// The value of the fact "decimals" attribute, with INF represented by 32767.
         /// </summary>
-        public int Decimals { get; set; }
+        public int? Decimals { get; set; }
 
         #region Not mapped fields
         /// <summary>

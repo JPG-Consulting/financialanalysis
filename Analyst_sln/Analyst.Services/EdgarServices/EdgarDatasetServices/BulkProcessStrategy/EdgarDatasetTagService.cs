@@ -56,8 +56,27 @@ namespace Analyst.Services.EdgarDatasetServices.BulkProcessStrategy
         
         public override void Parse(List<string> fieldNames, List<string> fields, int lineNumber, DataRow dr, int edgarDatasetId)
         {
-            //There is no need to implement, line by line strategy is faster enough
-            throw new NotImplementedException();
+            string strTag = fields[fieldNames.IndexOf("tag")];
+            string version = fields[fieldNames.IndexOf("version")];
+
+            dr["Tag"] = strTag;
+            dr["Version"] = version;
+            string value = fields[fieldNames.IndexOf("custom")];
+            dr["Custom"] = value == "1" ? true : false;
+            value = fields[fieldNames.IndexOf("abstract")];
+            dr["Abstract"] = value == "1" ? true : false;
+            value = fields[fieldNames.IndexOf("datatype")];
+            dr["Datatype"] = string.IsNullOrEmpty(value) ? null : value;
+            value = fields[fieldNames.IndexOf("iord")];
+            dr["ValueTypeStr"] = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+            value = fields[fieldNames.IndexOf("crdr")];
+            dr["NaturalAccountingBalanceStr"] = string.IsNullOrEmpty(value) ? (char?)null : value[0];
+            value = fields[fieldNames.IndexOf("tlabel")];
+            dr["LabelText"] = string.IsNullOrEmpty(value) ? null : value;
+            value = fields[fieldNames.IndexOf("doc")];
+            dr["Documentation"] = string.IsNullOrEmpty(value) ? null : value;
+            dr["LineNumber"] = lineNumber;
+            dr["DatasetId"] = edgarDatasetId;
         }
 
     }

@@ -88,9 +88,9 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
             else
                 number.CoRegistrant = value;
             value = fields[fieldNames.IndexOf("durp")];
-            number.durp = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
+            number.Durp = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
             value = fields[fieldNames.IndexOf("datp")];
-            number.datp = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
+            number.Datp = float.Parse(value, CultureInfo.GetCultureInfo("en-us").NumberFormat);
             value = fields[fieldNames.IndexOf("dcml")];
             number.Decimals = Convert.ToInt32(value);
 

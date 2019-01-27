@@ -36,7 +36,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// and closeness of the duration to a multiple of three months. 
         /// See fields dcml, durp and datp below.
         /// </summary>
-        [Required]
+        //[Required]
         public short Iprx { get; set; }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// The value of the fact "xml:lang" attribute, en-US represented by 32767, 
         /// other "en" dialects having lower values, and other languages lower still.
         /// </summary>
-        [Required]
+        //[Required]
         public int Dcml { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// expressed as a fraction of 1.  
         /// For example, a fact with duration of 120 days rounded to a 91-day quarter has a durp value of 29/91 = +0.3187.
         /// </summary>
-        [Required]
+        //[Required]
         public float Durp { get; set; }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Analyst.Domain.Edgar.Datasets
         /// expressed as a fraction of 1.  
         /// For example, a fact reported for 29/Dec, with ddate rounded to 31/Dec, has a datp value of minus 2/31 = -0.0645.
         /// </summary>
-        [Required]
+        //[Required]
         public float Datp { get; set; }
 
         

@@ -338,8 +338,8 @@ namespace Analyst.DBAccess.Repositories
                 coRegistrant = new SqlParameter("@CoRegistrant", DBNull.Value);
             else
                 coRegistrant = new SqlParameter("@CoRegistrant", number.CoRegistrant);
-            SqlParameter durp = new SqlParameter("@durp", number.durp);
-            SqlParameter datp = new SqlParameter("@datp", number.datp);
+            SqlParameter durp = new SqlParameter("@durp", number.Durp);
+            SqlParameter datp = new SqlParameter("@datp", number.Datp);
             SqlParameter decimals = new SqlParameter("@Decimals", number.Decimals);
             SqlParameter dimensionId = new SqlParameter("@Dimension_Id", number.DimensionId);
             SqlParameter submissionId = new SqlParameter("@Submission_Id", number.SubmissionId);

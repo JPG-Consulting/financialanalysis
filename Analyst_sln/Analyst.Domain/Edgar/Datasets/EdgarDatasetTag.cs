@@ -71,13 +71,29 @@ namespace Analyst.Domain.Edgar.Datasets
         /// otherwise, "I" if the value is a point in time, or "D" if the value is a duration.
         /// Field name in the file: Iord
         /// </summary>
-        public char? ValueType { get; set; }
+        [StringLength(1)]
+        public string ValueTypeStr { get; set; }
+        public char? ValueType
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ValueTypeStr))
+                    return null;
+                if (ValueTypeStr.Length != 1)
+                    return null;
+                return ValueTypeStr[0];
+            }
+
+            set { ValueTypeStr = value.ToString(); }
+        }
         
+        
+
         /// <summary>
         /// Another getter of ValueType
         /// </summary>
         /// <returns></returns>
-        public ValueType GetValueType()
+        public ValueType ValueTypeAsEnum()
         {
             if (!this.ValueType.HasValue)
                 return ValueTypeValue.NoValue;
@@ -104,12 +120,26 @@ namespace Analyst.Domain.Edgar.Datasets
         /// if not defined, then NULL.
         /// Field name in the file: crdr
         /// </summary>
-        public char? NaturalAccountingBalance { get; set; }
+        [StringLength(1)]
+        public string NaturalAccountingBalanceStr { get; set; }
+        public char? NaturalAccountingBalance
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(NaturalAccountingBalanceStr))
+                    return null;
+                if (NaturalAccountingBalanceStr.Length != 1)
+                    return null;
+                return NaturalAccountingBalanceStr[0];
+            }
+
+            set { NaturalAccountingBalanceStr = value.ToString(); }
+        }
 
         /// <summary>
         /// Another getter of NaturalAccountingBalance
         /// </summary>
-        public NaturalAccountingBalanceValue GetNaturalAccountingBalance()
+        public NaturalAccountingBalanceValue NaturalAccountingBalanceAsEnum()
         {
             if (!NaturalAccountingBalance.HasValue)
                 return NaturalAccountingBalanceValue.NoValue;
