@@ -1,4 +1,5 @@
 ﻿using Analyst.DBAccess.Contexts;
+using Analyst.DBAccess.Repositories;
 using Analyst.Domain.Edgar.Datasets;
 using Analyst.Services.EdgarDatasetServices;
 using System;
@@ -44,7 +45,7 @@ namespace Analyst.Windows
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            using (IEdgarDatasetService edsserv = new EdgarDatasetService())
+            using (IEdgarDatasetService edsserv = new EdgarDatasetService(new AnalystEdgarDatasetsBulkRepository()))
             {
                 int id = Convert.ToInt32(lblDatasetInProcess.Text);
                 EdgarDataset ds = edsserv.GetDataset(id);
@@ -100,14 +101,14 @@ namespace Analyst.Windows
 
         private IEdgarDatasetService CreateEdgarDatasetService()
         {
-            IEdgarDatasetService edgarDatasetService = new EdgarDatasetService();
+            IEdgarDatasetService edgarDatasetService = new EdgarDatasetService(new AnalystEdgarDatasetsBulkRepository());
             return edgarDatasetService;
         }
 
         private void LoadDatasets()
         {
             IList<EdgarDataset> datasets;
-            using (IEdgarDatasetService dsServ = new EdgarDatasetService())
+            using (IEdgarDatasetService dsServ = new EdgarDatasetService(new AnalystEdgarDatasetsBulkRepository()))
             {
                 datasets = dsServ.GetDatasets();
             }
