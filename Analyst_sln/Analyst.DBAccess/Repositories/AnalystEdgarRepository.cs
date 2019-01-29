@@ -170,7 +170,7 @@ namespace Analyst.DBAccess.Repositories
         {
             //todo: pending to add sortOrder
             total = Context.Registrants.Where(r => r.Name.Contains(searchString)).Count();
-            var query = Context.Registrants.Where(r => r.Name.Contains(searchString)).OrderBy(r => r.Name);
+            var query = Context.Registrants.Include("SIC").Where(r => r.Name.Contains(searchString)).OrderBy(r => r.Name);
             return query;
         }
 
