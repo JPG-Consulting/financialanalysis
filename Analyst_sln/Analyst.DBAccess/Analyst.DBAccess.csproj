@@ -60,6 +60,9 @@
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -74,18 +77,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contexts\EdgarDatasetsContext.cs" />
-    <Compile Include="Contexts\EdgarDatasetsContextInitializer.cs" />
-    <Compile Include="Contexts\EdgarFilesContext.cs" />
-    <Compile Include="Contexts\EdgarFilesContextInitializer.cs" />
-    <Compile Include="Repositories\AnalystEdgarFilesBulkRepository.cs" />
-    <Compile Include="Repositories\BulkRepositoryBase.cs" />
-    <Compile Include="Repositories\IAnalystEdgarBaseRepository.cs" />
-    <Compile Include="Repositories\AnalystEdgarDatasetsEFRepository.cs" />
-    <Compile Include="Contexts\EdgarInitialLoader.cs" />
-    <Compile Include="Repositories\AnalystEdgarFilesEFRepository.cs" />
+    <Compile Include="Contexts\EdgarContext.cs" />
+    <Compile Include="Contexts\EdgarContextInitializer.cs" />
+    <Compile Include="Repositories\BulkRepositories\AnalystEdgarFilesBulkRepository.cs" />
+    <Compile Include="Repositories\BulkRepositories\BulkRepositoryTemplate.cs" />
     <Compile Include="Repositories\AnalystEdgarRepository.cs" />
-    <Compile Include="Repositories\AnalystEdgarDatasetsBulkRepository.cs" />
+    <Compile Include="Contexts\EdgarInitialLoader.cs" />
+    <Compile Include="Repositories\BulkRepositories\AnalystEdgarDatasetsBulkRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +107,8 @@
     <Content Include="sql\queries\queries for errors\missing tags in dataset 201704.sql" />
     <Content Include="sql\queries\queries for errors\performance analysis presentations.sql" />
     <Content Include="sql\queries\queries for reports\submissions submitted.sql" />
-    <Content Include="sql\queries\creation_of_initial_db.sql" />
+    <Content Include="sql\scripts for manual execution\creation_of_initial_db.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset year 2015 quarter 4.sql" />
     <Content Include="sql\scripts\alter column ADSH.sql" />
     <Content Include="sql\scripts\create GET_MISSING_LINE_NUMBERS.sql" />
     <Content Include="sql\scripts\create SP_DISABLE_PRESENTATION_INDEXES.sql" />

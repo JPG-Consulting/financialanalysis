@@ -89,7 +89,7 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
 
         public override void Add(IAnalystEdgarDatasetsRepository repo, EdgarDataset dataset, EdgarDatasetTag file)
         {
-            repo.AddTag(dataset, file);
+            repo.Add(dataset, file);
         }
 
         public override IList<EdgarTuple> GetKeys(IAnalystEdgarDatasetsRepository repository, int datasetId)

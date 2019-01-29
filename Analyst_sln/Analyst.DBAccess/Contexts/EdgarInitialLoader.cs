@@ -671,7 +671,7 @@ namespace Analyst.DBAccess.Contexts
         public static void LoadInitialFullIndexes(IAnalystEdgarFilesRepository repository)
         {
             int thisYear = DateTime.Now.Year;
-            for (ushort i = 1993; i <= 2018; i++)
+            for (ushort i = 1993; i <= thisYear; i++)
             {
                 for (ushort q = (ushort)Quarter.QTR1; q <= (ushort)Quarter.QTR4; q++)
                 {

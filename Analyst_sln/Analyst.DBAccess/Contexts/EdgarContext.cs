@@ -1,6 +1,7 @@
 ﻿using Analyst.Domain;
 using Analyst.Domain.Edgar;
 using Analyst.Domain.Edgar.Datasets;
+using Analyst.Domain.Edgar.Indexes;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -15,15 +16,15 @@ using System.Threading.Tasks;
 
 namespace Analyst.DBAccess.Contexts
 {
-    internal class EdgarDatasetsContext : DbContext
+    internal class EdgarContext : DbContext
     {
 
-        static EdgarDatasetsContext()
+        static EdgarContext()
         {
-            Database.SetInitializer<EdgarDatasetsContext>(new EdgarDatasetsContextInitializer());
+            Database.SetInitializer<EdgarContext>(new EdgarContextInitializer());
         }
 
-        public EdgarDatasetsContext() : base("name=AnalystEdgarDatasets")
+        public EdgarContext() : base("name=AnalystEdgar")
         {
             //http://www.entityframeworktutorial.net/EntityFramework4.3/lazy-loading-with-dbcontext.aspx
             //this.Configuration.LazyLoadingEnabled = true;
@@ -42,6 +43,9 @@ namespace Analyst.DBAccess.Contexts
         public virtual DbSet<EdgarDatasetPresentation> Presentations { get; set; }
         public virtual DbSet<EdgarDatasetCalculation> Calculations { get; set; }
         public virtual DbSet<EdgarDatasetText> Texts { get; set; }
+
+        public virtual DbSet<MasterIndex> MasterIndexes { get; set; }
+        public virtual DbSet<IndexEntry> IndexEntries { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -155,6 +159,26 @@ namespace Analyst.DBAccess.Contexts
                 .WithMany(d => d.Texts)
                 .HasForeignKey(fk => fk.DimensionId)
                 .WillCascadeOnDelete(false);
+
+
+            modelBuilder.Entity<IndexEntry>()
+                .HasRequired(entry => entry.FormType)
+                .WithMany()
+                .HasForeignKey(entry => entry.FormTypeId)
+                .WillCascadeOnDelete(false)
+                ;
+
+            modelBuilder.Entity<IndexEntry>()
+                .HasRequired(entry => entry.Company)
+                .WithMany()
+                .HasForeignKey(entry => entry.CIK)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<IndexEntry>()
+                .HasRequired(entry => entry.MasterIndex)
+                .WithMany(index => index.Entries)
+                .HasForeignKey(entry => entry.MasterIndexId)
+                .WillCascadeOnDelete(true);
 
         }
 

@@ -69,7 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Edgar\Company.cs" />
     <Compile Include="Edgar\Datasets\EdgarDataset.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetCalculation.cs" />
     <Compile Include="Edgar\Datasets\EdgarDatasetDimension.cs" />
@@ -84,6 +83,7 @@
     <Compile Include="Edgar\Datasets\IEdgarDatasetFile.cs" />
     <Compile Include="Edgar\Exceptions\EdgarException.cs" />
     <Compile Include="Edgar\Exceptions\EdgarLineException.cs" />
+    <Compile Include="Edgar\IEdgarEntity.cs" />
     <Compile Include="Edgar\Indexes\MasterIndex.cs" />
     <Compile Include="Edgar\Indexes\IndexEntry.cs" />
     <Compile Include="Edgar\MutualFund.cs" />

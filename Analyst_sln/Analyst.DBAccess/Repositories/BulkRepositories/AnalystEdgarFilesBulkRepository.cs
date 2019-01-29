@@ -38,11 +38,5 @@ namespace Analyst.DBAccess.Repositories
             long rowsCopied = BulkCopy(tableName, dt);
             return rowsCopied;
         }
-
-        protected override SqlConnection CreateBulkConnection()
-        {
-            ConnectionStringSettings connSettings = ConfigurationManager.ConnectionStrings["AnalystEdgarFiles"];
-            return new SqlConnection(connSettings.ConnectionString);
-        }
     }
 }

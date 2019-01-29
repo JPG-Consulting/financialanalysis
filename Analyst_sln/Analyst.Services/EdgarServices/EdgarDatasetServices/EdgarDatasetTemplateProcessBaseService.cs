@@ -44,7 +44,7 @@ namespace Analyst.Services.EdgarServices.EdgarDatasetServices
         public ConcurrentDictionary<string, int> GetAsConcurrent(int datasetId)
         {
             ConcurrentDictionary<string, int> ret = new ConcurrentDictionary<string, int>();
-            using (IAnalystEdgarDatasetsRepository repository = new AnalystEdgarDatasetsEFRepository())
+            using (IAnalystEdgarDatasetsRepository repository = new AnalystEdgarRepository())
             {
                 IList<EdgarTuple> keysId = GetKeys(repository, datasetId);
                 foreach (EdgarTuple t in keysId)
@@ -136,7 +136,7 @@ namespace Analyst.Services.EdgarServices.EdgarDatasetServices
         private ConcurrentBag<int> GetMissingLines(int datasetId, int totalLines)
         {
             List<int> missing;
-            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsEFRepository())
+            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarRepository())
             {
                 missing = repo.GetMissingLines(datasetId, RelatedTable, totalLines);
             }
@@ -146,7 +146,7 @@ namespace Analyst.Services.EdgarServices.EdgarDatasetServices
 
         private bool IsAlreadyProcessed(EdgarTaskState state, string fieldToUpdate, out int savedInDb)
         {
-            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsEFRepository())
+            using (IAnalystEdgarDatasetsRepository repo = new AnalystEdgarRepository())
             {
                 savedInDb = repo.GetCount<T>(state.Dataset.Id);
                 int processed = (int)state.Dataset.GetType().GetProperty("Processed" + fieldToUpdate).GetValue(state.Dataset);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Analyst.Domain.Edgar
 {
     [Serializable]
-    public abstract class Registrant
+    public class Registrant
     {
 
         /// <summary>

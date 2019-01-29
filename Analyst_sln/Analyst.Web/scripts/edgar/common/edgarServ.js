@@ -3,7 +3,7 @@
     var URL_GET_ALL_DATASETS = "api/alldatasets"
     var URL_PROCESS_DATASET = "api/processdataset";
     var URL_DELETE_DATASET_FILE = "api/deletedataset";
-    var URL_GET_REGISTRANTS = "askedgarapi/companies";
+    //var URL_GET_REGISTRANTS = "askedgarapi/companies";
     var URL_GET_FULL_INDEXES = "api/fullindexes";
     var URL_PROCESS_FULL_INDEX = "api/processfullindex";
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +57,7 @@
 
     ////////////////////////////////
     //Public - Ask Edgar
+    /*
     this.getRegistrants = function (successCallback, errorCallback) {
         getPromise(URL_GET_REGISTRANTS).then
             (
@@ -68,7 +69,7 @@
             }
             );
     };
-
+    */
     ////////////////////////////////
     //Public - Files
 

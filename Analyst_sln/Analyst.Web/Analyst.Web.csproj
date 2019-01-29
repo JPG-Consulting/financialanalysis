@@ -101,6 +101,12 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net45\System.Diagnostics.DiagnosticSource.dll</HintPath>
       <Private>True</Private>
@@ -201,6 +207,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="scripts\3rdpartylibraries\angular-simple-pagination.js" />
     <Content Include="scripts\edgar\common\edgarApp.js" />
@@ -210,7 +217,9 @@
     <Content Include="Global.asax" />
     <Content Include="config\log4net\debug.config" />
     <Content Include="scripts\edgar\files\edgarfilescontroller.js" />
+    <Content Include="styles\PagedList.css" />
     <Content Include="Views\Edgar\AskEdgar\AskEdgarHome.cshtml" />
+    <Content Include="Views\Edgar\AskEdgar\Filings.cshtml" />
     <None Include="Views\Edgar\Datasets\ProcessDatasets_unittests.cshtml" />
     <Content Include="scripts\common\angular.min.js.map" />
     <Content Include="Views\Edgar\Home.cshtml" />
@@ -242,6 +251,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AskEdgarModel.cs" />
     <Compile Include="Models\ScreenAnalyzeTradeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -253,7 +263,6 @@
     </Content>
     <Content Include="Views\Edgar\RelatedData\SECForms.cshtml" />
     <Content Include="Views\Edgar\RelatedData\SICs.cshtml" />
-    <Content Include="Views\Edgar\RelatedData\Registrants.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\_ScreenAnalyzeTradeLayout.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Start.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Screener.cshtml" />

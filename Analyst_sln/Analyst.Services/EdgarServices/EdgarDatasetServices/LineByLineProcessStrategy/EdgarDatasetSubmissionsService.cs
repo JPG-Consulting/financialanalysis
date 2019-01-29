@@ -90,7 +90,7 @@ namespace Analyst.Services.EdgarDatasetServices.LineByLineProcessStrategy
             Registrant r = repository.GetRegistrant(cik);
             if (r == null)
             {
-                r = new Company();//TODO: no todos los registrantes son companias, algunos son mutual fund
+                r = new Registrant();
                 r.CIK = int.Parse(cik);
                 r.Name = fields[fieldNames.IndexOf("name")];
                 string value = fields[fieldNames.IndexOf("sic")];

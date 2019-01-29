@@ -361,7 +361,7 @@ namespace Analyst.Services.EdgarDatasetServices
 
         private IAnalystEdgarDatasetsRepository CreateRepository()
         {
-            return new AnalystEdgarDatasetsEFRepository();
+            return new AnalystEdgarRepository();
         }
 
         /// <summary>

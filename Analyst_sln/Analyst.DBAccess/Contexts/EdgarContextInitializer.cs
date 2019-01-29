@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 namespace Analyst.DBAccess.Contexts
 {
     //public class EdgarDatasetsContextInitializer : DropCreateDatabaseIfModelChanges<AnalystContext>
-    internal class EdgarDatasetsContextInitializer: CreateDatabaseIfNotExists<EdgarDatasetsContext>
+    internal class EdgarContextInitializer: CreateDatabaseIfNotExists<EdgarContext>
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger("EdgarDatasetsContextInitializer");
-        protected override void Seed(EdgarDatasetsContext context)
+        protected override void Seed(EdgarContext context)
         {
             try
             {
@@ -90,12 +90,14 @@ namespace Analyst.DBAccess.Contexts
                 log.Info("LOG created");
                 context.Database.ExecuteSqlCommand(GetTextScript("create table numbers.sql"));
                 log.Info("numbers created");
-                IAnalystEdgarDatasetsRepository repo = new AnalystEdgarDatasetsEFRepository(context);
+                IAnalystEdgarRepository repo = new AnalystEdgarRepository(context);
                 log.Info("Loading initial data");
                 EdgarInitialLoader.LoadInitialData(repo);
                 log.Info("SecForms and SICs loaded");
                 EdgarInitialLoader.LoadInitialDatasets(repo);
                 log.Info("Datasets loaded");
+                EdgarInitialLoader.LoadInitialFullIndexes(repo);
+                log.Info("Indexes loaded");
 
                 log.Info("Seed end");
             }

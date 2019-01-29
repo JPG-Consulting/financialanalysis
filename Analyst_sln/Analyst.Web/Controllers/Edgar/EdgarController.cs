@@ -60,8 +60,8 @@ namespace Analyst.Web.Controllers.Edgar.Datasets
         [Route("registrants")]
         public ActionResult GetRegistrants()
         {
-            IList<Registrant> registrants = edgarService.GetCompanies();
-            return View(VIEW_ROOT_PATH + "RelatedData/Registrants.cshtml", registrants);
+            IList<Registrant> registrants = edgarService.GetRegistrants();
+            return View(VIEW_ROOT_PATH + "AskEdgar/AskEdgarHome.cshtml", registrants);
         }
 
         [HttpGet]

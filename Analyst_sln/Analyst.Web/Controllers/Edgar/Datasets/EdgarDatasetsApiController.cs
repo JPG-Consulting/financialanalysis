@@ -54,33 +54,7 @@ namespace Analyst.Web.Controllers
             IList<EdgarDataset> datasets = datasetService.GetDatasets();
             return Ok(datasets);
         }
-
-        [HttpGet]
-        [Route("secforms")]
-        [ResponseType(typeof(IList<SECForm>))]
-        public IHttpActionResult GetSECForms()
-        {
-            IList<SECForm> forms = edgarService.GetSECForms();
-            return Ok(forms);
-        }
-
-        [HttpGet]
-        [Route("sics")]
-        [ResponseType(typeof(IList<SIC>))]
-        public IHttpActionResult GetSICs()
-        {
-            IList<SIC> sics = edgarService.GetSICs();
-            return Ok(sics);
-        }
-
-        [HttpGet]
-        [Route("registrants")]
-        [ResponseType(typeof(IList<Registrant>))]
-        public IHttpActionResult GetRegistrants()
-        {
-            IList<Registrant> registrants = edgarService.GetRegistrants();
-            return Ok(registrants);
-        }
+       
 
         public class DatasetAndIdParameters
         {

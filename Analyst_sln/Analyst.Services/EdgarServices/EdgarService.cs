@@ -21,7 +21,7 @@ namespace Analyst.Services.EdgarServices
         IList<SECForm> GetSECForms();
         IList<SIC> GetSICs();
         IList<Registrant> GetRegistrants();
-        IList<Registrant> GetCompanies();
+        IQueryable<Registrant> GetRegistrants(string sortOrder, string searchString, int pagesize,out int total);
     }
 
     public class EdgarService : IEdgarService
@@ -50,23 +50,13 @@ namespace Analyst.Services.EdgarServices
 
         public IList<Registrant> GetRegistrants()
         {
-            //TODO: Implement discriminator
-            //https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/implementing-inheritance-with-the-entity-framework-in-an-asp-net-mvc-application
-            //IList<Registrant> registrants = repository.Get<Registrant>();//TODO: Registrant shoul implement IEdgarEntity
-            //return registrants;
             throw new NotImplementedException();
         }
 
-        public IList<Registrant> GetCompanies()
+        public IQueryable<Registrant> GetRegistrants(string sortOrder, string searchString, int pagesize, out int total)
         {
-            //TODO: Implement discriminator
-            //https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/implementing-inheritance-with-the-entity-framework-in-an-asp-net-mvc-application
-            IList<Registrant> companies = edgarRepo.GetCompanies();
-            return companies;
-
+            return datasetsRepo.GetRegistrants(sortOrder, searchString,  pagesize, out total);
         }
-
-
     }
 
     

@@ -39,13 +39,6 @@ namespace Analyst.DBAccess.Repositories
         {
 
         }
-
-        protected override SqlConnection CreateBulkConnection()
-        {
-            ConnectionStringSettings connSettings = ConfigurationManager.ConnectionStrings["AnalystEdgarDatasets"];
-            return new SqlConnection(connSettings.ConnectionString);
-        }
-        
         public DataTable GetEmptyDataTable(DatasetsTables table)
         {
             return GetEmptyDataTable("EdgarDataset" + Enum.GetName(typeof(DatasetsTables), table));

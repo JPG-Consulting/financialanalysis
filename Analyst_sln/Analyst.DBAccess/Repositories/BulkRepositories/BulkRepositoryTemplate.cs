@@ -85,6 +85,10 @@ namespace Analyst.DBAccess.Repositories
             Log.Info("Rows copied in " + copier.DestinationTableName + ": " + e.RowsCopied);
         }
 
-        protected abstract SqlConnection CreateBulkConnection();
+        protected SqlConnection CreateBulkConnection()
+        {
+            ConnectionStringSettings connSettings = ConfigurationManager.ConnectionStrings["AnalystEdgar"];
+            return new SqlConnection(connSettings.ConnectionString);
+        }
     }
 }
