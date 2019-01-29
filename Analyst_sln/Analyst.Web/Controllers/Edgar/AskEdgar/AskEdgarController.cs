@@ -58,6 +58,7 @@ namespace Analyst.Web.Controllers.Frontend
             model.Registrants = query.ToPagedList(pageNumber, pageSize);
             model.PageNumber = pageNumber;
             model.PageCount = count / pageSize + ((count % pageSize) > 0 ? 1 : 0);
+            model.Total = count;
             return View(VIEW_HOME,model);
         }
 

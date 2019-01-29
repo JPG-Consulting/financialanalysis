@@ -10,8 +10,9 @@ namespace Analyst.Web.Models
     public class AskEdgarModel
     {
         public string Title { get; internal set; }
-        public IPagedList<Registrant> Registrants { get; internal set; }
+        public IPagedList<Registrant> Registrants { get; set; }
         public int PageCount { get; set; }
         public int PageNumber { get; set; }
+        public int Total { get; set; }
     }
 }

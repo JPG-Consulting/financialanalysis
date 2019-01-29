@@ -15,7 +15,12 @@
         <li>Balances --> A traves de los datasets</li>
         <li>Toda la documentacion --> A traves de los indices y archivos</li>
     </ul>
-
+    <a href="https://www.sec.gov/edgar/searchedgar/cik.htm">Buscador de CIK, dado el nombre de la empresa --> para completar las empresas que se obtienen de los indices</a>
+    <br />
+    Otra opcion, por ejemplo:<br />
+    <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1386509" target="_blank">'5AM Ventures II LP': https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=1386509</a>
+    <br />
+    <br />
 </div>
 
 @using (Html.BeginForm("getregistrants", "AskEdgar", FormMethod.Get))
@@ -103,7 +108,7 @@
                 }
             </table>
             <div>
-                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount (Total: @Model.Total)
             </div>
             <div>
                 @Html.PagedListPager(Model.Registrants, page => Url.Action("getregistrants", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, searchString = ViewBag.SearchString }))
