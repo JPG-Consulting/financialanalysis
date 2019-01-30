@@ -22,6 +22,7 @@ namespace Analyst.DBAccess.Repositories
 
         public long SaveIndexEntries(MasterIndex index, IList<IndexEntry> entries)
         {
+            log.Info("SaveIndexEntries - Saving data to datatable");
             string tableName = "IndexEntries";
             DataTable dt = GetEmptyDataTable(tableName);
             foreach(IndexEntry entry in entries)
@@ -35,7 +36,9 @@ namespace Analyst.DBAccess.Repositories
                 //dr["MasterDailyIndex_Id"] = ?????;
                 dt.Rows.Add(dr);
             }
+            log.Info($"SaveIndexEntries - Datatable has {dt.Rows.Count} rows, starting bulk copy");
             long rowsCopied = BulkCopy(tableName, dt);
+            log.Info($"SaveIndexEntries - Bulk copy ended ok");
             return rowsCopied;
         }
     }

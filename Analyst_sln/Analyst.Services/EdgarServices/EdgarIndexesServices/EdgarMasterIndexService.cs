@@ -14,7 +14,7 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
     public interface IEdgarMasterIndexService
     {
         MasterIndex ProcessDailyIndex(ushort year, ushort quarter, uint date);
-        MasterIndex ProcessFullIndex(ushort year, ushort quarter);
+        void ProcessFullIndex(ushort year, ushort quarter);
         IList<MasterIndex> GetFullIndexes();
     }
 
@@ -35,10 +35,14 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
     /// </summary>
     public class EdgarMasterIndexService : IEdgarMasterIndexService
     {
+        private readonly log4net.ILog logger = log4net.LogManager.GetLogger(typeof(EdgarMasterIndexService).Name);
         private IEdgarWebClient webClient;
         private IEdgarFileParser parser;
         private IAnalystEdgarFilesRepository edgarFilesRepo;
         private IAnalystEdgarFilesBulkRepository edgarFilesBulkRepo;
+
+        private static Dictionary<string, Task> tasks = new Dictionary<string, Task>();
+
         public EdgarMasterIndexService(IEdgarWebClient webClient, IEdgarFileParser parser,IAnalystEdgarFilesRepository edgarFilesRepository, IAnalystEdgarFilesBulkRepository edgarFilesBulkRepository)
         {
             this.webClient = webClient;
@@ -57,37 +61,69 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             throw new NotImplementedException();
         }
 
-        public MasterIndex ProcessFullIndex(ushort year, ushort quarter)
+        public void ProcessFullIndex(ushort year, ushort quarter)
         {
-            MasterIndex index;
-            Quarter q = (Quarter)quarter;
-            
-            index = GetFullIndexFromDB(year, q);
-            if (index != null && index.IsComplete)
-                return index;
+            string key = year.ToString("0000") + quarter.ToString("00");
+            if (tasks.ContainsKey(key))
+                return;
 
-            string content;            
-            if (GetFullIndexFromWeb(year, q, out content))
+            Task task = Task.Factory.StartNew(() =>
             {
-                if (index == null)
+                logger.Info($"ProcessFullIndex - Init proces for year {year}, quarter {quarter}");
+                try
                 {
-                    index = new MasterIndex();
-                    index.Quarter = q;
-                    index.Year = year;
+                    MasterIndex index;
+                    Quarter q = (Quarter)quarter;
+
+                    logger.Info($"ProcessFullIndex - Getting full index from DB");
+                    index = GetFullIndexFromDB(year, q);
+                    if (index != null && index.IsComplete)
+                        return index;
+
+                    logger.Info($"ProcessFullIndex - Downloading full index from Web");
+                    string content;
+                    if (GetFullIndexFromWeb(year, q, out content))
+                    {
+
+                        if (index == null)
+                        {
+                            logger.Info($"ProcessFullIndex - Creating new index");
+                            index = new MasterIndex();
+                            index.Quarter = q;
+                            index.Year = year;
+                        }
+                        logger.Info($"ProcessFullIndex - Parsing index");
+                        IList<IndexEntry> entries = parser.ParseMasterIndex(content);
+                        index.TotalLines = entries.Count;
+                        logger.Info($"ProcessFullIndex - Updating total lines");
+                        edgarFilesRepo.Update(index, "TotalLines");
+                        logger.Info($"ProcessFullIndex - Saving entries to DB");
+                        SaveIndexEntriesToDB(index, entries);
+                        logger.Info($"ProcessFullIndex - End successful");
+                        return index;
+                    }
+                    else
+                    {
+                        throw new ApplicationException($"It wasn't able to retrieve index (year={year}, quarter={quarter}");
+                    }
                 }
-                IList<IndexEntry> entries = parser.ParseMasterIndex(content);
-                index.TotalLines = entries.Count;
-                edgarFilesRepo.Update(index, "TotalLines");
-                SaveIndexEntriesToDB(index,entries);
-                return index;
-            }
-            else
-            {
-                throw new ApplicationException($"It wasn't able to retrieve index (year={year}, quarter={quarter}");
-            }
+                catch (Exception ex)
+                {
+                    logger.Fatal("ProcessFullIndex - Exception: " + ex.Message, ex);
+                    throw ex;
+                }
+            }, TaskCreationOptions.LongRunning).ContinueWith(ProcessFullIndexWhenFinish, key);
+            tasks.Add(key, task);
         }
 
-        
+        void ProcessFullIndexWhenFinish(Task task, object state)
+        {
+            string key = state.ToString();
+            if (tasks.ContainsKey(key))
+                tasks.Remove(key);
+        }
+
+
         private MasterIndex GetFullIndexFromDB(ushort year, Quarter q)
         {
             return edgarFilesRepo.GetFullIndex(year, q);

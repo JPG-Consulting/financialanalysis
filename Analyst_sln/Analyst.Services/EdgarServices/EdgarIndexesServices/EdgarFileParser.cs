@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
 
     public class EdgarFileParser: IEdgarFileParser
     {
+        private readonly log4net.ILog logger = log4net.LogManager.GetLogger(typeof(EdgarMasterIndexService).Name);
+
         private IAnalystEdgarFilesRepository edgarFileRepository;
         public EdgarFileParser(IAnalystEdgarFilesRepository repo)
         {
@@ -223,30 +226,42 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
 
         public List<IndexEntry> ParseMasterIndex(string content)
         {
-            // convert string to stream
-            byte[] byteArray = Encoding.ASCII.GetBytes(content);
-            MemoryStream stream = new MemoryStream(byteArray);
-            StreamReader sr = new StreamReader(stream);
-
+            logger.Info("ParseMasterIndex - Init");
             bool isData = false;
-            List<IndexEntry> files = new List<IndexEntry>();
-            int i = 1;
-            while (!sr.EndOfStream)
+            List<string> lines = content.Split('\n').ToList();
+            int i = 0;
+            logger.Info("ParseMasterIndex - Finding when start the data");
+            while (!isData)
             {
-                string line = sr.ReadLine();
-                if (isData)
-                {
-                    IndexEntry entry = ParseMasterIndexLine(line,i);
-                    files.Add(entry);
-                }
-                if (line == "--------------------------------------------------------------------------------")
+                if (lines[i] == "--------------------------------------------------------------------------------")
                     isData = true;
                 i++;
             }
-            return files;
+            logger.Info($"ParseMasterIndex - Data start at line {i+1}, getting lines to process");
+            var linesToProces = lines.GetRange(i, lines.Count - (i + 1));
+            logger.Info($"ParseMasterIndex - Start partitioning");
+            OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(0, linesToProces.Count);
+            ConcurrentBag<IndexEntry> indexEntries = new ConcurrentBag<IndexEntry>();
+            // Loop over the partitions in parallel.
+            Parallel.ForEach(rangePartitioner, (range, loopState) =>
+            {
+                using (IAnalystEdgarFilesRepository repo = new AnalystEdgarRepository())
+                {
+                    logger.Info($"$ParseMasterIndex - Processing range: from { range.Item1} to {range.Item2}");
+                    for (int j = range.Item1; j < range.Item2; j++)
+                    {
+                        string line = linesToProces[j];
+                        IndexEntry entry = ParseMasterIndexLine(line, j,repo);
+                        indexEntries.Add(entry);
+                    }
+                }
+            });
+            logger.Info($"ParseMasterIndex - Partitioning end");
+            logger.Info("ParseMasterIndex - End");
+            return indexEntries.ToList();
         }
 
-        private IndexEntry ParseMasterIndexLine(string line,int lineNumber)
+        private IndexEntry ParseMasterIndexLine(string line,int lineNumber, IAnalystEdgarFilesRepository repo)
         {
             //Example
             //1163302|UNITED STATES STEEL CORP|10-Q|2016-07-27|edgar/data/1163302/0001163302-16-000134.txt
@@ -254,9 +269,9 @@ namespace Analyst.Services.EdgarServices.EdgarIndexesServices
             //entry.OriginalLine = line;
             string[] fields = line.Split('|');
             entry.CIK = int.Parse(fields[0]);
-            entry.Company = edgarFileRepository.GetRegistrant(entry.CIK,fields[1]);
+            entry.Company = repo.GetRegistrant(entry.CIK,fields[1]);
             entry.CompanyName = fields[1];
-            entry.FormType = edgarFileRepository.GetSECForm(fields[2]);
+            entry.FormType = repo.GetSECForm(fields[2]);
             entry.FormTypeId = entry.FormType.Id;
             string format;
             if (fields[3].Length == 10)

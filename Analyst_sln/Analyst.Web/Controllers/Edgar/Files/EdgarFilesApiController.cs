@@ -48,7 +48,7 @@ namespace Analyst.Web.Controllers.Edgar.Files
         [Route("processfullindex")]
         public IHttpActionResult ProcessFullIndex(ProcessFullIndexParameter param)
         {
-            MasterIndex index = indexService.ProcessFullIndex((ushort)param.year, (ushort)param.quarter);
+            indexService.ProcessFullIndex((ushort)param.year, (ushort)param.quarter);
             IList<MasterIndex> indexes = indexService.GetFullIndexes();
             return Ok(indexes);
         }
