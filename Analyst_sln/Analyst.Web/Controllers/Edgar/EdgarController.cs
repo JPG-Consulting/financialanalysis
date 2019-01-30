@@ -57,14 +57,6 @@ namespace Analyst.Web.Controllers.Edgar.Datasets
         #region Related data
 
         [HttpGet]
-        [Route("registrants")]
-        public ActionResult GetRegistrants()
-        {
-            IList<Registrant> registrants = edgarService.GetRegistrants();
-            return View(VIEW_ROOT_PATH + "AskEdgar/AskEdgarHome.cshtml", registrants);
-        }
-
-        [HttpGet]
         [Route("secforms")]
         public ActionResult GetSecForms()
         {

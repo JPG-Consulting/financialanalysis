@@ -5,7 +5,6 @@ using Analyst.Services.AnalysisProcesses.ScreenAnalyzeTrade;
 using Analyst.Services.EdgarDatasetServices;
 using Analyst.Services.EdgarServices;
 using Analyst.Services.EdgarServices.EdgarIndexesServices;
-using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,10 +49,10 @@ namespace Analyst.Web.App_Start.UnityConfiguration
             RegisterAnalystComponents(container);
 
             //register the resolver for MVC
-            DependencyResolver.SetResolver(new Unity.Mvc5.UnityDependencyResolver(container));
+            DependencyResolver.SetResolver(new Unity.AspNet.Mvc.UnityDependencyResolver(container));
 
             //register the resolver for Web API
-            GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
+            GlobalConfiguration.Configuration.DependencyResolver = new Unity.AspNet.WebApi.UnityDependencyResolver(container);
         }
 
         private static void RegisterAnalystComponents(UnityContainer container)

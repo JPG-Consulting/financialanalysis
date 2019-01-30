@@ -20,8 +20,8 @@ namespace Analyst.Services.EdgarServices
     {
         IList<SECForm> GetSECForms();
         IList<SIC> GetSICs();
-        IList<Registrant> GetRegistrants();
         IQueryable<Registrant> GetRegistrants(string sortOrder, string searchString, int pagesize,out int total);
+        IQueryable GetFilings(int cik, int? year, Quarter? quarter, string sortOrder, int pagesize, out int count);
     }
 
     public class EdgarService : IEdgarService
@@ -38,24 +38,24 @@ namespace Analyst.Services.EdgarServices
 
         public IList<SECForm> GetSECForms()
         {
-            IList<SECForm> forms = datasetsRepo.Get<SECForm>();
+            IList<SECForm> forms = edgarRepo.Get<SECForm>();
             return forms;
         }
 
         public IList<SIC> GetSICs()
         {
-            IList<SIC> sics = datasetsRepo.Get<SIC>();
+            IList<SIC> sics = edgarRepo.Get<SIC>();
             return sics;
-        }
-
-        public IList<Registrant> GetRegistrants()
-        {
-            throw new NotImplementedException();
         }
 
         public IQueryable<Registrant> GetRegistrants(string sortOrder, string searchString, int pagesize, out int total)
         {
             return datasetsRepo.GetRegistrants(sortOrder, searchString,  pagesize, out total);
+        }
+
+        public IQueryable GetFilings(int cik, int? year, Quarter? quarter, string sortOrder, int pagesize, out int count)
+        {
+            return datasetsRepo.GetFilings(cik, year, quarter, sortOrder, pagesize, out count);
         }
     }
 

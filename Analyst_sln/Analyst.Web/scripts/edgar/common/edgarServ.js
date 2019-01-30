@@ -3,7 +3,6 @@
     var URL_GET_ALL_DATASETS = "api/alldatasets"
     var URL_PROCESS_DATASET = "api/processdataset";
     var URL_DELETE_DATASET_FILE = "api/deletedataset";
-    //var URL_GET_REGISTRANTS = "askedgarapi/companies";
     var URL_GET_FULL_INDEXES = "api/fullindexes";
     var URL_PROCESS_FULL_INDEX = "api/processfullindex";
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,21 +54,6 @@
         $http.post(URL_DELETE_DATASET_FILE, data).success(callbackSuccess).error(callbackError);
     }
 
-    ////////////////////////////////
-    //Public - Ask Edgar
-    /*
-    this.getRegistrants = function (successCallback, errorCallback) {
-        getPromise(URL_GET_REGISTRANTS).then
-            (
-            function success(response) {
-                successCallback(response.data);
-            },
-            function error(response) {
-                errorCallback(response);
-            }
-            );
-    };
-    */
     ////////////////////////////////
     //Public - Files
 

@@ -94,9 +94,9 @@ namespace Analyst.DBAccess.Contexts
                 log.Info("Loading initial data");
                 EdgarInitialLoader.LoadInitialData(repo);
                 log.Info("SecForms and SICs loaded");
-                EdgarInitialLoader.LoadInitialDatasets(repo);
+                EdgarInitialLoader.LoadInitialDatasets((IAnalystEdgarDatasetsRepository)repo);
                 log.Info("Datasets loaded");
-                EdgarInitialLoader.LoadInitialFullIndexes(repo);
+                EdgarInitialLoader.LoadInitialFullIndexes((IAnalystEdgarFilesRepository)repo);
                 log.Info("Indexes loaded");
 
                 log.Info("Seed end");

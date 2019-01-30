@@ -27,13 +27,13 @@ namespace Analyst.DBAccess.Contexts
         public const string DAILY_INDEX_BASE_URL = SEC_BASE_URL + "/Archives/edgar/daily-index/{0}/{1}/{2}.{3}.idx";
 
 
-        internal static void LoadInitialData(IAnalystEdgarBaseRepository repository)
+        internal static void LoadInitialData(IAnalystEdgarRepository repository)
         {
             LoadSECForms(repository);
             LoadSICs(repository);
         }
 
-        private static void LoadSECForms(IAnalystEdgarBaseRepository repository)
+        private static void LoadSECForms(IAnalystEdgarRepository repository)
         {
             if (repository.GetSECFormsCount() == 0)
             {
@@ -191,7 +191,7 @@ namespace Analyst.DBAccess.Contexts
             }
         }
 
-        private static void LoadSICs(IAnalystEdgarBaseRepository repository)
+        private static void LoadSICs(IAnalystEdgarRepository repository)
         {
             if(repository.GetSICCount() == 0)
             {

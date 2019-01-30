@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using System.Linq;
 using PagedList;
 using Analyst.Domain.Edgar;
+using Analyst.Domain;
 
 namespace Analyst.Web.Controllers.Frontend
 {
@@ -63,11 +64,17 @@ namespace Analyst.Web.Controllers.Frontend
         }
 
         [HttpGet]
-        [Route("popupfilings")]
+        [Route("getfilings")]
         public ActionResult ShowFilings(int cik)
         {
             AskEdgarModel model = new AskEdgarModel();
             model.Title = "Show filings";
+            int? year=null;
+            Quarter? quarter=null;
+            string sortOrder = "";
+            const int pagesize = 10;
+            int count;
+            IQueryable filings = edgarService.GetFilings(cik, year, quarter, sortOrder, pagesize, out count);
             return View(VIEW_HOME, model);
         }
     }
