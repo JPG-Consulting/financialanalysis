@@ -20,12 +20,17 @@
 </head>
 <body>
     <div>
-        <a href="~/home">home</a><br />
-        aca quiero agregar el menu principal: <br />
-        Ask edgar (front y back)<br />
-        ScreenAnalyzeTrade<br />
-        PortfolioManager<br />
-        Anotar las otras ideas!!<br />
+        <a href='@Url.Action("Index","Main")'>Home</a>
+        &nbsp;&nbsp;&nbsp;
+        <a href='@Url.Action("Index","Edgar")'>Edgar</a>
+        &nbsp;&nbsp;&nbsp;
+        <a href='@Url.Action("Index","ScreenAnalyzeTrade")'>Screen-->Analyze-->Trade</a>
+        &nbsp;&nbsp;&nbsp;
+        <a href="#">Portfolio Managemer</a>
+        &nbsp;&nbsp;&nbsp;
+        <a href="#">Inverse Z Model</a>
+        &nbsp;&nbsp;&nbsp;
+        <a href="#">Options valuator</a>
         <hr />
         @RenderBody()
     </div>
