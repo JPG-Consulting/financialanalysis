@@ -2,12 +2,38 @@
     Layout = "~/Views/_MainLayout.cshtml";
 }
 
-<h2>@ViewBag.Title</h2>
+
 
 <div>
     <table>
         <tr>
-            <td width="5%" valign="top">Poner menu especifico para Edgar</td>
+            <td>
+                <div>
+                    <a href='@Url.Action("Index","AskEdgar")'>Ask Edgar Home</a>
+                    &nbsp;&nbsp;
+                    <a href='@Url.Action("IndexDatasets","Edgar")'>Edgar Datasets - Process</a>
+                    &nbsp;&nbsp;
+                    <a href='@Url.Action("IndexFiles","Edgar")'>Edgar Indexes and files</a>
+                    &nbsp;&nbsp;
+                    <a href='@Url.Action("Readme","Edgar")'>Edgar Datasets - Readme</a>
+                    &nbsp;&nbsp;
+                    <a href='@Url.Action("GetSecForms","Edgar")'>SEC Forms</a>
+                    &nbsp;&nbsp;
+                    <a href='@Url.Action("GetSICs","Edgar")'>SIC Codes</a>
+                </div>
+                <hr />
+            </td>
+        </tr>
+        @if (!string.IsNullOrEmpty(ViewBag.Title))
+        {
+        <tr>
+            <td>
+                <h4>@ViewBag.Title</h4>
+                <hr />
+            </td>
+        </tr>
+        }
+        <tr>
             <td>@RenderBody()</td>
         </tr>
     </table>

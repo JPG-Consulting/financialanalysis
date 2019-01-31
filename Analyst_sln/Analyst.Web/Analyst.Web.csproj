@@ -471,9 +471,10 @@
     <Content Include="styles\PagedList.css" />
     <Content Include="Views\Edgar\AskEdgar\AskEdgarHome.cshtml" />
     <Content Include="Views\Edgar\AskEdgar\Filings.cshtml" />
+    <Content Include="Views\Edgar\AskEdgar\Registrants.cshtml" />
     <None Include="Views\Edgar\Datasets\ProcessDatasets_unittests.cshtml" />
     <Content Include="scripts\common\angular.min.js.map" />
-    <Content Include="Views\Edgar\Home.cshtml" />
+    <Content Include="Views\Edgar\EdgarHome.cshtml" />
     <None Include="Properties\PublishProfiles\localhost.pubxml" />
     <Content Include="Views\Edgar\Datasets\readme.cshtml" />
     <Content Include="Views\Edgar\Datasets\ProcessDatasets.cshtml" />

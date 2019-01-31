@@ -27,7 +27,7 @@ namespace Analyst.Web.Controllers.Edgar.Datasets
         [Route("home")]
         public ActionResult Index()
         {
-            return View(VIEW_ROOT_PATH + "Home.cshtml");
+            return View(VIEW_ROOT_PATH + "EdgarHome.cshtml");
         }
 
         #region Datasets
@@ -61,6 +61,7 @@ namespace Analyst.Web.Controllers.Edgar.Datasets
         public ActionResult GetSecForms()
         {
             IList<SECForm> forms = edgarService.GetSECForms();
+            ViewBag.Title = "SEC forms (filing type)";
             return View(VIEW_ROOT_PATH + "RelatedData/SECForms.cshtml", forms);
         }
 
@@ -69,6 +70,7 @@ namespace Analyst.Web.Controllers.Edgar.Datasets
         public ActionResult GetSICs()
         {
             IList<SIC> sics = edgarService.GetSICs();
+            ViewBag.Title = "Standard Industrial Classification codes";
             return View(VIEW_ROOT_PATH + "RelatedData/SICs.cshtml", sics);
         }
         #endregion

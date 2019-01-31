@@ -14,6 +14,7 @@ namespace Analyst.Web.Controllers.Frontend
     {
         private const string VIEW_ROOT_PATH = "~/Views/Edgar/AskEdgar/";
         private const string VIEW_HOME = VIEW_ROOT_PATH + "AskEdgarHome.cshtml";
+        private const string VIEW_REGISTRANTS = VIEW_ROOT_PATH + "Registrants.cshtml";
 
         private IEdgarService edgarService;
 
@@ -30,8 +31,8 @@ namespace Analyst.Web.Controllers.Frontend
         }
 
         [HttpGet]
-        [Route("getregistrants")]
-        public ActionResult GetRegistrants(string sortOrder, string currentFilter, string searchString, int? page)
+        [Route("getregistrantsby")]
+        public ActionResult GetRegistrantsBy(string sortOrder, string currentFilter, string searchString, int? page)
         {
             //Paging
             //https://docs.microsoft.com/es-es/aspnet/mvc/overview/getting-started/getting-started-with-ef-using-mvc/sorting-filtering-and-paging-with-the-entity-framework-in-an-asp-net-mvc-application#add-paging
@@ -60,12 +61,12 @@ namespace Analyst.Web.Controllers.Frontend
             model.PageNumber = pageNumber;
             model.PageCount = count / pageSize + ((count % pageSize) > 0 ? 1 : 0);
             model.Total = count;
-            return View(VIEW_HOME,model);
+            return View(VIEW_REGISTRANTS, model);
         }
 
         [HttpGet]
-        [Route("getfilings")]
-        public ActionResult ShowFilings(int cik)
+        [Route("getfilingsby")]
+        public ActionResult GetFilingsBy(int cik)
         {
             AskEdgarModel model = new AskEdgarModel();
             model.Title = "Show filings";
