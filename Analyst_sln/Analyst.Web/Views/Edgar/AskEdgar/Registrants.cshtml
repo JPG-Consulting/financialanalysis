@@ -7,8 +7,7 @@
 @using Analyst.Domain.Edgar
 @using PagedList.Mvc
 
-<h2>Registrants</h2>
-@using (Html.BeginForm("GetRegistrants", "AskEdgar", FormMethod.Get))
+@using (Html.BeginForm("GetRegistrantsBy", "AskEdgar", FormMethod.Get))
 {
     <p>
         Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
@@ -95,7 +94,7 @@
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount (Total: @Model.Total)
             </div>
             <div>
-                @Html.PagedListPager(Model.Registrants, page => Url.Action("getregistrants", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, searchString = ViewBag.SearchString }))
+                @Html.PagedListPager(Model.Registrants, page => Url.Action("GetRegistrantsBy", "AskEdgar", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, searchString = ViewBag.SearchString }))
             </div>
         }
 

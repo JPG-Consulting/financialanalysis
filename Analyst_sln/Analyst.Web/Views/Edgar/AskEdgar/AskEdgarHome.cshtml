@@ -9,6 +9,32 @@
 
 <link href="~/styles/PagedList.css" rel="stylesheet" type="text/css" />
 
+<script type="text/javascript">
+    var registrantsPopup;
+    var filingsPopup;
+    function openRegistrantsPopup()
+    {
+        @{<text>
+        var searchStr = document.getElementById("txtSearchString").value;
+        //Ejemplo con parametros
+        //var url = '@Url.Action("GetRegistrantsBy", "AskEdgar", new { sortOrder = "asdf", currentFilter = "qwer", searchString = "zxcv", page = -1 }, this.Request.Url.Scheme)';
+        
+        var url = '@Url.Action("GetRegistrantsBy", "AskEdgar")?searchString=' + searchStr;
+        var parameters = "resizable=yes,scrollbars=yes";
+        if (registrantsPopup == null) {
+            registrantsPopup = window.open(url, "registrantsPopup", parameters);
+        }
+        else {
+            registrantsPopup.open(url, "registrantsPopup", parameters);
+        }
+        </text>}
+    }
+
+    function openFilingsPopup() {
+
+    }
+</script>
+
 <div>
     El objetivo de esta seccion es poder consultar toda la informacion disponible en Edgar, ya sea:
     <ul>
@@ -22,17 +48,14 @@
     <br />
     <br />
 </div>
-<script>
-    funcition openPopup(page)
-    {
-        alert(page);
-        alert('@Url.Action("GetRegistrantsBy", "AskEdgar", new { sortOrder="asdf", currentFilter="qwer", searchString="zxcv", page =- 1 },this.Request.Url.Scheme)');
-    }
-</script>
+<hr />
 
-<a  onclick="javascript:openPopup('registrants')>Registrants</a>
+@Html.TextBox("txtSearchString", ViewBag.CurrentFilter as string)
+<a href="#" onclick="javascript:openRegistrantsPopup()">Search registrants</a>
 <br />
-<a onclick="javascript:openPopup('filings')>filings</a>
+<a href="#" onclick="javascript:openFilingsPopup()">filings</a>
+<br />
+
 
 
 

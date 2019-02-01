@@ -10,6 +10,7 @@ namespace Analyst.Web.Models
     public class AskEdgarModel
     {
         public string Title { get; internal set; }
+        public string SearchString { get; set; }
         public IPagedList<Registrant> Registrants { get; set; }
         public Registrant SelectedRegistrant { get; set; }
         public IPagedList<SECForm> Filings { get; set; }
