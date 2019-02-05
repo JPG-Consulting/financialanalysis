@@ -10,6 +10,6 @@ namespace Analyst.Services.AnalysisProcesses.ScreenAnalyzeTrade
 {
     public interface IExcelManager
     {
-        DataTable ReadExcel(Stream inputStream);
+        DataTable ReadExcelAsDatatable(Stream inputStream);
     }
 }

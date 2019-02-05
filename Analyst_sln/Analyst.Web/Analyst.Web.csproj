@@ -517,7 +517,7 @@
     <Content Include="Views\Edgar\RelatedData\SICs.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\_ScreenAnalyzeTradeLayout.cshtml" />
     <Content Include="Views\ScreenAnalyzeTrade\Start.cshtml" />
-    <Content Include="Views\ScreenAnalyzeTrade\Screener.cshtml" />
+    <Content Include="Views\ScreenAnalyzeTrade\Step01_Screener.cshtml" />
     <Content Include="Views\_MainLayout.cshtml" />
     <Content Include="Views\Index.cshtml" />
     <Content Include="Views\Edgar\_EdgarLayout.cshtml" />

@@ -32,7 +32,7 @@ namespace Analyst.Web.Controllers
         public ActionResult Screener()
         {
             ViewBag.Test = "Server time: " + DateTime.Now.ToString();
-            return View("Screener",new ScreenAnalyzeTradeModel());
+            return View("Step01_Screener", new ScreenAnalyzeTradeModel());
 
         }
 
@@ -45,7 +45,7 @@ namespace Analyst.Web.Controllers
             {
                 try
                 {
-                    DataTable dt = excelManager.ReadExcel(file.InputStream);
+                    DataTable dt = excelManager.ReadExcelAsDatatable(file.InputStream);
                     model.ExcelDataTable = dt;
                     ViewBag.Message = "File uploaded successfully";
                 }
@@ -58,7 +58,7 @@ namespace Analyst.Web.Controllers
             {
                 ViewBag.Message = "You have not specified a file.";
             }
-            return View("Screener",model);
+            return View("Step01_Screener", model);
         }
     }
 
