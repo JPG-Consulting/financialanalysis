@@ -1,4 +1,4 @@
-USE [Analyst_EdgarDatasets_dev]
+USE [Analyst_Edgar_dev]
 GO
 
 /*
@@ -16,12 +16,12 @@ declare @submissionid int = (select id from EdgarDatasetSubmissions where ADSH =
 declare @SequentialNumberForGrouping smallint = 18;
 declare @SequentialNumberForArc smallint = 1
 declare @Negative bit = 1
-declare @ParentTagId int = (select id from EdgarDatasetTags where Tag = 'FinancialGuaranteeInsuranceContractsFutureExpectedPremiumRevenueToBeRecognized' and version = 'us-gaap/2015')
+declare @ParentTagId int = (select id from EdgarDatasetTags where Tag = 'FinancialGuaranteeInsuranceContractsFutureExpectedPremiumRevenueToBeRecognized' and version = 'us-gaap/2015' and DatasetId = 201504)
 declare @ChildTagId int = @ParentTagId
 declare @LineNumber int = 601778 --exec [dbo].[GET_MISSING_LINE_NUMBERS] 201504,'EdgarDatasetCalculations',630214 
 declare @DatasetId int = 201504
 
-if(not exists(select 1 from EdgarDatasetCalculations where LineNumber = @LineNumber)) 
+if(not exists(select 1 from EdgarDatasetCalculations where LineNumber = @LineNumber and DatasetId = 201504)) 
 BEGIN
 	begin tran T1;
 	INSERT INTO [dbo].[EdgarDatasetCalculations]
@@ -43,7 +43,7 @@ BEGIN
 			   ,@ParentTagId
 			   ,@ChildTagId);
 
-	update EdgarDatasets set ProcessedCalculations = ProcessedCalculations + 1 where id = 201504;
+	update EdgarDatasets set ProcessedCalculations = (select count(1) from EdgarDatasetCalculations where DatasetId = 201504) where id = 201504;
 	commit tran t1
 end
 GO

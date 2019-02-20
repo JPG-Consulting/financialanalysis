@@ -30,11 +30,36 @@ namespace Analyst.DBAccess.Repositories
             }
         }
 
+        protected int BulkTimeout
+        {
+            get
+            {
+                string strTimeout = ConfigurationManager.AppSettings["bulk_timeout"];
+                int temp;
+                if (int.TryParse(strTimeout, out temp))
+                    return temp;
+                else
+                    return 60 * 60;//1 hour by default
+            }
+        }
+
+        protected int BulkBatchSize
+        {
+            get
+            {
+                string strSize = ConfigurationManager.AppSettings["bulk_batch_size"];
+                if (int.TryParse(strSize, out int temp))
+                    return temp;
+                else
+                    return 10000;//default value
+            }
+        }
+
         protected long BulkCopy(string tableName, DataTable dt)
         {
-            string strSize = ConfigurationManager.AppSettings["bulk_batch_size"];
-            string strTimeout = ConfigurationManager.AppSettings["bulk_timeout"];
-            int temp;
+            
+            
+            
             Log.Info("Table " + tableName + " -- Starting bulk copy process");
             using (SqlConnection conn = CreateBulkConnection())
             {
@@ -42,15 +67,9 @@ namespace Analyst.DBAccess.Repositories
                 using (SqlBulkCopy bulkCopy = new SqlBulkCopy(conn))
                 {
                     Log.Info("Table " + tableName + " -- configuring");
-                    if (int.TryParse(strTimeout, out temp))
-                        bulkCopy.BulkCopyTimeout = temp;
-                    else
-                        bulkCopy.BulkCopyTimeout = 60 * 60;//1 hour by default
 
-                    if (int.TryParse(strSize, out temp))
-                        bulkCopy.BatchSize = temp;
-                    else
-                        bulkCopy.BatchSize = 10000;//default value
+                    bulkCopy.BulkCopyTimeout = BulkTimeout;
+                    bulkCopy.BatchSize = BulkBatchSize;
                     bulkCopy.SqlRowsCopied += BulkCopy_SqlRowsCopied;
                     bulkCopy.NotifyAfter = bulkCopy.BatchSize;
 

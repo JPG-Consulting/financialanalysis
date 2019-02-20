@@ -54,7 +54,7 @@ namespace Analyst.DBAccess.Repositories
             using (SqlConnection conn = CreateBulkConnection())
             {
                 try
-                { 
+                {
                     conn.Open();
                     DeleteAllRows(id, table,conn);
                     UpdateDatasetStatus(id, table,conn);
@@ -69,6 +69,7 @@ namespace Analyst.DBAccess.Repositories
         private void DeleteAllRows(int id, DatasetsTables table, SqlConnection conn)
         {
             SqlCommand comm = new SqlCommand();
+            comm.CommandTimeout = BulkTimeout;
             comm.CommandText = "delete from EdgarDataset" + Enum.GetName(typeof(DatasetsTables), table) + " where DatasetId = " + id;
             comm.CommandType = CommandType.Text;
             comm.Connection = conn;

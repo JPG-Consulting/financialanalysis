@@ -68,7 +68,7 @@
     <Compile Include="Contexts\EdgarContext.cs" />
     <Compile Include="Contexts\EdgarContextInitializer.cs" />
     <Compile Include="Repositories\BulkRepositories\AnalystEdgarFilesBulkRepository.cs" />
-    <Compile Include="Repositories\BulkRepositories\BulkRepositoryTemplate.cs" />
+    <Compile Include="Repositories\BulkRepositories\BulkRepositoryBase.cs" />
     <Compile Include="Repositories\AnalystEdgarRepository.cs" />
     <Compile Include="Contexts\EdgarInitialLoader.cs" />
     <Compile Include="Repositories\BulkRepositories\AnalystEdgarDatasetsBulkRepository.cs" />
@@ -96,7 +96,8 @@
     <Content Include="sql\queries\queries for errors\performance analysis presentations.sql" />
     <Content Include="sql\queries\queries for reports\submissions submitted.sql" />
     <Content Include="sql\scripts for manual execution\creation_of_initial_db.sql" />
-    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset year 2015 quarter 4.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 04 - check.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 04 - fix.sql" />
     <Content Include="sql\scripts\alter column ADSH.sql" />
     <Content Include="sql\scripts\create GET_MISSING_LINE_NUMBERS.sql" />
     <Content Include="sql\scripts\create SP_DISABLE_PRESENTATION_INDEXES.sql" />
