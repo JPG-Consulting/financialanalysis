@@ -38,7 +38,7 @@ namespace Analyst.Services.EdgarDatasetServices
     {
         public const int MAX_TRIALS = 5;
         private static ConcurrentDictionary<int, Task> datasetsInProcess = new ConcurrentDictionary<int,Task>();
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(EdgarDatasetService).Name);
 
         private IEdgarDatasetSubmissionsService submissionService;
         private IEdgarDatasetTagService tagService;

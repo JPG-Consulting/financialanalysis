@@ -31,7 +31,7 @@ namespace Analyst.DBAccess.Repositories
 
     public class AnalystEdgarDatasetsBulkRepository : BulkRepositoryBase,IAnalystEdgarDatasetsBulkRepository
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(AnalystEdgarDatasetsBulkRepository).Name);
 
         protected override log4net.ILog Log { get { return log; } }
 
