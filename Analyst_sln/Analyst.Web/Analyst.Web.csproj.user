@@ -11,7 +11,7 @@
     <WebStackScaffolding_ViewDialogWidth>600</WebStackScaffolding_ViewDialogWidth>
     <ProjectView>ProjectFiles</ProjectView>
     <NameOfLastUsedPublishProfile>localhost</NameOfLastUsedPublishProfile>
-    <LastActiveSolutionConfig>Debug|x64</LastActiveSolutionConfig>
+    <LastActiveSolutionConfig>Release|x64</LastActiveSolutionConfig>
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
