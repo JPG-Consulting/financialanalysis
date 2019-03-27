@@ -102,6 +102,15 @@ function edgardatasetscontroller($scope, $interval, serv) {
             $scope.model.errorMessage = data;
         }
     }
+
+    $scope.test_click = function (dsId) {
+        //chkContinueIfErrors
+        //radioWithNotes
+        //radioWithoutNotes
+        $scope.model.message = "valor chks: chkContinueIfErrors=";
+        
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////
 
     

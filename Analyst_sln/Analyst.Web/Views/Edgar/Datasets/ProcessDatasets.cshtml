@@ -74,6 +74,7 @@
                         <td><strong>Renders</strong></td>
                         <td><strong>Presentations</strong></td>
                         <td><strong>Run</strong></td>
+                        <td><strong>Options</strong></td>
                     </tr>
 
                     <tr ng-repeat="dataset in model.datasets | limitTo:pagingSettings.pageLimit:pagingSettings.offset" ng-click="selectDataset(dataset.id);">
@@ -97,7 +98,7 @@
                             <span ng-style="progressNumberStyle(dataset.ProcessedNumbers / dataset.TotalNumbers * 100 )">
                                 {{ dataset.TotalNumbers == 0 ? 0.00 : dataset.ProcessedNumbers / dataset.TotalNumbers * 100 | number: 3 }} %
                             </span>
-                            <div ng-show="!dataset.IsComplete && dataset.ProcessedNumbers > 0 && dataset.ProcessedNumbers < 100">
+                            <div ng-show="!dataset.IsComplete && dataset.ProcessedNumbers > 0 && dataset.ProcessedNumbers < dataset.TotalNumbers ">
                                 <input type="button" value="Delete" ng-click="deleteDataset_click('numbers',dataset.Id)" />
                             </div>
                         </td>
@@ -105,7 +106,7 @@
                             <span ng-style="progressNumberStyle(dataset.ProcessedCalculations / dataset.TotalCalculations * 100)">
                                 {{ dataset.TotalCalculations == 0 ? 0.00 : dataset.ProcessedCalculations / dataset.TotalCalculations * 100 | number: 3 }} %
                             </span>
-                            <div ng-show="!dataset.IsComplete && dataset.ProcessedCalculations > 0 && dataset.ProcessedCalculations < 100">
+                            <div ng-show="!dataset.IsComplete && dataset.ProcessedCalculations > 0 && dataset.ProcessedCalculations < dataset.TotalCalculations">
                                 <input type="button" value="Delete" ng-click="deleteDataset_click('calculations',dataset.Id)" />
                             </div>
                         </td>
@@ -113,7 +114,7 @@
                             <span ng-style="progressNumberStyle(dataset.ProcessedTexts / dataset.TotalTexts * 100 )">
                                 {{ dataset.TotalTexts == 0 ? 0.00 : dataset.ProcessedTexts / dataset.TotalTexts * 100 | number: 3 }} %
                             </span>
-                            <div ng-show="!dataset.IsComplete && dataset.ProcessedTexts > 0 && dataset.ProcessedTexts < 100">
+                            <div ng-show="!dataset.IsComplete && dataset.ProcessedTexts > 0 && dataset.ProcessedTexts < dataset.TotalTexts">
                                 <input type="button" value="Delete" ng-click="deleteDataset_click('texts',dataset.Id)" />
                             </div>
                         </td>
@@ -121,7 +122,7 @@
                             <span ng-style="progressNumberStyle(dataset.ProcessedRenders / dataset.TotalRenders * 100)">
                                 {{ dataset.TotalRenders == 0 ? 0.00 : dataset.ProcessedRenders / dataset.TotalRenders * 100 | number: 3 }} %
                             </span>
-                            <div ng-show="!dataset.IsComplete && dataset.ProcessedRenders > 0 && dataset.ProcessedRenders < 100">
+                            <div ng-show="!dataset.IsComplete && dataset.ProcessedRenders > 0 && dataset.ProcessedRenders < dataset.TotalRenders">
                                 <input type="button" value="Delete" ng-click="deleteDataset_click('renders',dataset.Id)" />
                             </div>
                         </td>
@@ -129,13 +130,25 @@
                             <span ng-style="progressNumberStyle(dataset.ProcessedPresentations / dataset.TotalPresentations * 100)">
                                 {{ dataset.TotalPresentations == 0 ? 0.00 : dataset.ProcessedPresentations / dataset.TotalPresentations * 100 | number: 3 }} %
                             </span>
-                            <div ng-show="!dataset.IsComplete && dataset.ProcessedPresentations > 0 && dataset.ProcessedPresentations < 100">
+                            <div ng-show="!dataset.IsComplete && dataset.ProcessedPresentations > 0 && dataset.ProcessedPresentations < dataset.TotalPresentations">
                                 <input type="button" value="Delete" ng-click="deleteDataset_click('presentations',dataset.Id)" />
                             </div>
                         </td>
                         <td>
                             <div ng-show="!dataset.IsComplete">
-                                <input type="button" value="Run" ng-click="processDataset_click(dataset.Id)" />
+                                <input type="button" value="Run" ng-click="processDataset_click(dataset.Id)" /><br />
+                            </div>
+                        </td>
+                        <td>
+                            
+                            <div ng-show="!dataset.IsComplete">
+                                &lt;TBD&gt;
+                                <!--
+                                Continue if errors: <input type="checkbox" value="Continue if errors" id="chkContinueIfErrors" /><br />
+                                Process with notes<input type="radio" name="datasetsradio" value="with notes" id="radioWithNotes" />
+                                or without notes<input type="radio" name="datasetsradio" value="without notes" id="radioWithoutNotes" /><br />
+                                <input type="button" value="test" ng-click="test_click(dataset.Id)" /><br />
+                                -->
                             </div>
                             <div ng-show="dataset.IsComplete">
                                 Completed
