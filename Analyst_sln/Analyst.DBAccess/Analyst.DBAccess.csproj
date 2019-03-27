@@ -96,8 +96,12 @@
     <Content Include="sql\queries\queries for errors\performance analysis presentations.sql" />
     <Content Include="sql\queries\queries for reports\submissions submitted.sql" />
     <Content Include="sql\scripts for manual execution\creation_of_initial_db.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 03 - analisis.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 03 - fix.sql" />
     <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 04 - check.sql" />
     <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 04 - fix.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2017 04 - analisis.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2018 04 - analisis.sql" />
     <Content Include="sql\scripts\alter column ADSH.sql" />
     <Content Include="sql\scripts\create GET_MISSING_LINE_NUMBERS.sql" />
     <Content Include="sql\scripts\create SP_DISABLE_PRESENTATION_INDEXES.sql" />
