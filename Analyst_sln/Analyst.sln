@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyst.Windows", "Analyst.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyst.ConsoleApp", "Analyst.ConsoleApp\Analyst.ConsoleApp.csproj", "{E3465348-3A05-4753-AF19-677ED4EBE6C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Analyst.WebCore", "Analyst.WebCore\Analyst.WebCore.csproj", "{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,14 @@ Global
 		{E3465348-3A05-4753-AF19-677ED4EBE6C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E3465348-3A05-4753-AF19-677ED4EBE6C7}.Release|x64.ActiveCfg = Release|x64
 		{E3465348-3A05-4753-AF19-677ED4EBE6C7}.Release|x64.Build.0 = Release|x64
+		{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}.Debug|x64.Build.0 = Debug|Any CPU
+		{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}.Release|x64.ActiveCfg = Release|Any CPU
+		{A4B208CA-2630-41B9-9CC7-E88C20BC0AF4}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
