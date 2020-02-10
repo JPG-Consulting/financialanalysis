@@ -9,7 +9,9 @@ go
 */
 
 -----------------------------------------------------------------------------------------------------------------------------
---DB: Analyst_EdgarDatasets
+--DB: Analyst_Edgar
+--Only for EDGAR SEC data
+
 use [master];
 
 DECLARE @dbname nvarchar(128)
@@ -78,7 +80,8 @@ go
 -----------------------------------------------------
 
 -----------------------------------------------------------------------------------------------------------------------------
---DB: Analyst_EdgarFiles
+--DB: Analyst_dev
+--Everything, except for EDGAR SEC data
 
 DECLARE @dbname nvarchar(128)
 SET @dbname = N'Analyst_dev'
