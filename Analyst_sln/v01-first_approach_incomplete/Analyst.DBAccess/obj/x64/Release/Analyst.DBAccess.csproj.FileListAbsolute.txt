@@ -1,0 +1,41 @@
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\scripts\create SP_EDGARDATASETTEXT_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\scripts\create SP_EDGARDATASETNUMBER_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\scripts\create SP_EDGARDATASETPRESENTATIONS_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\scripts\create SP_EDGARDATASETRENDERS_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\scripts\create SP_EDGARDATASETTAGS_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.DBAccess.dll.config
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.DBAccess.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.DBAccess.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.Domain.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\EntityFramework.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\EntityFramework.SqlServer.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.Domain.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\EntityFramework.xml
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\EntityFramework.SqlServer.xml
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\x64\Release\Analyst.DBAccess.csprojResolveAssemblyReference.cache
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\x64\Release\Analyst.DBAccess.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\x64\Release\Analyst.DBAccess.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\log4net.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\log4net.xml
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\sql\scripts\create SP_EDGARDATASETTEXT_INSERT.sql
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\sql\scripts\create SP_EDGARDATASETNUMBER_INSERT.sql
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\sql\scripts\create SP_EDGARDATASETPRESENTATIONS_INSERT.sql
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\sql\scripts\create SP_EDGARDATASETRENDERS_INSERT.sql
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\sql\scripts\create SP_EDGARDATASETTAGS_INSERT.sql
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.DBAccess.dll.config
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.DBAccess.dll
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.DBAccess.pdb
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.Domain.dll
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\EntityFramework.dll
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\EntityFramework.SqlServer.dll
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\log4net.dll
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.Domain.pdb
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\Analyst.Domain.dll.config
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\EntityFramework.xml
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\EntityFramework.SqlServer.xml
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\bin\x64\Release\log4net.xml
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\x64\Release\Analyst.DBAccess.csprojAssemblyReference.cache
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\x64\Release\Analyst.DBAccess.csproj.CoreCompileInputs.cache
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\x64\Release\Analyst.DBAccess.csproj.CopyComplete
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\x64\Release\Analyst.DBAccess.dll
+D:\Desarrollo\src\FinanceAnalysis.Net\Analyst_sln\Analyst.DBAccess\obj\x64\Release\Analyst.DBAccess.pdb

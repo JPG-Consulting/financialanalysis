@@ -1,0 +1,43 @@
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\scripts\create SP_EDGARDATASETTEXT_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\scripts\create SP_EDGARDATASETNUMBER_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\scripts\create SP_EDGARDATASETPRESENTATIONS_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\scripts\create SP_EDGARDATASETRENDERS_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\scripts\create SP_EDGARDATASETTAGS_INSERT.sql
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\config\log4net\debug.config
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.Windows.exe.config
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.Windows.exe
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.Windows.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.DBAccess.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.Domain.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.Services.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\CommonServiceLocator.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\EntityFramework.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\EntityFramework.SqlServer.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Abstractions.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Configuration.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Container.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Interception.Configuration.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Interception.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.RegistrationByConvention.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.ServiceLocation.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\log4net.dll
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.DBAccess.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.Domain.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Analyst.Services.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\CommonServiceLocator.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\EntityFramework.xml
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\EntityFramework.SqlServer.xml
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Abstractions.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Configuration.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Container.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Interception.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.Interception.Configuration.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.RegistrationByConvention.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\Unity.ServiceLocation.pdb
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\bin\Release\log4net.xml
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Release\Analyst.Windows.csprojResolveAssemblyReference.cache
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Release\Analyst.Windows.Form1.resources
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Release\Analyst.Windows.Properties.Resources.resources
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Release\Analyst.Windows.csproj.GenerateResource.Cache
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Release\Analyst.Windows.exe
+D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Windows\obj\Release\Analyst.Windows.pdb

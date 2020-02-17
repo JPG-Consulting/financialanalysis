@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A57801E6-0965-4DDB-8723-F61E196635CB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Analyst.Services</RootNamespace>
+    <AssemblyName>Analyst.Services</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ExcelDataReader, Version=3.4.2.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.4.2\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.4.2.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.4.2\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnalysisProcesses\ScreenAnalyzeTrade\ExcelManager.cs" />
+    <Compile Include="AnalysisProcesses\ScreenAnalyzeTrade\IExcelManager.cs" />
+    <Compile Include="Datasources\EdgarDatasource.cs" />
+    <Compile Include="Datasources\IDatasource.cs" />
+    <Compile Include="Datasources\MorningstarDatasource.cs" />
+    <Compile Include="Datasources\YahooDatasource.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetBaseService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetCalculationService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetDimensionService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetNumService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetPresentationService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetRenderService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetSubmissionsService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetTagService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\BulkProcessStrategy\EdgarDatasetTextService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetTemplateProcessBaseService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetBaseService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetCalculationService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetDimensionService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetNumService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetPresentationService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetRenderService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetSubmissionsService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetTagService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\Interfaces\IEdgarDatasetTextService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\InvalidLineException.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetCalculationService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetDimensionService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetPresentationService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetRenderService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetTextService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetBaseService.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\Codecs.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\EdgarFileParser.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\EdgarMasterIndexService.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\EdgarWebClient.cs" />
+    <Compile Include="EdgarServices\EdgarIndexesServices\InvalidFormatException.cs" />
+    <Compile Include="EdgarServices\EdgarService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarDatasetService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\EdgarTaskState.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetNumService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetSubmissionsService.cs" />
+    <Compile Include="EdgarServices\EdgarDatasetServices\LineByLineProcessStrategy\EdgarDatasetTagService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Analyst.DBAccess\Analyst.DBAccess.csproj">
+      <Project>{11e25a3a-3ce3-4ead-a12b-5682d9cdb937}</Project>
+      <Name>Analyst.DBAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Analyst.Domain\Analyst.Domain.csproj">
+      <Project>{e9e00d2a-6f62-4a7f-887d-84f7e4340686}</Project>
+      <Name>Analyst.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

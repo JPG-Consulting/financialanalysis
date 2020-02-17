@@ -1,0 +1,18 @@
+﻿@model Analyst.Web.Models.AskEdgarModel
+@{
+    ViewBag.Title = "Filings"; ViewBag.Title = "StartView";
+    Layout = "~/Views/Edgar/_EdgarLayout.cshtml";
+}
+@using System.Data
+@using Analyst.Domain.Edgar
+@using PagedList.Mvc
+
+<link href="~/styles/PagedList.css" rel="stylesheet" type="text/css" />
+
+<h2>Filings</h2>
+
+
+@if(Model.Filings != null)
+{
+
+}
