@@ -18,3 +18,13 @@ Analyst_sln/Analyst.Web.Tests/obj
 Analyst_sln/Analyst.Windows/bin
 Analyst_sln/Analyst.Windows/obj
 Analyst_sln/Analyst.WebCore/obj
+Analyst_sln/FinancialAnalyst.DataSources/bin
+Analyst_sln/FinancialAnalyst.DataSources/obj
+Analyst_sln/FinancialAnalyst.UI.WPF/bin
+Analyst_sln/FinancialAnalyst.UI.WPF/obj
+Analyst_sln/FinancialAnalyst.DAC/bin
+Analyst_sln/FinancialAnalyst.DAC/obj
+Analyst_sln/FinancialAnalyst.BatchProcesses/bin
+Analyst_sln/FinancialAnalyst.BatchProcesses/obj
+Analyst_sln/FinancialAnalyst.Common/bin
+Analyst_sln/FinancialAnalyst.Common/obj
