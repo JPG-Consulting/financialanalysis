@@ -5,9 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Edgar\" />
-    <Folder Include="Google\" />
-    <Folder Include="Yahoo\" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Composition" Version="1.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinancialAnalyst.Common\FinancialAnalyst.Common.csproj" />
   </ItemGroup>
 
 </Project>

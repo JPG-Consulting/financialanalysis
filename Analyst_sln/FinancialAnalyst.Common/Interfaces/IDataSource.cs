@@ -1,10 +1,13 @@
-﻿using System;
+﻿using FinancialAnalyst.Common.Entities;
+using FinancialAnalyst.Common.Entities.Assets;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace FinancialAnalyst.Common.Interfaces
 {
-    class IDatasource
+    public interface IDataSource
     {
+        bool TryGetAssetData(string ticker, Market market,out AssetBase asset,out string errorMessage);
     }
 }

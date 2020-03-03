@@ -1,6 +1,6 @@
 using System;
 
-namespace FinancialAnalyst.WebAPI
+namespace FinancialAnalyst.WebAPI.Models
 {
     public class WeatherForecast
     {
