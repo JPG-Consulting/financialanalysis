@@ -38,3 +38,5 @@ Analyst_sln/FinancialAnalyst.UI.WPF/bin
 Analyst_sln/FinancialAnalyst.UI.WPF/obj
 Analyst_sln/FinancialAnalyst.WebAPI/bin
 Analyst_sln/FinancialAnalyst.WebAPI/obj
+/Analyst_sln/FinancialAnalyst.DataSources.Tests/bin
+/Analyst_sln/FinancialAnalyst.DataSources.Tests/obj
