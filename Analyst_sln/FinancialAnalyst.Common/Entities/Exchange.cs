@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FinancialAnalyst.Common.Entities
 {
-    public enum Market
+    public enum Exchange
     {
         NYSE,
         NASDAQ,

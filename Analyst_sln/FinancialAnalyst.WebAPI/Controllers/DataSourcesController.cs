@@ -9,6 +9,7 @@ using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.RequestResponse;
 using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.WebAPI.Models;
+using FinancialAnalyst.WebAPI.Properties;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -36,19 +37,24 @@ namespace FinancialAnalyst.WebAPI.Controllers
         */
 
         [HttpGet("getassetdata")]
-        public APIResponse<Stock> GetAssetData(string ticker,string market)
+        public APIResponse<Stock> GetAssetData(string ticker,string exchange)
         {
-            Market m;
-            if (Enum.TryParse<Market>(market, out m))
+            
+            if(string.IsNullOrEmpty(ticker))
             {
-                if (dataSource.TryGetAssetData(ticker, m, out AssetBase asset, out string message))
+                return new APIResponse<Stock>()
                 {
-                    return new APIResponse<Stock>()
-                    {
-                        Content = (Stock)asset,
-                        Ok = true,
-                        ErrorMessage = message,
-                    };
+                    Ok = false,
+                    ErrorMessage = Resources.UI_TickerNull,
+                };
+            }
+
+            Exchange? exch = null ;
+            if (string.IsNullOrEmpty(exchange) == false)
+            {
+                if (Enum.TryParse<Exchange>(exchange, out Exchange temp))
+                {
+                    exch = temp;
                 }
                 else
                 {
@@ -56,9 +62,19 @@ namespace FinancialAnalyst.WebAPI.Controllers
                     {
                         Content = null,
                         Ok = false,
-                        ErrorMessage = message,
+                        ErrorMessage = $"Market {exchange} is not a valid market",
                     };
                 }
+            }
+            
+            if (dataSource.TryGetAssetData(ticker, exch, out AssetBase asset, out string message))
+            {
+                return new APIResponse<Stock>()
+                {
+                    Content = (Stock)asset,
+                    Ok = true,
+                    ErrorMessage = message,
+                };
             }
             else
             {
@@ -66,7 +82,7 @@ namespace FinancialAnalyst.WebAPI.Controllers
                 {
                     Content = null,
                     Ok = false,
-                    ErrorMessage = $"Market {market} is not a valid market",
+                    ErrorMessage = message,
                 };
             }
         }

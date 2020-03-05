@@ -9,7 +9,7 @@ namespace FinancialAnalyst.DataSources.Yahoo.TrialsNotWorking
 {
     class Caller
     {
-        public AssetBase GetAssetData(string ticker, Market market)
+        public AssetBase GetAssetData(string ticker, Exchange market)
         {
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //opcion 1: YahooStockEngine

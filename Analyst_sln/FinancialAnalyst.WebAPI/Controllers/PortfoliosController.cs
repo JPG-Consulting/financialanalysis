@@ -18,36 +18,20 @@ namespace FinancialAnalyst.WebAPI.Controllers
         {
 #if DEBUG
             List<Portfolio> portfolios = new List<Portfolio>();
-            Portfolio portfolio = new Portfolio()
-            {
-                TotalCash = 35000,
-                AssetAllocations = new List<AssetAllocation>()
-                {
-                    /*
-                    //ETF
-                    new AssetAllocation() {Ticker="TQQQ" ,Percentage=10, Ticker_Market=Market.NASDAQ,},
-                    new AssetAllocation() {Ticker="SPXL", Percentage = 10, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="TNA", Percentage = 10, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="MIDU", Percentage = 10, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="VNQ", Percentage = 8, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="GEX", Percentage = 3, Ticker_Market=Market.NASDAQ, },
-                    */
-
-                    //STOCKS
-                    new AssetAllocation() {Ticker="AAPL", Percentage = 3, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="AMZN", Percentage = 3, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="CSCO", Percentage = 3, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="GOOGL", Percentage = 3, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="IBM", Percentage = 3, Ticker_Market=Market.NYSE, },
-                    new AssetAllocation() {Ticker="MSFT", Percentage = 3, Ticker_Market=Market.NASDAQ, },
-                    new AssetAllocation() {Ticker="ORCL", Percentage = 3, Ticker_Market=Market.NYSE, },
-                    
-                    //others
-                    //new AssetAllocation("",),
-                    //new AssetAllocation("",),
-
-                },
-            };
+            Portfolio portfolio;
+            portfolio = Portfolio.From("Warren Buffet", new string[] { 
+                "AAL","AAPL","AMZN","AXP","AXTA","BAC","BIIB","BK","CHTR","COST","DAL","DVA","GL","GM","GS","JNJ","JPM",
+                "KHC","KO","KR","LBTYA","LBTYK","LILA","LILAK","LSXMA","LSXMK","LUV","MA","MCO","MDLZ","MTB","OXY","PG","PNC","PSX",
+                "RH","QSR","SIRI","SPY","STNE","STOR","SU","SYF","TEVA","TRV","UAL","UPS","USB","V","VOO","VRSN","WFC",});
+            portfolios.Add(portfolio);
+            portfolio = Portfolio.From("Warren Buffet - My Selection", new string[] {
+                "AAL","AAPL","AMZN","AXP","AXTA","BAC","BIIB","BK","CHTR","COST","DAL","DVA","GL","GM","GS","JNJ","JPM",
+                "KHC","KO","KR","LBTYA","LBTYK","LILA","LILAK","LSXMA","LSXMK","LUV","MA","MCO","MDLZ","MTB","OXY","PG","PNC","PSX",
+                "RH","QSR","SIRI","SPY","STNE","STOR","SU","SYF","TEVA","TRV","UAL","UPS","USB","V","VOO","VRSN","WFC",});
+            portfolios.Add(portfolio);
+            portfolio = Portfolio.From("ETF", new string[] { "TQQQ", "SPXL", "TNA", "MIDU", "VNQ", "GEX", });
+            portfolios.Add(portfolio);
+            portfolio = Portfolio.From("Big Technologies", new string[] { "AAPL", "AMZN", "CSCO", "GOOGL", "IBM", "MSFT", "ORCL", });
             portfolios.Add(portfolio);
             return portfolios;
 #endif

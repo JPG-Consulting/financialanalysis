@@ -18,7 +18,7 @@ namespace FinancialAnalyst.UI.Windows.Managers
     {
 #if DEBUG
         //TODO: url has to be an app parameter
-        private static readonly HttpClient httpClient = new HttpClient() { BaseAddress = new Uri("http://localhost:51249/api") };
+        private static readonly HttpClient httpClient = new HttpClient() { BaseAddress = new Uri("http://localhost/FinancialAnalyst.WebAPI/api") };
 #endif
 
         static internal IEnumerable<Portfolio> GetPortfoliosByUser(string user)
@@ -34,9 +34,14 @@ namespace FinancialAnalyst.UI.Windows.Managers
             return JsonConvert.DeserializeObject<IEnumerable<Portfolio>>(jsonResponse);
         }
 
-        static internal APIResponse<Stock> GetAssetData(string ticker, Market market)
+        static internal APIResponse<Stock> GetAssetData(string ticker, Exchange? market)
         {
-            string uri = $"{httpClient.BaseAddress}/DataSources/getassetdata?ticker={ticker}&market={market.ToString()}";
+
+            string uri;
+            if(market.HasValue)
+                uri = $"{httpClient.BaseAddress}/DataSources/getassetdata?ticker={ticker}&market={market.ToString()}";
+            else
+                uri = $"{httpClient.BaseAddress}/DataSources/getassetdata?ticker={ticker}";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             WebResponse response = request.GetResponse();
             string jsonResponse;

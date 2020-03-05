@@ -17,7 +17,7 @@ namespace FinancialAnalyst.DataSources.Yahoo
     /// </summary>
     public class YahooDataSource : IDataSource
     {
-        public bool TryGetAssetData(string ticker, Market market, out AssetBase asset, out string errorMessage)
+        public bool TryGetAssetData(string ticker, Exchange? market, out AssetBase asset, out string errorMessage)
         {
             throw new NotImplementedException();
         }

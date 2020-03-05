@@ -9,7 +9,7 @@ namespace FinancialAnalyst.DataSources.Edgar
 {
     public class EdgarSECDataSource : IDataSource
     {
-        public bool TryGetAssetData(string ticker, Market market, out AssetBase asset, out string errorMessage)
+        public bool TryGetAssetData(string ticker, Exchange? market, out AssetBase asset, out string errorMessage)
         {
             throw new NotImplementedException();
         }

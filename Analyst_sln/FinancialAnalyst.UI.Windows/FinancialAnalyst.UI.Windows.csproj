@@ -98,6 +98,10 @@
       <Project>{B2A252A9-453C-4287-B32B-868676FB5CB5}</Project>
       <Name>FinancialAnalyst.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FinancialAnalyst.UI.Windows.UserControls\FinancialAnalyst.UI.Windows.UserControls.csproj">
+      <Project>{221c0edb-4a3b-43a6-a3aa-524bb20ddb1f}</Project>
+      <Name>FinancialAnalyst.UI.Windows.UserControls</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

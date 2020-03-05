@@ -14,7 +14,7 @@ namespace FinancialAnalyst.DataSources.Yahoo
         
         private static readonly HttpClient httpClientFundamentals = new HttpClient() { BaseAddress = new Uri("https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/") };
 
-        internal static dynamic GetBasicData(string ticker,Market market)
+        internal static dynamic GetBasicData(string ticker,Exchange market)
         {
             throw new NotImplementedException();
         }

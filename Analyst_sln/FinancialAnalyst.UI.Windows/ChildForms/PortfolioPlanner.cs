@@ -1,7 +1,9 @@
 ﻿using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Entities.RequestResponse;
+using FinancialAnalyst.Common.Interfaces.UIInterfaces;
 using FinancialAnalyst.UI.Windows.Managers;
+using FinancialAnalyst.UI.Windows.UserControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,11 +16,15 @@ using System.Windows.Forms;
 
 namespace FinancialAnalyst.UI.Windows.ChildForms
 {
-    public partial class PortfolioPlanner : Form
+    public partial class PortfolioPlanner : Form, IAssetDetailShower
     {
         public PortfolioPlanner()
         {
             InitializeComponent();
+            splitContainerMain.Dock = DockStyle.Fill;
+            splitContainerPortfoliosAndCommands.Dock = DockStyle.Fill;
+            flowLayoutPanelPortfolios.Dock = DockStyle.Fill;
+            assetDetailUserControl1.Dock = DockStyle.Fill;
         }
 
         private void PortfolioPlanner_Load(object sender, EventArgs e)
@@ -27,20 +33,10 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
             IEnumerable<Portfolio> portfolios = FinancialAnalystWebAPICaller.GetPortfoliosByUser(user);
             foreach(Portfolio portfolio in portfolios)
             {
-                foreach(AssetAllocation alloc in portfolio.AssetAllocations)
-                {
-                    Label lbl = new Label();
-                    APIResponse<Stock> response = FinancialAnalystWebAPICaller.GetAssetData(alloc.Ticker, alloc.Ticker_Market);
-                    if (response.Ok)
-                    {
-                        lbl.Text = response.Content.Description;
-                    }
-                    else
-                    {
-                        lbl.Text = response.ErrorMessage;
-                    }
-                    flowLayoutPanelPortfolios.Controls.Add(lbl);
-                }
+                PortfolioUserControl portfolioUserControl = new PortfolioUserControl(this);
+                portfolioUserControl.Set(portfolio);
+                flowLayoutPanelPortfolios.Controls.Add(portfolioUserControl);
+                
             }
         }
 
@@ -48,5 +44,12 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         {
 
         }
+
+        public void ShowAssetDetail(AssetAllocation alloc)
+        {
+            APIResponse<Stock> response = FinancialAnalystWebAPICaller.GetAssetData(alloc.Ticker, alloc.Exchange);
+            assetDetailUserControl1.Show(response);
+        }
+
     }
 }

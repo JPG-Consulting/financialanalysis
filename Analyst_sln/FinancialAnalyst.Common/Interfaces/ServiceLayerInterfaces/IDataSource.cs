@@ -8,6 +8,6 @@ namespace FinancialAnalyst.Common.Interfaces
 {
     public interface IDataSource
     {
-        bool TryGetAssetData(string ticker, Market market,out AssetBase asset,out string errorMessage);
+        bool TryGetAssetData(string ticker, Exchange? market,out AssetBase asset,out string errorMessage);
     }
 }
