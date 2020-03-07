@@ -1,7 +1,0 @@
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services.Tests\bin\Release\Analyst.Services.Tests.dll
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services.Tests\bin\Release\Analyst.Services.Tests.pdb
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services.Tests\bin\Release\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services.Tests\bin\Release\es\Microsoft.VisualStudio.QualityTools.UnitTestFramework.resources.dll
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services.Tests\obj\Release\Analyst.Services.Tests.csprojResolveAssemblyReference.cache
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services.Tests\obj\Release\Analyst.Services.Tests.dll
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.Services.Tests\obj\Release\Analyst.Services.Tests.pdb

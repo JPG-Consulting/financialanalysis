@@ -1,5 +1,0 @@
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\bin\Release\Analyst.ConsoleApp.exe.config
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\bin\Release\Analyst.ConsoleApp.exe
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\bin\Release\Analyst.ConsoleApp.pdb
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\obj\Release\Analyst.ConsoleApp.exe
-D:\Importante\Desarrollo\Sourcecode\FinanceAnalysis.Net\Analyst_sln\Analyst.ConsoleApp\obj\Release\Analyst.ConsoleApp.pdb
