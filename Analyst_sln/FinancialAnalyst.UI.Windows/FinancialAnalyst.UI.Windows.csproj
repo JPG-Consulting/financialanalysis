@@ -55,6 +55,12 @@
     <Compile Include="ChildForms\PortfolioPlanner.Designer.cs">
       <DependentUpon>PortfolioPlanner.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChildForms\ShowAssetDetailForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChildForms\ShowAssetDetailForm.Designer.cs">
+      <DependentUpon>ShowAssetDetailForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Managers\FinancialAnalystWebAPICaller.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -66,6 +72,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ChildForms\PortfolioPlanner.resx">
       <DependentUpon>PortfolioPlanner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChildForms\ShowAssetDetailForm.resx">
+      <DependentUpon>ShowAssetDetailForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

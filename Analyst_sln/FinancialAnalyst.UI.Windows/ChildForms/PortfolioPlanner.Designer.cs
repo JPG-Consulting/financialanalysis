@@ -32,7 +32,7 @@
             this.splitContainerPortfoliosAndCommands = new System.Windows.Forms.SplitContainer();
             this.buttonCreatePortfolio = new System.Windows.Forms.Button();
             this.flowLayoutPanelPortfolios = new System.Windows.Forms.FlowLayoutPanel();
-            this.assetDetailUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.AssetDetailUserControl();
+            this.portfolioDetailUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.PortfolioDetailUserControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -45,7 +45,7 @@
             // 
             // splitContainerMain
             // 
-            this.splitContainerMain.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerMain.Location = new System.Drawing.Point(122, 46);
             this.splitContainerMain.Name = "splitContainerMain";
             // 
             // splitContainerMain.Panel1
@@ -54,9 +54,9 @@
             // 
             // splitContainerMain.Panel2
             // 
-            this.splitContainerMain.Panel2.Controls.Add(this.assetDetailUserControl1);
+            this.splitContainerMain.Panel2.Controls.Add(this.portfolioDetailUserControl1);
             this.splitContainerMain.Size = new System.Drawing.Size(975, 520);
-            this.splitContainerMain.SplitterDistance = 726;
+            this.splitContainerMain.SplitterDistance = 481;
             this.splitContainerMain.TabIndex = 1;
             // 
             // splitContainerPortfoliosAndCommands
@@ -72,7 +72,7 @@
             // splitContainerPortfoliosAndCommands.Panel2
             // 
             this.splitContainerPortfoliosAndCommands.Panel2.Controls.Add(this.flowLayoutPanelPortfolios);
-            this.splitContainerPortfoliosAndCommands.Size = new System.Drawing.Size(507, 429);
+            this.splitContainerPortfoliosAndCommands.Size = new System.Drawing.Size(314, 429);
             this.splitContainerPortfoliosAndCommands.SplitterDistance = 63;
             this.splitContainerPortfoliosAndCommands.TabIndex = 1;
             // 
@@ -90,15 +90,16 @@
             // 
             this.flowLayoutPanelPortfolios.Location = new System.Drawing.Point(14, 17);
             this.flowLayoutPanelPortfolios.Name = "flowLayoutPanelPortfolios";
-            this.flowLayoutPanelPortfolios.Size = new System.Drawing.Size(354, 249);
+            this.flowLayoutPanelPortfolios.Size = new System.Drawing.Size(169, 249);
             this.flowLayoutPanelPortfolios.TabIndex = 0;
             // 
-            // assetDetailUserControl1
+            // portfolioDetailUserControl1
             // 
-            this.assetDetailUserControl1.Location = new System.Drawing.Point(64, 181);
-            this.assetDetailUserControl1.Name = "assetDetailUserControl1";
-            this.assetDetailUserControl1.Size = new System.Drawing.Size(146, 248);
-            this.assetDetailUserControl1.TabIndex = 0;
+            this.portfolioDetailUserControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.portfolioDetailUserControl1.Location = new System.Drawing.Point(34, 140);
+            this.portfolioDetailUserControl1.Name = "portfolioDetailUserControl1";
+            this.portfolioDetailUserControl1.Size = new System.Drawing.Size(172, 258);
+            this.portfolioDetailUserControl1.TabIndex = 0;
             // 
             // PortfolioPlanner
             // 
@@ -108,6 +109,7 @@
             this.Controls.Add(this.splitContainerMain);
             this.Name = "PortfolioPlanner";
             this.Text = "PortfolioPlanner";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PortfolioPlanner_FormClosed);
             this.Load += new System.EventHandler(this.PortfolioPlanner_Load);
             this.splitContainerMain.Panel1.ResumeLayout(false);
             this.splitContainerMain.Panel2.ResumeLayout(false);
@@ -126,6 +128,6 @@
         private System.Windows.Forms.Button buttonCreatePortfolio;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelPortfolios;
         private System.Windows.Forms.SplitContainer splitContainerPortfoliosAndCommands;
-        private UserControls.AssetDetailUserControl assetDetailUserControl1;
+        private UserControls.PortfolioDetailUserControl portfolioDetailUserControl1;
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace FinancialAnalyst.UI.Windows.UserControls
 {
-    partial class PortfolioUserControl
+    partial class PortfolioSummaryUserControl
     {
         /// <summary>
         /// Required designer variable.
@@ -31,15 +31,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.labelName = new System.Windows.Forms.Label();
             this.dataGridViewAssets = new System.Windows.Forms.DataGridView();
-            this.label2 = new System.Windows.Forms.Label();
-            this.labelTotalPercentage = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.labelBetaPortfolio = new System.Windows.Forms.Label();
             this.dataGridViewAssets_TickerColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewAssets_ProportionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewAssets_AmountColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewAssets_ShowDetailColumn = new System.Windows.Forms.DataGridViewButtonColumn();
             this.dataGridViewAssets_ExchangeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label2 = new System.Windows.Forms.Label();
+            this.labelTotalPercentage = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.labelBetaPortfolio = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssets)).BeginInit();
             this.SuspendLayout();
             // 
@@ -77,42 +77,6 @@
             this.dataGridViewAssets.TabIndex = 2;
             this.dataGridViewAssets.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewAssets_CellContentClick);
             this.dataGridViewAssets.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewAssets_CellValueChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 282);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Total:";
-            // 
-            // labelTotalPercentage
-            // 
-            this.labelTotalPercentage.AutoSize = true;
-            this.labelTotalPercentage.Location = new System.Drawing.Point(46, 282);
-            this.labelTotalPercentage.Name = "labelTotalPercentage";
-            this.labelTotalPercentage.Size = new System.Drawing.Size(96, 13);
-            this.labelTotalPercentage.TabIndex = 4;
-            this.labelTotalPercentage.Text = "<total percentage>";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 299);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(32, 13);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Beta:";
-            // 
-            // labelBetaPortfolio
-            // 
-            this.labelBetaPortfolio.AutoSize = true;
-            this.labelBetaPortfolio.Location = new System.Drawing.Point(48, 299);
-            this.labelBetaPortfolio.Name = "labelBetaPortfolio";
-            this.labelBetaPortfolio.Size = new System.Drawing.Size(80, 13);
-            this.labelBetaPortfolio.TabIndex = 6;
-            this.labelBetaPortfolio.Text = "<beta portfolio>";
             // 
             // dataGridViewAssets_TickerColumn
             // 
@@ -158,11 +122,46 @@
             this.dataGridViewAssets_ExchangeColumn.Name = "dataGridViewAssets_ExchangeColumn";
             this.dataGridViewAssets_ExchangeColumn.Visible = false;
             // 
-            // PortfolioUserControl
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 282);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(34, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Total:";
+            // 
+            // labelTotalPercentage
+            // 
+            this.labelTotalPercentage.AutoSize = true;
+            this.labelTotalPercentage.Location = new System.Drawing.Point(46, 282);
+            this.labelTotalPercentage.Name = "labelTotalPercentage";
+            this.labelTotalPercentage.Size = new System.Drawing.Size(96, 13);
+            this.labelTotalPercentage.TabIndex = 4;
+            this.labelTotalPercentage.Text = "<total percentage>";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 299);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(32, 13);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Beta:";
+            // 
+            // labelBetaPortfolio
+            // 
+            this.labelBetaPortfolio.AutoSize = true;
+            this.labelBetaPortfolio.Location = new System.Drawing.Point(48, 299);
+            this.labelBetaPortfolio.Name = "labelBetaPortfolio";
+            this.labelBetaPortfolio.Size = new System.Drawing.Size(80, 13);
+            this.labelBetaPortfolio.TabIndex = 6;
+            this.labelBetaPortfolio.Text = "<beta portfolio>";
+            // 
+            // PortfolioSummaryUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.labelBetaPortfolio);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.labelTotalPercentage);
@@ -170,8 +169,8 @@
             this.Controls.Add(this.dataGridViewAssets);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.label1);
-            this.Name = "PortfolioUserControl";
-            this.Size = new System.Drawing.Size(263, 320);
+            this.Name = "PortfolioSummaryUserControl";
+            this.Size = new System.Drawing.Size(265, 322);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssets)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,11 +49,17 @@
     <Compile Include="AssetDetailUserControl.Designer.cs">
       <DependentUpon>AssetDetailUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="PortfolioUserControl.cs">
+    <Compile Include="PortfolioDetailUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PortfolioUserControl.Designer.cs">
-      <DependentUpon>PortfolioUserControl.cs</DependentUpon>
+    <Compile Include="PortfolioDetailUserControl.Designer.cs">
+      <DependentUpon>PortfolioDetailUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PortfolioSummaryUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PortfolioSummaryUserControl.Designer.cs">
+      <DependentUpon>PortfolioSummaryUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
@@ -61,8 +68,11 @@
     <EmbeddedResource Include="AssetDetailUserControl.resx">
       <DependentUpon>AssetDetailUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PortfolioUserControl.resx">
-      <DependentUpon>PortfolioUserControl.cs</DependentUpon>
+    <EmbeddedResource Include="PortfolioDetailUserControl.resx">
+      <DependentUpon>PortfolioDetailUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PortfolioSummaryUserControl.resx">
+      <DependentUpon>PortfolioSummaryUserControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

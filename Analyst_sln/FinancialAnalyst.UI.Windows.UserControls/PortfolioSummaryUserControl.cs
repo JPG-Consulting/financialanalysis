@@ -12,30 +12,20 @@ using FinancialAnalyst.Common.Interfaces.UIInterfaces;
 
 namespace FinancialAnalyst.UI.Windows.UserControls
 {
-    public partial class PortfolioUserControl: UserControl
+    public partial class PortfolioSummaryUserControl: UserControl
     {
-        private IAssetDetailShower formShower;
         private Portfolio portfolio;
+        private ICallerForm callerForm;
 
-        public PortfolioUserControl(IAssetDetailShower formShower)
+        public PortfolioSummaryUserControl(ICallerForm callerForm)
         {
             InitializeComponent();
-            this.formShower = formShower;
+            this.callerForm = callerForm;
         }
 
         public void Set(Portfolio portfolio)
         {
             this.portfolio = portfolio;
-            /*
-            foreach(AssetAllocation assetAllocation in portfolio.AssetAllocations)
-            {
-                DataGridViewRow row = new DataGridViewRow();
-                row.Cells.Insert(dataGridViewAssets_TickerColumn.Index, new DataGridViewTextBoxCell() { Value = assetAllocation.Ticker });
-                row.Cells.Insert(dataGridViewAssets_ProportionColumn.Index,new DataGridViewTextBoxCell() { Value = assetAllocation.Percentage });
-                row.DataBoundItem = assetAllocation;
-                dataGridViewAssets.Rows.Add(row);
-            }
-            */
             dataGridViewAssets.DataSource = portfolio.AssetAllocations;
             labelName.Text = portfolio.Name;
             CalculateTotal();
@@ -63,7 +53,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             if (e.ColumnIndex == dataGridViewAssets_ShowDetailColumn.Index)
             {
                 AssetAllocation assetAllocation = (AssetAllocation)dataGridViewAssets.Rows[e.RowIndex].DataBoundItem;
-                this.formShower.ShowAssetDetail(assetAllocation);
+                callerForm.Show(assetAllocation);
             }
         }
 

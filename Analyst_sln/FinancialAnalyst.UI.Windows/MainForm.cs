@@ -16,11 +16,13 @@ namespace FinancialAnalyst.UI.Windows
         public MainForm()
         {
             InitializeComponent();
+            this.IsMdiContainer = true;
         }
 
         private void portfolioPlannerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PortfolioPlanner form = new PortfolioPlanner();
+            form.MdiParent = this;
             form.Show();
         }
     }

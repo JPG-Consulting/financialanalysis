@@ -6,8 +6,8 @@ using System.Text;
 
 namespace FinancialAnalyst.Common.Interfaces.UIInterfaces
 {
-    public interface IAssetDetailShower
+    public interface ICallerForm
     {
-        void ShowAssetDetail(AssetAllocation asset);
+        void Show(AssetAllocation asset);
     }
 }
