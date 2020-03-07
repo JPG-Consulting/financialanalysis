@@ -30,7 +30,9 @@ namespace Analyst.Domain.Edgar.Datasets
         /// The numeric value refers to the "R file" as computed by the renderer and posted on the EDGAR website.  
         /// Note that in some situations the numbers skip.
         /// </summary>
-        [Index("IX_SubmissionId_Report",IsUnique = true,Order =2)]
+        // https://docs.microsoft.com/es-es/ef/core/modeling/indexes
+        // https://github.com/jsakamoto/EntityFrameworkCore.IndexAttribute
+        //[Index("IX_SubmissionId_Report",IsUnique = true,Order =2)]
         [Required]
         public int Report { get; set; }
 
@@ -105,8 +107,11 @@ namespace Analyst.Domain.Edgar.Datasets
         
         public int DatasetId { get; set; }
 
-        [Index("IX_SubmissionId_Report", IsUnique = true, Order = 1)]
+        // https://docs.microsoft.com/es-es/ef/core/modeling/indexes
+        // https://github.com/jsakamoto/EntityFrameworkCore.IndexAttribute
+        //[Index("IX_SubmissionId_Report", IsUnique = true, Order = 1)]
         public int SubmissionId { get; set; }
+        
         [Required]
         public EdgarDatasetSubmission Submission { get; set; }
 

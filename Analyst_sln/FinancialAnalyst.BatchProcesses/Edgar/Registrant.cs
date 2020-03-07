@@ -54,7 +54,9 @@ namespace Analyst.Domain.Edgar
         /// Ten digit number assigned by the Commission 
         /// to each registrant that submits filings.
         /// </summary>
-        [Index(IsUnique = true)]
+        // https://docs.microsoft.com/es-es/ef/core/modeling/indexes
+        // https://github.com/jsakamoto/EntityFrameworkCore.IndexAttribute
+        //[Index(IsUnique = true)]
         public int CIK { get; set; }
 
         [Required]

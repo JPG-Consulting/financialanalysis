@@ -12,4 +12,13 @@
     <Content Include="Edgar\Datasets\readme.htm" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinancialAnalyst.Common\FinancialAnalyst.Common.csproj" />
+  </ItemGroup>
+
 </Project>

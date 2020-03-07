@@ -1,4 +1,5 @@
 ﻿using Analyst.Domain.Edgar.Datasets;
+using FinancialAnalyst.Common.Entities;
 using System;
 using System.Collections;
 using System.Collections.Generic;

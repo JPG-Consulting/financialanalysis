@@ -21,7 +21,9 @@ namespace Analyst.Domain.Edgar.Datasets
         /// Although MD5 is unsuitable for cryptographic use, 
         /// it is used here merely to limit the size of the primary key.
         /// </summary>
-        [Index("IX_DimensionH", IsUnique = true,Order =1)]
+        // https://docs.microsoft.com/es-es/ef/core/modeling/indexes
+        // https://github.com/jsakamoto/EntityFrameworkCore.IndexAttribute
+        //[Index("IX_DimensionH", IsUnique = true,Order =1)]
         [StringLength(34)]//32 hexa + "0x"
         public string DimensionH { get; set; }
 
@@ -51,7 +53,10 @@ namespace Analyst.Domain.Edgar.Datasets
                 return DimensionH;
             }
         }
-        [Index("IX_DimensionH", IsUnique = true, Order = 2)]
+
+        // https://docs.microsoft.com/es-es/ef/core/modeling/indexes
+        // https://github.com/jsakamoto/EntityFrameworkCore.IndexAttribute
+        //[Index("IX_DimensionH", IsUnique = true, Order = 2)]
         public int DatasetId { get; set; }
 
         public virtual EdgarDataset Dataset { get; set; } 

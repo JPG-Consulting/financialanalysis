@@ -23,7 +23,9 @@ namespace Analyst.Domain.Edgar
         [DataMember]
         public int Id { get; set; }
 
-        [Index(IsUnique =true)]
+        // https://docs.microsoft.com/es-es/ef/core/modeling/indexes
+        // https://github.com/jsakamoto/EntityFrameworkCore.IndexAttribute
+        //[Index(IsUnique =true)]
         [DataMember]
         public short Code { get; set; }
 

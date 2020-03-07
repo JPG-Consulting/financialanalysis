@@ -17,9 +17,11 @@ namespace Analyst.Domain.Edgar
         [Key]
         public int Id { get; set; }
 
+        // https://docs.microsoft.com/es-es/ef/core/modeling/indexes
+        // https://github.com/jsakamoto/EntityFrameworkCore.IndexAttribute
+        //[Index(IsUnique = true)]
         [Column(TypeName = "NVARCHAR")]
         [StringLength(20)]
-        [Index(IsUnique = true)]
         [DataMember]
         public String Code { get; set; }
 
