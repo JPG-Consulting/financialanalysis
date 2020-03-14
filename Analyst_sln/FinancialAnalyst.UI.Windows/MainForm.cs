@@ -21,7 +21,14 @@ namespace FinancialAnalyst.UI.Windows
 
         private void portfolioPlannerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PortfolioPlanner form = new PortfolioPlanner();
+            PortfolioPlannerForm form = new PortfolioPlannerForm();
+            form.MdiParent = this;
+            form.Show();
+        }
+
+        private void toolStripMenuItemSP500_Click(object sender, EventArgs e)
+        {
+            StandardAndPoorsForm form = new StandardAndPoorsForm();
             form.MdiParent = this;
             form.Show();
         }

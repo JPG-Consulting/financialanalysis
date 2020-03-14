@@ -1,6 +1,6 @@
 ﻿namespace FinancialAnalyst.UI.Windows.ChildForms
 {
-    partial class PortfolioPlanner
+    partial class PortfolioPlannerForm
     {
         /// <summary>
         /// Required designer variable.

@@ -16,11 +16,11 @@ using System.Windows.Forms;
 
 namespace FinancialAnalyst.UI.Windows.ChildForms
 {
-    public partial class PortfolioPlanner : Form, ICallerForm
+    public partial class PortfolioPlannerForm : Form, ICallerForm
     {
         private readonly List<ShowAssetDetailForm> showAssetDetailForms = new List<ShowAssetDetailForm>();
 
-        public PortfolioPlanner()
+        public PortfolioPlannerForm()
         {
             InitializeComponent();
             splitContainerMain.Dock = DockStyle.Fill;
