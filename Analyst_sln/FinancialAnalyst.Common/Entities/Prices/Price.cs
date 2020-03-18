@@ -2,13 +2,24 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FinancialAnalyst.Common.Entities
+namespace FinancialAnalyst.Common.Entities.Prices
 {
+    [Serializable]
     public class Price
     {
-        public DateTime Date { get; private set; }
-        public double Close { get; private set; }
-        public long Volume { get; private set; }
+        public DateTime Date { get; set; }
+
+        /// <summary>
+        /// Close price adjusted for splits (if data is from yahoo).
+        /// </summary>
+        public double Close { get; set; }
+
+        /// <summary>
+        /// Adjusted close price adjusted for both dividends and splits (if data is from yahoo).
+        /// </summary>
+        public double AdjustedClose { get; set; }
+        public long Volume { get; set; }
+
 
         /// <summary>
         /// Expected format:
@@ -24,6 +35,7 @@ namespace FinancialAnalyst.Common.Entities
             Price p = new Price();
             p.Date = DateTime.ParseExact(values[0], "yyyy-MM-dd", null);
             p.Close = double.Parse(values[4]);
+            p.AdjustedClose = double.Parse(values[5]);
             p.Volume = long.Parse(values[6]);
             return p;
         }

@@ -6,8 +6,10 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Assets;
+using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Entities.RequestResponse;
 using FinancialAnalyst.Common.Interfaces;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using FinancialAnalyst.WebAPI.Models;
 using FinancialAnalyst.WebAPI.Properties;
 using Microsoft.AspNetCore.Http;
@@ -20,21 +22,13 @@ namespace FinancialAnalyst.WebAPI.Controllers
     [ApiController]
     public class DataSourcesController : ControllerBase
     {
-        private IDataSource dataSource;
+        private IDataSourceManager dataSourceManager;
 
-        public DataSourcesController()
-        {
-            //TODO: add dependency injection
-            this.dataSource = new FinancialAnalyst.DataSources.Reuters.ReutersDataSource();
-        }
 
-        /*
-        public DataSourcesController(IDataSource dataSource)
+        public DataSourcesController(IDataSourceManager dataSourceManager)
         {
-            //TODO: add dependency injection
-            this.dataSource = dataSource;
+            this.dataSourceManager = dataSourceManager;
         }
-        */
 
         [HttpGet("getassetdata")]
         public APIResponse<Stock> GetAssetData(string ticker,string exchange)
@@ -67,7 +61,7 @@ namespace FinancialAnalyst.WebAPI.Controllers
                 }
             }
             
-            if (dataSource.TryGetAssetData(ticker, exch, out AssetBase asset, out string message))
+            if (dataSourceManager.TryGetAssetData(ticker, exch, out AssetBase asset, out string message))
             {
                 return new APIResponse<Stock>()
                 {
@@ -87,5 +81,79 @@ namespace FinancialAnalyst.WebAPI.Controllers
             }
         }
 
+
+        [HttpGet("getprices")]
+        public APIResponse<PriceList> GetPrices(string ticker, string exchange, string from, string to, string interval)
+        {
+            if (string.IsNullOrEmpty(ticker))
+            {
+                return new APIResponse<PriceList>()
+                {
+                    Ok = false,
+                    ErrorMessage = Resources.UI_TickerNull,
+                };
+            }
+
+            Exchange? exch = null;
+            if (string.IsNullOrEmpty(exchange) == false)
+            {
+                if (Enum.TryParse<Exchange>(exchange, out Exchange exchangeValue))
+                {
+                    exch = exchangeValue;
+                }
+                else
+                {
+                    return new APIResponse<PriceList>()
+                    {
+                        Content = null,
+                        Ok = false,
+                        ErrorMessage = $"Market {exchange} is not a valid market",
+                    };
+                }
+            }
+
+
+            DateTime? fromDate = null;
+            if (string.IsNullOrEmpty(from) == false && DateTime.TryParse(from, out DateTime temp) == true)
+            {
+                fromDate = temp;
+            }
+
+            DateTime? toDate = null;
+            if (string.IsNullOrEmpty(to) == false && DateTime.TryParse(to, out temp) == true)
+            {
+                toDate = temp;
+            }
+
+            if(Enum.TryParse<PriceInterval>(interval,out PriceInterval priceInterval) == false)
+            {
+                return new APIResponse<PriceList>()
+                {
+                    Content = null,
+                    Ok = false,
+                    ErrorMessage = $"PriceInterval '{interval}' is not a valid interval",
+                };
+            }
+
+            if (dataSourceManager.TryGetPrices(ticker, exch,fromDate,toDate, priceInterval, out PriceList prices, out string message))
+            {
+                return new APIResponse<PriceList>()
+                {
+                    Content = (PriceList)prices,
+                    Ok = true,
+                    ErrorMessage = message,
+                };
+            }
+            else
+            {
+                return new APIResponse<PriceList>()
+                {
+                    Content = null,
+                    Ok = false,
+                    ErrorMessage = message,
+                };
+            }
+
+        }
     }
 }

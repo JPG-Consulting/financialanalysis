@@ -1,4 +1,7 @@
 ﻿using FinancialAnalyst.Common.Entities;
+using FinancialAnalyst.Common.Entities.Prices;
+using FinancialAnalyst.Common.Entities.RequestResponse;
+using FinancialAnalyst.UI.Windows.Managers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,14 +26,9 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
         private void StandardAndPoors_Load(object sender, EventArgs e)
         {
-            //daily
-            //https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=-1325635200&period2=1584144000&interval=1d&events=history
-
-            //monthly
-            //https://query1.finance.yahoo.com/v7/finance/download/%5EGSPC?period1=-1325635200&period2=1584144000&interval=1mo&events=history
-
-            string[] lines = File.ReadAllLines(@"HistoricalData\^GSPC.csv");
-
+            string ticker = "^GSPC";
+            APIResponse<PriceList> pricesResponse = FinancialAnalystWebAPICaller.GetPrices(ticker, null,DateTime.Now.AddYears(-50),DateTime.Now,PriceInterval.Monthly);
+            
             chartSP.Series.Clear();
             chartSP.Titles.Add("S&P 500");
 
@@ -39,9 +37,8 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
             Series priceSeries = this.chartSP.Series.Add("Prices");
             priceSeries.ChartType = SeriesChartType.Spline;
-            for (int i=1;i<lines.Length;i++)
+            foreach(Price p in pricesResponse.Content)
             {
-                Price p = Price.From(lines[i]);
                 priceSeries.Points.AddXY(p.Date, p.Close);
             }
             

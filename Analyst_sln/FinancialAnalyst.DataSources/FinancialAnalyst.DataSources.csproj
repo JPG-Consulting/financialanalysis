@@ -18,4 +18,13 @@
     <ProjectReference Include="..\FinancialAnalyst.Common\FinancialAnalyst.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="HistoricalData\^GSPC_Daily.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HistoricalData\^GSPC_Monthly.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
