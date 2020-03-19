@@ -9,19 +9,9 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources.Edgar
 {
-    public class EdgarSECDataSource : IDataSource
+    public class EdgarSECDataSource : IAssetDataDataSource, IFillingsDataSource
     {
-        public bool TryGetAssetData(string ticker, Exchange? market, out AssetBase asset, out string errorMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out string message)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
+        public bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
         {
             throw new NotImplementedException();
         }

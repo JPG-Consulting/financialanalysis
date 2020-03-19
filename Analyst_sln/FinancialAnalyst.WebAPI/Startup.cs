@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using FinancialAnalyst.DataSources;
+using FinancialAnalyst.DataSources.Nasdaq;
+using FinancialAnalyst.DataSources.Reuters;
+using FinancialAnalyst.DataSources.Yahoo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,7 +30,10 @@ namespace FinancialAnalyst.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddTransient<IDataSourceManager, DataSourceManager>();
+            services.AddTransient<IDataSource, DataSourceManager>();
+            services.AddTransient<IPricesDataSource, YahooDataSource>();
+            services.AddTransient<IAssetDataDataSource, ReutersDataSource>();
+            services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
             services.AddTransient<ICacheManager, FileCacheManager>();
         }
 

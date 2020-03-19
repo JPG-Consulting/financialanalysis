@@ -11,27 +11,52 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources
 {
-    public class DataSourceManager:IDataSourceManager
+    public class DataSourceManager:IDataSource
     {
-        private IDataSource reutersdataSource;
-        private IDataSource yahooDataSource;
+        private IAssetDataDataSource assetDataDataSource;
+        private IPricesDataSource pricesDataSouce;
+        private IOptionChainDataSource optionChainDataSource;
         private ICacheManager cacheManager;
 
-        public DataSourceManager(ICacheManager cacheManager)
+        public DataSourceManager(IAssetDataDataSource assetDataDataSource,IPricesDataSource pricesDataSouce,IOptionChainDataSource optionChainDataSource, ICacheManager cacheManager)
         {
-            this.reutersdataSource = new ReutersDataSource();
-            this.yahooDataSource = new YahooDataSource();
+            this.assetDataDataSource = assetDataDataSource;
+            this.pricesDataSouce = pricesDataSouce;
+            this.optionChainDataSource = optionChainDataSource;
             this.cacheManager = cacheManager;
+        }
+
+        public bool TryGetCompleteAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
+        {
+            if (assetDataDataSource.TryGetAssetData(ticker, exchange, out asset, out errorMessage) == false)
+                return false;
+
+            DateTime? from = null;
+            DateTime? to = null;
+            if (TryGetPrices(ticker, exchange, from, to, PriceInterval.Monthly, out PriceList prices, out errorMessage) == false)
+                return false;
+
+            Stock s = asset as Stock;
+            if (s != null)
+            {
+                if (TryGetOptionsChain(ticker, exchange, out OptionChain optionChain, out errorMessage) == false)
+                    return false;
+
+                CalculateThoricalValue(s, prices, optionChain);
+            }
+
+            return true;
+        }
+
+        private void CalculateThoricalValue(Stock s, PriceList prices, OptionChain optionChain)
+        {
+            //s.Volatility = prices.CalculateVolatility();
+            throw new NotImplementedException("Pending to calculate theorical price for all options");
         }
 
         public bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
         {
-            return reutersdataSource.TryGetAssetData(ticker, exchange, out asset, out errorMessage);
-        }
-
-        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out string message)
-        {
-            throw new NotImplementedException();
+            return assetDataDataSource.TryGetAssetData(ticker, exchange, out asset, out errorMessage);
         }
 
         public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
@@ -41,7 +66,12 @@ namespace FinancialAnalyst.DataSources
                 errorMessage = "Obtained from cache";
                 return true;
             }
-            return yahooDataSource.TryGetPrices(ticker, exchange,from,to, interval,out prices, out errorMessage);
+            return pricesDataSouce.TryGetPrices(ticker, exchange,from,to, interval,out prices, out errorMessage);
+        }
+
+        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionChain optionChain, out string message)
+        {
+            return optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionChain, out message);
         }
     }
 }

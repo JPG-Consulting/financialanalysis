@@ -49,6 +49,12 @@
     <Compile Include="AssetDetailUserControl.Designer.cs">
       <DependentUpon>AssetDetailUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="OptionsChainUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="OptionsChainUserControl.Designer.cs">
+      <DependentUpon>OptionsChainUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="PortfolioDetailUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -67,6 +73,9 @@
   <ItemGroup>
     <EmbeddedResource Include="AssetDetailUserControl.resx">
       <DependentUpon>AssetDetailUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OptionsChainUserControl.resx">
+      <DependentUpon>OptionsChainUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PortfolioDetailUserControl.resx">
       <DependentUpon>PortfolioDetailUserControl.cs</DependentUpon>

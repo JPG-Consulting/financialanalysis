@@ -22,12 +22,13 @@ namespace FinancialAnalyst.WebAPI.Controllers
     [ApiController]
     public class DataSourcesController : ControllerBase
     {
-        private IDataSourceManager dataSourceManager;
+        private IDataSource dataSource;
+        private IPricesDataSource pricesDataSource;
 
-
-        public DataSourcesController(IDataSourceManager dataSourceManager)
+        public DataSourcesController(IDataSource dataSourceManager, IPricesDataSource pricesDataSource)
         {
-            this.dataSourceManager = dataSourceManager;
+            this.dataSource = dataSourceManager;
+            this.pricesDataSource = pricesDataSource;
         }
 
         [HttpGet("getassetdata")]
@@ -61,7 +62,7 @@ namespace FinancialAnalyst.WebAPI.Controllers
                 }
             }
             
-            if (dataSourceManager.TryGetAssetData(ticker, exch, out AssetBase asset, out string message))
+            if (dataSource.TryGetCompleteAssetData(ticker, exch, out AssetBase asset, out string message))
             {
                 return new APIResponse<Stock>()
                 {
@@ -135,7 +136,7 @@ namespace FinancialAnalyst.WebAPI.Controllers
                 };
             }
 
-            if (dataSourceManager.TryGetPrices(ticker, exch,fromDate,toDate, priceInterval, out PriceList prices, out string message))
+            if (dataSource.TryGetPrices(ticker, exch,fromDate,toDate, priceInterval, out PriceList prices, out string message))
             {
                 return new APIResponse<PriceList>()
                 {

@@ -17,20 +17,10 @@ namespace FinancialAnalyst.DataSources.Yahoo
     /// Thanks to:
     /// http://www.jarloo.com/get-yahoo-finance-api-data-via-yql/
     /// </summary>
-    public class YahooDataSource : IDataSource
+    public class YahooDataSource : IPricesDataSource
     {
         private static DateTime FIRST_DATE = new DateTime(1927, 12, 30, 0, 0, 0);
         private static DateTime DATE_1970 = new DateTime(1970, 1, 1, 0, 0, 0);
-
-        public bool TryGetAssetData(string ticker, Exchange? market, out AssetBase asset, out string errorMessage)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out string message)
-        {
-            throw new NotImplementedException();
-        }
 
         public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval priceInterval, out PriceList prices, out string errorMessage)
         {

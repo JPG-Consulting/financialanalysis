@@ -18,7 +18,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 {
     public partial class PortfolioPlannerForm : Form, ICallerForm
     {
-        private readonly List<ShowAssetDetailForm> showAssetDetailForms = new List<ShowAssetDetailForm>();
+        private readonly List<AssetDetailForm> showAssetDetailForms = new List<AssetDetailForm>();
 
         public PortfolioPlannerForm()
         {
@@ -73,7 +73,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         {
             //I create a form for every request because maybe the user want to see several asset details at the same time
             APIResponse<Stock> response = FinancialAnalystWebAPICaller.GetAssetData(alloc.Ticker, alloc.Exchange);
-            ShowAssetDetailForm showAssetDetailForm = new ShowAssetDetailForm(response);
+            AssetDetailForm showAssetDetailForm = new AssetDetailForm(response);
             showAssetDetailForms.Add(showAssetDetailForm);
             //showAssetDetailForm.MdiParent = this.ParentForm;
             showAssetDetailForm.Show();
@@ -81,7 +81,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
         private void PortfolioPlanner_FormClosed(object sender, FormClosedEventArgs e)
         {
-            foreach(ShowAssetDetailForm form in showAssetDetailForms)
+            foreach(AssetDetailForm form in showAssetDetailForms)
             {
                 form.Close();
             }

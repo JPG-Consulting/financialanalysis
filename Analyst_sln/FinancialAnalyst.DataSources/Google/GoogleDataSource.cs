@@ -20,7 +20,17 @@ namespace FinancialAnalyst.DataSources.Google
             throw new NotImplementedException();
         }
 
+        public bool TryGetCompleteAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool TryGetOptionsChain(string ticker, Exchange? exchange, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionChain optionChain, out string errorMessage)
         {
             throw new NotImplementedException();
         }

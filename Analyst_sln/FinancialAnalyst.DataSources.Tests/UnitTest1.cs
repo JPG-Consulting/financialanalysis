@@ -11,7 +11,6 @@ namespace FinancialAnalyst.DataSources.Tests
         [TestMethod]
         public void TestMethod1()
         {
-            IDataSource ds = new ReutersDataSource();
             Assert.Fail("Pending to complete test methods!!!");
         }
     }

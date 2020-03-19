@@ -56,11 +56,11 @@
     <Compile Include="ChildForms\PortfolioPlannerForm.Designer.cs">
       <DependentUpon>PortfolioPlannerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChildForms\ShowAssetDetailForm.cs">
+    <Compile Include="ChildForms\AssetDetailForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ChildForms\ShowAssetDetailForm.Designer.cs">
-      <DependentUpon>ShowAssetDetailForm.cs</DependentUpon>
+    <Compile Include="ChildForms\AssetDetailForm.Designer.cs">
+      <DependentUpon>AssetDetailForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ChildForms\StandardAndPoorsForm.cs">
       <SubType>Form</SubType>
@@ -80,8 +80,8 @@
     <EmbeddedResource Include="ChildForms\PortfolioPlannerForm.resx">
       <DependentUpon>PortfolioPlannerForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ChildForms\ShowAssetDetailForm.resx">
-      <DependentUpon>ShowAssetDetailForm.cs</DependentUpon>
+    <EmbeddedResource Include="ChildForms\AssetDetailForm.resx">
+      <DependentUpon>AssetDetailForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ChildForms\StandardAndPoorsForm.resx">
       <DependentUpon>StandardAndPoorsForm.cs</DependentUpon>

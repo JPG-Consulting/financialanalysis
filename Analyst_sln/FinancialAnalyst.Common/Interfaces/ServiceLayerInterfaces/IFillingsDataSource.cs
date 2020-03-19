@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces
 {
-    public interface IDataSourceManager:IDataSource
+    public interface IFillingsDataSource
     {
     }
 }

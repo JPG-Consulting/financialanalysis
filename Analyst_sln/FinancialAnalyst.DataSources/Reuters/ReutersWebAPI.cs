@@ -21,25 +21,13 @@ namespace FinancialAnalyst.DataSources.Reuters
 
         internal static bool GetSummary(string ticker, out string jsonResponse, out string errorMessage)
         {
-            //return GetSummary_v2(ticker, out jsonResponse, out errorMessage);
-            return GetSummary_v1(ticker, out jsonResponse, out errorMessage);
-        }
-
-        internal static bool GetSummary_v1(string ticker, out string jsonResponse, out string errorMessage)
-        {
             //https://stackoverflow.com/questions/20990601/decompressing-gzip-stream-from-httpclient-response
 
             httpClientSummary.DefaultRequestHeaders.Clear();
-            //httpClientSummary.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("PostmanRuntime/7.22.0")));
             httpClientSummary.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
-            //httpClientSummary.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue();
-            //httpClientSummary.DefaultRequestHeaders.CacheControl.NoCache = true;
-            //httpClientSummary.DefaultRequestHeaders.Postman-Token
-            //httpClientSummary.DefaultRequestHeaders.Host = "www.reuters.com";
             httpClientSummary.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             httpClientSummary.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
             httpClientSummary.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
-            //httpClientSummary.DefaultRequestHeaders.Cookie
             httpClientSummary.DefaultRequestHeaders.Connection.Add("keep-alive");
 
             httpClientSummary.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
@@ -67,24 +55,6 @@ namespace FinancialAnalyst.DataSources.Reuters
                 errorMessage = responseMessage.ReasonPhrase;
                 return false;
             }
-        }
-
-        internal static bool GetSummary_v2(string ticker, out string jsonResponse, out string errorMessage)
-        {
-            //https://stackoverflow.com/questions/36939980/strange-httpclient-result
-
-            string uri = $"{httpClientSummary.BaseAddress}{ticker}";
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.KeepAlive = false;
-            request.ContentType = "application/json; charset=utf-8";
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-            WebResponse response = request.GetResponse();
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-            {
-                jsonResponse = reader.ReadToEnd();
-            }
-            errorMessage = "ok";
-            return true;
         }
     }
 }

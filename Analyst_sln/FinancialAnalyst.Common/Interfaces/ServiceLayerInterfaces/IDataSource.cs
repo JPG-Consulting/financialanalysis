@@ -7,10 +7,8 @@ using System.Text;
 
 namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces
 {
-    public interface IDataSource
+    public interface IDataSource: IPricesDataSource, IAssetDataDataSource, IOptionChainDataSource, IFillingsDataSource
     {
-        bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset,out string errorMessage);
-        bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices,  out string errorMessage);
-        bool TryGetOptionsChain(string ticker, Exchange? exchange, out string message);
+        bool TryGetCompleteAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage);
     }
 }

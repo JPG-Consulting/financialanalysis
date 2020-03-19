@@ -10,8 +10,8 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources.Reuters
 {
-    public class ReutersDataSource : IDataSource
-    {
+    public class ReutersDataSource : IAssetDataDataSource
+	{
         public bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
         {
 			bool ok = false;
@@ -162,16 +162,6 @@ namespace FinancialAnalyst.DataSources.Reuters
                 return false;
             }
         }
-
-		public bool TryGetOptionsChain(string ticker, Exchange? exchange, out string message)
-		{
-			throw new NotImplementedException();
-		}
-
-		public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
-		{
-			throw new NotImplementedException();
-		}
 
 		private string Translate(Exchange exchange)
 		{

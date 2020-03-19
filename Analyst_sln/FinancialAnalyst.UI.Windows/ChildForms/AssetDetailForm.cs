@@ -12,16 +12,20 @@ using System.Windows.Forms;
 
 namespace FinancialAnalyst.UI.Windows.ChildForms
 {
-    public partial class ShowAssetDetailForm : Form
+    public partial class AssetDetailForm : Form
     {
-        private ShowAssetDetailForm()
+        private AssetDetailForm()
         {
             InitializeComponent();
+            optionsChainUserControl1.Dock = DockStyle.Fill;
+            assetDetailUserControl1.Dock = DockStyle.Fill;
+            splitContainerMain.Dock = DockStyle.Fill;
         }
 
-        public ShowAssetDetailForm(APIResponse<Stock> response):this()
+        public AssetDetailForm(APIResponse<Stock> response):this()
         {
             assetDetailUserControl1.Show(response);
+            optionsChainUserControl1.Show(response);
         }
 
     }
