@@ -8,13 +8,20 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources.Nasdaq
 {
-    public class NasdaqDataSource : IOptionChainDataSource,IAssetDataDataSource
+    public class NasdaqDataSource : IOptionChainDataSource,IAssetDataDataSource, IFinancialDataSource
     {
         public bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
         {
             //https://api.nasdaq.com/api/quote/GM/info?assetclass=stocks
             //GM = General motors
 
+            throw new NotImplementedException();
+        }
+
+        public bool TryFinancialData(string ticker,Exchange? exchange,out string message)
+        {
+            //https://api.nasdaq.com/api/company/GM/financials?frequency=1
+            //https://api.nasdaq.com/api/company/AMZN/financials?frequency=1
             throw new NotImplementedException();
         }
 

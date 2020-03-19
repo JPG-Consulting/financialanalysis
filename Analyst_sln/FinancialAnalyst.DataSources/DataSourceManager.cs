@@ -16,13 +16,15 @@ namespace FinancialAnalyst.DataSources
         private IAssetDataDataSource assetDataDataSource;
         private IPricesDataSource pricesDataSouce;
         private IOptionChainDataSource optionChainDataSource;
+        private IFinancialDataSource financialDataSource;
         private ICacheManager cacheManager;
 
-        public DataSourceManager(IAssetDataDataSource assetDataDataSource,IPricesDataSource pricesDataSouce,IOptionChainDataSource optionChainDataSource, ICacheManager cacheManager)
+        public DataSourceManager(IAssetDataDataSource assetDataDataSource,IPricesDataSource pricesDataSouce,IOptionChainDataSource optionChainDataSource,IFinancialDataSource financialDataSource, ICacheManager cacheManager)
         {
             this.assetDataDataSource = assetDataDataSource;
             this.pricesDataSouce = pricesDataSouce;
             this.optionChainDataSource = optionChainDataSource;
+            this.financialDataSource = financialDataSource;
             this.cacheManager = cacheManager;
         }
 
@@ -43,6 +45,8 @@ namespace FinancialAnalyst.DataSources
                     return false;
 
                 CalculateThoricalValue(s, prices, optionChain);
+
+                return TryFinancialData(ticker, exchange, out errorMessage);
             }
 
             return true;
@@ -72,6 +76,11 @@ namespace FinancialAnalyst.DataSources
         public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionChain optionChain, out string message)
         {
             return optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionChain, out message);
+        }
+
+        public bool TryFinancialData(string ticker, Exchange? exchange, out string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

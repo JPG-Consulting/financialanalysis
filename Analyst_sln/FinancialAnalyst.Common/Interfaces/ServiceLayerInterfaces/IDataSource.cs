@@ -7,7 +7,7 @@ using System.Text;
 
 namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces
 {
-    public interface IDataSource: IPricesDataSource, IAssetDataDataSource, IOptionChainDataSource, IFillingsDataSource
+    public interface IDataSource: IPricesDataSource, IAssetDataDataSource, IOptionChainDataSource, IFillingsDataSource,IFinancialDataSource
     {
         bool TryGetCompleteAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage);
     }
