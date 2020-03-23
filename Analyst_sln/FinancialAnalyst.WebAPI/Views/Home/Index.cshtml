@@ -12,8 +12,26 @@
     <ul>
         <li><a href="/FinancialAnalyst.WebAPI/api/WeatherForecast" target="_blank">WeatherForecast</a></li>
         <li><a href="/FinancialAnalyst.WebAPI/api/Portfolios/getportfoliosbyuser" target="_blank">GetPortfoliosByUser</a></li>
-        <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getassetdata?ticker=ko&market=NYSE" target="_blank">GetAssetData - Coca Cola</a></li>
-        <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getassetdata?ticker=MSFT&market=NASDAQ" target="_blank">GetAssetData - Microsoft</a></li>
+        <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getstockdata?ticker=ko&exchange=NYSE" target="_blank">GetAssetData - Coca Cola</a></li>
+        <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getstockdata?ticker=MSFT&exchange=NASDAQ" target="_blank">GetAssetData - Microsoft</a></li>
+        <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getstockdata?ticker=AAPL&exchange=NASDAQ" target="_blank">GetAssetData - Apple</a></li>
     </ul>
+    <hr>
+    <div>
+        <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-3.1">Use multiple environments in ASP.NET Core</a>
+        <br />
+        <environment include="Development">
+            <div>The effective tag is: &lt;environment include="Development"&gt;</div>
+        </environment>
+        <environment exclude="Development">
+            <div>The effective tag is: &lt;environment exclude="Development"&gt;</div>
+        </environment>
+        <environment include="Staging,Development,Staging_2">
+            <div>
+                The effective tag is:
+                &lt;environment include="Staging,Development,Staging_2"&gt;
+            </div>
+        </environment>
+    </div>
 </div>
 

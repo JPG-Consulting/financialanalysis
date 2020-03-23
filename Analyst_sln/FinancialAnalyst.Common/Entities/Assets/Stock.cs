@@ -38,6 +38,8 @@ namespace FinancialAnalyst.Common.Entities.Assets
         public double? ROI_TTM { get; set; }
         public List<News> NewsList { get; set; }
         public List<Officer> Officers { get; set; }
-        public double? Volatility { get; internal set; }
+        public double? Volatility { get; set; }
+
+        public OptionsChain OptionsChain { get; set; }
     }
 }

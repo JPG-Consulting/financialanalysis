@@ -32,7 +32,7 @@ namespace FinancialAnalyst.WebAPI
             services.AddControllersWithViews();
             services.AddTransient<IDataSource, DataSourceManager>();
             services.AddTransient<IPricesDataSource, YahooDataSource>();
-            services.AddTransient<IAssetDataDataSource, ReutersDataSource>();
+            services.AddTransient<IStockDataDataSource, ReutersDataSource>();
             services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
             services.AddTransient<IFinancialDataSource, NasdaqDataSource>();
             services.AddTransient<ICacheManager, FileCacheManager>();

@@ -10,9 +10,9 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources.Reuters
 {
-    public class ReutersDataSource : IAssetDataDataSource
+    public class ReutersDataSource : IStockDataDataSource
 	{
-        public bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
+        public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
 			bool ok = false;
 			string jsonResponse = "{}";

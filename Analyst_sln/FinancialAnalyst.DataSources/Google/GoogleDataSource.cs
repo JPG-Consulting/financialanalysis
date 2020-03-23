@@ -20,12 +20,12 @@ namespace FinancialAnalyst.DataSources.Google
             throw new NotImplementedException();
         }
 
-        public bool TryGetAssetData(string ticker, Exchange? market, out AssetBase asset, out string errorMessage)
+        public bool TryGetStockData(string ticker, Exchange? market, out Stock asset, out string errorMessage)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetCompleteAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
+        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
             throw new NotImplementedException();
         }

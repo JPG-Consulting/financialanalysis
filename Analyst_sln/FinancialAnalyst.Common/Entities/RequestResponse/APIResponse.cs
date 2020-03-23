@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,5 +10,12 @@ namespace FinancialAnalyst.Common.Entities.RequestResponse
         public T Content { get; set; }
         public bool Ok { get; set; }
         public string ErrorMessage { get; set; }
+
+        public string Serialize()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
+
+    
 }

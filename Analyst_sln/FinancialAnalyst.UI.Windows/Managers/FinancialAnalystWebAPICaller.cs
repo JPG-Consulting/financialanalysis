@@ -35,13 +35,13 @@ namespace FinancialAnalyst.UI.Windows.Managers
             return JsonConvert.DeserializeObject<IEnumerable<Portfolio>>(jsonResponse);
         }
 
-        static internal APIResponse<Stock> GetAssetData(string ticker, Exchange? market)
+        static internal APIResponse<Stock> GetStockData(string ticker, Exchange? market)
         {
             string uri;
             if(market.HasValue)
-                uri = $"{httpClient.BaseAddress}/DataSources/getassetdata?ticker={ticker}&market={market.ToString()}";
+                uri = $"{httpClient.BaseAddress}/DataSources/getstockdata?ticker={ticker}&market={market.ToString()}";
             else
-                uri = $"{httpClient.BaseAddress}/DataSources/getassetdata?ticker={ticker}";
+                uri = $"{httpClient.BaseAddress}/DataSources/getstockdata?ticker={ticker}";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             WebResponse response = request.GetResponse();
             string jsonResponse;

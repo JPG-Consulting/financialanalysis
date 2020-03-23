@@ -37,7 +37,10 @@
     "IIS": {
       "commandName": "IIS",
       "launchBrowser": true,
-      "launchUrl": "http://localhost/FinancialAnalyst.WebAPI"
+      "launchUrl": "http://localhost/FinancialAnalyst.WebAPI",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

@@ -10,9 +10,9 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources.Nasdaq
 {
-    public class NasdaqDataSource : IOptionChainDataSource,IAssetDataDataSource, IFinancialDataSource
+    public class NasdaqDataSource : IOptionChainDataSource,IStockDataDataSource, IFinancialDataSource
     {
-        public bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
+        public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
             //https://api.nasdaq.com/api/quote/GM/info?assetclass=stocks
             //GM = General motors

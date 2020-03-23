@@ -9,9 +9,9 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources.Edgar
 {
-    public class EdgarSECDataSource : IAssetDataDataSource, IFillingsDataSource
+    public class EdgarSECDataSource : IStockDataDataSource, IFillingsDataSource
     {
-        public bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
+        public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
             throw new NotImplementedException();
         }

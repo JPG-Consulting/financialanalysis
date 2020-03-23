@@ -31,25 +31,47 @@ namespace FinancialAnalyst.WebAPI.Controllers
             this.pricesDataSource = pricesDataSource;
         }
 
-        [HttpGet("getassetdata")]
-        public APIResponse<Stock> GetAssetData(string ticker,string exchange)
+        [HttpGet("getstockdata")]
+        public string GetStockData(string ticker,string exchange)
         {
-            
-            if(string.IsNullOrEmpty(ticker))
-            {
-                return new APIResponse<Stock>()
-                {
-                    Ok = false,
-                    ErrorMessage = Resources.UI_TickerNull,
-                };
-            }
 
-            Exchange? exch = null ;
-            if (string.IsNullOrEmpty(exchange) == false)
+            try
             {
-                if (Enum.TryParse<Exchange>(exchange, out Exchange temp))
+                if (string.IsNullOrEmpty(ticker))
                 {
-                    exch = temp;
+                    return new APIResponse<Stock>()
+                    {
+                        Ok = false,
+                        ErrorMessage = Resources.UI_TickerNull,
+                    }.Serialize();
+                }
+
+                Exchange? exch = null;
+                if (string.IsNullOrEmpty(exchange) == false)
+                {
+                    if (Enum.TryParse<Exchange>(exchange, out Exchange temp))
+                    {
+                        exch = temp;
+                    }
+                    else
+                    {
+                        return new APIResponse<Stock>()
+                        {
+                            Content = null,
+                            Ok = false,
+                            ErrorMessage = $"Market {exchange} is not a valid market",
+                        }.Serialize();
+                    }
+                }
+
+                if (dataSource.TryGetCompleteStockData(ticker, exch, out Stock stock, out string message))
+                {
+                    return new APIResponse<Stock>()
+                    {
+                        Content = stock,
+                        Ok = true,
+                        ErrorMessage = message,
+                    }.Serialize();
                 }
                 else
                 {
@@ -57,28 +79,18 @@ namespace FinancialAnalyst.WebAPI.Controllers
                     {
                         Content = null,
                         Ok = false,
-                        ErrorMessage = $"Market {exchange} is not a valid market",
-                    };
+                        ErrorMessage = message,
+                    }.Serialize();
                 }
             }
-            
-            if (dataSource.TryGetCompleteAssetData(ticker, exch, out AssetBase asset, out string message))
-            {
-                return new APIResponse<Stock>()
-                {
-                    Content = (Stock)asset,
-                    Ok = true,
-                    ErrorMessage = message,
-                };
-            }
-            else
+            catch(Exception ex)
             {
                 return new APIResponse<Stock>()
                 {
                     Content = null,
                     Ok = false,
-                    ErrorMessage = message,
-                };
+                    ErrorMessage = ex.Message,
+                }.Serialize();
             }
         }
 
