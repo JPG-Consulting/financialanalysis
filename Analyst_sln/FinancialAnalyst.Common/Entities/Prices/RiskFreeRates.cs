@@ -6,10 +6,11 @@ namespace FinancialAnalyst.Common.Entities.Prices
 {
     public class RiskFreeRates
     {
-        public DateTime Day { get; set; }
+        public DateTime Date { get; set; }
         public double OneMonth { get; set; }
-        public double ThreeMonth { get; set; }
-        public double SixMonth { get; set; }
+        public double TwoMonths { get; set; }
+        public double ThreeMonths { get; set; }
+        public double SixMonths { get; set; }
         public double OneYear { get; set; }
         public double TwoYears { get; set; }
         public double ThreeYears { get; set; }

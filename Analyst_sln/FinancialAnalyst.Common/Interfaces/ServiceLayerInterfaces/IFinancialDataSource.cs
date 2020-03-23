@@ -7,6 +7,6 @@ namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces
 {
     public interface IFinancialDataSource
     {
-        bool TryFinancialData(string ticker, Exchange? exchange, out string message);
+        bool TryGetFinancialData(string ticker, Exchange? exchange, out string message);
     }
 }

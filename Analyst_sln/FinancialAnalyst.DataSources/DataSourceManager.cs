@@ -18,14 +18,16 @@ namespace FinancialAnalyst.DataSources
         private IPricesDataSource pricesDataSouce;
         private IOptionChainDataSource optionChainDataSource;
         private IFinancialDataSource financialDataSource;
+        private IRiskFreeRatesDataSource riskFreeRatesDataSource;
         private ICacheManager cacheManager;
 
-        public DataSourceManager(IStockDataDataSource assetDataDataSource,IPricesDataSource pricesDataSouce,IOptionChainDataSource optionChainDataSource,IFinancialDataSource financialDataSource, ICacheManager cacheManager)
+        public DataSourceManager(IStockDataDataSource assetDataDataSource,IPricesDataSource pricesDataSouce,IOptionChainDataSource optionChainDataSource,IFinancialDataSource financialDataSource, IRiskFreeRatesDataSource riskFreeRatesDataSource, ICacheManager cacheManager)
         {
             this.assetDataDataSource = assetDataDataSource;
             this.pricesDataSouce = pricesDataSouce;
             this.optionChainDataSource = optionChainDataSource;
             this.financialDataSource = financialDataSource;
+            this.riskFreeRatesDataSource = riskFreeRatesDataSource;
             this.cacheManager = cacheManager;
         }
 
@@ -47,15 +49,13 @@ namespace FinancialAnalyst.DataSources
 
                 stock.OptionsChain = optionsChain;
 
-                //https://www.treasury.gov/resource-center/data-chart-center/interest-rates/pages/TextView.aspx?data=yield
-                RiskFreeRates riskFreeRate = new RiskFreeRates()
-                {
-                    TwoYears = 0.37 / 100, //r=0.37%=0.0037
-                };
+
+                if (TryGetRiskFreeRates(out RiskFreeRates riskFreeRate, out errorMessage) == false)
+                    return false;
 
                 OptionsCalculator.CalculateThoricalValue(s, prices, optionsChain, riskFreeRate);
 
-                return TryFinancialData(ticker, exchange, out errorMessage);
+                return TryGetFinancialData(ticker, exchange, out errorMessage);
             }
 
             return true;
@@ -82,10 +82,15 @@ namespace FinancialAnalyst.DataSources
             return optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionsChain, out message);
         }
 
-        public bool TryFinancialData(string ticker, Exchange? exchange, out string message)
+        public bool TryGetFinancialData(string ticker, Exchange? exchange, out string message)
         {
             message = "Pending to get financial data";
             return true;
+        }
+
+        public bool TryGetRiskFreeRates(out RiskFreeRates riskFreeRate, out string message)
+        {
+            return riskFreeRatesDataSource.TryGetRiskFreeRates(out riskFreeRate,out message);
         }
     }
 }

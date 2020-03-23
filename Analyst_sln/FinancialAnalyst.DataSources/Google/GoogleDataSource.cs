@@ -15,7 +15,7 @@ namespace FinancialAnalyst.DataSources.Google
     /// </summary>
     public class GoogleDataSource : IDataSource
     {
-        public bool TryFinancialData(string ticker, Exchange? exchange, out string message)
+        public bool TryGetFinancialData(string ticker, Exchange? exchange, out string message)
         {
             throw new NotImplementedException();
         }

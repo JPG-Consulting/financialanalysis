@@ -7,6 +7,7 @@ using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using FinancialAnalyst.DataSources;
 using FinancialAnalyst.DataSources.Nasdaq;
 using FinancialAnalyst.DataSources.Reuters;
+using FinancialAnalyst.DataSources.USTreasury;
 using FinancialAnalyst.DataSources.Yahoo;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,7 @@ namespace FinancialAnalyst.WebAPI
             services.AddTransient<IStockDataDataSource, ReutersDataSource>();
             services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
             services.AddTransient<IFinancialDataSource, NasdaqDataSource>();
+            services.AddTransient<IRiskFreeRatesDataSource, USTreasuryDataSource>();
             services.AddTransient<ICacheManager, FileCacheManager>();
         }
 

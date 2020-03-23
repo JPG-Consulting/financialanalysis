@@ -20,7 +20,7 @@ namespace FinancialAnalyst.DataSources.Nasdaq
             throw new NotImplementedException();
         }
 
-        public bool TryFinancialData(string ticker,Exchange? exchange,out string message)
+        public bool TryGetFinancialData(string ticker,Exchange? exchange,out string message)
         {
             //https://api.nasdaq.com/api/company/GM/financials?frequency=1
             //https://api.nasdaq.com/api/company/AMZN/financials?frequency=1
