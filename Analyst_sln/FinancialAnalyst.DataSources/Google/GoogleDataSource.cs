@@ -35,7 +35,7 @@ namespace FinancialAnalyst.DataSources.Google
             throw new NotImplementedException();
         }
 
-        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionChain optionChain, out string errorMessage)
+        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionChain, out string errorMessage)
         {
             throw new NotImplementedException();
         }

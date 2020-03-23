@@ -1,5 +1,6 @@
 ﻿using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Assets;
+using FinancialAnalyst.Common.Entities.Assets.Options;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
@@ -33,18 +34,24 @@ namespace FinancialAnalyst.DataSources
             if (assetDataDataSource.TryGetAssetData(ticker, exchange, out asset, out errorMessage) == false)
                 return false;
 
-            DateTime? from = null;
-            DateTime? to = null;
-            if (TryGetPrices(ticker, exchange, from, to, PriceInterval.Monthly, out PriceList prices, out errorMessage) == false)
+            DateTime? from = DateTime.Now.AddYears(-1).AddDays(-1);
+            DateTime? to = DateTime.Now;
+            if (TryGetPrices(ticker, exchange, from, to, PriceInterval.Daily, out PriceList prices, out errorMessage) == false)
                 return false;
 
             Stock s = asset as Stock;
             if (s != null)
             {
-                if (TryGetOptionsChain(ticker, exchange, out OptionChain optionChain, out errorMessage) == false)
+                if (TryGetOptionsChain(ticker, exchange, out OptionsChain optionsChain, out errorMessage) == false)
                     return false;
 
-                CalculateThoricalValue(s, prices, optionChain);
+                //https://www.treasury.gov/resource-center/data-chart-center/interest-rates/pages/TextView.aspx?data=yield
+                RiskFreeRates riskFreeRate = new RiskFreeRates()
+                {
+                    TwoYears = 0.37 / 100, //r=0.37%=0.0037
+                };
+
+                OptionsCalculator.CalculateThoricalValue(s, prices, optionsChain, riskFreeRate);
 
                 return TryFinancialData(ticker, exchange, out errorMessage);
             }
@@ -52,12 +59,7 @@ namespace FinancialAnalyst.DataSources
             return true;
         }
 
-        private void CalculateThoricalValue(Stock s, PriceList prices, OptionChain optionChain)
-        {
-            //s.Volatility = prices.CalculateVolatility();
-            throw new NotImplementedException("Pending to calculate theorical price for all options");
-        }
-
+        
         public bool TryGetAssetData(string ticker, Exchange? exchange, out AssetBase asset, out string errorMessage)
         {
             return assetDataDataSource.TryGetAssetData(ticker, exchange, out asset, out errorMessage);
@@ -73,14 +75,15 @@ namespace FinancialAnalyst.DataSources
             return pricesDataSouce.TryGetPrices(ticker, exchange,from,to, interval,out prices, out errorMessage);
         }
 
-        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionChain optionChain, out string message)
+        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionsChain, out string message)
         {
-            return optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionChain, out message);
+            return optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionsChain, out message);
         }
 
         public bool TryFinancialData(string ticker, Exchange? exchange, out string message)
         {
-            throw new NotImplementedException();
+            message = "Pending to get financial data";
+            return true;
         }
     }
 }

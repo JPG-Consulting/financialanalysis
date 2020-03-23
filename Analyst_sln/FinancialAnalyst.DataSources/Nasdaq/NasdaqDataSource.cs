@@ -1,7 +1,9 @@
 ﻿using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Assets;
+using FinancialAnalyst.Common.Entities.Assets.Options;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,15 +27,44 @@ namespace FinancialAnalyst.DataSources.Nasdaq
             throw new NotImplementedException();
         }
 
-        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionChain optionChain, out string errorMessage)
+        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionChain, out string errorMessage)
         {
             DateTime from = new DateTime(DateTime.Now.Year,DateTime.Now.Month,1);
             DateTime to = new DateTime(DateTime.Now.Year, DateTime.Now.Month, GetLastDay(DateTime.Now.Month));
             bool ok = NasdaqApiCaller.GetOptionChain(ticker, from, to, out string jsonResponse, out errorMessage);
 
-            optionChain = new OptionChain();
-            errorMessage = "Pending to parse data";
-            return false;
+            optionChain = new OptionsChain();
+            dynamic rawdata = JsonConvert.DeserializeObject(jsonResponse);
+            
+            foreach (var optionRow in rawdata.data.optionChainList.rows)
+            {
+                if(optionRow.call != null)
+                {
+                    CallOption o = new CallOption()
+                    {
+                        Symbol = optionRow.call.symbol,
+                        Last = optionRow.call.last,
+                        Strike = optionRow.call.strike,
+                        ExpirationDate = optionRow.call.expiryDate,
+                    };
+                    optionChain.Add(o);
+                }
+
+                if (optionRow.put != null)
+                {
+                    PutOption o = new PutOption()
+                    {
+                        Symbol = optionRow.put.symbol,
+                        Last = optionRow.put.last,
+                        Strike = optionRow.put.strike,
+                        ExpirationDate = optionRow.put.expiryDate,
+                    };
+                    optionChain.Add(o);
+                }
+            }
+
+            errorMessage = "ok";
+            return true;
         }
 
         private int GetLastDay(int month)

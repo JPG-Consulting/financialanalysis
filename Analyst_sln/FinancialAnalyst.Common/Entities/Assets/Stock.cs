@@ -16,27 +16,28 @@ namespace FinancialAnalyst.Common.Entities.Assets
         public string Sector { get; set; }
         public string Industry { get; set; }
         public string Country { get; set; }
-        public decimal? Price_Last { get; set; }
+        public double? Price_Last { get; set; }
         public DateTime? Price_Last_Time { get; set; }
-        public decimal? Price_FiftyTwoWeekHigh { get; set; }
-        public decimal? Price_FiftyTwoWeekLow { get; set; }
-        public decimal? Beta { get; set; }
-        public decimal? EarningsPerShare_ExcludingExtraItems_TTM { get; set; }
-        public decimal? PriceEarnings_ExcludingExtraITems_TTM { get; set; }
-        public decimal? PriceSales_Annual { get; set; }
-        public decimal? PriceSales_TTM { get; set; }
-        public decimal? PriceToCashFlow_PerShare_TTM { get; set; }
-        public decimal? PriceBook_Annual { get; set; }
-        public decimal? PriceBook_Quarterly { get; set; }
-        public decimal? DividendYield { get; set; }
-        public decimal? LongTermDebtToEquity_Annual { get; set; }
-        public decimal? TotalDebtToEquity_Annual { get; set; }
-        public decimal? LongTermDebtToEquity_Quarterly { get; set; }
-        public decimal? TotalDebtToEquity_Quarterly { get; set; }
-        public decimal? SharesOut { get; set; }
-        public decimal? ROE_TTM { get; set; }
-        public decimal? ROI_TTM { get; set; }
+        public double? Price_FiftyTwoWeekHigh { get; set; }
+        public double? Price_FiftyTwoWeekLow { get; set; }
+        public double? Beta { get; set; }
+        public double? EarningsPerShare_ExcludingExtraItems_TTM { get; set; }
+        public double? PriceEarnings_ExcludingExtraITems_TTM { get; set; }
+        public double? PriceSales_Annual { get; set; }
+        public double? PriceSales_TTM { get; set; }
+        public double? PriceToCashFlow_PerShare_TTM { get; set; }
+        public double? PriceBook_Annual { get; set; }
+        public double? PriceBook_Quarterly { get; set; }
+        public double? DividendYield { get; set; }
+        public double? LongTermDebtToEquity_Annual { get; set; }
+        public double? TotalDebtToEquity_Annual { get; set; }
+        public double? LongTermDebtToEquity_Quarterly { get; set; }
+        public double? TotalDebtToEquity_Quarterly { get; set; }
+        public double? SharesOut { get; set; }
+        public double? ROE_TTM { get; set; }
+        public double? ROI_TTM { get; set; }
         public List<News> NewsList { get; set; }
         public List<Officer> Officers { get; set; }
+        public double? Volatility { get; internal set; }
     }
 }

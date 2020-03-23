@@ -8,6 +8,6 @@ namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces
 {
     public interface IOptionChainDataSource
     {
-        bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionChain optionChain, out string errorMessage);
+        bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionChain, out string errorMessage);
     }
 }
