@@ -1,6 +1,7 @@
 ﻿using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Assets.Options;
+using FinancialAnalyst.Common.Entities.Accounting;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
@@ -12,7 +13,7 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources
 {
-    public class DataSourceManager:IDataSource
+    public class DataSourceManager : IDataSource
     {
         private IStockDataDataSource assetDataDataSource;
         private IPricesDataSource pricesDataSouce;
@@ -49,13 +50,17 @@ namespace FinancialAnalyst.DataSources
 
                 stock.OptionsChain = optionsChain;
 
-
+                //TODO: get this data 1 per day and store it in a cache
                 if (TryGetRiskFreeRates(out RiskFreeRates riskFreeRate, out errorMessage) == false)
                     return false;
 
                 OptionsCalculator.CalculateThoricalValue(s, prices, optionsChain, riskFreeRate);
 
-                return TryGetFinancialData(ticker, exchange, out errorMessage);
+                if (TryGetFinancialData(ticker, exchange, out FinancialStatements financialData, out errorMessage) == false)
+                    return false;
+
+                s.FinancialStatements = financialData;
+                return true;
             }
 
             return true;
@@ -82,15 +87,40 @@ namespace FinancialAnalyst.DataSources
             return optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionsChain, out message);
         }
 
-        public bool TryGetFinancialData(string ticker, Exchange? exchange, out string message)
+        public bool TryGetFinancialData(string ticker, Exchange? exchange, out FinancialStatements financialData, out string message)
         {
-            message = "Pending to get financial data";
-            return true;
+            /*
+             * Sources
+             * *******
+             * 
+             * Nasdaq - 4 years, from 2016 to 2019
+             * https://api.nasdaq.com/api/company/AAPL/financials?frequency=1
+             * 
+             * Reuters - 6 years, from 2014 to 2019
+             * https://www.reuters.com/companies/api/getFetchCompanyFinancials/AAPL.OQ
+             * 
+             * Financial statement from Apple site
+             * https://investor.apple.com/sec-filings/sec-filings-details/default.aspx?FilingId=13709514
+             * http://d18rn0p25nwr6d.cloudfront.net/CIK-0000320193/c0dc1bce-6ba9-4131-af22-54dab3277c8e.html#
+             * 
+             * The problem is that neither of both are usefull to calculate future cashflows.
+             * I have to use EDGAR, but:
+             * Pending to parse, store and read the datasets
+             * Pending to parse, store and read the file indexes
+             * Pending to access the files
+             */
+
+            return financialDataSource.TryGetFinancialData(ticker, exchange, out financialData, out message);
         }
 
         public bool TryGetRiskFreeRates(out RiskFreeRates riskFreeRate, out string message)
         {
             return riskFreeRatesDataSource.TryGetRiskFreeRates(out riskFreeRate,out message);
+        }
+
+        public bool TryGetFinancialData(string ticker, string cik, out string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

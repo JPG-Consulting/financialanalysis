@@ -1,4 +1,5 @@
 ﻿using FinancialAnalyst.Common.Entities;
+using FinancialAnalyst.Common.Entities.Accounting;
 using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces;
@@ -9,9 +10,14 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources.Edgar
 {
-    public class EdgarSECDataSource : IStockDataDataSource, IFillingsDataSource
+    public class EdgarSECDataSource : IFinancialDataSource, IFillingsDataSource
     {
-        public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+        public bool TryGetFinancialData(string ticker, Exchange? exchange, out FinancialStatements financialData, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetFinancialData(string ticker, string cik, out string message)
         {
             throw new NotImplementedException();
         }

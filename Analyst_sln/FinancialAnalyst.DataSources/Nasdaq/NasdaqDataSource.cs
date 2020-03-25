@@ -1,6 +1,7 @@
 ﻿using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Assets.Options;
+using FinancialAnalyst.Common.Entities.Accounting;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using Newtonsoft.Json;
@@ -10,20 +11,19 @@ using System.Text;
 
 namespace FinancialAnalyst.DataSources.Nasdaq
 {
-    public class NasdaqDataSource : IOptionChainDataSource,IStockDataDataSource, IFinancialDataSource
+    public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource
     {
         public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
-            //https://api.nasdaq.com/api/quote/GM/info?assetclass=stocks
-            //GM = General motors
-
+            //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
             throw new NotImplementedException();
         }
 
-        public bool TryGetFinancialData(string ticker,Exchange? exchange,out string message)
+        public bool TryGetFinancialData(string ticker,Exchange? exchange, out FinancialStatements financialData, out string errorMessage)
         {
-            //https://api.nasdaq.com/api/company/GM/financials?frequency=1
-            //https://api.nasdaq.com/api/company/AMZN/financials?frequency=1
+            //Example
+            //https://api.nasdaq.com/api/company/AAPL/financials?frequency=1
+            bool ok = NasdaqApiCaller.GetFinancialData(ticker, out string jsonResponse, out errorMessage);
             throw new NotImplementedException();
         }
 

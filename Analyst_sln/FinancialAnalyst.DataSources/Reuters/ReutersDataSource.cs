@@ -1,5 +1,6 @@
 ﻿using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Assets;
+using FinancialAnalyst.Common.Entities.Accounting;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
@@ -7,13 +8,14 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace FinancialAnalyst.DataSources.Reuters
 {
-    public class ReutersDataSource : IStockDataDataSource
+    public class ReutersDataSource : IStockDataDataSource, IFinancialDataSource
 	{
-        public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
-        {
+		public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+		{
 			bool ok = false;
 			string jsonResponse = "{}";
 			string internalTicker = "";
@@ -22,9 +24,9 @@ namespace FinancialAnalyst.DataSources.Reuters
 				internalTicker = $"{ticker}{Translate(exchange.Value)}";
 				ok = ReutersWebAPI.GetSummary(internalTicker, out jsonResponse, out errorMessage);
 			}
-			
+
 			//If it fails the first try, it tries with all exchanges
-			if(ok == false)
+			if (ok == false)
 			{
 				internalTicker = $"{ticker}";
 				ok = ReutersWebAPI.GetSummary(internalTicker, out jsonResponse, out errorMessage);
@@ -40,55 +42,56 @@ namespace FinancialAnalyst.DataSources.Reuters
 				}
 			}
 
-            if(ok)
-            {
+			if (ok)
+			{
+                #region Data transformation
                 dynamic summary = JsonConvert.DeserializeObject(jsonResponse);
-                Stock s = new Stock();
-                s.CompanyName = summary.market_data.company_name;
-                s.Description = summary.market_data.about;
-                s.WebSite = summary.market_data.website;
-                s.WebSite_Source = $"https://www.reuters.com/companies/{internalTicker}";
-                s.Sector = summary.market_data.sector;
-                s.Industry = summary.market_data.industry;
-                s.Country = summary.country;
-                s.Price_Last = summary.market_data.last;
-                s.Price_Last_Time = summary.market_data.last_time;
-                s.Price_FiftyTwoWeekHigh = summary.market_data.fiftytwo_wk_high;
-                s.Price_FiftyTwoWeekLow = summary.market_data.fiftytwo_wk_low;
-                s.Beta = summary.market_data.beta;
-                s.EarningsPerShare_ExcludingExtraItems_TTM = summary.market_data.eps_excl_extra_ttm;
-                s.PriceEarnings_ExcludingExtraITems_TTM = summary.market_data.pe_excl_extra_ttm;
-                s.PriceSales_Annual = summary.market_data.ps_annual;
-                s.PriceSales_TTM = summary.market_data.ps_ttm;
-                s.PriceToCashFlow_PerShare_TTM = summary.market_data.pcf_share_ttm;
-                s.PriceBook_Annual = summary.market_data.pb_annual;
-                s.PriceBook_Quarterly = summary.market_data.pb_quarterly;
-                s.DividendYield = summary.market_data.dividend_yield_indicated_annual;
-                s.LongTermDebtToEquity_Annual = summary.market_data.lt_debt_equity_annual;
-                s.TotalDebtToEquity_Annual = summary.market_data.total_debt_equity_annual;
-                s.LongTermDebtToEquity_Quarterly = summary.market_data.lt_debt_equity_quarterly;
-                s.TotalDebtToEquity_Quarterly= summary.market_data.total_debt_equity_quarterly;
-                s.SharesOut = summary.market_data.shares_out;
-                s.ROE_TTM = summary.market_data.roe_ttm;
-                s.ROI_TTM = summary.market_data.roi_ttm;
-                s.NewsList = new List<News>();
-                foreach(var news in summary.market_data.sig_devs)
-                {
-                    News n = new News();
-                    n.DateTime = news.last_update;
-                    n.Title = news.headline;
-                    n.Content = news.description;
-                    s.NewsList.Add(n);
-                }
-                s.Officers = new List<Officer>();
-                foreach (var officer in summary.market_data.officers)
-                {
-                    Officer o = new Officer();
-                    o.Name = officer.name;
-                    o.Rank = officer.rank;
-                    o.Title = officer.title;
-                    s.Officers.Add(o);
-                }
+				Stock s = new Stock();
+				s.CompanyName = summary.market_data.company_name;
+				s.Description = summary.market_data.about;
+				s.WebSite = summary.market_data.website;
+				s.WebSite_Source = $"https://www.reuters.com/companies/{internalTicker}";
+				s.Sector = summary.market_data.sector;
+				s.Industry = summary.market_data.industry;
+				s.Country = summary.country;
+				s.Price_Last = summary.market_data.last;
+				s.Price_Last_Time = summary.market_data.last_time;
+				s.Price_FiftyTwoWeekHigh = summary.market_data.fiftytwo_wk_high;
+				s.Price_FiftyTwoWeekLow = summary.market_data.fiftytwo_wk_low;
+				s.Beta = summary.market_data.beta;
+				s.EarningsPerShare_ExcludingExtraItems_TTM = summary.market_data.eps_excl_extra_ttm;
+				s.PriceEarnings_ExcludingExtraITems_TTM = summary.market_data.pe_excl_extra_ttm;
+				s.PriceSales_Annual = summary.market_data.ps_annual;
+				s.PriceSales_TTM = summary.market_data.ps_ttm;
+				s.PriceToCashFlow_PerShare_TTM = summary.market_data.pcf_share_ttm;
+				s.PriceBook_Annual = summary.market_data.pb_annual;
+				s.PriceBook_Quarterly = summary.market_data.pb_quarterly;
+				s.DividendYield = summary.market_data.dividend_yield_indicated_annual;
+				s.LongTermDebtToEquity_Annual = summary.market_data.lt_debt_equity_annual;
+				s.TotalDebtToEquity_Annual = summary.market_data.total_debt_equity_annual;
+				s.LongTermDebtToEquity_Quarterly = summary.market_data.lt_debt_equity_quarterly;
+				s.TotalDebtToEquity_Quarterly = summary.market_data.total_debt_equity_quarterly;
+				s.SharesOut = summary.market_data.shares_out;
+				s.ROE_TTM = summary.market_data.roe_ttm;
+				s.ROI_TTM = summary.market_data.roi_ttm;
+				s.NewsList = new List<News>();
+				foreach (var news in summary.market_data.sig_devs)
+				{
+					News n = new News();
+					n.DateTime = news.last_update;
+					n.Title = news.headline;
+					n.Content = news.description;
+					s.NewsList.Add(n);
+				}
+				s.Officers = new List<Officer>();
+				foreach (var officer in summary.market_data.officers)
+				{
+					Officer o = new Officer();
+					o.Name = officer.name;
+					o.Rank = officer.rank;
+					o.Title = officer.title;
+					s.Officers.Add(o);
+				}
 
 				/*
                 s.EarningsPerYear = summary.market_data.eps_per_year...;
@@ -147,21 +150,107 @@ namespace FinancialAnalyst.DataSources.Reuters
                   ]
                 },
                 */
-
+				#endregion
 				errorMessage = $"Ticker {internalTicker} founded.";
 				asset = s;
-                return true;
-            }
-            else
-            {
+				return true;
+			}
+			else
+			{
 				if (exchange.HasValue)
 					errorMessage = $"It can't find asset data for ticker {ticker} in exchange {exchange.Value.ToString()}";
 				else
 					errorMessage = $"It can't find asset data for ticker {ticker} in all markets available";
-                asset = null;
-                return false;
-            }
-        }
+				asset = null;
+				return false;
+			}
+		}
+
+		public bool TryGetFinancialData(string ticker, Exchange? exchange, out FinancialStatements financialData, out string errorMessage)
+		{
+			//Example
+			//https://www.reuters.com/companies/api/getFetchCompanyFinancials/AAPL.OQ
+
+			try
+			{
+				bool ok = false;
+				string jsonResponse = "{}";
+				string internalTicker = "";
+
+				internalTicker = $"{ticker}{Translate(exchange.Value)}";
+				ok = ReutersWebAPI.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
+
+				//If it fails the first try, it tries with all exchanges
+				if (ok == false)
+				{
+					internalTicker = $"{ticker}";
+					ok = ReutersWebAPI.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
+
+					Exchange[] exchanges = (Exchange[])Enum.GetValues(typeof(Exchange));
+					int i = 0;
+					while (ok == false && i < exchanges.Length)
+					{
+						Exchange ex = exchanges[i];
+						internalTicker = $"{ticker}{Translate(ex)}";
+						ok = ReutersWebAPI.GetSummary(internalTicker, out jsonResponse, out errorMessage);
+						i++;
+					}
+				}
+
+				if (ok)
+				{
+					dynamic rawdata = JsonConvert.DeserializeObject(jsonResponse);
+					financialData = new FinancialStatements()
+					{
+						IncomeStatement = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
+						BalanceSheet = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
+						CashFlowStatement = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
+						
+					};
+
+					AddValues(financialData.IncomeStatement.Childs, rawdata.market_data.financial_statements.income.annual);
+					AddValues(financialData.BalanceSheet.Childs, rawdata.market_data.financial_statements.balance_sheet.annual);
+					AddValues(financialData.CashFlowStatement.Childs, rawdata.market_data.financial_statements.cash_flow.annual);
+
+					return true;
+				}
+				else
+				{
+					if (exchange.HasValue)
+						errorMessage = $"It can't find financial data for ticker {ticker} in exchange {exchange.Value.ToString()}.";
+					else
+						errorMessage = $"It can't find financial data for ticker {ticker} in all markets available.";
+					financialData = null;
+					return false;
+				}
+			}
+			catch(Exception ex)
+			{
+				financialData = null;
+				errorMessage = ex.Message;
+				return false;
+			}
+		}
+
+		private void AddValues(List<AccountingItem> items, dynamic collection)
+		{
+			foreach (var item in collection)
+			{
+				AccountingItem accountingItem = new AccountingItem()
+				{
+					Name = item.Name,
+					ValuesPerPeriod = new Dictionary<DateTime, double>(),
+				};
+
+				foreach (JToken datevalue in item.Value)
+				{
+					DateTime date = datevalue.Value<DateTime>("date");
+					double value = datevalue.Value<double>("value");
+					accountingItem.ValuesPerPeriod.Add(date, value);
+				}
+				items.Add(accountingItem);
+			}
+		}
 
 		private string Translate(Exchange exchange)
 		{
@@ -175,7 +264,8 @@ namespace FinancialAnalyst.DataSources.Reuters
 					throw new NotImplementedException($"There is no translation for exchange {exchange.ToString()}");
 			}
 		}
-		/* Exchanges JPMorgan
+
+		/* Exchanges for JPMorgan
 		<table width="100%" cellspacing="0" cellpadding="1" class="search-table-data">
 		<tr>
 			<th>Company</th>
@@ -689,7 +779,7 @@ namespace FinancialAnalyst.DataSources.Reuters
 			</table> 
 		*/
 
-		/* AAPLE Exchanges
+		/* Exchanges for AAPLE
 		<table width="100%" cellspacing="0" cellpadding="1" class="search-table-data">
 			<tr>
 				<th>Company</th>

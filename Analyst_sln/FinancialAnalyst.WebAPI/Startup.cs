@@ -35,7 +35,7 @@ namespace FinancialAnalyst.WebAPI
             services.AddTransient<IPricesDataSource, YahooDataSource>();
             services.AddTransient<IStockDataDataSource, ReutersDataSource>();
             services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
-            services.AddTransient<IFinancialDataSource, NasdaqDataSource>();
+            services.AddTransient<IFinancialDataSource, ReutersDataSource>();
             services.AddTransient<IRiskFreeRatesDataSource, USTreasuryDataSource>();
             services.AddTransient<ICacheManager, FileCacheManager>();
         }

@@ -21,20 +21,31 @@ namespace FinancialAnalyst.DataSources.Reuters
 
         internal static bool GetSummary(string ticker, out string jsonResponse, out string errorMessage)
         {
+            string uri = $"{httpClientSummary.BaseAddress}{ticker}";
+            return Get(httpClientSummary, uri, out jsonResponse, out errorMessage);
+            
+        }
+
+        internal static bool GetFinancialData(string ticker, out string jsonResponse, out string errorMessage)
+        {
+            string uri = $"{httpClientFinancials.BaseAddress}{ticker}";
+            return Get(httpClientFinancials, uri, out jsonResponse, out errorMessage);
+        }
+
+        private static bool Get(HttpClient client, string uri, out string jsonResponse, out string errorMessage)
+        {
             //https://stackoverflow.com/questions/20990601/decompressing-gzip-stream-from-httpclient-response
 
-            httpClientSummary.DefaultRequestHeaders.Clear();
-            httpClientSummary.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
-            httpClientSummary.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-            httpClientSummary.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
-            httpClientSummary.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
-            httpClientSummary.DefaultRequestHeaders.Connection.Add("keep-alive");
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("br"));
+            client.DefaultRequestHeaders.AcceptCharset.Add(new StringWithQualityHeaderValue("utf-8"));
+            client.DefaultRequestHeaders.Connection.Add("keep-alive");
 
-            httpClientSummary.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));//ACCEPT header
-            httpClientSummary.DefaultRequestHeaders.AcceptCharset.Add(new StringWithQualityHeaderValue("utf-8"));
-
-            string uri = $"{httpClientSummary.BaseAddress}{ticker}";
-            HttpResponseMessage responseMessage = httpClientSummary.GetAsync(uri).Result;
+            HttpResponseMessage responseMessage = client.GetAsync(uri).Result;
             string originalContent = responseMessage.Content.ReadAsStringAsync().Result;
             string content = originalContent;
             if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)

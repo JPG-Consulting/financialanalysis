@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancialAnalyst.Common.Entities.Accounting;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,8 @@ namespace FinancialAnalyst.Common.Entities.Assets
     public class Stock : AssetBase
     {
         public override AssetType AssetType { get { return AssetType.Stock; } }
+
+#pragma warning disable CA2235 // Mark all non-serializable fields
 
         public string CompanyName { get; set; }
         public string Description { get; set; }
@@ -41,5 +44,8 @@ namespace FinancialAnalyst.Common.Entities.Assets
         public double? Volatility { get; set; }
 
         public OptionsChain OptionsChain { get; set; }
+        public FinancialStatements FinancialStatements { get; set; }
+
+#pragma warning restore CA2235 // Mark all non-serializable fields
     }
 }
