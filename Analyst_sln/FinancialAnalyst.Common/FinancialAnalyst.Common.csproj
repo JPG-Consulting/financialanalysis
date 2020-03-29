@@ -5,8 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Entities\EdgarSEC\Datasets\readme.htm" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Entities\EdgarSEC\Datasets\readme.htm" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MathNet.Numerics" Version="4.9.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0-preview.1.20120.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\DBInterfaces\" />
   </ItemGroup>
 
 </Project>

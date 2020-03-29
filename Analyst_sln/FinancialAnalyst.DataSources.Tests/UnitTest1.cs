@@ -15,12 +15,14 @@ namespace FinancialAnalyst.DataSources.Tests
         [TestMethod]
         public void Test_Serialization()
         {
-            IPricesDataSource pricesDataSource  = new YahooDataSource();
             IStockDataDataSource stockDataDataSource = new ReutersDataSource();
+            IPricesDataSource pricesDataSource  = new YahooDataSource();
             IOptionChainDataSource optionChainDataSource = new NasdaqDataSource();
             IFinancialDataSource financialDataSource = new NasdaqDataSource();
+            IRiskFreeRatesDataSource riskFreeRatesDataSource = null;
             ICacheManager cacheManager = new FileCacheManager();
-            IDataSource dataSource = new DataSourceManager(stockDataDataSource, pricesDataSource, optionChainDataSource, financialDataSource, cacheManager);
+
+            IDataSource dataSource = new DataSourceManager(stockDataDataSource, pricesDataSource, optionChainDataSource, financialDataSource, riskFreeRatesDataSource, cacheManager);
             bool ok = dataSource.TryGetCompleteStockData("AAPL", Common.Entities.Exchange.NASDAQ, out Stock stock, out string message);
             Assert.IsTrue(ok);
             string json = JsonConvert.SerializeObject(stock);
