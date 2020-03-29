@@ -1,8 +1,100 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="sql\queries\control_queries.sql" />
+    <None Remove="sql\queries\queries for errors\check for processed.sql" />
+    <None Remove="sql\queries\queries for errors\duplicated analys num record.sql" />
+    <None Remove="sql\queries\queries for errors\duplicated analys tag record.sql" />
+    <None Remove="sql\queries\queries for errors\duplicated analys txt record.sql" />
+    <None Remove="sql\queries\queries for errors\missing analysis num records.sql" />
+    <None Remove="sql\queries\queries for errors\missing tags in dataset 201704.sql" />
+    <None Remove="sql\queries\queries for errors\performance analysis presentations.sql" />
+    <None Remove="sql\queries\queries for reports\01st approach to balance.sql" />
+    <None Remove="sql\queries\queries for reports\submissions submitted.sql" />
+    <None Remove="sql\scripts for manual execution\creation_of_initial_db.sql" />
+    <None Remove="sql\scripts for manual execution\fixes for datasets\dataset 2015 03 - analisis.sql" />
+    <None Remove="sql\scripts for manual execution\fixes for datasets\dataset 2015 03 - fix.sql" />
+    <None Remove="sql\scripts for manual execution\fixes for datasets\dataset 2015 04 - check.sql" />
+    <None Remove="sql\scripts for manual execution\fixes for datasets\dataset 2015 04 - fix.sql" />
+    <None Remove="sql\scripts for manual execution\fixes for datasets\dataset 2017 04 - analisis.sql" />
+    <None Remove="sql\scripts for manual execution\fixes for datasets\dataset 2018 04 - analisis.sql" />
+    <None Remove="sql\scripts\alter column ADSH.sql" />
+    <None Remove="sql\scripts\create GET_MISSING_LINE_NUMBERS.sql" />
+    <None Remove="sql\scripts\create SP_DISABLE_PRESENTATION_INDEXES.sql" />
+    <None Remove="sql\scripts\create SP_EDGARDATASETCALC_INSERT.sql" />
+    <None Remove="sql\scripts\create SP_EDGARDATASETDIMENSIONS_INSERT.sql" />
+    <None Remove="sql\scripts\create SP_EDGARDATASETNUMBER_INSERT.sql" />
+    <None Remove="sql\scripts\create SP_EDGARDATASETPRESENTATIONS_INSERT.sql" />
+    <None Remove="sql\scripts\create SP_EDGARDATASETRENDERS_INSERT.sql" />
+    <None Remove="sql\scripts\create SP_EDGARDATASETSUBMISSIONS_INSERT.sql" />
+    <None Remove="sql\scripts\create SP_EDGARDATASETTAGS_INSERT.sql" />
+    <None Remove="sql\scripts\create SP_EDGARDATASETTEXT_INSERT.sql" />
+    <None Remove="sql\scripts\create SP_GET_CALCULATIONS_KEYS.sql" />
+    <None Remove="sql\scripts\create SP_GET_DIMENSIONS_KEYS.sql" />
+    <None Remove="sql\scripts\create SP_GET_NUMBER_KEYS.sql" />
+    <None Remove="sql\scripts\create SP_GET_PRESENTATION_KEYS.sql" />
+    <None Remove="sql\scripts\create SP_GET_RENDER_KEYS.sql" />
+    <None Remove="sql\scripts\create SP_GET_SUBMISSIONS_KEYS.sql" />
+    <None Remove="sql\scripts\create SP_GET_TAGS_KEYS.sql" />
+    <None Remove="sql\scripts\create SP_GET_TEXT_KEYS.sql" />
+    <None Remove="sql\scripts\create table LOG.sql" />
+    <None Remove="sql\scripts\create table numbers.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="sql\queries\control_queries.sql" />
+    <Content Include="sql\queries\queries for errors\check for processed.sql" />
+    <Content Include="sql\queries\queries for errors\duplicated analys num record.sql" />
+    <Content Include="sql\queries\queries for errors\duplicated analys tag record.sql" />
+    <Content Include="sql\queries\queries for errors\duplicated analys txt record.sql" />
+    <Content Include="sql\queries\queries for errors\missing analysis num records.sql" />
+    <Content Include="sql\queries\queries for errors\missing tags in dataset 201704.sql" />
+    <Content Include="sql\queries\queries for errors\performance analysis presentations.sql" />
+    <Content Include="sql\queries\queries for reports\01st approach to balance.sql" />
+    <Content Include="sql\queries\queries for reports\submissions submitted.sql" />
+    <Content Include="sql\scripts for manual execution\creation_of_initial_db.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 03 - analisis.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 03 - fix.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 04 - check.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2015 04 - fix.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2017 04 - analisis.sql" />
+    <Content Include="sql\scripts for manual execution\fixes for datasets\dataset 2018 04 - analisis.sql" />
+    <Content Include="sql\scripts\alter column ADSH.sql" />
+    <Content Include="sql\scripts\create GET_MISSING_LINE_NUMBERS.sql" />
+    <Content Include="sql\scripts\create SP_DISABLE_PRESENTATION_INDEXES.sql" />
+    <Content Include="sql\scripts\create SP_EDGARDATASETCALC_INSERT.sql" />
+    <Content Include="sql\scripts\create SP_EDGARDATASETDIMENSIONS_INSERT.sql" />
+    <Content Include="sql\scripts\create SP_EDGARDATASETNUMBER_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sql\scripts\create SP_EDGARDATASETPRESENTATIONS_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sql\scripts\create SP_EDGARDATASETRENDERS_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sql\scripts\create SP_EDGARDATASETSUBMISSIONS_INSERT.sql" />
+    <Content Include="sql\scripts\create SP_EDGARDATASETTAGS_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sql\scripts\create SP_EDGARDATASETTEXT_INSERT.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="sql\scripts\create SP_GET_CALCULATIONS_KEYS.sql" />
+    <Content Include="sql\scripts\create SP_GET_DIMENSIONS_KEYS.sql" />
+    <Content Include="sql\scripts\create SP_GET_NUMBER_KEYS.sql" />
+    <Content Include="sql\scripts\create SP_GET_PRESENTATION_KEYS.sql" />
+    <Content Include="sql\scripts\create SP_GET_RENDER_KEYS.sql" />
+    <Content Include="sql\scripts\create SP_GET_SUBMISSIONS_KEYS.sql" />
+    <Content Include="sql\scripts\create SP_GET_TAGS_KEYS.sql" />
+    <Content Include="sql\scripts\create SP_GET_TEXT_KEYS.sql" />
+    <Content Include="sql\scripts\create table LOG.sql" />
+    <Content Include="sql\scripts\create table numbers.sql" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FinancialAnalyst.Common\FinancialAnalyst.Common.csproj" />
