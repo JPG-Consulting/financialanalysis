@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialAnalyst.BatchProcesses.DB.Contexts
+namespace FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Contexts
 {
     /// <summary>
     /// Esta clase es un asco y esta toda hardcodeada, pero lo que tiene no va a cambiar casi nunca

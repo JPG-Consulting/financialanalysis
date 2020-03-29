@@ -5,11 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FinancialAnalyst.BatchProcesses.DB.Repositories;
+using FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Repositories;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinancialAnalyst.BatchProcesses.DB.Contexts
+namespace FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Contexts
 {
     internal class EdgarContextInitializer
     {

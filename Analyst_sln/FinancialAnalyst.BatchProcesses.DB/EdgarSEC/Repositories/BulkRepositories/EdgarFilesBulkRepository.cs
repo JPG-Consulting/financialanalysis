@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinancialAnalyst.BatchProcesses.DB.Repositories.BulkRepositories
+namespace FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Repositories.BulkRepositories
 {
     public interface IEdgarFilesBulkRepository
     {

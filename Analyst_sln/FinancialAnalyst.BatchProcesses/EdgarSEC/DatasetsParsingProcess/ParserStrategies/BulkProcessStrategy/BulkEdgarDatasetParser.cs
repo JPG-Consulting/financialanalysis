@@ -1,4 +1,4 @@
-﻿using FinancialAnalyst.BatchProcesses.DB.Repositories.BulkRepositories;
+﻿using FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Repositories.BulkRepositories;
 using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess.ParserStrategies.Interfaces;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Datasets;
 using FinancialAnalyst.Common.Exceptions.EdgarSEC;

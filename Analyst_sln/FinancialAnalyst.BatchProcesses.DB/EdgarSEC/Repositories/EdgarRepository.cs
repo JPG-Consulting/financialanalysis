@@ -1,4 +1,4 @@
-﻿using FinancialAnalyst.BatchProcesses.DB.Contexts;
+﻿using FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Contexts;
 using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.EdgarSEC;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Datasets;
@@ -14,7 +14,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace FinancialAnalyst.BatchProcesses.DB.Repositories
+namespace FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Repositories
 {
     public class EdgarRepository : IEdgarDatasetsRepository, IEdgarFilesRepository, IEdgarRepository
     {

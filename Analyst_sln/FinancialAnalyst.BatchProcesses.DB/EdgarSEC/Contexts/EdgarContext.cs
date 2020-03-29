@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 
 
-namespace FinancialAnalyst.BatchProcesses.DB.Contexts
+namespace FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Contexts
 {
     internal class EdgarContext : DbContext
     {

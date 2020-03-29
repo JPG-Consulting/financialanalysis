@@ -16,8 +16,4 @@
     <ProjectReference Include="..\FinancialAnalyst.Common\FinancialAnalyst.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="EdgarSEC\IndexesParsingProcess\" />
-  </ItemGroup>
-
 </Project>
