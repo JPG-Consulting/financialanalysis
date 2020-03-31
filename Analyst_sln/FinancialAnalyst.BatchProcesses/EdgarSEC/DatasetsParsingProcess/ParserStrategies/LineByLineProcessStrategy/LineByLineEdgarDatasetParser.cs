@@ -1,9 +1,9 @@
-﻿using FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Repositories;
-using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess;
+﻿using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess;
 using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess.ParserStrategies.Interfaces;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Datasets;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Repositories;
 using FinancialAnalyst.Common.Exceptions.EdgarSEC;
+using FinancialAnalyst.DataAccess.EdgarSEC.Repositories;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

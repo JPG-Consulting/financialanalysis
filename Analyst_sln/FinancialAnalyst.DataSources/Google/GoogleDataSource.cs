@@ -7,6 +7,7 @@ using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 
 namespace FinancialAnalyst.DataSources.Google
 {

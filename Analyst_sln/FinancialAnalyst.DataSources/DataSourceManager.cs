@@ -4,12 +4,13 @@ using FinancialAnalyst.Common.Entities.Assets.Options;
 using FinancialAnalyst.Common.Entities.Accounting;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces;
-using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using FinancialAnalyst.DataSources.Reuters;
 using FinancialAnalyst.DataSources.Yahoo;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 
 namespace FinancialAnalyst.DataSources
 {

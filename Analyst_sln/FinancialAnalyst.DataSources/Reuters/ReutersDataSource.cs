@@ -3,7 +3,7 @@ using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Accounting;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces;
-using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -22,14 +22,14 @@ namespace FinancialAnalyst.DataSources.Reuters
 			if (exchange.HasValue)
 			{
 				internalTicker = $"{ticker}{Translate(exchange.Value)}";
-				ok = ReutersWebAPI.GetSummary(internalTicker, out jsonResponse, out errorMessage);
+				ok = ReutersApiCaller.GetSummary(internalTicker, out jsonResponse, out errorMessage);
 			}
 
 			//If it fails the first try, it tries with all exchanges
 			if (ok == false)
 			{
 				internalTicker = $"{ticker}";
-				ok = ReutersWebAPI.GetSummary(internalTicker, out jsonResponse, out errorMessage);
+				ok = ReutersApiCaller.GetSummary(internalTicker, out jsonResponse, out errorMessage);
 
 				Exchange[] exchanges = (Exchange[])Enum.GetValues(typeof(Exchange));
 				int i = 0;
@@ -37,7 +37,7 @@ namespace FinancialAnalyst.DataSources.Reuters
 				{
 					Exchange ex = exchanges[i];
 					internalTicker = $"{ticker}{Translate(ex)}";
-					ok = ReutersWebAPI.GetSummary(internalTicker, out jsonResponse, out errorMessage);
+					ok = ReutersApiCaller.GetSummary(internalTicker, out jsonResponse, out errorMessage);
 					i++;
 				}
 			}
@@ -178,13 +178,13 @@ namespace FinancialAnalyst.DataSources.Reuters
 				string internalTicker = "";
 
 				internalTicker = $"{ticker}{Translate(exchange.Value)}";
-				ok = ReutersWebAPI.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
+				ok = ReutersApiCaller.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
 
 				//If it fails the first try, it tries with all exchanges
 				if (ok == false)
 				{
 					internalTicker = $"{ticker}";
-					ok = ReutersWebAPI.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
+					ok = ReutersApiCaller.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
 
 					Exchange[] exchanges = (Exchange[])Enum.GetValues(typeof(Exchange));
 					int i = 0;
@@ -192,7 +192,7 @@ namespace FinancialAnalyst.DataSources.Reuters
 					{
 						Exchange ex = exchanges[i];
 						internalTicker = $"{ticker}{Translate(ex)}";
-						ok = ReutersWebAPI.GetSummary(internalTicker, out jsonResponse, out errorMessage);
+						ok = ReutersApiCaller.GetSummary(internalTicker, out jsonResponse, out errorMessage);
 						i++;
 					}
 				}

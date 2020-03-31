@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FinancialAnalyst.BatchProcesses.DB\FinancialAnalyst.BatchProcesses.DB.csproj" />
     <ProjectReference Include="..\FinancialAnalyst.Common\FinancialAnalyst.Common.csproj" />
+    <ProjectReference Include="..\FinancialAnalyst.DAC\FinancialAnalyst.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

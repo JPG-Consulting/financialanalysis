@@ -3,7 +3,7 @@ using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Assets.Options;
 using FinancialAnalyst.Common.Entities.Accounting;
 using FinancialAnalyst.Common.Entities.Prices;
-using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

@@ -1,11 +1,11 @@
-﻿using FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Repositories;
-using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess;
+﻿using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess;
 using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess.ParserStrategies.Interfaces;
 using FinancialAnalyst.Common.Entities.EdgarSEC;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Datasets;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Repositories;
 using FinancialAnalyst.Common.Exceptions;
 using FinancialAnalyst.Common.Exceptions.EdgarSEC;
+using FinancialAnalyst.DataAccess.EdgarSEC.Repositories;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -180,10 +180,38 @@ namespace FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess
 
         #endregion
 
+        #region IDisposable implementation
+        private bool isDisposed;
+        private IntPtr nativeResource = IntPtr.Zero;
+
         public void Dispose()
         {
-
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            // The bulk of the clean-up code is implemented in Dispose(bool)
 
+            if (isDisposed) 
+                return;
+
+            if (disposing)
+            {
+                // free managed resources
+                
+            }
+
+            // free native resources if there are any.
+            if (nativeResource != IntPtr.Zero)
+            {
+                System.Runtime.InteropServices.Marshal.FreeHGlobal(nativeResource);
+                nativeResource = IntPtr.Zero;
+            }
+
+            isDisposed = true;
+        }
+        #endregion
     }
 }

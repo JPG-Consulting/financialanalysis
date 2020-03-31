@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FinancialAnalyst.Common.Interfaces;
+using FinancialAnalyst.BatchProcesses.EdgarSEC;
+using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess;
+using FinancialAnalyst.BatchProcesses.EdgarSEC.FilesParsingProcess;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.Edgar;
 using FinancialAnalyst.DataSources;
 using FinancialAnalyst.DataSources.Nasdaq;
 using FinancialAnalyst.DataSources.Reuters;
@@ -31,13 +35,19 @@ namespace FinancialAnalyst.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddTransient<ICacheManager, FileCacheManager>();
+
             services.AddTransient<IDataSource, DataSourceManager>();
             services.AddTransient<IPricesDataSource, YahooDataSource>();
             services.AddTransient<IStockDataDataSource, ReutersDataSource>();
             services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
             services.AddTransient<IFinancialDataSource, ReutersDataSource>();
             services.AddTransient<IRiskFreeRatesDataSource, USTreasuryDataSource>();
-            services.AddTransient<ICacheManager, FileCacheManager>();
+            
+            services.AddTransient<IMasterIndexesParser, MasterIndexesParser>();
+            services.AddTransient<IEdgarService, EdgarService>();
+            services.AddTransient<IEdgarDatasetParser, EdgarDatasetParser>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

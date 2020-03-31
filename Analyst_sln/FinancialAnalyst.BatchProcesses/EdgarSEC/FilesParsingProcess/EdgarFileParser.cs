@@ -1,7 +1,7 @@
-﻿using FinancialAnalyst.BatchProcesses.DB.EdgarSEC.Repositories;
-using FinancialAnalyst.Common.Entities.EdgarSEC.Indexes;
+﻿using FinancialAnalyst.Common.Entities.EdgarSEC.Indexes;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Repositories;
 using FinancialAnalyst.Common.Exceptions.EdgarSEC;
+using FinancialAnalyst.DataAccess.EdgarSEC.Repositories;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

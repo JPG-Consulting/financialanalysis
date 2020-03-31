@@ -38,7 +38,9 @@ namespace FinancialAnalyst.Common.Entities.EdgarSEC.Indexes
         /// If IndexDate is null, it's a quarter full index
         /// If IndexDate has a value, it's a daily index
         /// </summary>
+#pragma warning disable CA2235 // Mark all non-serializable fields
         public DateTime? IndexDate { get; }
+#pragma warning restore CA2235 // Mark all non-serializable fields
 
 
         /// <summary>

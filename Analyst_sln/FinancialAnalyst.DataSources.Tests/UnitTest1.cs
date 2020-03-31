@@ -1,6 +1,7 @@
 using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using FinancialAnalyst.DataSources.Nasdaq;
 using FinancialAnalyst.DataSources.Reuters;
 using FinancialAnalyst.DataSources.Yahoo;

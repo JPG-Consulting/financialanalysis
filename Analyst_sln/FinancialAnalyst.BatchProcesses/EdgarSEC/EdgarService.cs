@@ -10,17 +10,10 @@ using System.Collections.Concurrent;
 using FinancialAnalyst.Common.Entities.EdgarSEC;
 using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.EdgarSEC.Repositories;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.Edgar;
 
 namespace FinancialAnalyst.BatchProcesses.EdgarSEC
 {
-    public interface IEdgarService
-    {
-        IList<SECForm> GetSECForms();
-        IList<SIC> GetSICs();
-        IQueryable<Registrant> GetRegistrants(string sortOrder, string searchString, int pagesize,out int total);
-        IQueryable GetFilings(int cik, int? year, Quarter? quarter, string sortOrder, int pagesize, out int count);
-    }
-
     public class EdgarService : IEdgarService
     {
         private IEdgarDatasetsRepository datasetsRepo;

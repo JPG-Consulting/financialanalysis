@@ -4,6 +4,7 @@ using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using System;
 using System.Collections.Generic;
 using System.Text;

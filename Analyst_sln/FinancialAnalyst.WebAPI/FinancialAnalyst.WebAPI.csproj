@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="System.Composition" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FinancialAnalyst.BatchProcesses\FinancialAnalyst.BatchProcesses.csproj" />
     <ProjectReference Include="..\FinancialAnalyst.Common\FinancialAnalyst.Common.csproj" />
     <ProjectReference Include="..\FinancialAnalyst.DataSources\FinancialAnalyst.DataSources.csproj" />
   </ItemGroup>
