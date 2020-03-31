@@ -17,7 +17,8 @@ namespace FinancialAnalyst.DataSources.Reuters
         };
         private static readonly HttpClient httpClientSummary = new HttpClient(handler) { BaseAddress = new Uri("https://www.reuters.com/companies/api/getFetchCompanyProfile/") };
         private static readonly HttpClient httpClientFinancials = new HttpClient(handler) { BaseAddress = new Uri("https://www.reuters.com/companies/api/getFetchCompanyFinancials/") };
-        private static readonly HttpClient httpClientKeyMetrics = new HttpClient(handler) { BaseAddress = new Uri("https://www.reuters.com/companies/api/getFetchCompanyKeyMetrics/") };
+        
+        //private static readonly HttpClient httpClientKeyMetrics = new HttpClient(handler) { BaseAddress = new Uri("https://www.reuters.com/companies/api/getFetchCompanyKeyMetrics/") };
 
         internal static bool GetSummary(string ticker, out string jsonResponse, out string errorMessage)
         {

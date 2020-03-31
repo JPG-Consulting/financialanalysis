@@ -10,18 +10,19 @@ namespace FinancialAnalyst.DataSources.Yahoo
 {
     internal class YahooApiCaller
     {
-        private static readonly HttpClient httpClientSummary = new HttpClient() { BaseAddress = new Uri("https://query1.finance.yahoo.com/v10/finance/quoteSummary") };
-
-        private static readonly HttpClient httpClientPrices = new HttpClient() 
-        { 
+        private static readonly HttpClient httpClientPrices = new HttpClient()
+        {
             BaseAddress = new Uri("https://query1.finance.yahoo.com/v7/finance/download"),
             Timeout = TimeSpan.FromMinutes(5),
         };
 
+        /*
+        private static readonly HttpClient httpClientSummary = new HttpClient() { BaseAddress = new Uri("https://query1.finance.yahoo.com/v10/finance/quoteSummary") };
+
         private static readonly HttpClient httpClientBasicData = new HttpClient() { BaseAddress = new Uri("https://query2.finance.yahoo.com/v7/finance/quote") };
         
         private static readonly HttpClient httpClientFundamentals = new HttpClient() { BaseAddress = new Uri("https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/") };
-
+        */
         internal static dynamic GetBasicData(string ticker,Exchange market)
         {
             throw new NotImplementedException();
