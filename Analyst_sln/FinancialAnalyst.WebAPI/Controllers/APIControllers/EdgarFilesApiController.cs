@@ -2,11 +2,8 @@
 using FinancialAnalyst.Common.Entities.EdgarSEC.Indexes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using System.Web.Http.Description;
+using Microsoft.AspNetCore.Mvc;
+using FinancialAnalyst.WebAPI.Models;
 
 namespace Analyst.Web.Controllers.Edgar.Files
 {
@@ -17,8 +14,8 @@ namespace Analyst.Web.Controllers.Edgar.Files
     ///   compiling filings from the beginning of the current quarter through the previous business day.At the end of the quarter, 
     ///   the full index is rolled into a static quarterly index.
     /// </summary>
-    [RoutePrefix("edgar/files/api")]
-    public class EdgarFilesApiController : ApiController
+    [Route("edgar/files/api")]
+    public class EdgarFilesApiController : ControllerBase
     {
         private IMasterIndexesParser indexesParser;
         public EdgarFilesApiController(IMasterIndexesParser indexesParser)
@@ -29,7 +26,7 @@ namespace Analyst.Web.Controllers.Edgar.Files
 
         [HttpGet]
         [Route("dailyindex")]
-        public IHttpActionResult GetDailyIndex(ushort year,ushort quarter, uint date)
+        public ActionResult<MasterIndex> GetDailyIndex(ushort year,ushort quarter, uint date)
         {
             MasterIndex index = indexesParser.ProcessDailyIndex(year, quarter, date);
             return Ok(index);
@@ -37,8 +34,7 @@ namespace Analyst.Web.Controllers.Edgar.Files
 
         [HttpGet]
         [Route("fullindexes")]
-        [ResponseType(typeof(IList<MasterIndex>))]
-        public IHttpActionResult GetFullIndexes()
+        public ActionResult<IList<MasterIndex>> GetFullIndexes()
         {
             IList<MasterIndex> indexes = indexesParser.GetFullIndexes();
             return Ok(indexes);
@@ -46,17 +42,13 @@ namespace Analyst.Web.Controllers.Edgar.Files
 
         [HttpPost]
         [Route("processfullindex")]
-        public IHttpActionResult ProcessFullIndex(ProcessFullIndexParameter param)
+        public ActionResult<IList<MasterIndex>> ProcessFullIndex(ProcessFullIndexParameters param)
         {
             indexesParser.ProcessFullIndex((ushort)param.year, (ushort)param.quarter);
             IList<MasterIndex> indexes = indexesParser.GetFullIndexes();
             return Ok(indexes);
         }
 
-        public class ProcessFullIndexParameter
-        {
-            public int year { get; set; }
-            public int quarter { get; set; }
-        }
+        
     }
 }
