@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="HistoricalData\^GSPC_Daily.csv">
+    <None Update="FinancialDataSources\HistoricalData\^GSPC_Daily.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="HistoricalData\^GSPC_Monthly.csv">
+    <None Update="FinancialDataSources\HistoricalData\^GSPC_Monthly.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
