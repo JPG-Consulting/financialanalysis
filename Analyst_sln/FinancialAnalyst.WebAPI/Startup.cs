@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using FinancialAnalyst.BatchProcesses.EdgarSEC;
 using FinancialAnalyst.BatchProcesses.EdgarSEC.DatasetsParsingProcess;
 using FinancialAnalyst.BatchProcesses.EdgarSEC.FilesParsingProcess;
+using FinancialAnalyst.Common.Entities.EdgarSEC.Repositories;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.Edgar;
+using FinancialAnalyst.DataAccess.EdgarSEC.Repositories;
+using FinancialAnalyst.DataAccess.EdgarSEC.Repositories.BulkRepositories;
 using FinancialAnalyst.DataSources;
 using FinancialAnalyst.DataSources.Nasdaq;
 using FinancialAnalyst.DataSources.Reuters;
@@ -44,10 +47,18 @@ namespace FinancialAnalyst.WebAPI
             services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
             services.AddTransient<IFinancialDataSource, ReutersDataSource>();
             services.AddTransient<IRiskFreeRatesDataSource, USTreasuryDataSource>();
-            
-            services.AddTransient<IMasterIndexesParser, MasterIndexesParser>();
+
             services.AddTransient<IEdgarService, EdgarService>();
             services.AddTransient<IEdgarDatasetParser, EdgarDatasetParser>();
+            services.AddTransient<IEdgarFileParser, EdgarFileParser>();
+            services.AddTransient<IMasterIndexesParser, MasterIndexesParser>();
+            services.AddTransient<IEdgarWebClient, EdgarWebClient>();
+
+            services.AddTransient<IEdgarRepository, EdgarRepository>();
+            services.AddTransient<IEdgarFilesRepository, EdgarRepository>();
+            services.AddTransient<IEdgarFilesBulkRepository, EdgarFilesBulkRepository>();
+            services.AddTransient<IEdgarDatasetsRepository, EdgarRepository>();
+            services.AddTransient<IEdgarDatasetsBulkRepository, EdgarDatasetsBulkRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
