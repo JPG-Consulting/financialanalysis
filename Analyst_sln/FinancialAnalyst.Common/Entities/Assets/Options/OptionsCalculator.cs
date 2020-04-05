@@ -1,6 +1,7 @@
 ﻿using FinancialAnalyst.Common.Entities.Prices;
 using System;
 using System.Collections.Generic;
+using System.Runtime;
 using System.Text;
 
 namespace FinancialAnalyst.Common.Entities.Assets.Options
@@ -16,31 +17,36 @@ namespace FinancialAnalyst.Common.Entities.Assets.Options
         ///     Book "Options, futures and other derivatives" from John Hull, 8th edition
         ///     Chapter 14 "The Black-Scholes-Merton model" (page 299)
         /// </summary>
-        /// <param name="s">Underlying asset</param>
+        /// <param name="stock">Underlying asset</param>
         /// <param name="prices">Daily prices of the underlying asset for the last year</param>
         /// <param name="optionChain">Current options chain existing in the market</param>
         /// <param name="riskFreeRate">
         /// When the Black-Scholes formula is used in practice the interest rate r (risk free rate) 
         /// is set equal to the zero-coupon risk-free interest rate for a maturity T
         /// </param>
-        public static void CalculateThoricalValue(Stock s, PriceList prices, OptionsChain optionChain, RiskFreeRates riskFreeRate)
+        public static void CalculateTheoricalValue(PriceList prices, OptionsChain optionChain, RiskFreeRates riskFreeRates, double lastPrice)
         {
-            if(s.Volatility == null)
-            {
-                s.Volatility = CalculateVolatility(prices);
-            }
+            double volatility  = CalculateVolatility(prices);
+            CalculateTheoricalValue(prices, optionChain, riskFreeRates, lastPrice, volatility);
+        }
 
-            foreach(var options in optionChain)
+        public static void CalculateTheoricalValue(PriceList prices, OptionsChain optionChain, RiskFreeRates riskFreeRates, double lastPrice, double volatility)
+        {
+            optionChain.HistoricalVolatility = volatility;
+            optionChain.Prices = prices;
+            optionChain.RiskFreeRates = riskFreeRates;
+
+            foreach (var options in optionChain)
             {
                 foreach (OptionBase option in options.Value)
                 {
                     if (option is CallOption)
                     {
-                        option.TheoricalValue = CalculateCall(s, option, riskFreeRate.TwoYears);
+                        option.TheoricalValue = CalculateCall(lastPrice, volatility, option, riskFreeRates.TwoYears);
                     }
                     else if (option is PutOption)
                     {
-                        option.TheoricalValue = CalculatePut(s, option, riskFreeRate.TwoYears);
+                        option.TheoricalValue = CalculatePut(lastPrice, volatility, option, riskFreeRates.TwoYears);
                     }
                     else
                     {
@@ -80,10 +86,10 @@ namespace FinancialAnalyst.Common.Entities.Assets.Options
         ///     Seciontion: 14.8 - Black-Scholes-Merton pricing formulas (page 313)
         /// </summary>
         /// <returns></returns>
-        public static double CalculateCall(Stock s, OptionBase option, double riskFreeRate)
+        public static double CalculateCall(double lastPrice,double volatility, OptionBase option, double riskFreeRate)
         {
-            double s0 = s.Price_Last.Value;
-            double σ = s.Volatility.Value;
+            double s0 = lastPrice;
+            double σ = volatility;
             double T = (option.ExpirationDate - DateTime.Now).TotalDays / TRADING_DAYS_PER_YEAR;
             double K = option.Strike;
             double d1 = (Math.Log(s0 / K) + (riskFreeRate + Math.Pow(σ,2) / 2) * T) / (σ * Math.Sqrt(T));
@@ -121,10 +127,10 @@ namespace FinancialAnalyst.Common.Entities.Assets.Options
         ///     Seciontion: 14.8 - Black-Scholes-Merton pricing formulas (page 313)
         /// </summary>
         /// <returns></returns>
-        public static double CalculatePut(Stock s, OptionBase option, double riskFreeRate)
+        public static double CalculatePut(double lastPrice, double volatility, OptionBase option, double riskFreeRate)
         {
-            double s0 = s.Price_Last.Value;
-            double σ = s.Volatility.Value;
+            double s0 = lastPrice;
+            double σ = volatility;
             double T = (option.ExpirationDate - DateTime.Now).TotalDays / TRADING_DAYS_PER_YEAR;
             double K = option.Strike;
             double d1 = (Math.Log(s0 / K) + (riskFreeRate + Math.Pow(σ, 2) / 2) * T) / (σ * Math.Sqrt(T));

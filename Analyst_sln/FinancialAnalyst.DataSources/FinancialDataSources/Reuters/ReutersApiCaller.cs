@@ -49,7 +49,7 @@ namespace FinancialAnalyst.DataSources.Reuters
             HttpResponseMessage responseMessage = client.GetAsync(uri).Result;
             string originalContent = responseMessage.Content.ReadAsStringAsync().Result;
             string content = originalContent;
-            if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+            if (responseMessage.StatusCode == HttpStatusCode.OK || responseMessage.StatusCode == HttpStatusCode.PartialContent)
             {
                 errorMessage = "OK";
                 jsonResponse = content;

@@ -9,6 +9,6 @@ namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources
 {
     public interface IDataSource: IPricesDataSource, IStockDataDataSource, IOptionChainDataSource, IFillingsDataSource,IFinancialDataSource
     {
-        bool TryGetCompleteStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage);
+        bool TryGetCompleteStockData(string ticker, Exchange? exchange, bool includeOptionChain, bool includeFinancialStatements, out Stock stock, out string errorMessage);
     }
 }

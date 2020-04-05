@@ -23,7 +23,7 @@ namespace FinancialAnalyst.DataSources
         private IRiskFreeRatesDataSource riskFreeRatesDataSource;
         private ICacheManager cacheManager;
 
-        public DataSourceManager(IStockDataDataSource assetDataDataSource,IPricesDataSource pricesDataSouce,IOptionChainDataSource optionChainDataSource,IFinancialDataSource financialDataSource, IRiskFreeRatesDataSource riskFreeRatesDataSource, ICacheManager cacheManager)
+        public DataSourceManager(IStockDataDataSource assetDataDataSource, IPricesDataSource pricesDataSouce, IOptionChainDataSource optionChainDataSource, IFinancialDataSource financialDataSource, IRiskFreeRatesDataSource riskFreeRatesDataSource, ICacheManager cacheManager)
         {
             this.assetDataDataSource = assetDataDataSource;
             this.pricesDataSouce = pricesDataSouce;
@@ -33,44 +33,33 @@ namespace FinancialAnalyst.DataSources
             this.cacheManager = cacheManager;
         }
 
-        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, out Stock stock, out string errorMessage)
+        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, bool includeOptionChain, bool includeFinancialStatements, out Stock stock, out string errorMessage)
         {
-            if (assetDataDataSource.TryGetStockData(ticker, exchange, out stock, out errorMessage) == false)
+            if (assetDataDataSource.TryGetStockSummary(ticker, exchange, out stock, out errorMessage) == false)
                 return false;
 
-            DateTime? from = DateTime.Now.AddYears(-1).AddDays(-1);
-            DateTime? to = DateTime.Now;
-            if (TryGetPrices(ticker, exchange, from, to, PriceInterval.Daily, out PriceList prices, out errorMessage) == false)
-                return false;
-
-            Stock s = stock as Stock;
-            if (s != null)
+            if (includeOptionChain && stock.Price_Last.HasValue)
             {
-                if (TryGetOptionsChain(ticker, exchange, out OptionsChain optionsChain, out errorMessage) == false)
+                if (TryGetOptionsChainWithTheoricalValue(ticker, exchange, stock.Price_Last.Value, out OptionsChain optionsChain, out errorMessage) == false)
                     return false;
-
                 stock.OptionsChain = optionsChain;
+                stock.Volatility = optionsChain.HistoricalVolatility;
+            }
 
-                //TODO: get this data 1 per day and store it in a cache
-                if (TryGetRiskFreeRates(out RiskFreeRates riskFreeRate, out errorMessage) == false)
-                    return false;
-
-                OptionsCalculator.CalculateThoricalValue(s, prices, optionsChain, riskFreeRate);
-
+            if (includeFinancialStatements)
+            {
                 if (TryGetFinancialData(ticker, exchange, out FinancialStatements financialData, out errorMessage) == false)
                     return false;
-
-                s.FinancialStatements = financialData;
-                return true;
+                stock.FinancialStatements = financialData;
             }
 
             return true;
         }
 
         
-        public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
-            return assetDataDataSource.TryGetStockData(ticker, exchange, out asset, out errorMessage);
+            return assetDataDataSource.TryGetStockSummary(ticker, exchange, out asset, out errorMessage);
         }
 
         public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
@@ -83,9 +72,35 @@ namespace FinancialAnalyst.DataSources
             return pricesDataSouce.TryGetPrices(ticker, exchange,from,to, interval,out prices, out errorMessage);
         }
 
-        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionsChain, out string message)
+        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionChain, out string errorMessage)
         {
-            return optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionsChain, out message);
+            return optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionChain, out errorMessage);
+        }
+
+        public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, out OptionsChain optionsChain, out string errorMessage)
+        {
+            DateTime? from = DateTime.Now.AddYears(-1).AddDays(-1);
+            DateTime? to = DateTime.Now;
+            if (TryGetPrices(ticker, exchange, from, to, PriceInterval.Daily, out PriceList prices, out errorMessage) == false)
+            {
+                optionsChain = null;
+                return false;
+            }
+            return TryGetOptionsChainWithTheoricalValue(ticker, exchange, lastPrice, prices, out optionsChain, out errorMessage);
+        }
+
+        public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, PriceList historicalPrices, out OptionsChain optionsChain, out string errorMessage)
+        {
+            if (optionChainDataSource.TryGetOptionsChain(ticker, exchange, out optionsChain, out errorMessage) == false)
+                return false;
+
+            //TODO: get this data 1 per day and store it in a cache
+            if (TryGetRiskFreeRates(out RiskFreeRates riskFreeRate, out errorMessage) == false)
+                return false;
+
+            OptionsCalculator.CalculateTheoricalValue(historicalPrices, optionsChain, riskFreeRate, lastPrice);
+            
+            return true;
         }
 
         public bool TryGetFinancialData(string ticker, Exchange? exchange, out FinancialStatements financialData, out string message)

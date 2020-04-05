@@ -8,12 +8,15 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using log4net;
 
 namespace FinancialAnalyst.DataSources.Nasdaq
 {
     public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource
     {
-        public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+        private readonly ILog logger = log4net.LogManager.GetLogger(typeof(NasdaqDataSource));
+
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
             throw new NotImplementedException();
@@ -43,11 +46,18 @@ namespace FinancialAnalyst.DataSources.Nasdaq
                     CallOption o = new CallOption()
                     {
                         Symbol = optionRow.call.symbol,
-                        Last = optionRow.call.last,
                         Strike = optionRow.call.strike,
                         ExpirationDate = optionRow.call.expiryDate,
                     };
+                    o.SetLast(optionRow.call.last);
+                    o.SetChange(optionRow.call.change);
+                    o.SetBid(optionRow.call.bid);
+                    o.SetAsk(optionRow.call.ask);
+                    o.SetVolume(optionRow.call.volume);
+                    o.SetOpenInterest(optionRow.call.openinterest);
+
                     optionChain.Add(o);
+                    
                 }
 
                 if (optionRow.put != null)
@@ -59,12 +69,29 @@ namespace FinancialAnalyst.DataSources.Nasdaq
                         Strike = optionRow.put.strike,
                         ExpirationDate = optionRow.put.expiryDate,
                     };
+                    o.SetLast(optionRow.call.last);
+                    o.SetChange(optionRow.call.change);
+                    o.SetBid(optionRow.call.bid);
+                    o.SetAsk(optionRow.call.ask);
+                    o.SetVolume(optionRow.call.volume);
+                    o.SetOpenInterest(optionRow.call.openinterest);
+
                     optionChain.Add(o);
                 }
             }
 
             errorMessage = "ok";
             return true;
+        }
+
+        public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, out OptionsChain optionsChain, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, PriceList historicalPrices, out OptionsChain optionsChain, out string errorMessage)
+        {
+            throw new NotImplementedException();
         }
 
         private int GetLastDay(int month)

@@ -15,7 +15,7 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
     /// </summary>
     public class FinancialModelingPrepDataSource : IDataSource
     {
-        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, bool includeOptionChain, bool includeFinancialData, out Stock stock, out string errorMessage)
         {
             throw new NotImplementedException();
         }
@@ -36,12 +36,22 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
             throw new NotImplementedException();
         }
 
+        public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, out OptionsChain optionsChain, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, PriceList historicalPrices, out OptionsChain optionsChain, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetStockData(string ticker, Exchange? exchange, out Stock stock, out string errorMessage)
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock stock, out string errorMessage)
         {
             throw new NotImplementedException();
         }

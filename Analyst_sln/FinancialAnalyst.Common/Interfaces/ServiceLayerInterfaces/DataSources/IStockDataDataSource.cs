@@ -8,6 +8,6 @@ namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources
 {
     public interface IStockDataDataSource
     {
-        bool TryGetStockData(string ticker, Exchange? exchange, out Stock stock, out string errorMessage);
+        bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock stock, out string errorMessage);
     }
 }
