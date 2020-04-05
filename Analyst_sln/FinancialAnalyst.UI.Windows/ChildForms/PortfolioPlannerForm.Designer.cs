@@ -30,7 +30,7 @@
         {
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerPortfoliosAndCommands = new System.Windows.Forms.SplitContainer();
-            this.buttonCreatePortfolio = new System.Windows.Forms.Button();
+            this.buttonCreatePortfolioFromTransactions = new System.Windows.Forms.Button();
             this.flowLayoutPanelPortfolios = new System.Windows.Forms.FlowLayoutPanel();
             this.portfolioDetailUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.PortfolioDetailUserControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
@@ -56,7 +56,7 @@
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.portfolioDetailUserControl1);
             this.splitContainerMain.Size = new System.Drawing.Size(975, 520);
-            this.splitContainerMain.SplitterDistance = 481;
+            this.splitContainerMain.SplitterDistance = 480;
             this.splitContainerMain.TabIndex = 1;
             // 
             // splitContainerPortfoliosAndCommands
@@ -67,7 +67,7 @@
             // 
             // splitContainerPortfoliosAndCommands.Panel1
             // 
-            this.splitContainerPortfoliosAndCommands.Panel1.Controls.Add(this.buttonCreatePortfolio);
+            this.splitContainerPortfoliosAndCommands.Panel1.Controls.Add(this.buttonCreatePortfolioFromTransactions);
             // 
             // splitContainerPortfoliosAndCommands.Panel2
             // 
@@ -76,15 +76,15 @@
             this.splitContainerPortfoliosAndCommands.SplitterDistance = 63;
             this.splitContainerPortfoliosAndCommands.TabIndex = 1;
             // 
-            // buttonCreatePortfolio
+            // buttonCreatePortfolioFromTransactions
             // 
-            this.buttonCreatePortfolio.Location = new System.Drawing.Point(3, 19);
-            this.buttonCreatePortfolio.Name = "buttonCreatePortfolio";
-            this.buttonCreatePortfolio.Size = new System.Drawing.Size(75, 23);
-            this.buttonCreatePortfolio.TabIndex = 0;
-            this.buttonCreatePortfolio.Text = "Create portfolio";
-            this.buttonCreatePortfolio.UseVisualStyleBackColor = true;
-            this.buttonCreatePortfolio.Click += new System.EventHandler(this.buttonCreatePortfolio_Click);
+            this.buttonCreatePortfolioFromTransactions.Location = new System.Drawing.Point(3, 19);
+            this.buttonCreatePortfolioFromTransactions.Name = "buttonCreatePortfolioFromTransactions";
+            this.buttonCreatePortfolioFromTransactions.Size = new System.Drawing.Size(180, 23);
+            this.buttonCreatePortfolioFromTransactions.TabIndex = 0;
+            this.buttonCreatePortfolioFromTransactions.Text = "Create portfolio from transactions";
+            this.buttonCreatePortfolioFromTransactions.UseVisualStyleBackColor = true;
+            this.buttonCreatePortfolioFromTransactions.Click += new System.EventHandler(this.buttonCreatePortfolioFromTransactions_Click);
             // 
             // flowLayoutPanelPortfolios
             // 
@@ -101,13 +101,13 @@
             this.portfolioDetailUserControl1.Size = new System.Drawing.Size(172, 258);
             this.portfolioDetailUserControl1.TabIndex = 0;
             // 
-            // PortfolioPlanner
+            // PortfolioPlannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1227, 643);
             this.Controls.Add(this.splitContainerMain);
-            this.Name = "PortfolioPlanner";
+            this.Name = "PortfolioPlannerForm";
             this.Text = "PortfolioPlanner";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PortfolioPlanner_FormClosed);
             this.Load += new System.EventHandler(this.PortfolioPlanner_Load);
@@ -125,7 +125,7 @@
 
         #endregion
         private System.Windows.Forms.SplitContainer splitContainerMain;
-        private System.Windows.Forms.Button buttonCreatePortfolio;
+        private System.Windows.Forms.Button buttonCreatePortfolioFromTransactions;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelPortfolios;
         private System.Windows.Forms.SplitContainer splitContainerPortfoliosAndCommands;
         private UserControls.PortfolioDetailUserControl portfolioDetailUserControl1;

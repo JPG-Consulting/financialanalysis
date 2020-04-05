@@ -2,13 +2,14 @@
 using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Entities.RequestResponse;
 using FinancialAnalyst.Common.Interfaces.UIInterfaces;
-using FinancialAnalyst.UI.Windows.Managers;
 using FinancialAnalyst.UI.Windows.UserControls;
+using FinancialAnalyst.WebAPICallers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
     public partial class PortfolioPlannerForm : Form, ICallerForm
     {
         private readonly List<AssetDetailForm> showAssetDetailForms = new List<AssetDetailForm>();
+
+        
 
         public PortfolioPlannerForm()
         {
@@ -31,20 +34,12 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
         private void PortfolioPlanner_Load(object sender, EventArgs e)
         {
-            string user = "asdf";
-            IEnumerable<Portfolio> portfolios = FinancialAnalystWebAPICaller.GetPortfoliosByUser(user);
+            IEnumerable<Portfolio> portfolios = PortfoliosAPICaller.GetDefaultPortfolios();
             foreach(Portfolio portfolio in portfolios)
             {
-                PortfolioSummaryUserControl portfolioUserControl = new PortfolioSummaryUserControl(this);
-                portfolioUserControl.Set(portfolio);
-                portfolioUserControl.Click += PortfolioUserControl_Click;
-                portfolioUserControl.BorderStyle = BorderStyle.FixedSingle;
-                flowLayoutPanelPortfolios.Controls.Add(portfolioUserControl);
-                
+                Show(portfolio);
             }
         }
-
-        
 
         private void PortfolioUserControl_Click(object sender, EventArgs e)
         {
@@ -56,9 +51,49 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
             }
         }
 
-        private void buttonCreatePortfolio_Click(object sender, EventArgs e)
+        private void buttonCreatePortfolioFromTransactions_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Pending to create portfolio");
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                //openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.Filter = "CSV files (*.csv)|*.csv";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    Stream fileStream = openFileDialog.OpenFile();
+                    string name = "New portfolio";
+                    string user = "asdf";
+                    APIResponse<Portfolio> response = PortfoliosAPICaller.CreateNewPortfolioFromTransacions(user, name, fileStream);
+                    if (response.Ok)
+                        Show(response.Content);
+                    else
+                    {
+                        MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+
+            
+        }
+
+        private void PortfolioPlanner_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            foreach (AssetDetailForm form in showAssetDetailForms)
+            {
+                form.Close();
+            }
+        }
+
+        private void Show(Portfolio portfolio)
+        {
+            PortfolioSummaryUserControl portfolioUserControl = new PortfolioSummaryUserControl(this);
+            portfolioUserControl.Set(portfolio);
+            portfolioUserControl.Click += PortfolioUserControl_Click;
+            portfolioUserControl.BorderStyle = BorderStyle.FixedSingle;
+            flowLayoutPanelPortfolios.Controls.Add(portfolioUserControl);
         }
 
         private void SetBorderToPortfolios(BorderStyle borderStyle)
@@ -72,19 +107,13 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         public void Show(AssetAllocation alloc)
         {
             //I create a form for every request because maybe the user want to see several asset details at the same time
-            APIResponse<Stock> response = FinancialAnalystWebAPICaller.GetStockData(alloc.Ticker, alloc.Exchange);
+            APIResponse<Stock> response = DataSourcesAPICaller.GetCompleteStockData(alloc.Ticker, alloc.Exchange, true ,true );
             AssetDetailForm showAssetDetailForm = new AssetDetailForm(response);
             showAssetDetailForms.Add(showAssetDetailForm);
             //showAssetDetailForm.MdiParent = this.ParentForm;
             showAssetDetailForm.Show();
         }
 
-        private void PortfolioPlanner_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            foreach(AssetDetailForm form in showAssetDetailForms)
-            {
-                form.Close();
-            }
-        }
+        
     }
 }

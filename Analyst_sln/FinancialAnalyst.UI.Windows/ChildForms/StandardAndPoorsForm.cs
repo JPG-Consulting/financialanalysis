@@ -1,7 +1,7 @@
 ﻿using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Entities.RequestResponse;
-using FinancialAnalyst.UI.Windows.Managers;
+using FinancialAnalyst.WebAPICallers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,7 +27,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         private void StandardAndPoors_Load(object sender, EventArgs e)
         {
             string ticker = "^GSPC";
-            APIResponse<PriceList> pricesResponse = FinancialAnalystWebAPICaller.GetPrices(ticker, null,DateTime.Now.AddYears(-50),DateTime.Now,PriceInterval.Monthly);
+            APIResponse<PriceList> pricesResponse = DataSourcesAPICaller.GetPrices(ticker, null,DateTime.Now.AddYears(-50),DateTime.Now,PriceInterval.Monthly);
             
             chartSP.Series.Clear();
             chartSP.Titles.Add("S&P 500");

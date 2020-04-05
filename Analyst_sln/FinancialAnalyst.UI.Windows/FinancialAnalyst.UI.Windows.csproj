@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -68,7 +71,6 @@
     <Compile Include="ChildForms\StandardAndPoorsForm.Designer.cs">
       <DependentUpon>StandardAndPoorsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Managers\FinancialAnalystWebAPICaller.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +123,13 @@
       <Project>{221c0edb-4a3b-43a6-a3aa-524bb20ddb1f}</Project>
       <Name>FinancialAnalyst.UI.Windows.UserControls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FinancialAnalyst.WebAPICallers\FinancialAnalyst.WebAPICallers.csproj">
+      <Project>{8C900F34-1CD3-4B1D-BA51-08E5EA58A13C}</Project>
+      <Name>FinancialAnalyst.WebAPICallers</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Managers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

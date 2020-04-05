@@ -23,6 +23,8 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
     [ApiController]
     public class DataSourcesController : ControllerBase
     {
+        //https://docs.microsoft.com/es-es/aspnet/core/web-api/?view=aspnetcore-3.1
+
         private IDataSource dataSource;
         private IPricesDataSource pricesDataSource;
 
@@ -32,8 +34,8 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
             this.pricesDataSource = pricesDataSource;
         }
 
-        [HttpGet("getstockdata")]
-        public APIResponse<Stock> GetStockData(string ticker,string exchange)
+        [HttpGet("getcompletestockdata")]
+        public APIResponse<Stock> GetCompleteStockData(string ticker,string exchange, bool? includeOptionChain, bool? includeFinancialStatements )
         {
 
             try
@@ -65,7 +67,13 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                     }
                 }
 
-                if (dataSource.TryGetCompleteStockData(ticker, exch, out Stock stock, out string message))
+                if (includeOptionChain == null)
+                    includeOptionChain = false;
+
+                if (includeFinancialStatements == null)
+                    includeFinancialStatements = false;
+
+                if (dataSource.TryGetCompleteStockData(ticker, exch, includeOptionChain.Value, includeFinancialStatements.Value, out Stock stock, out string message))
                 {
                     return new APIResponse<Stock>()
                     {

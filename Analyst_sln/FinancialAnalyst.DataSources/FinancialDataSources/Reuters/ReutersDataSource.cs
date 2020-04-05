@@ -14,7 +14,7 @@ namespace FinancialAnalyst.DataSources.Reuters
 {
     public class ReutersDataSource : IStockDataDataSource, IFinancialDataSource
 	{
-		public bool TryGetStockData(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+		public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
 		{
 			bool ok = false;
 			string jsonResponse = "{}";
@@ -171,63 +171,54 @@ namespace FinancialAnalyst.DataSources.Reuters
 			//Example
 			//https://www.reuters.com/companies/api/getFetchCompanyFinancials/AAPL.OQ
 
-			try
-			{
-				bool ok = false;
-				string jsonResponse = "{}";
-				string internalTicker = "";
+			bool ok = false;
+			string jsonResponse = "{}";
+			string internalTicker = "";
 
-				internalTicker = $"{ticker}{Translate(exchange.Value)}";
+			internalTicker = $"{ticker}{Translate(exchange.Value)}";
+			ok = ReutersApiCaller.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
+
+			//If it fails the first try, it tries with all exchanges
+			if (ok == false)
+			{
+				internalTicker = $"{ticker}";
 				ok = ReutersApiCaller.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
 
-				//If it fails the first try, it tries with all exchanges
-				if (ok == false)
+				Exchange[] exchanges = (Exchange[])Enum.GetValues(typeof(Exchange));
+				int i = 0;
+				while (ok == false && i < exchanges.Length)
 				{
-					internalTicker = $"{ticker}";
-					ok = ReutersApiCaller.GetFinancialData(internalTicker, out jsonResponse, out errorMessage);
-
-					Exchange[] exchanges = (Exchange[])Enum.GetValues(typeof(Exchange));
-					int i = 0;
-					while (ok == false && i < exchanges.Length)
-					{
-						Exchange ex = exchanges[i];
-						internalTicker = $"{ticker}{Translate(ex)}";
-						ok = ReutersApiCaller.GetSummary(internalTicker, out jsonResponse, out errorMessage);
-						i++;
-					}
-				}
-
-				if (ok)
-				{
-					dynamic rawdata = JsonConvert.DeserializeObject(jsonResponse);
-					financialData = new FinancialStatements()
-					{
-						IncomeStatement = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
-						BalanceSheet = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
-						CashFlowStatement = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
-						
-					};
-
-					AddValues(financialData.IncomeStatement.Childs, rawdata.market_data.financial_statements.income.annual);
-					AddValues(financialData.BalanceSheet.Childs, rawdata.market_data.financial_statements.balance_sheet.annual);
-					AddValues(financialData.CashFlowStatement.Childs, rawdata.market_data.financial_statements.cash_flow.annual);
-
-					return true;
-				}
-				else
-				{
-					if (exchange.HasValue)
-						errorMessage = $"It can't find financial data for ticker {ticker} in exchange {exchange.Value.ToString()}.";
-					else
-						errorMessage = $"It can't find financial data for ticker {ticker} in all markets available.";
-					financialData = null;
-					return false;
+					Exchange ex = exchanges[i];
+					internalTicker = $"{ticker}{Translate(ex)}";
+					ok = ReutersApiCaller.GetSummary(internalTicker, out jsonResponse, out errorMessage);
+					i++;
 				}
 			}
-			catch(Exception ex)
+
+			if (ok)
 			{
+				dynamic rawdata = JsonConvert.DeserializeObject(jsonResponse);
+				financialData = new FinancialStatements()
+				{
+					IncomeStatement = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
+					BalanceSheet = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
+					CashFlowStatement = new AccountingItem() { IsAnnual = true, Childs = new List<AccountingItem>(), },
+						
+				};
+
+				AddValues(financialData.IncomeStatement.Childs, rawdata.market_data.financial_statements.income.annual);
+				AddValues(financialData.BalanceSheet.Childs, rawdata.market_data.financial_statements.balance_sheet.annual);
+				AddValues(financialData.CashFlowStatement.Childs, rawdata.market_data.financial_statements.cash_flow.annual);
+
+				return true;
+			}
+			else
+			{
+				if (exchange.HasValue)
+					errorMessage = $"It can't find financial data for ticker {ticker} in exchange {exchange.Value.ToString()}.";
+				else
+					errorMessage = $"It can't find financial data for ticker {ticker} in all markets available.";
 				financialData = null;
-				errorMessage = ex.Message;
 				return false;
 			}
 		}

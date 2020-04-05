@@ -57,7 +57,7 @@
             // portfolioPlannerToolStripMenuItem
             // 
             this.portfolioPlannerToolStripMenuItem.Name = "portfolioPlannerToolStripMenuItem";
-            this.portfolioPlannerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.portfolioPlannerToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.portfolioPlannerToolStripMenuItem.Text = "Portfolio planner";
             this.portfolioPlannerToolStripMenuItem.Click += new System.EventHandler(this.portfolioPlannerToolStripMenuItem_Click);
             // 
@@ -77,6 +77,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

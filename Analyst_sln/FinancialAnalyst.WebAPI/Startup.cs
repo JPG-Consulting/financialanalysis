@@ -11,6 +11,7 @@ using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.Edgar;
 using FinancialAnalyst.DataAccess.EdgarSEC.Repositories;
 using FinancialAnalyst.DataAccess.EdgarSEC.Repositories.BulkRepositories;
+using FinancialAnalyst.DataAccess.Portfolios;
 using FinancialAnalyst.DataSources;
 using FinancialAnalyst.DataSources.Nasdaq;
 using FinancialAnalyst.DataSources.Reuters;
@@ -39,6 +40,10 @@ namespace FinancialAnalyst.WebAPI
         {
             services.AddControllersWithViews();
 
+            //https://stackoverflow.com/questions/29841503/json-serialization-deserialization-in-asp-net-core
+            services.AddMvc().AddNewtonsoftJson();
+
+            #region Financial Analyst services/managers/parsers
             services.AddTransient<ICacheManager, FileCacheManager>();
 
             services.AddTransient<IDataSource, DataSourceManager>();
@@ -59,7 +64,11 @@ namespace FinancialAnalyst.WebAPI
             services.AddTransient<IEdgarFilesBulkRepository, EdgarFilesBulkRepository>();
             services.AddTransient<IEdgarDatasetsRepository, EdgarRepository>();
             services.AddTransient<IEdgarDatasetsBulkRepository, EdgarDatasetsBulkRepository>();
-        }
+
+
+            services.AddTransient<IPortfoliosContext, PortfoliosContext>();
+            #endregion
+    }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Portfolios;
+using FinancialAnalyst.Common.Entities.RequestResponse;
+using FinancialAnalyst.DataAccess.Portfolios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,18 +18,21 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
     [ApiController]
     public class PortfoliosController : ControllerBase
     {
-        [HttpGet("getportfoliosbyuser")]
-        public IEnumerable<Portfolio> GetPortfoliosByUser(string userId)
+        //https://docs.microsoft.com/es-es/aspnet/core/web-api/?view=aspnetcore-3.1
+        //https://www.devtrends.co.uk/blog/handling-errors-in-asp.net-core-web-api
+
+        private readonly IPortfoliosContext portfoliosContext;
+        public PortfoliosController(IPortfoliosContext portfoliosContext)
         {
-#if DEBUG
+            this.portfoliosContext = portfoliosContext;
+        }
+
+        [HttpGet("getdefaultportfolios")]
+        public ActionResult<APIResponse<IEnumerable<Portfolio>>> GetDefaultPortfolios()
+        {
             List<Portfolio> portfolios = new List<Portfolio>();
             Portfolio portfolio;
-            portfolio = Portfolio.From("Warren Buffet", new string[] { 
-                "AAL","AAPL","AMZN","AXP","AXTA","BAC","BIIB","BK","CHTR","COST","DAL","DVA","GL","GM","GS","JNJ","JPM",
-                "KHC","KO","KR","LBTYA","LBTYK","LILA","LILAK","LSXMA","LSXMK","LUV","MA","MCO","MDLZ","MTB","OXY","PG","PNC","PSX",
-                "RH","QSR","SIRI","SPY","STNE","STOR","SU","SYF","TEVA","TRV","UAL","UPS","USB","V","VOO","VRSN","WFC",});
-            portfolios.Add(portfolio);
-            portfolio = Portfolio.From("Warren Buffet - My Selection", new string[] {
+            portfolio = Portfolio.From("Warren Buffet", new string[] {
                 "AAL","AAPL","AMZN","AXP","AXTA","BAC","BIIB","BK","CHTR","COST","DAL","DVA","GL","GM","GS","JNJ","JPM",
                 "KHC","KO","KR","LBTYA","LBTYK","LILA","LILAK","LSXMA","LSXMK","LUV","MA","MCO","MDLZ","MTB","OXY","PG","PNC","PSX",
                 "RH","QSR","SIRI","SPY","STNE","STOR","SU","SYF","TEVA","TRV","UAL","UPS","USB","V","VOO","VRSN","WFC",});
@@ -33,8 +41,54 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
             portfolios.Add(portfolio);
             portfolio = Portfolio.From("Big Technologies", new string[] { "AAPL", "AMZN", "CSCO", "GOOGL", "IBM", "MSFT", "ORCL", });
             portfolios.Add(portfolio);
-            return portfolios;
-#endif
+            APIResponse<IEnumerable<Portfolio>> response = new APIResponse<IEnumerable<Portfolio>>()
+            {
+                Content = portfolios,
+                Ok = true,
+                ErrorMessage = "ok",
+            };
+            return Ok(response);
+        }
+
+        [HttpGet("getportfoliosbyuser")]
+        public ActionResult<APIResponse<IEnumerable<Portfolio>>> GetPortfoliosByUser(string userId)
+        {
+            APIResponse<IEnumerable<Portfolio>> response = new APIResponse<IEnumerable<Portfolio>>()
+            {
+                Content = null,
+                Ok = false,
+                ErrorMessage = "Not implemented",
+            };
+            return StatusCode(StatusCodes.Status501NotImplemented, response);
+        }
+
+
+        private string[] permittedExtensions = { ".csv",};
+
+        [HttpPost("createportfolio")]
+        public ActionResult<APIResponse<Portfolio>> CreatePortfolio([FromForm]string userid, [FromForm] string portfolioname, [FromForm] IFormFile transactions)
+        {
+            //https://docs.microsoft.com/es-es/aspnet/core/mvc/models/file-uploads?view=aspnetcore-3.1
+
+            List<string[]> transactionsList = new List<string[]>();
+            using (var reader = new StreamReader(transactions.OpenReadStream()))
+            {
+                while (reader.Peek() >= 0)
+                {
+                    string line = reader.ReadLine();
+                    string[] fields = line.Split(",");
+                    transactionsList.Add(fields);
+                }
+            }
+
+
+            APIResponse<IEnumerable<Portfolio>> response = new APIResponse<IEnumerable<Portfolio>>()
+            {
+                Content = null,
+                Ok = false,
+                ErrorMessage = "Not implemented",
+            };
+            return StatusCode(StatusCodes.Status501NotImplemented, response);
         }
     }
 }
