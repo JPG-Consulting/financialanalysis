@@ -11,6 +11,11 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Backend\" />
+    <Folder Include="Views\Backend\" />
+  </ItemGroup>
+
 
 
 </Project>
