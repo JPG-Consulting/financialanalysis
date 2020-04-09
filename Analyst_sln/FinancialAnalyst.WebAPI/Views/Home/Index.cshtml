@@ -12,11 +12,11 @@
     <ul>
         <!--IIS-->
         <!--
-    <li><a href="/FinancialAnalyst.WebAPI/api/Portfolios/getportfoliosbyuser" target="_blank">GetPortfoliosByUser</a></li>
-    <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getcompletestockdata?ticker=ko&exchange=NYSE" target="_blank">GetAssetData - Coca Cola</a></li>
-    <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getcompletestockdata?ticker=MSFT&exchange=NASDAQ" target="_blank">GetAssetData - Microsoft</a></li>
-    <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getcompletestockdata?ticker=AAPL&exchange=NASDAQ" target="_blank">GetAssetData - Apple</a></li>
-    -->
+        <li><a href="/FinancialAnalyst.WebAPI/api/Portfolios/getportfoliosbyuser" target="_blank">GetPortfoliosByUser</a></li>
+        <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getcompletestockdata?ticker=ko&exchange=NYSE" target="_blank">GetAssetData - Coca Cola</a></li>
+        <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getcompletestockdata?ticker=MSFT&exchange=NASDAQ" target="_blank">GetAssetData - Microsoft</a></li>
+        <li><a href="/FinancialAnalyst.WebAPI/api/DataSources/getcompletestockdata?ticker=AAPL&exchange=NASDAQ" target="_blank">GetAssetData - Apple</a></li>
+        -->
         <!--IIS Express-->
         <li><a href="api/Portfolios/getportfoliosbyuser" target="_blank">GetPortfoliosByUser</a></li>
         <li><a href="api/DataSources/getcompletestockdata?ticker=ko&exchange=NYSE&includeOptionChain=true&includeFinancialStatements=true" target="_blank">GetCompleteStockData - Coca Cola</a></li>
@@ -28,17 +28,30 @@
     <ul>
         <li><a href="https://www.treasury.gov/resource-center/data-chart-center/interest-rates/pages/TextView.aspx?data=yield" target="_blank">U.S. DEPARTMENT OF THE TREASURY</a></li>
         <li>
-            <a href="http://data.treasury.gov/feed.svc/DailyTreasuryYieldCurveRateData?$filter=month(NEW_DATE) eq 3 and year(NEW_DATE) eq 2020" 
-               title="DailyTreasuryYieldCurveRateData XML" 
-               xmlns:fmt="urn:treasury-xslt-fmt" 
-               xmlns:msxml="urn:schemas-microsoft-com:xslt" 
-               xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" 
-               xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" 
-               xmlns:a="http://www.w3.org/2005/Atom" 
+            <a href="http://data.treasury.gov/feed.svc/DailyTreasuryYieldCurveRateData?$filter=month(NEW_DATE) eq 3 and year(NEW_DATE) eq 2020"
+               title="DailyTreasuryYieldCurveRateData XML"
+               xmlns:fmt="urn:treasury-xslt-fmt"
+               xmlns:msxml="urn:schemas-microsoft-com:xslt"
+               xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices"
+               xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+               xmlns:a="http://www.w3.org/2005/Atom"
                class="external"
                target="_blank">
                 <img src="https://www.treasury.gov/Style%20Library/Images/Treas/xml.gif" alt="XML">
             </a>
+        </li>
+    </ul>
+
+    <hr />
+    Ver las anotaciones en la version anterior del proyecto
+    <hr />
+    Para las noticias se puede usar:
+    <ul>
+        <li>
+            <a href="https://www.pressrelease.com/newsroom/business-finance">PressRelease.com</a>
+        </li>
+        <li>
+            <bold>SEC Fillings</bold>
         </li>
     </ul>
     <hr />
