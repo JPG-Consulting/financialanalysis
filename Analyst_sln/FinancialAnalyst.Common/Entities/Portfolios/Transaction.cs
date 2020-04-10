@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;
 
@@ -43,7 +44,10 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         [JsonProperty]
         public decimal RegFee { get; set; }
 
-        public int PortfolioId { get; set; }
+        [Required]
+        public int UserId { get; set; }
+
+        public int? PortfolioId { get; set; }
 
         public static Transaction From(int portfolioId, string[] fields)
         {

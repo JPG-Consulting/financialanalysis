@@ -82,6 +82,7 @@ namespace FinancialAnalyst.Portfolios
                     
                     if (t != null)
                     {
+                        t.UserId = user.Id;
                         t.PortfolioId = portfolioId;
                         portfoliosContext.Add(t);
                         portfolio.Transactions.Add(t);

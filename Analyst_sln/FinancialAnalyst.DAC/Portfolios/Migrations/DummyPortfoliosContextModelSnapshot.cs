@@ -122,7 +122,7 @@ namespace FinancialAnalyst.DataAccess.Migrations
                     b.Property<decimal>("NetCashBalance")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("PortfolioId")
+                    b.Property<int?>("PortfolioId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -140,7 +140,7 @@ namespace FinancialAnalyst.DataAccess.Migrations
                     b.Property<string>("TransactionCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -201,13 +201,13 @@ namespace FinancialAnalyst.DataAccess.Migrations
                 {
                     b.HasOne("FinancialAnalyst.Common.Entities.Portfolios.Portfolio", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("PortfolioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PortfolioId");
 
                     b.HasOne("FinancialAnalyst.Common.Entities.Users.User", null)
                         .WithMany("Transactions")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
