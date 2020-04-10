@@ -20,8 +20,8 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
     public partial class PortfolioPlannerForm : Form, ICallerForm
     {
         private readonly List<AssetDetailForm> showAssetDetailForms = new List<AssetDetailForm>();
+        const string userName = "sgastia";
 
-        
 
         public PortfolioPlannerForm()
         {
@@ -34,7 +34,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
         private void PortfolioPlanner_Load(object sender, EventArgs e)
         {
-            IEnumerable<Portfolio> portfolios = PortfoliosAPICaller.GetDefaultPortfolios();
+            IEnumerable<Portfolio> portfolios = PortfoliosAPICaller.GetPortfoliosByUser(userName);
             foreach(Portfolio portfolio in portfolios)
             {
                 Show(portfolio);
@@ -67,8 +67,8 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
                     {
                         Stream fileStream = openFileDialog.OpenFile();
                         string name = "New portfolio";
-                        string user = "sgastia";
-                        APIResponse<Portfolio> response = PortfoliosAPICaller.CreateNewPortfolioFromTransacions(user, name, fileStream);
+                        
+                        APIResponse<Portfolio> response = PortfoliosAPICaller.CreateNewPortfolioFromTransacions(userName, name, fileStream);
                         if (response.Ok)
                             Show(response.Content);
                         else

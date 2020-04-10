@@ -13,17 +13,9 @@ namespace FinancialAnalyst.WebAPICallers
 {
     public class PortfoliosAPICaller
     {
-        public static IEnumerable<Portfolio> GetDefaultPortfolios()
+        public static IEnumerable<Portfolio> GetPortfoliosByUser(string username)
         {
-            string uri = $"api/Portfolios/getdefaultportfolios";
-            HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
-            APIResponse<IEnumerable<Portfolio>> response = JsonConvert.DeserializeObject<APIResponse<IEnumerable<Portfolio>>>(jsonResponse);
-            return response.Content;
-        }
-
-        public static IEnumerable<Portfolio> GetPortfoliosByUser(string user)
-        {
-            string uri = $"api/Portfolios/getportfoliosbyuser";
+            string uri = $"api/Portfolios/getportfoliosbyuser?username={username}";
             HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
             APIResponse<IEnumerable<Portfolio>> response = JsonConvert.DeserializeObject<APIResponse<IEnumerable<Portfolio>>>(jsonResponse);
             return response.Content;

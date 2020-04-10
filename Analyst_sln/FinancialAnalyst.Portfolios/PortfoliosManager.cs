@@ -18,6 +18,13 @@ namespace FinancialAnalyst.Portfolios
             this.portfoliosContext = portfoliosContext;
         }
 
+        public bool GetPortfoliosByUserName(string username, out IEnumerable<Portfolio> portfolios, out string message)
+        {
+            portfolios = portfoliosContext.GetPortfoliosByUserName(username);
+            message = "";
+            return true;
+        }
+
         /// <summary>
         /// It creates a portfolio from the transactions.
         /// First line of fileStream has to be the initial balance.

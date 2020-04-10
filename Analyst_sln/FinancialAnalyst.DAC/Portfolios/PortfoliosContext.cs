@@ -15,6 +15,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         int Add(Transaction transaction);
         int Add(PortfolioBalance pb);
         User GetUser(string userName);
+        IEnumerable<Portfolio> GetPortfoliosByUserName(string username);
     }
     public class PortfoliosContext : DbContext, IPortfoliosContext
     {
@@ -97,6 +98,15 @@ namespace FinancialAnalyst.DataAccess.Portfolios
                 return users[0];
             else
                 return null;
+        }
+
+        public IEnumerable<Portfolio> GetPortfoliosByUserName(string username)
+        {
+            User user = GetUser(username);
+            if (user == null)
+                return new List<Portfolio>();
+            else
+                return Portfolios.Where(p => p.UserId == user.Id).ToList();
         }
 
     }
