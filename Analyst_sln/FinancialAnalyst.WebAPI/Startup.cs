@@ -17,6 +17,7 @@ using FinancialAnalyst.DataSources.Nasdaq;
 using FinancialAnalyst.DataSources.Reuters;
 using FinancialAnalyst.DataSources.USTreasury;
 using FinancialAnalyst.DataSources.Yahoo;
+using FinancialAnalyst.Portfolios;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -67,8 +68,9 @@ namespace FinancialAnalyst.WebAPI
 
 
             services.AddTransient<IPortfoliosContext, PortfoliosContext>();
+            services.AddTransient<IPortfoliosManager, PortfoliosManager>();
             #endregion
-    }
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

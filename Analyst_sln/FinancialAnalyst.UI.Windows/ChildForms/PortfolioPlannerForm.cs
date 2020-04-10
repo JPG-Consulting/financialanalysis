@@ -63,15 +63,22 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    Stream fileStream = openFileDialog.OpenFile();
-                    string name = "New portfolio";
-                    string user = "asdf";
-                    APIResponse<Portfolio> response = PortfoliosAPICaller.CreateNewPortfolioFromTransacions(user, name, fileStream);
-                    if (response.Ok)
-                        Show(response.Content);
-                    else
+                    try
                     {
-                        MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Stream fileStream = openFileDialog.OpenFile();
+                        string name = "New portfolio";
+                        string user = "asdf";
+                        APIResponse<Portfolio> response = PortfoliosAPICaller.CreateNewPortfolioFromTransacions(user, name, fileStream);
+                        if (response.Ok)
+                            Show(response.Content);
+                        else
+                        {
+                            MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

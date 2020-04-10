@@ -17,6 +17,7 @@
     <ProjectReference Include="..\FinancialAnalyst.BatchProcesses\FinancialAnalyst.BatchProcesses.csproj" />
     <ProjectReference Include="..\FinancialAnalyst.Common\FinancialAnalyst.Common.csproj" />
     <ProjectReference Include="..\FinancialAnalyst.DataSources\FinancialAnalyst.DataSources.csproj" />
+    <ProjectReference Include="..\FinancialAnalyst.Portfolios\FinancialAnalyst.Portfolios.csproj" />
   </ItemGroup>
 
   <ItemGroup>

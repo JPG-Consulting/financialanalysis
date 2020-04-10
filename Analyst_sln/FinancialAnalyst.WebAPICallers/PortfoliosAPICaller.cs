@@ -29,11 +29,11 @@ namespace FinancialAnalyst.WebAPICallers
             return response.Content;
         }
 
-        public static APIResponse<Portfolio> CreateNewPortfolioFromTransacions(string userId, string portfolioName, Stream file)
+        public static APIResponse<Portfolio> CreateNewPortfolioFromTransacions(string username, string portfolioName, Stream file)
         {
             string uri = $"api/Portfolios/createportfolio";
             Dictionary<string, string> parameters = new Dictionary<string, string>();
-            parameters.Add("userid", userId);
+            parameters.Add("username", username);
             parameters.Add("portfolioname", portfolioName);
             string name = "transactions";
             string filename = name + ".csv";

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using FinancialAnalyst.Common.Entities.Users;
 
 namespace FinancialAnalyst.DataSources.Reuters
 {

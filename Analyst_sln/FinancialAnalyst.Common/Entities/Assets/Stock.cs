@@ -1,4 +1,5 @@
 ﻿using FinancialAnalyst.Common.Entities.Accounting;
+using FinancialAnalyst.Common.Entities.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;

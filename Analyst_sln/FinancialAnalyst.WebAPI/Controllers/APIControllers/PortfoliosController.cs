@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Entities.RequestResponse;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using FinancialAnalyst.DataAccess.Portfolios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,10 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         //https://docs.microsoft.com/es-es/aspnet/core/web-api/?view=aspnetcore-3.1
         //https://www.devtrends.co.uk/blog/handling-errors-in-asp.net-core-web-api
 
-        private readonly IPortfoliosContext portfoliosContext;
-        public PortfoliosController(IPortfoliosContext portfoliosContext)
+        private readonly IPortfoliosManager portfoliosService;
+        public PortfoliosController(IPortfoliosManager portfoliosService)
         {
-            this.portfoliosContext = portfoliosContext;
+            this.portfoliosService = portfoliosService;
         }
 
         [HttpGet("getdefaultportfolios")]
@@ -66,29 +67,21 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         private string[] permittedExtensions = { ".csv",};
 
         [HttpPost("createportfolio")]
-        public ActionResult<APIResponse<Portfolio>> CreatePortfolio([FromForm]string userid, [FromForm] string portfolioname, [FromForm] IFormFile transactions)
+        public ActionResult<APIResponse<Portfolio>> CreatePortfolio([FromForm]string username, [FromForm] string portfolioname, [FromForm] IFormFile transactions, [FromForm] bool firstRowIsInitalBalance=true)
         {
             //https://docs.microsoft.com/es-es/aspnet/core/mvc/models/file-uploads?view=aspnetcore-3.1
 
-            List<string[]> transactionsList = new List<string[]>();
-            using (var reader = new StreamReader(transactions.OpenReadStream()))
-            {
-                while (reader.Peek() >= 0)
-                {
-                    string line = reader.ReadLine();
-                    string[] fields = line.Split(",");
-                    transactionsList.Add(fields);
-                }
-            }
+            MemoryStream target = new MemoryStream();
+            transactions.CopyTo(target);
+            Portfolio portfolio = portfoliosService.Create(username, portfolioname,target, firstRowIsInitalBalance);
 
-
-            APIResponse<IEnumerable<Portfolio>> response = new APIResponse<IEnumerable<Portfolio>>()
+            APIResponse<Portfolio> response = new APIResponse<Portfolio>()
             {
-                Content = null,
-                Ok = false,
-                ErrorMessage = "Not implemented",
+                Content = portfolio,
+                Ok = true,
+                ErrorMessage = "ok",
             };
-            return StatusCode(StatusCodes.Status501NotImplemented, response);
+            return StatusCode(StatusCodes.Status200OK, response);
         }
     }
 }

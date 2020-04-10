@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FinancialAnalyst.Common.Entities
+namespace FinancialAnalyst.Common.Entities.Users
 {
     public class Officer
     {

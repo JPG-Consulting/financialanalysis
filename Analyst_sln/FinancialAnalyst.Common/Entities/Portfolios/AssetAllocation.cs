@@ -20,5 +20,7 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
 
         [JsonProperty]
         public decimal? Percentage { get; set; }
+
+        public int PortfolioId { get; set; }
     }
 }
