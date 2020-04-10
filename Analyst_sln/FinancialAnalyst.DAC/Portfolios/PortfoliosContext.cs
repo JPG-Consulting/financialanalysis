@@ -1,8 +1,10 @@
 ﻿using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Entities.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace FinancialAnalyst.DataAccess.Portfolios
@@ -12,11 +14,10 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         int Add(Portfolio portfolio);
         int Add(Transaction transaction);
         int Add(PortfolioBalance pb);
-        int GetUser(string userName);
+        User GetUser(string userName);
     }
     public class PortfoliosContext : DbContext, IPortfoliosContext
     {
-        /*
         public DbSet<User> Users { get; set; }
 
         public DbSet<Portfolio> Portfolios { get; set; }
@@ -24,15 +25,49 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         public DbSet<Transaction> Transactions { get; set; }
 
         public DbSet<PortfolioBalance> PortfolioBalances { get; set; }
-        */
 
-        public List<User> Users = new List<User>();
+        public PortfoliosContext()
+        {
 
-        public List<Portfolio> Portfolios = new List<Portfolio>();
+        }
 
-        public List<Transaction> Transactions = new List<Transaction>();
 
-        public List<PortfolioBalance> PortfolioBalances = new List<PortfolioBalance>();
+        public PortfoliosContext(DbContextOptions<PortfoliosContext> options) : base(options)
+        {
+
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            if (options.IsConfigured == false)
+            {
+                string connString = GetConnectionString();
+                if (string.IsNullOrEmpty(connString))
+                {
+                    throw new ArgumentException("It can't load Portfolios database, there is no connection string configured");
+
+                }
+
+                options.UseSqlServer(connString);
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>();
+            modelBuilder.Entity<Portfolio>();
+            modelBuilder.Entity<Transaction>();
+            modelBuilder.Entity<PortfolioBalance>();
+        }
+
+        public static string GetConnectionString()
+        {
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("appsettings.json");
+            var configuration = configurationBuilder.Build();
+            string connString = configuration.GetConnectionString("FA_Portfolios");
+            return connString;
+        }
 
         public int Add(Portfolio portfolio)
         {
@@ -55,15 +90,13 @@ namespace FinancialAnalyst.DataAccess.Portfolios
             return balance.Id;
         }
 
-        public int GetUser(string userName)
+        public User GetUser(string userName)
         {
-            return 1;
-        }
-
-
-        public override int SaveChanges()
-        {
-            return 1;
+            var users = Users.Where(u => u.UserName == userName).ToList();
+            if (users.Count == 1)
+                return users[0];
+            else
+                return null;
         }
 
     }

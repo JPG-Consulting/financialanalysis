@@ -21,6 +21,7 @@ using FinancialAnalyst.Portfolios;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -43,6 +44,16 @@ namespace FinancialAnalyst.WebAPI
 
             //https://stackoverflow.com/questions/29841503/json-serialization-deserialization-in-asp-net-core
             services.AddMvc().AddNewtonsoftJson();
+
+            /*
+            services.AddDbContext<PortfoliosContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("FA_Portfolios"),
+                    assembly => assembly.MigrationsAssembly(typeof(PortfoliosContext).Assembly.FullName));
+            });
+            */
+            string connString = PortfoliosContext.GetConnectionString();
+            services.AddDbContext<PortfoliosContext>(options => options.UseSqlServer(connString));
 
             #region Financial Analyst services/managers/parsers
             services.AddTransient<ICacheManager, FileCacheManager>();

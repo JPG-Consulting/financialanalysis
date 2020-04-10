@@ -67,7 +67,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
                     {
                         Stream fileStream = openFileDialog.OpenFile();
                         string name = "New portfolio";
-                        string user = "asdf";
+                        string user = "sgastia";
                         APIResponse<Portfolio> response = PortfoliosAPICaller.CreateNewPortfolioFromTransacions(user, name, fileStream);
                         if (response.Ok)
                             Show(response.Content);

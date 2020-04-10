@@ -44,7 +44,6 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         public decimal RegFee { get; set; }
 
         public int PortfolioId { get; set; }
-        public int UserId { get; set; }
 
         public static Transaction From(int portfolioId, string[] fields)
         {

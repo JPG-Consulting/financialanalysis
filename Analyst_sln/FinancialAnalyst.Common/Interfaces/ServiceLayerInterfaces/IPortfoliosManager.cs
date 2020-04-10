@@ -8,6 +8,6 @@ namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces
 {
     public interface IPortfoliosManager
     {
-        Portfolio Create(string userid, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance);
+        bool Create(string userName, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance, out Portfolio portfolio, out string message);
     }
 }

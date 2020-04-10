@@ -1,4 +1,5 @@
 ﻿using FinancialAnalyst.Common.Entities.Portfolios;
+using FinancialAnalyst.Common.Entities.Users;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using FinancialAnalyst.DataAccess.Portfolios;
 using System;
@@ -25,15 +26,21 @@ namespace FinancialAnalyst.Portfolios
         /// <param name="portfolioname"></param>
         /// <param name="fileStream">It expects a CSV file. First line has to be the initial balance</param>
         /// <returns></returns>
-        public Portfolio Create(string userName, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance)
+        public bool Create(string userName, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance,out Portfolio portfolio, out string message)
         {
             List<string[]> transactionsList = new List<string[]>();
 
-            int userId = portfoliosContext.GetUser(userName);
-
-            Portfolio portfolio = new Portfolio()
+            User user = portfoliosContext.GetUser(userName);
+            if(user == null)
             {
-                UserId = userId,
+                portfolio = null;
+                message = $"User '{userName}' doesn't exist.";
+                return false;
+            }
+
+            portfolio = new Portfolio()
+            {
+                UserId = user.Id,
                 Name = portfolioname,
             };
             int portfolioId = portfoliosContext.Add(portfolio);
@@ -72,17 +79,24 @@ namespace FinancialAnalyst.Portfolios
                     string[] fields = line.Split(',');
                     transactionsList.Add(fields);
                     Transaction t = Transaction.From(portfolioId, fields);
+                    
                     if (t != null)
                     {
+                        t.PortfolioId = portfolioId;
                         portfoliosContext.Add(t);
                         portfolio.Transactions.Add(t);
+                    }
+                    else
+                    {
+                        //TODO: Inform to user that transaction wasn't saved
                     }
                 }
             }
 
             AddAssetAllocations(portfolio);
 
-            return portfolio;
+            message = $"Portfilio '{portfolioname}' created successfuly.";
+            return true;
         }
 
         private void AddAssetAllocations(Portfolio portfolio)

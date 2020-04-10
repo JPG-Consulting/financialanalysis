@@ -8,7 +8,7 @@ namespace FinancialAnalyst.Common.Entities.Users
     public class User
     {
         
-        int Id { get; set; }
+        public int Id { get; set; }
 
         public string UserName { get; set; }
 

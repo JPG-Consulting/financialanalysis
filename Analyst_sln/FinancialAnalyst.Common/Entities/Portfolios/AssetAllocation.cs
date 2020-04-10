@@ -9,6 +9,8 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
     [Serializable]
     public class AssetAllocation
     {
+        public int Id { get; set; }
+
         [JsonProperty]
         public string Ticker { get; set; }
 

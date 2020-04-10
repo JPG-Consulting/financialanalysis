@@ -73,15 +73,27 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
 
             MemoryStream target = new MemoryStream();
             transactions.CopyTo(target);
-            Portfolio portfolio = portfoliosService.Create(username, portfolioname,target, firstRowIsInitalBalance);
-
-            APIResponse<Portfolio> response = new APIResponse<Portfolio>()
+            bool ok = portfoliosService.Create(username, portfolioname,target, firstRowIsInitalBalance, out Portfolio portfolio, out string message);
+            if (ok)
             {
-                Content = portfolio,
-                Ok = true,
-                ErrorMessage = "ok",
-            };
-            return StatusCode(StatusCodes.Status200OK, response);
+                APIResponse<Portfolio> response = new APIResponse<Portfolio>()
+                {
+                    Content = portfolio,
+                    Ok = true,
+                    ErrorMessage = message,
+                };
+                return StatusCode(StatusCodes.Status200OK, response);
+            }
+            else
+            {
+                APIResponse<Portfolio> response = new APIResponse<Portfolio>()
+                {
+                    Content = portfolio,
+                    Ok = true,
+                    ErrorMessage = message,
+                };
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, response);
+            }
         }
     }
 }

@@ -24,7 +24,7 @@ namespace FinancialAnalyst.DataSources.Tests
             ICacheManager cacheManager = new FileCacheManager();
 
             IDataSource dataSource = new DataSourceManager(stockDataDataSource, pricesDataSource, optionChainDataSource, financialDataSource, riskFreeRatesDataSource, cacheManager);
-            bool ok = dataSource.TryGetCompleteStockData("AAPL", Common.Entities.Exchange.NASDAQ, out Stock stock, out string message);
+            bool ok = dataSource.TryGetCompleteStockData("AAPL", Common.Entities.Exchange.NASDAQ, true, true, out Stock stock, out string message);
             Assert.IsTrue(ok);
             string json = JsonConvert.SerializeObject(stock);
             Stock s = JsonConvert.DeserializeObject<Stock>(json);
