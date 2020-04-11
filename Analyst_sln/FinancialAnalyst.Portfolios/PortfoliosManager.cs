@@ -21,6 +21,15 @@ namespace FinancialAnalyst.Portfolios
         public bool GetPortfoliosByUserName(string username, out IEnumerable<Portfolio> portfolios, out string message)
         {
             portfolios = portfoliosContext.GetPortfoliosByUserName(username);
+            foreach(Portfolio portfolio in portfolios)
+            {
+                if(portfolio.Transactions.Count > 0)
+                {
+                    //recalculate asset allocations
+                    portfoliosContext.DeleteAssetAllocation(portfolio);
+                    AddAssetAllocations(portfolio);
+                }
+            }
             message = "";
             return true;
         }
@@ -115,12 +124,16 @@ namespace FinancialAnalyst.Portfolios
                         select new
                         {
                             Symbol = transactionsGroup.Key,
-                            Amount = (from assetAlloc in transactionsGroup select assetAlloc.Amount)
+                            Amount = (
+                                      from transaction in transactionsGroup 
+                                      select transaction.Quantity > 0? Math.Abs(transaction.Amount): transaction.Amount
+                                      )
                         };
             
             foreach(var assetAllocationEntry in query)
             {
                 AssetAllocation assetAllocation = new AssetAllocation();
+                assetAllocation.PortfolioId = portfolio.Id;
                 assetAllocation.Ticker = assetAllocationEntry.Symbol;
                 assetAllocation.Amount = assetAllocationEntry.Amount.Sum();
                 portfolio.AssetAllocations.Add(assetAllocation);
@@ -139,6 +152,13 @@ namespace FinancialAnalyst.Portfolios
                 assetAllocation.Percentage = allocationAmount / initialAmount;
                 portfolio.TotalCash -= allocationAmount;
             }
+
+            AssetAllocation cashAllocation = new AssetAllocation();
+            cashAllocation.PortfolioId = portfolio.Id;
+            cashAllocation.Ticker = "Cash";
+            cashAllocation.Amount = portfolio.TotalCash;
+            cashAllocation.Percentage = portfolio.TotalCash / initialAmount;
+            portfolio.AssetAllocations.Add(cashAllocation);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace FinancialAnalyst.DataAccess.Migrations
 
                     b.HasIndex("PortfolioId");
 
-                    b.ToTable("AssetAllocation");
+                    b.ToTable("AssetAllocations");
                 });
 
             modelBuilder.Entity("FinancialAnalyst.Common.Entities.Portfolios.Portfolio", b =>

@@ -16,9 +16,14 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         int Add(PortfolioBalance pb);
         User GetUser(string userName);
         IEnumerable<Portfolio> GetPortfoliosByUserName(string username);
+        void DeleteAssetAllocation(Portfolio portfolio);
     }
     public class PortfoliosContext : DbContext, IPortfoliosContext
     {
+        //To add a new table, execute command in Package Manager Console:
+        //dotnet ef migrations add <NameOfMigration> --project FinancialAnalyst.DataAccessCore
+        //Then, copy migration from DataAccessCore to DataAccess (.Net Standard)
+
         public DbSet<User> Users { get; set; }
 
         public DbSet<Portfolio> Portfolios { get; set; }
@@ -26,6 +31,8 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         public DbSet<Transaction> Transactions { get; set; }
 
         public DbSet<PortfolioBalance> PortfolioBalances { get; set; }
+
+        public DbSet<AssetAllocation> AssetAllocations { get; set; }
 
         public PortfoliosContext()
         {
@@ -59,6 +66,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
             modelBuilder.Entity<Portfolio>();
             modelBuilder.Entity<Transaction>();
             modelBuilder.Entity<PortfolioBalance>();
+            modelBuilder.Entity<AssetAllocation>();
         }
 
         public static string GetConnectionString()
@@ -106,7 +114,13 @@ namespace FinancialAnalyst.DataAccess.Portfolios
             if (user == null)
                 return new List<Portfolio>();
             else
-                return Portfolios.Where(p => p.UserId == user.Id).ToList();
+                return Portfolios.Include(p => p.Transactions).Include(p => p.AssetAllocations).Include(p => p.Balances).Where(p => p.UserId == user.Id).ToList();
+        }
+
+        public void DeleteAssetAllocation(Portfolio portfolio)
+        {
+            List<AssetAllocation> aas = AssetAllocations.Where(aa => aa.PortfolioId == portfolio.Id).ToList();
+            AssetAllocations.RemoveRange(aas);
         }
 
     }

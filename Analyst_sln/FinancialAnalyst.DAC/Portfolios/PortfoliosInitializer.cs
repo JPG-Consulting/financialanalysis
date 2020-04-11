@@ -14,7 +14,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         {
             context.Database.Migrate();
 
-            context.Database.EnsureCreated();
+            //context.Database.EnsureCreated();
 
             FillData(context);
         }
@@ -28,6 +28,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
                 {
                     UserName = "sgastia",
                     Email = "sgastia@gmail.com",
+                    Portfolios = new List<Portfolio>(),
                 };
                 context.Users.Add(defaultUser);
                 context.SaveChanges();
