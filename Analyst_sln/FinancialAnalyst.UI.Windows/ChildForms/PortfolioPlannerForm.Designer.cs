@@ -30,14 +30,14 @@
         {
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.dataGridViewPortfolios = new System.Windows.Forms.DataGridView();
-            this.buttonLoadTransactions = new System.Windows.Forms.Button();
-            this.buttonRefresh = new System.Windows.Forms.Button();
-            this.portfolioSummaryUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.PortfolioSummaryUserControl();
             this.dataGridViewPortfolios_NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewPortfolios_InitialBalanceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewPortfolios_TotalCostsColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewPortfolios_MarketValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewPortfolios_TotalCashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonLoadTransactions = new System.Windows.Forms.Button();
+            this.buttonRefresh = new System.Windows.Forms.Button();
+            this.portfolioSummaryUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.PortfolioSummaryUserControl();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -80,34 +80,6 @@
             this.dataGridViewPortfolios.TabIndex = 2;
             this.dataGridViewPortfolios.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.dataGridViewPortfolios_RowStateChanged);
             // 
-            // buttonLoadTransactions
-            // 
-            this.buttonLoadTransactions.Location = new System.Drawing.Point(84, 3);
-            this.buttonLoadTransactions.Name = "buttonLoadTransactions";
-            this.buttonLoadTransactions.Size = new System.Drawing.Size(159, 23);
-            this.buttonLoadTransactions.TabIndex = 0;
-            this.buttonLoadTransactions.Text = "Load transactions";
-            this.buttonLoadTransactions.UseVisualStyleBackColor = true;
-            this.buttonLoadTransactions.Click += new System.EventHandler(this.buttonLoadTransactions_Click);
-            // 
-            // buttonRefresh
-            // 
-            this.buttonRefresh.Location = new System.Drawing.Point(3, 3);
-            this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
-            this.buttonRefresh.TabIndex = 1;
-            this.buttonRefresh.Text = "Refresh";
-            this.buttonRefresh.UseVisualStyleBackColor = true;
-            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
-            // 
-            // portfolioSummaryUserControl1
-            // 
-            this.portfolioSummaryUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.portfolioSummaryUserControl1.Location = new System.Drawing.Point(0, 0);
-            this.portfolioSummaryUserControl1.Name = "portfolioSummaryUserControl1";
-            this.portfolioSummaryUserControl1.Size = new System.Drawing.Size(1536, 573);
-            this.portfolioSummaryUserControl1.TabIndex = 1;
-            // 
             // dataGridViewPortfolios_NameColumn
             // 
             this.dataGridViewPortfolios_NameColumn.DataPropertyName = "Name";
@@ -145,6 +117,34 @@
             this.dataGridViewPortfolios_TotalCashColumn.HeaderText = "Cash";
             this.dataGridViewPortfolios_TotalCashColumn.Name = "dataGridViewPortfolios_TotalCashColumn";
             this.dataGridViewPortfolios_TotalCashColumn.ReadOnly = true;
+            // 
+            // buttonLoadTransactions
+            // 
+            this.buttonLoadTransactions.Location = new System.Drawing.Point(84, 3);
+            this.buttonLoadTransactions.Name = "buttonLoadTransactions";
+            this.buttonLoadTransactions.Size = new System.Drawing.Size(159, 23);
+            this.buttonLoadTransactions.TabIndex = 0;
+            this.buttonLoadTransactions.Text = "Load transactions";
+            this.buttonLoadTransactions.UseVisualStyleBackColor = true;
+            this.buttonLoadTransactions.Click += new System.EventHandler(this.buttonLoadTransactions_Click);
+            // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.Location = new System.Drawing.Point(3, 3);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
+            this.buttonRefresh.TabIndex = 1;
+            this.buttonRefresh.Text = "Refresh";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
+            // portfolioSummaryUserControl1
+            // 
+            this.portfolioSummaryUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.portfolioSummaryUserControl1.Location = new System.Drawing.Point(0, 0);
+            this.portfolioSummaryUserControl1.Name = "portfolioSummaryUserControl1";
+            this.portfolioSummaryUserControl1.Size = new System.Drawing.Size(1536, 573);
+            this.portfolioSummaryUserControl1.TabIndex = 1;
             // 
             // PortfolioPlannerForm
             // 

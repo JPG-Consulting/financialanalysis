@@ -30,11 +30,19 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
             portfolioSummaryUserControl1.Dock = DockStyle.Fill;
             dataGridViewPortfolios.AutoGenerateColumns = false;
             
-            int indexBalance = dataGridViewPortfolios.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewPortfolios_InitialBalanceColumn.Name).Single().Index;
+            int indexBalance = dataGridViewPortfolios_InitialBalanceColumn.Index;
             dataGridViewPortfolios.Columns[indexBalance].DefaultCellStyle.Format = "N2";
             dataGridViewPortfolios.Columns[indexBalance].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-            int indexCash = dataGridViewPortfolios.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewPortfolios_TotalCashColumn.Name).Single().Index;
+            int indexCosts = dataGridViewPortfolios_TotalCashColumn.Index;
+            dataGridViewPortfolios.Columns[indexCosts].DefaultCellStyle.Format = "N2";
+            dataGridViewPortfolios.Columns[indexCosts].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            int indexMktValue = dataGridViewPortfolios_MarketValueColumn.Index;
+            dataGridViewPortfolios.Columns[indexMktValue].DefaultCellStyle.Format = "N2";
+            dataGridViewPortfolios.Columns[indexMktValue].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            int indexCash = dataGridViewPortfolios_TotalCashColumn.Index;
             dataGridViewPortfolios.Columns[indexCash].DefaultCellStyle.Format = "N2";
             dataGridViewPortfolios.Columns[indexCash].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
@@ -86,7 +94,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
         private void dataGridViewPortfolios_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
         {
-            if (e.StateChanged == DataGridViewElementStates.Selected)
+            if (e.StateChanged == DataGridViewElementStates.Selected && e.Row.Selected)
             {
                 Portfolio portfolio = e.Row.DataBoundItem as Portfolio;
                 if (portfolio != null)

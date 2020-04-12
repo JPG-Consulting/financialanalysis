@@ -76,24 +76,29 @@ namespace FinancialAnalyst.DataSources.Reuters
 				s.ROE_TTM = summary.market_data.roe_ttm;
 				s.ROI_TTM = summary.market_data.roi_ttm;
 				s.NewsList = new List<News>();
-				foreach (var news in summary.market_data.sig_devs)
+				if (summary.market_data.sig_devs != null)
 				{
-					News n = new News();
-					n.DateTime = news.last_update;
-					n.Title = news.headline;
-					n.Content = news.description;
-					s.NewsList.Add(n);
+					foreach (var news in summary.market_data.sig_devs)
+					{
+						News n = new News();
+						n.DateTime = news.last_update;
+						n.Title = news.headline;
+						n.Content = news.description;
+						s.NewsList.Add(n);
+					}
 				}
 				s.Officers = new List<Officer>();
-				foreach (var officer in summary.market_data.officers)
+				if (summary.market_data.officers != null)
 				{
-					Officer o = new Officer();
-					o.Name = officer.name;
-					o.Rank = officer.rank;
-					o.Title = officer.title;
-					s.Officers.Add(o);
+					foreach (var officer in summary.market_data.officers)
+					{
+						Officer o = new Officer();
+						o.Name = officer.name;
+						o.Rank = officer.rank;
+						o.Title = officer.title;
+						s.Officers.Add(o);
+					}
 				}
-
 				/*
                 s.EarningsPerYear = summary.market_data.eps_per_year...;
                 "eps_per_year": {

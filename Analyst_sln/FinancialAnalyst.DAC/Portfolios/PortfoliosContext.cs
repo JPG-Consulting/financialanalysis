@@ -66,7 +66,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>();
-            modelBuilder.Entity<Portfolio>();
+            modelBuilder.Entity<Portfolio>().Ignore(p => p.CashPercentage);
             modelBuilder.Entity<Transaction>();
             modelBuilder.Entity<PortfolioBalance>();
             modelBuilder.Entity<AssetAllocation>();

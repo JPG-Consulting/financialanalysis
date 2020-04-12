@@ -74,9 +74,9 @@ namespace FinancialAnalyst.UI.Windows.UserControls
 
         private void CalculateTotals(Portfolio portfolio)
         {
-            int indexPercentage = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_ProportionColumn.Name).Single().Index;
-            int indexCosts = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_CostsColumn.Name).Single().Index;
-            int indexMarketValue = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_MarketValueColumn.Name).Single().Index;
+            int indexPercentage = dataGridViewAssets_ProportionColumn.Index;
+            int indexCosts = dataGridViewAssets_CostsColumn.Index;
+            int indexMarketValue = dataGridViewAssets_MarketValueColumn.Index;
             decimal totalPercentage = 0;
             decimal totalCosts = 0;
             decimal totalValue = 0;
@@ -107,30 +107,40 @@ namespace FinancialAnalyst.UI.Windows.UserControls
                 }
             }
             else
+            {
                 labelTotalCosts.Text = "0.00";
+                labelTotalCosts.BackColor = SystemColors.Control; ;
+            }
 
             if (portfolio.MarketValue.HasValue)
             {
                 if (totalValue == portfolio.MarketValue.Value)
                 {
+                    
                     labelMarketValue.Text = portfolio.MarketValue.Value.ToString("N2");
-                    labelMarketValue.BackColor = SystemColors.Control; ;
+                    labelMarketValue.BackColor = SystemColors.Control;
                 }
                 else
                 {
-                    labelMarketValue.Text = $"{totalCosts.ToString("N2")} (Diff:{(totalValue - portfolio.MarketValue.Value).ToString("N2")})";
+                    labelMarketValue.Text = $"{totalValue.ToString("N2")} (Diff:{(totalValue - portfolio.MarketValue.Value).ToString("N2")})";
                     labelMarketValue.BackColor = Color.Red;
                 }
             }
             else
+            {
                 labelMarketValue.Text = "0.00";
-
+                labelMarketValue.BackColor = SystemColors.Control;
+            }
 
 
             if (portfolio.Cash.HasValue)
+            {
                 labelCash.Text = portfolio.Cash.Value.ToString("N2");
+                if(portfolio.CashPercentage.HasValue)
+                    labelCash.Text += $" ({portfolio.CashPercentage.Value.ToString("N2")}%)"; 
+            }
             else
-                labelCash.Text = "0.00";
+                labelCash.Text = "0.00 (0.00%)";
         }
 
         private void CalculateBeta()

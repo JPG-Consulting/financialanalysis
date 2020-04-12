@@ -76,6 +76,23 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         [JsonProperty]
         public decimal? Cash { get; set; }
 
+        [JsonIgnore]
+        public decimal? CashPercentage
+        {
+            get
+            {
+                if (Cash.HasValue && MarketValue.HasValue)
+                {
+                    if (MarketValue.Value > 0)
+                        return Cash.Value / MarketValue.Value * 100;
+                    else
+                        return 0;
+                }
+                else
+                    return null;
+
+            }
+        }
 
         [JsonProperty]
         public decimal? MarketValue { get; set; }
