@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Interfaces.UIInterfaces;
+using System.Runtime.InteropServices;
 
 namespace FinancialAnalyst.UI.Windows.UserControls
 {
@@ -21,6 +22,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
         {
             InitializeComponent();
             this.callerForm = callerForm;
+            dataGridViewAssets.AutoGenerateColumns = false;
         }
 
         public void Set(Portfolio portfolio)
@@ -59,15 +61,20 @@ namespace FinancialAnalyst.UI.Windows.UserControls
 
         private void CalculateTotal()
         {
-            int index = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_ProportionColumn.Name).Single().Index;
-            Decimal total = 0;
+            int indexPercentage = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_ProportionColumn.Name).Single().Index;
+            int indexAmount = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_AmountColumn.Name).Single().Index;
+            Decimal totalPercentage = 0;
+            decimal totalValue = 0;
             for (int i=1;i< dataGridViewAssets.Rows.Count;i++)
             {
                 DataGridViewRow row = dataGridViewAssets.Rows[i];
-                if(row.Cells[index].Value != null)
-                    total += (decimal)row.Cells[index].Value;
+                if(row.Cells[indexPercentage].Value != null)
+                    totalPercentage += (decimal)row.Cells[indexPercentage].Value;
+                if (row.Cells[indexAmount].Value != null)
+                    totalValue += (decimal)row.Cells[indexAmount].Value;
+
             }
-            labelTotalPercentage.Text = $"{total.ToString("0.00")}%";
+            labelTotalPercentage.Text = $"{totalValue.ToString("0.00")} ({totalPercentage.ToString("0.00")}%)";
         }
 
         private void CalculateBeta()

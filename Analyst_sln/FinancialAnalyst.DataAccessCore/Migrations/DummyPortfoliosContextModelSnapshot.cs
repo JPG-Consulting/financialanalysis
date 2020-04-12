@@ -110,6 +110,9 @@ namespace FinancialAnalyst.DataAccess.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("CashflowType")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Commission")
                         .HasColumnType("decimal(18,2)");
 

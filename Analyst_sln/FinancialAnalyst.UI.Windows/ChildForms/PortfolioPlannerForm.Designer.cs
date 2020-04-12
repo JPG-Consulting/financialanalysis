@@ -33,6 +33,7 @@
             this.buttonCreatePortfolioFromTransactions = new System.Windows.Forms.Button();
             this.flowLayoutPanelPortfolios = new System.Windows.Forms.FlowLayoutPanel();
             this.portfolioDetailUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.PortfolioDetailUserControl();
+            this.buttonRefresh = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -67,6 +68,7 @@
             // 
             // splitContainerPortfoliosAndCommands.Panel1
             // 
+            this.splitContainerPortfoliosAndCommands.Panel1.Controls.Add(this.buttonRefresh);
             this.splitContainerPortfoliosAndCommands.Panel1.Controls.Add(this.buttonCreatePortfolioFromTransactions);
             // 
             // splitContainerPortfoliosAndCommands.Panel2
@@ -78,7 +80,7 @@
             // 
             // buttonCreatePortfolioFromTransactions
             // 
-            this.buttonCreatePortfolioFromTransactions.Location = new System.Drawing.Point(3, 19);
+            this.buttonCreatePortfolioFromTransactions.Location = new System.Drawing.Point(95, 19);
             this.buttonCreatePortfolioFromTransactions.Name = "buttonCreatePortfolioFromTransactions";
             this.buttonCreatePortfolioFromTransactions.Size = new System.Drawing.Size(180, 23);
             this.buttonCreatePortfolioFromTransactions.TabIndex = 0;
@@ -100,6 +102,16 @@
             this.portfolioDetailUserControl1.Name = "portfolioDetailUserControl1";
             this.portfolioDetailUserControl1.Size = new System.Drawing.Size(172, 258);
             this.portfolioDetailUserControl1.TabIndex = 0;
+            // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.Location = new System.Drawing.Point(14, 19);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
+            this.buttonRefresh.TabIndex = 1;
+            this.buttonRefresh.Text = "Refresh";
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
             // 
             // PortfolioPlannerForm
             // 
@@ -129,5 +141,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelPortfolios;
         private System.Windows.Forms.SplitContainer splitContainerPortfoliosAndCommands;
         private UserControls.PortfolioDetailUserControl portfolioDetailUserControl1;
+        private System.Windows.Forms.Button buttonRefresh;
     }
 }

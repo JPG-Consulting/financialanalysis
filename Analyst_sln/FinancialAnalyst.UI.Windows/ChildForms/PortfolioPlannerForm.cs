@@ -34,11 +34,12 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
         private void PortfolioPlanner_Load(object sender, EventArgs e)
         {
-            IEnumerable<Portfolio> portfolios = PortfoliosAPICaller.GetPortfoliosByUser(userName);
-            foreach(Portfolio portfolio in portfolios)
-            {
-                Show(portfolio);
-            }
+            LoadPortfolios();
+        }
+
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            LoadPortfolios();
         }
 
         private void PortfolioUserControl_Click(object sender, EventArgs e)
@@ -91,6 +92,22 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
             foreach (AssetDetailForm form in showAssetDetailForms)
             {
                 form.Close();
+            }
+        }
+
+        private void LoadPortfolios()
+        {
+            try
+            {
+                IEnumerable<Portfolio> portfolios = PortfoliosAPICaller.GetPortfoliosByUser(userName);
+                foreach (Portfolio portfolio in portfolios)
+                {
+                    Show(portfolio);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

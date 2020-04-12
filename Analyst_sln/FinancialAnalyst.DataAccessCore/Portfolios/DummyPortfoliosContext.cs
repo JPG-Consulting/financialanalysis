@@ -27,6 +27,12 @@ namespace FinancialAnalyst.DataAccess.Portfolios
          * Therefore .NET Standard is not sufficient for the EF Core tools to execute application code. 
          * The dummy project you create to use as startup project provides a concrete target platform into which the tools can load the .NET Standard class library.
          * 
+         * **************************************************************************************************************************************
+         * 
+         * To add a new table, execute command in Package Manager Console:
+         * dotnet ef migrations add <NameOfMigration> --project FinancialAnalyst.DataAccessCore
+         * Then, copy migration from DataAccessCore to DataAccess (.Net Standard)
+         * 
          */
     }
 }

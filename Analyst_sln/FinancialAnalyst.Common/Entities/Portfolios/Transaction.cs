@@ -35,7 +35,8 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         [JsonProperty]
         public decimal Commission { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty]
+        [Required]
         public decimal Amount { get; set; }
 
         [JsonProperty]
@@ -44,10 +45,16 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         [JsonProperty]
         public decimal RegFee { get; set; }
 
+        [JsonIgnore]
         [Required]
         public int UserId { get; set; }
 
+        [JsonIgnore]
         public int? PortfolioId { get; set; }
+
+        [JsonProperty]
+        [Required]
+        public CashflowTypes CashflowType { get; private set; }
 
         public static Transaction From(int portfolioId, string[] fields)
         {
@@ -69,10 +76,10 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
             if(string.IsNullOrEmpty(fields[4]) == false)
                 t.Symbol = fields[4];
 
-            if (string.IsNullOrEmpty(fields[3]))
+            if (string.IsNullOrEmpty(fields[5]))
                 t.Price = 0;
             else
-                t.Price = decimal.Parse(fields[3], enUsCultureInfo);
+                t.Price = decimal.Parse(fields[5], enUsCultureInfo);
 
             if (string.IsNullOrEmpty(fields[6]))
                 t.Commission = 0;
@@ -87,6 +94,24 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
                 t.RegFee = 0;
             else
                 t.RegFee = decimal.Parse(fields[9], enUsCultureInfo);
+
+
+            if(t.Quantity == 0)
+            {
+                if (t.Amount >= 0)
+                    t.CashflowType = CashflowTypes.Deposit;
+                else
+                    t.CashflowType = CashflowTypes.Withdrawal;
+            }
+            else
+            {
+                if (t.Description.ToUpper().StartsWith(CashflowTypes.Bought.ToString().ToUpper()))
+                    t.CashflowType = CashflowTypes.Bought;
+                else if (t.Description.ToUpper().StartsWith(CashflowTypes.Sell.ToString().ToUpper()))
+                    t.CashflowType = CashflowTypes.Sell;
+                else
+                    t.CashflowType = CashflowTypes.Unknown;
+            }
 
             return t;
         }

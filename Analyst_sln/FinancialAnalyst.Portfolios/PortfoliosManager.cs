@@ -95,8 +95,7 @@ namespace FinancialAnalyst.Portfolios
                         if (portfolio.Balances.Where(b => b.TransactionCode == pb.TransactionCode).Any() == false)
                         {
                             pb.PortfolioId = portfolioId;
-                            portfoliosContext.Add(pb);
-                            portfolio.Balances.Add(pb);
+                            portfoliosContext.Add(pb);//And it also adds the balance to the balances collection of the portfolio
                             portfolio.InitialBalance = pb.NetCashBalance;
                         }
                     }
@@ -118,8 +117,7 @@ namespace FinancialAnalyst.Portfolios
                     {
                         newTransaction.UserId = user.Id;
                         newTransaction.PortfolioId = portfolioId;
-                        portfoliosContext.Add(newTransaction);
-                        portfolio.Transactions.Add(newTransaction);
+                        portfoliosContext.Add(newTransaction);//And it also adds the transaction to the transactions collection of the portfolio
                     }
                     else
                     {
@@ -136,49 +134,81 @@ namespace FinancialAnalyst.Portfolios
 
         private void CalculateAssetAllocations(Portfolio portfolio)
         {
-
-            var query = from transaction in portfolio.Transactions
-                        group transaction by transaction.Symbol into transactionsGroup
-                        select new
-                        {
-                            Symbol = transactionsGroup.Key,
-                            Amount = (
-                                      from transaction in transactionsGroup 
-                                      select transaction.Quantity > 0? Math.Abs(transaction.Amount): transaction.Amount
-                                      )
-                        };
-            
-            foreach(var assetAllocationEntry in query)
-            {
-                AssetAllocation assetAllocation = new AssetAllocation();
-                assetAllocation.PortfolioId = portfolio.Id;
-                assetAllocation.Ticker = assetAllocationEntry.Symbol;
-                assetAllocation.Amount = assetAllocationEntry.Amount.Sum();
-                portfolio.AssetAllocations.Add(assetAllocation);
-            }
-
             decimal initialAmount;
-            if (portfolio.InitialBalance == 0)
-                initialAmount = portfolio.AssetAllocations.Sum(aa => aa.Amount.HasValue ? aa.Amount.Value : 0);
+            if (portfolio.Balances.Count() == 0)
+                initialAmount = portfolio.Transactions.Sum(t => t.Amount);
             else
                 initialAmount = portfolio.InitialBalance;
 
-            portfolio.TotalCash = initialAmount;
-            foreach (AssetAllocation assetAllocation in portfolio.AssetAllocations)
+            decimal cash = initialAmount;
+            Dictionary<string, AssetAllocation> groups = new Dictionary<string, AssetAllocation>();
+            foreach (Transaction t in portfolio.Transactions)
             {
-                decimal allocationAmount = assetAllocation.Amount.HasValue ? assetAllocation.Amount.Value : 0;
-                assetAllocation.Percentage = allocationAmount / initialAmount;
-                portfolio.TotalCash -= allocationAmount;
+                if(t.CashflowType == CashflowTypes.Bought || t.CashflowType == CashflowTypes.Sell)
+                {
+                    AssetAllocation assetAllocation;
+                    if (groups.ContainsKey(t.Symbol) == false)
+                    {
+                        assetAllocation = new AssetAllocation() 
+                        { 
+                            Ticker = t.Symbol,
+                            Amount = 0,
+                            PortfolioId = portfolio.Id,
+                        };
+                        groups.Add(t.Symbol, assetAllocation);
+                    }
+                    else
+                        assetAllocation = groups[t.Symbol];
+
+
+                    /*
+                     * //TODO: <<<<<<<<<<<<<<<<<<<<corregir: cantidad, costo y precio.>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                     * Aca estoy calculando el costo
+                     * Falta agregar cantidad, costo y el campo amount deberia ser para el precio
+                     */
+                    if (t.CashflowType == CashflowTypes.Bought)
+                    {
+                        assetAllocation.Amount += Math.Abs(t.Amount);
+                    }
+                    else
+                    {
+                        assetAllocation.Amount -= Math.Abs(t.Amount);
+                    }
+
+                    cash += t.Amount;//Bougths are negative and sells are positive, there is no need to use abs()
+                    //cash -= t.Commission;//Amount already contains comission.
+                    //cash -= t.RegFee;//Amount already contains reg fee.
+                }
+                else
+                {
+                    cash += t.Amount;
+                }
             }
 
-            /*
+            if(initialAmount + portfolio.Transactions.Sum(t => t.Amount) == cash)
+            {
+                //ok
+            }
+            else
+            {
+                //error
+            }
+
+            portfolio.TotalCash = cash;
+
+            foreach(var assetAllocation in groups)
+            {
+                assetAllocation.Value.Percentage = assetAllocation.Value.Amount / initialAmount * 100;
+                portfolio.AssetAllocations.Add(assetAllocation.Value);
+            }
+
             AssetAllocation cashAllocation = new AssetAllocation();
             cashAllocation.PortfolioId = portfolio.Id;
             cashAllocation.Ticker = "Cash";
             cashAllocation.Amount = portfolio.TotalCash;
             cashAllocation.Percentage = portfolio.TotalCash / initialAmount;
             portfolio.AssetAllocations.Add(cashAllocation);
-            */
+
         }
     }
 }
