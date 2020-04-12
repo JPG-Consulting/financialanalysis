@@ -18,15 +18,25 @@ namespace FinancialAnalyst.UI.Windows.UserControls
         private Portfolio portfolio;
         private ICallerForm callerForm;
 
-        public PortfolioSummaryUserControl(ICallerForm callerForm)
+        public PortfolioSummaryUserControl()
         {
             InitializeComponent();
-            this.callerForm = callerForm;
             dataGridViewAssets.AutoGenerateColumns = false;
         }
 
-        public void Set(Portfolio portfolio)
+        public void Set(ICallerForm callerForm,Portfolio portfolio)
         {
+            this.callerForm = callerForm;
+            dataGridViewAssets.AutoGenerateColumns = false;
+
+            int indexPercentage = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_ProportionColumn.Name).Single().Index;
+            dataGridViewAssets.Columns[indexPercentage].DefaultCellStyle.Format = "0.00\\%";
+            dataGridViewAssets.Columns[indexPercentage].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            int indexAmount = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_AmountColumn.Name).Single().Index;
+            dataGridViewAssets.Columns[indexAmount].DefaultCellStyle.Format = "N2";
+            dataGridViewAssets.Columns[indexAmount].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
             this.portfolio = portfolio;
             dataGridViewAssets.DataSource = portfolio.AssetAllocations;
             labelName.Text = portfolio.Name;

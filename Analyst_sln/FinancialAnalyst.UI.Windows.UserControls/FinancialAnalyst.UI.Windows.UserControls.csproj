@@ -55,12 +55,6 @@
     <Compile Include="OptionsChainUserControl.Designer.cs">
       <DependentUpon>OptionsChainUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="PortfolioDetailUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PortfolioDetailUserControl.Designer.cs">
-      <DependentUpon>PortfolioDetailUserControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="PortfolioSummaryUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -76,9 +70,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OptionsChainUserControl.resx">
       <DependentUpon>OptionsChainUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PortfolioDetailUserControl.resx">
-      <DependentUpon>PortfolioDetailUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PortfolioSummaryUserControl.resx">
       <DependentUpon>PortfolioSummaryUserControl.cs</DependentUpon>

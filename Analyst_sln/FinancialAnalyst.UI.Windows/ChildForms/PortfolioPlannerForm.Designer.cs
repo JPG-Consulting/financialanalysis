@@ -29,83 +29,65 @@
         private void InitializeComponent()
         {
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
-            this.splitContainerPortfoliosAndCommands = new System.Windows.Forms.SplitContainer();
-            this.buttonCreatePortfolioFromTransactions = new System.Windows.Forms.Button();
-            this.flowLayoutPanelPortfolios = new System.Windows.Forms.FlowLayoutPanel();
-            this.portfolioDetailUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.PortfolioDetailUserControl();
+            this.dataGridViewPortfolios = new System.Windows.Forms.DataGridView();
+            this.buttonLoadTransactions = new System.Windows.Forms.Button();
             this.buttonRefresh = new System.Windows.Forms.Button();
+            this.portfolioSummaryUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.PortfolioSummaryUserControl();
+            this.dataGridViewPortfolios_NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewPortfolios_TotalCashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewPortfolios_InitialBalanceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
             this.splitContainerMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerPortfoliosAndCommands)).BeginInit();
-            this.splitContainerPortfoliosAndCommands.Panel1.SuspendLayout();
-            this.splitContainerPortfoliosAndCommands.Panel2.SuspendLayout();
-            this.splitContainerPortfoliosAndCommands.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPortfolios)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainerMain
             // 
-            this.splitContainerMain.Location = new System.Drawing.Point(122, 46);
+            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerMain.Location = new System.Drawing.Point(0, 0);
             this.splitContainerMain.Name = "splitContainerMain";
             // 
             // splitContainerMain.Panel1
             // 
-            this.splitContainerMain.Panel1.Controls.Add(this.splitContainerPortfoliosAndCommands);
+            this.splitContainerMain.Panel1.Controls.Add(this.dataGridViewPortfolios);
+            this.splitContainerMain.Panel1.Controls.Add(this.buttonLoadTransactions);
+            this.splitContainerMain.Panel1.Controls.Add(this.buttonRefresh);
             // 
             // splitContainerMain.Panel2
             // 
-            this.splitContainerMain.Panel2.Controls.Add(this.portfolioDetailUserControl1);
-            this.splitContainerMain.Size = new System.Drawing.Size(975, 520);
-            this.splitContainerMain.SplitterDistance = 480;
+            this.splitContainerMain.Panel2.Controls.Add(this.portfolioSummaryUserControl1);
+            this.splitContainerMain.Size = new System.Drawing.Size(1536, 750);
+            this.splitContainerMain.SplitterDistance = 314;
             this.splitContainerMain.TabIndex = 1;
             // 
-            // splitContainerPortfoliosAndCommands
+            // dataGridViewPortfolios
             // 
-            this.splitContainerPortfoliosAndCommands.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerPortfoliosAndCommands.Name = "splitContainerPortfoliosAndCommands";
-            this.splitContainerPortfoliosAndCommands.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.dataGridViewPortfolios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewPortfolios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewPortfolios_NameColumn,
+            this.dataGridViewPortfolios_TotalCashColumn,
+            this.dataGridViewPortfolios_InitialBalanceColumn});
+            this.dataGridViewPortfolios.Location = new System.Drawing.Point(3, 32);
+            this.dataGridViewPortfolios.Name = "dataGridViewPortfolios";
+            this.dataGridViewPortfolios.Size = new System.Drawing.Size(297, 150);
+            this.dataGridViewPortfolios.TabIndex = 2;
+            this.dataGridViewPortfolios.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.dataGridViewPortfolios_RowStateChanged);
             // 
-            // splitContainerPortfoliosAndCommands.Panel1
+            // buttonLoadTransactions
             // 
-            this.splitContainerPortfoliosAndCommands.Panel1.Controls.Add(this.buttonRefresh);
-            this.splitContainerPortfoliosAndCommands.Panel1.Controls.Add(this.buttonCreatePortfolioFromTransactions);
-            // 
-            // splitContainerPortfoliosAndCommands.Panel2
-            // 
-            this.splitContainerPortfoliosAndCommands.Panel2.Controls.Add(this.flowLayoutPanelPortfolios);
-            this.splitContainerPortfoliosAndCommands.Size = new System.Drawing.Size(314, 429);
-            this.splitContainerPortfoliosAndCommands.SplitterDistance = 63;
-            this.splitContainerPortfoliosAndCommands.TabIndex = 1;
-            // 
-            // buttonCreatePortfolioFromTransactions
-            // 
-            this.buttonCreatePortfolioFromTransactions.Location = new System.Drawing.Point(95, 19);
-            this.buttonCreatePortfolioFromTransactions.Name = "buttonCreatePortfolioFromTransactions";
-            this.buttonCreatePortfolioFromTransactions.Size = new System.Drawing.Size(180, 23);
-            this.buttonCreatePortfolioFromTransactions.TabIndex = 0;
-            this.buttonCreatePortfolioFromTransactions.Text = "Create portfolio from transactions";
-            this.buttonCreatePortfolioFromTransactions.UseVisualStyleBackColor = true;
-            this.buttonCreatePortfolioFromTransactions.Click += new System.EventHandler(this.buttonCreatePortfolioFromTransactions_Click);
-            // 
-            // flowLayoutPanelPortfolios
-            // 
-            this.flowLayoutPanelPortfolios.Location = new System.Drawing.Point(14, 17);
-            this.flowLayoutPanelPortfolios.Name = "flowLayoutPanelPortfolios";
-            this.flowLayoutPanelPortfolios.Size = new System.Drawing.Size(169, 249);
-            this.flowLayoutPanelPortfolios.TabIndex = 0;
-            // 
-            // portfolioDetailUserControl1
-            // 
-            this.portfolioDetailUserControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.portfolioDetailUserControl1.Location = new System.Drawing.Point(34, 140);
-            this.portfolioDetailUserControl1.Name = "portfolioDetailUserControl1";
-            this.portfolioDetailUserControl1.Size = new System.Drawing.Size(172, 258);
-            this.portfolioDetailUserControl1.TabIndex = 0;
+            this.buttonLoadTransactions.Location = new System.Drawing.Point(84, 3);
+            this.buttonLoadTransactions.Name = "buttonLoadTransactions";
+            this.buttonLoadTransactions.Size = new System.Drawing.Size(159, 23);
+            this.buttonLoadTransactions.TabIndex = 0;
+            this.buttonLoadTransactions.Text = "Load transactions";
+            this.buttonLoadTransactions.UseVisualStyleBackColor = true;
+            this.buttonLoadTransactions.Click += new System.EventHandler(this.buttonLoadTransactions_Click);
             // 
             // buttonRefresh
             // 
-            this.buttonRefresh.Location = new System.Drawing.Point(14, 19);
+            this.buttonRefresh.Location = new System.Drawing.Point(3, 3);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(75, 23);
             this.buttonRefresh.TabIndex = 1;
@@ -113,11 +95,45 @@
             this.buttonRefresh.UseVisualStyleBackColor = true;
             this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
             // 
+            // portfolioSummaryUserControl1
+            // 
+            this.portfolioSummaryUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.portfolioSummaryUserControl1.Location = new System.Drawing.Point(0, 0);
+            this.portfolioSummaryUserControl1.Name = "portfolioSummaryUserControl1";
+            this.portfolioSummaryUserControl1.Size = new System.Drawing.Size(1218, 750);
+            this.portfolioSummaryUserControl1.TabIndex = 1;
+            // 
+            // dataGridViewPortfolios_NameColumn
+            // 
+            this.dataGridViewPortfolios_NameColumn.DataPropertyName = "Name";
+            this.dataGridViewPortfolios_NameColumn.FillWeight = 50F;
+            this.dataGridViewPortfolios_NameColumn.HeaderText = "Name";
+            this.dataGridViewPortfolios_NameColumn.Name = "dataGridViewPortfolios_NameColumn";
+            this.dataGridViewPortfolios_NameColumn.ReadOnly = true;
+            // 
+            // dataGridViewPortfolios_TotalCashColumn
+            // 
+            this.dataGridViewPortfolios_TotalCashColumn.DataPropertyName = "TotalCash";
+            this.dataGridViewPortfolios_TotalCashColumn.FillWeight = 25F;
+            this.dataGridViewPortfolios_TotalCashColumn.HeaderText = "Total cash";
+            this.dataGridViewPortfolios_TotalCashColumn.Name = "dataGridViewPortfolios_TotalCashColumn";
+            this.dataGridViewPortfolios_TotalCashColumn.ReadOnly = true;
+            this.dataGridViewPortfolios_TotalCashColumn.Width = 75;
+            // 
+            // dataGridViewPortfolios_InitialBalanceColumn
+            // 
+            this.dataGridViewPortfolios_InitialBalanceColumn.DataPropertyName = "InitialBalance";
+            this.dataGridViewPortfolios_InitialBalanceColumn.FillWeight = 25F;
+            this.dataGridViewPortfolios_InitialBalanceColumn.HeaderText = "Initial balance";
+            this.dataGridViewPortfolios_InitialBalanceColumn.Name = "dataGridViewPortfolios_InitialBalanceColumn";
+            this.dataGridViewPortfolios_InitialBalanceColumn.ReadOnly = true;
+            this.dataGridViewPortfolios_InitialBalanceColumn.Width = 75;
+            // 
             // PortfolioPlannerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1227, 643);
+            this.ClientSize = new System.Drawing.Size(1536, 750);
             this.Controls.Add(this.splitContainerMain);
             this.Name = "PortfolioPlannerForm";
             this.Text = "PortfolioPlanner";
@@ -127,20 +143,19 @@
             this.splitContainerMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
             this.splitContainerMain.ResumeLayout(false);
-            this.splitContainerPortfoliosAndCommands.Panel1.ResumeLayout(false);
-            this.splitContainerPortfoliosAndCommands.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerPortfoliosAndCommands)).EndInit();
-            this.splitContainerPortfoliosAndCommands.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPortfolios)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
         private System.Windows.Forms.SplitContainer splitContainerMain;
-        private System.Windows.Forms.Button buttonCreatePortfolioFromTransactions;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelPortfolios;
-        private System.Windows.Forms.SplitContainer splitContainerPortfoliosAndCommands;
-        private UserControls.PortfolioDetailUserControl portfolioDetailUserControl1;
+        private System.Windows.Forms.Button buttonLoadTransactions;
         private System.Windows.Forms.Button buttonRefresh;
+        private System.Windows.Forms.DataGridView dataGridViewPortfolios;
+        private UserControls.PortfolioSummaryUserControl portfolioSummaryUserControl1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_NameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_TotalCashColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_InitialBalanceColumn;
     }
 }

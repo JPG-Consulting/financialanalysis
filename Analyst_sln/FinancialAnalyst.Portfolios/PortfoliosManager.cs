@@ -194,14 +194,13 @@ namespace FinancialAnalyst.Portfolios
                 //error
             }
 
-            portfolio.TotalCash = cash;
-
             foreach(var assetAllocation in groups)
             {
                 assetAllocation.Value.Percentage = assetAllocation.Value.Amount / initialAmount * 100;
                 portfolio.AssetAllocations.Add(assetAllocation.Value);
             }
 
+            portfolio.TotalCash = cash;
             AssetAllocation cashAllocation = new AssetAllocation();
             cashAllocation.PortfolioId = portfolio.Id;
             cashAllocation.Ticker = "Cash";

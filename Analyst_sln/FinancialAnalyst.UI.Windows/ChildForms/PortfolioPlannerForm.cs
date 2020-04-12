@@ -27,9 +27,16 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         {
             InitializeComponent();
             splitContainerMain.Dock = DockStyle.Fill;
-            splitContainerPortfoliosAndCommands.Dock = DockStyle.Fill;
-            flowLayoutPanelPortfolios.Dock = DockStyle.Fill;
-            portfolioDetailUserControl1.Dock = DockStyle.Fill;
+            portfolioSummaryUserControl1.Dock = DockStyle.Fill;
+            dataGridViewPortfolios.AutoGenerateColumns = false;
+            
+            int indexBalance = dataGridViewPortfolios.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewPortfolios_InitialBalanceColumn.Name).Single().Index;
+            dataGridViewPortfolios.Columns[indexBalance].DefaultCellStyle.Format = "N2";
+            dataGridViewPortfolios.Columns[indexBalance].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            int indexCash = dataGridViewPortfolios.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewPortfolios_TotalCashColumn.Name).Single().Index;
+            dataGridViewPortfolios.Columns[indexCash].DefaultCellStyle.Format = "N2";
+            dataGridViewPortfolios.Columns[indexCash].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
 
         private void PortfolioPlanner_Load(object sender, EventArgs e)
@@ -42,17 +49,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
             LoadPortfolios();
         }
 
-        private void PortfolioUserControl_Click(object sender, EventArgs e)
-        {
-            SetBorderToPortfolios(BorderStyle.FixedSingle);
-            PortfolioSummaryUserControl control = sender as PortfolioSummaryUserControl;
-            if(sender != null)
-            {
-                control.BorderStyle = BorderStyle.Fixed3D;
-            }
-        }
-
-        private void buttonCreatePortfolioFromTransactions_Click(object sender, EventArgs e)
+        private void buttonLoadTransactions_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
@@ -87,6 +84,16 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
             
         }
 
+        private void dataGridViewPortfolios_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
+        {
+            if (e.StateChanged == DataGridViewElementStates.Selected)
+            {
+                Portfolio portfolio = e.Row.DataBoundItem as Portfolio;
+                if (portfolio != null)
+                    Show(portfolio);
+            }
+        }
+
         private void PortfolioPlanner_FormClosed(object sender, FormClosedEventArgs e)
         {
             foreach (AssetDetailForm form in showAssetDetailForms)
@@ -100,10 +107,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
             try
             {
                 IEnumerable<Portfolio> portfolios = PortfoliosAPICaller.GetPortfoliosByUser(userName);
-                foreach (Portfolio portfolio in portfolios)
-                {
-                    Show(portfolio);
-                }
+                dataGridViewPortfolios.DataSource = portfolios;
             }
             catch (Exception ex)
             {
@@ -113,19 +117,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
         private void Show(Portfolio portfolio)
         {
-            PortfolioSummaryUserControl portfolioUserControl = new PortfolioSummaryUserControl(this);
-            portfolioUserControl.Set(portfolio);
-            portfolioUserControl.Click += PortfolioUserControl_Click;
-            portfolioUserControl.BorderStyle = BorderStyle.FixedSingle;
-            flowLayoutPanelPortfolios.Controls.Add(portfolioUserControl);
-        }
-
-        private void SetBorderToPortfolios(BorderStyle borderStyle)
-        {
-            foreach (PortfolioSummaryUserControl portfolioUserControl in flowLayoutPanelPortfolios.Controls)
-            {
-                portfolioUserControl.BorderStyle = borderStyle;
-            }
+            portfolioSummaryUserControl1.Set(this,portfolio);
         }
 
         public void Show(AssetAllocation alloc)
