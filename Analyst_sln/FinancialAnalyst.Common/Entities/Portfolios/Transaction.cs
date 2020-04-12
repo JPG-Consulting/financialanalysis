@@ -66,7 +66,8 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
             else
                 t.Quantity = int.Parse(fields[3]);
 
-            t.Symbol = fields[4];
+            if(string.IsNullOrEmpty(fields[4]) == false)
+                t.Symbol = fields[4];
 
             if (string.IsNullOrEmpty(fields[3]))
                 t.Price = 0;

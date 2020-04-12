@@ -52,9 +52,11 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         {
             //https://docs.microsoft.com/es-es/aspnet/core/mvc/models/file-uploads?view=aspnetcore-3.1
 
+            bool overrideIfExist = false;
+
             MemoryStream target = new MemoryStream();
             transactions.CopyTo(target);
-            bool ok = portfoliosService.Create(username, portfolioname,target, firstRowIsInitalBalance, out Portfolio portfolio, out string message);
+            bool ok = portfoliosService.Create(username, portfolioname,target, firstRowIsInitalBalance, overrideIfExist, out Portfolio portfolio, out string message);
             APIResponse<Portfolio> response = new APIResponse<Portfolio>()
             {
                 Content = portfolio,

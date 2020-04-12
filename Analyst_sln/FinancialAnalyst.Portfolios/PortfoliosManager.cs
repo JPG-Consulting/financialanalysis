@@ -26,8 +26,8 @@ namespace FinancialAnalyst.Portfolios
                 if(portfolio.Transactions.Count > 0)
                 {
                     //recalculate asset allocations
-                    portfoliosContext.DeleteAssetAllocation(portfolio);
-                    AddAssetAllocations(portfolio);
+                    portfoliosContext.DeleteAssetAllocations(portfolio);
+                    CalculateAssetAllocations(portfolio);
                 }
             }
             message = "";
@@ -42,7 +42,7 @@ namespace FinancialAnalyst.Portfolios
         /// <param name="portfolioname"></param>
         /// <param name="fileStream">It expects a CSV file. First line has to be the initial balance</param>
         /// <returns></returns>
-        public bool Create(string userName, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance,out Portfolio portfolio, out string message)
+        public bool Create(string userName, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance, bool overrideIfExists, out Portfolio portfolio, out string message)
         {
             List<string[]> transactionsList = new List<string[]>();
 
@@ -54,12 +54,27 @@ namespace FinancialAnalyst.Portfolios
                 return false;
             }
 
-            portfolio = new Portfolio()
+            portfolio = portfoliosContext.GetPortfoliosByUserNameAndPortfolioName(userName, portfolioname);
+            int portfolioId;
+            if (overrideIfExists && portfolio != null)
             {
-                UserId = user.Id,
-                Name = portfolioname,
-            };
-            int portfolioId = portfoliosContext.Add(portfolio);
+                portfoliosContext.DeletePortfolio(portfolio);
+                portfolio = null;
+            }
+            
+            if (portfolio == null)
+            {
+                portfolio = new Portfolio()
+                {
+                    UserId = user.Id,
+                    Name = portfolioname,
+                };
+                portfolioId = portfoliosContext.Add(portfolio);
+            }
+            else
+            {
+                portfolioId = portfolio.Id;
+            }
 
             fileStream.Position = 0;
             using (StreamReader reader = new StreamReader(fileStream, System.Text.Encoding.UTF8, true))
@@ -77,10 +92,13 @@ namespace FinancialAnalyst.Portfolios
                         string line = reader.ReadLine();
                         string[] fields = line.Split(',');
                         PortfolioBalance pb = PortfolioBalance.From(fields);
-                        pb.PortfolioId = portfolioId;
-                        portfoliosContext.Add(pb);
-                        portfolio.Balances.Add(pb);
-                        portfolio.InitialBalance = pb.NetCashBalance;
+                        if (portfolio.Balances.Where(b => b.TransactionCode == pb.TransactionCode).Any() == false)
+                        {
+                            pb.PortfolioId = portfolioId;
+                            portfoliosContext.Add(pb);
+                            portfolio.Balances.Add(pb);
+                            portfolio.InitialBalance = pb.NetCashBalance;
+                        }
                     }
                 }
                 else
@@ -94,14 +112,14 @@ namespace FinancialAnalyst.Portfolios
                     string line = reader.ReadLine();
                     string[] fields = line.Split(',');
                     transactionsList.Add(fields);
-                    Transaction t = Transaction.From(portfolioId, fields);
+                    Transaction newTransaction = Transaction.From(portfolioId, fields);
                     
-                    if (t != null)
+                    if (newTransaction != null && portfolio.Transactions.Where(t => t.TransactionCode == newTransaction.TransactionCode).Any() == false)
                     {
-                        t.UserId = user.Id;
-                        t.PortfolioId = portfolioId;
-                        portfoliosContext.Add(t);
-                        portfolio.Transactions.Add(t);
+                        newTransaction.UserId = user.Id;
+                        newTransaction.PortfolioId = portfolioId;
+                        portfoliosContext.Add(newTransaction);
+                        portfolio.Transactions.Add(newTransaction);
                     }
                     else
                     {
@@ -110,13 +128,13 @@ namespace FinancialAnalyst.Portfolios
                 }
             }
 
-            AddAssetAllocations(portfolio);
+            CalculateAssetAllocations(portfolio);
 
             message = $"Portfilio '{portfolioname}' created successfuly.";
             return true;
         }
 
-        private void AddAssetAllocations(Portfolio portfolio)
+        private void CalculateAssetAllocations(Portfolio portfolio)
         {
 
             var query = from transaction in portfolio.Transactions
@@ -153,12 +171,14 @@ namespace FinancialAnalyst.Portfolios
                 portfolio.TotalCash -= allocationAmount;
             }
 
+            /*
             AssetAllocation cashAllocation = new AssetAllocation();
             cashAllocation.PortfolioId = portfolio.Id;
             cashAllocation.Ticker = "Cash";
             cashAllocation.Amount = portfolio.TotalCash;
             cashAllocation.Percentage = portfolio.TotalCash / initialAmount;
             portfolio.AssetAllocations.Add(cashAllocation);
+            */
         }
     }
 }

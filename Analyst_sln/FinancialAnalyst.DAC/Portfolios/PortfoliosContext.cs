@@ -16,7 +16,9 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         int Add(PortfolioBalance pb);
         User GetUser(string userName);
         IEnumerable<Portfolio> GetPortfoliosByUserName(string username);
-        void DeleteAssetAllocation(Portfolio portfolio);
+        Portfolio GetPortfoliosByUserNameAndPortfolioName(string userName, string portfolioname);
+        void DeleteAssetAllocations(Portfolio portfolio);
+        void DeletePortfolio(Portfolio portfolio);
     }
     public class PortfoliosContext : DbContext, IPortfoliosContext
     {
@@ -117,7 +119,22 @@ namespace FinancialAnalyst.DataAccess.Portfolios
                 return Portfolios.Include(p => p.Transactions).Include(p => p.AssetAllocations).Include(p => p.Balances).Where(p => p.UserId == user.Id).ToList();
         }
 
-        public void DeleteAssetAllocation(Portfolio portfolio)
+        public Portfolio GetPortfoliosByUserNameAndPortfolioName(string userName, string portfolioname)
+        {
+            User user = GetUser(userName);
+            if (user == null)
+                return null;
+            else
+                return Portfolios.Include(p => p.Transactions).Include(p => p.AssetAllocations).Include(p => p.Balances).Where(p => p.UserId == user.Id && p.Name == portfolioname).SingleOrDefault();
+        }
+
+        public void DeletePortfolio(Portfolio portfolio)
+        {
+            Portfolios.Remove(portfolio);
+            SaveChanges();
+        }
+
+        public void DeleteAssetAllocations(Portfolio portfolio)
         {
             List<AssetAllocation> aas = AssetAllocations.Where(aa => aa.PortfolioId == portfolio.Id).ToList();
             AssetAllocations.RemoveRange(aas);
