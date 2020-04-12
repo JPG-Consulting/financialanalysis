@@ -16,13 +16,20 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
 
         [JsonProperty]
         public Exchange? Exchange { get; set; }
+        
+        [JsonProperty]
+        public int? Quantity { get; set; }
 
         [JsonProperty]
-        public decimal? Amount { get; set; }
+        public decimal? Costs { get; set; }
+
+        [JsonProperty]
+        public decimal? MarketValue { get; set; }
 
         [JsonProperty]
         public decimal? Percentage { get; set; }
 
         public int PortfolioId { get; set; }
+        
     }
 }

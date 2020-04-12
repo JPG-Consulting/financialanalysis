@@ -26,16 +26,22 @@ namespace FinancialAnalyst.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal?>("Amount")
+                    b.Property<decimal?>("Costs")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("Exchange")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("MarketValue")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal?>("Percentage")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("PortfolioId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("Ticker")
@@ -55,13 +61,22 @@ namespace FinancialAnalyst.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("InitialBalance")
+                    b.Property<decimal?>("Cash")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("InitialBalance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("IsSimulated")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("MarketValue")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("TotalCash")
+                    b.Property<decimal?>("TotalCosts")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")

@@ -129,7 +129,5 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
             //showAssetDetailForm.MdiParent = this.ParentForm;
             showAssetDetailForm.Show();
         }
-
-        
     }
 }

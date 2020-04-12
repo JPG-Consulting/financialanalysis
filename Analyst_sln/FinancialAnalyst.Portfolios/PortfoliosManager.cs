@@ -135,12 +135,16 @@ namespace FinancialAnalyst.Portfolios
         private void CalculateAssetAllocations(Portfolio portfolio)
         {
             decimal initialAmount;
-            if (portfolio.Balances.Count() == 0)
-                initialAmount = portfolio.Transactions.Sum(t => t.Amount);
+            if (portfolio.InitialBalance.HasValue)
+                initialAmount = portfolio.InitialBalance.Value;
             else
-                initialAmount = portfolio.InitialBalance;
+            {
+                initialAmount = portfolio.Transactions.Sum(t => t.Amount);
+                portfolio.InitialBalance = initialAmount;
+            }
 
             decimal cash = initialAmount;
+            decimal totalCosts = 0;
             Dictionary<string, AssetAllocation> groups = new Dictionary<string, AssetAllocation>();
             foreach (Transaction t in portfolio.Transactions)
             {
@@ -152,7 +156,7 @@ namespace FinancialAnalyst.Portfolios
                         assetAllocation = new AssetAllocation() 
                         { 
                             Ticker = t.Symbol,
-                            Amount = 0,
+                            Costs = 0,
                             PortfolioId = portfolio.Id,
                         };
                         groups.Add(t.Symbol, assetAllocation);
@@ -168,11 +172,15 @@ namespace FinancialAnalyst.Portfolios
                      */
                     if (t.CashflowType == CashflowTypes.Bought)
                     {
-                        assetAllocation.Amount += Math.Abs(t.Amount);
+                        assetAllocation.Costs += Math.Abs(t.Amount);
+                        assetAllocation.Quantity += t.Quantity;
+                        totalCosts += Math.Abs(t.Amount);
                     }
                     else
                     {
-                        assetAllocation.Amount -= Math.Abs(t.Amount);
+                        assetAllocation.Costs -= Math.Abs(t.Amount);
+                        assetAllocation.Quantity -= t.Quantity;
+                        totalCosts -= Math.Abs(t.Amount);
                     }
 
                     cash += t.Amount;//Bougths are negative and sells are positive, there is no need to use abs()
@@ -196,18 +204,24 @@ namespace FinancialAnalyst.Portfolios
 
             foreach(var assetAllocation in groups)
             {
-                assetAllocation.Value.Percentage = assetAllocation.Value.Amount / initialAmount * 100;
+                assetAllocation.Value.Percentage = assetAllocation.Value.Costs / initialAmount * 100;
                 portfolio.AssetAllocations.Add(assetAllocation.Value);
             }
 
-            portfolio.TotalCash = cash;
+            /*
             AssetAllocation cashAllocation = new AssetAllocation();
             cashAllocation.PortfolioId = portfolio.Id;
             cashAllocation.Ticker = "Cash";
-            cashAllocation.Amount = portfolio.TotalCash;
-            cashAllocation.Percentage = portfolio.TotalCash / initialAmount;
+            cashAllocation.Costs = cash;
+            cashAllocation.Percentage = cash / initialAmount;
             portfolio.AssetAllocations.Add(cashAllocation);
+            */
 
+            portfolio.Cash = cash;
+            portfolio.TotalCosts = totalCosts;
+            portfolio.MarketValue = totalCosts;//TODO: Pending to calculate
+            portfolio.IsSimulated = false;
+            portfoliosContext.Update(portfolio);
         }
     }
 }

@@ -42,6 +42,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
                     "KHC","KO","KR","LBTYA","LBTYK","LILA","LILAK","LSXMA","LSXMK","LUV","MA","MCO","MDLZ","MTB","OXY","PG","PNC","PSX",
                     "RH","QSR","SIRI","SPY","STNE","STOR","SU","SYF","TEVA","TRV","UAL","UPS","USB","V","VOO","VRSN","WFC",});
                 portfolio.UserId = defaultUser.Id;
+                portfolio.IsSimulated = true;
                 context.Add(portfolio);
             }
 
@@ -50,6 +51,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
             {
                 Portfolio portfolio = Portfolio.From(name, new string[] { "TQQQ", "SPXL", "TNA", "MIDU", "VNQ", "GEX", });
                 portfolio.UserId = defaultUser.Id;
+                portfolio.IsSimulated = true;
                 context.Add(portfolio);
             }
 
@@ -58,6 +60,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
             {
                 Portfolio portfolio = Portfolio.From(name, new string[] { "AAPL", "AMZN", "CSCO", "GOOGL", "IBM", "MSFT", "ORCL", });
                 portfolio.UserId = defaultUser.Id;
+                portfolio.IsSimulated = true;
                 context.Add(portfolio);
             }
         }

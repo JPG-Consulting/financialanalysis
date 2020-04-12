@@ -19,6 +19,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         Portfolio GetPortfoliosByUserNameAndPortfolioName(string userName, string portfolioname);
         void DeleteAssetAllocations(Portfolio portfolio);
         void DeletePortfolio(Portfolio portfolio);
+        void Update(Portfolio portfolio);
     }
     public class PortfoliosContext : DbContext, IPortfoliosContext
     {
@@ -80,6 +81,8 @@ namespace FinancialAnalyst.DataAccess.Portfolios
             return connString;
         }
 
+        #region CRUD
+
         public int Add(Portfolio portfolio)
         {
             Portfolios.Add(portfolio);
@@ -128,6 +131,11 @@ namespace FinancialAnalyst.DataAccess.Portfolios
                 return Portfolios.Include(p => p.Transactions).Include(p => p.AssetAllocations).Include(p => p.Balances).Where(p => p.UserId == user.Id && p.Name == portfolioname).SingleOrDefault();
         }
 
+        public void Update(Portfolio portfolio)
+        {
+            SaveChanges();
+        }
+
         public void DeletePortfolio(Portfolio portfolio)
         {
             Portfolios.Remove(portfolio);
@@ -139,6 +147,6 @@ namespace FinancialAnalyst.DataAccess.Portfolios
             List<AssetAllocation> aas = AssetAllocations.Where(aa => aa.PortfolioId == portfolio.Id).ToList();
             AssetAllocations.RemoveRange(aas);
         }
-
+        #endregion
     }
 }

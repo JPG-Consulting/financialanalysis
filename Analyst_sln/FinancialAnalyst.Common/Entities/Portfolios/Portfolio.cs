@@ -20,7 +20,6 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
 
         [JsonProperty]
         public int UserId { get; set; }
-
         
         public List<AssetAllocation> AssetAllocations
         {
@@ -64,12 +63,29 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
             }
         }
 
-        [JsonProperty]
-        public decimal TotalCash { get; set; }
-
+        
         [JsonProperty]
         public string Name { get; set; }
-        public decimal InitialBalance { get; set; }
+
+        [JsonProperty]
+        public decimal? InitialBalance { get; set; }
+
+        [JsonProperty]
+        public decimal? TotalCosts { get; set; }
+
+        [JsonProperty]
+        public decimal? Cash { get; set; }
+
+
+        [JsonProperty]
+        public decimal? MarketValue { get; set; }
+
+        /// <summary>
+        /// It is used to know if asset allocations are simulated or are calculated from existing transactions
+        /// </summary>
+        [JsonProperty]
+        public bool IsSimulated { get; set; }
+
 
         public static Portfolio From(string name, string[] tickers)
         {

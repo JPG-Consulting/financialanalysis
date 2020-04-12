@@ -34,8 +34,10 @@
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.portfolioSummaryUserControl1 = new FinancialAnalyst.UI.Windows.UserControls.PortfolioSummaryUserControl();
             this.dataGridViewPortfolios_NameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewPortfolios_TotalCashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewPortfolios_InitialBalanceColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewPortfolios_TotalCostsColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewPortfolios_MarketValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewPortfolios_TotalCashColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -48,6 +50,7 @@
             this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerMain.Location = new System.Drawing.Point(0, 0);
             this.splitContainerMain.Name = "splitContainerMain";
+            this.splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainerMain.Panel1
             // 
@@ -59,7 +62,7 @@
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.portfolioSummaryUserControl1);
             this.splitContainerMain.Size = new System.Drawing.Size(1536, 750);
-            this.splitContainerMain.SplitterDistance = 314;
+            this.splitContainerMain.SplitterDistance = 173;
             this.splitContainerMain.TabIndex = 1;
             // 
             // dataGridViewPortfolios
@@ -67,11 +70,13 @@
             this.dataGridViewPortfolios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewPortfolios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewPortfolios_NameColumn,
-            this.dataGridViewPortfolios_TotalCashColumn,
-            this.dataGridViewPortfolios_InitialBalanceColumn});
+            this.dataGridViewPortfolios_InitialBalanceColumn,
+            this.dataGridViewPortfolios_TotalCostsColumn,
+            this.dataGridViewPortfolios_MarketValueColumn,
+            this.dataGridViewPortfolios_TotalCashColumn});
             this.dataGridViewPortfolios.Location = new System.Drawing.Point(3, 32);
             this.dataGridViewPortfolios.Name = "dataGridViewPortfolios";
-            this.dataGridViewPortfolios.Size = new System.Drawing.Size(297, 150);
+            this.dataGridViewPortfolios.Size = new System.Drawing.Size(558, 120);
             this.dataGridViewPortfolios.TabIndex = 2;
             this.dataGridViewPortfolios.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.dataGridViewPortfolios_RowStateChanged);
             // 
@@ -100,34 +105,46 @@
             this.portfolioSummaryUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.portfolioSummaryUserControl1.Location = new System.Drawing.Point(0, 0);
             this.portfolioSummaryUserControl1.Name = "portfolioSummaryUserControl1";
-            this.portfolioSummaryUserControl1.Size = new System.Drawing.Size(1218, 750);
+            this.portfolioSummaryUserControl1.Size = new System.Drawing.Size(1536, 573);
             this.portfolioSummaryUserControl1.TabIndex = 1;
             // 
             // dataGridViewPortfolios_NameColumn
             // 
             this.dataGridViewPortfolios_NameColumn.DataPropertyName = "Name";
-            this.dataGridViewPortfolios_NameColumn.FillWeight = 50F;
+            this.dataGridViewPortfolios_NameColumn.FillWeight = 40F;
             this.dataGridViewPortfolios_NameColumn.HeaderText = "Name";
             this.dataGridViewPortfolios_NameColumn.Name = "dataGridViewPortfolios_NameColumn";
             this.dataGridViewPortfolios_NameColumn.ReadOnly = true;
             // 
-            // dataGridViewPortfolios_TotalCashColumn
-            // 
-            this.dataGridViewPortfolios_TotalCashColumn.DataPropertyName = "TotalCash";
-            this.dataGridViewPortfolios_TotalCashColumn.FillWeight = 25F;
-            this.dataGridViewPortfolios_TotalCashColumn.HeaderText = "Total cash";
-            this.dataGridViewPortfolios_TotalCashColumn.Name = "dataGridViewPortfolios_TotalCashColumn";
-            this.dataGridViewPortfolios_TotalCashColumn.ReadOnly = true;
-            this.dataGridViewPortfolios_TotalCashColumn.Width = 75;
-            // 
             // dataGridViewPortfolios_InitialBalanceColumn
             // 
             this.dataGridViewPortfolios_InitialBalanceColumn.DataPropertyName = "InitialBalance";
-            this.dataGridViewPortfolios_InitialBalanceColumn.FillWeight = 25F;
+            this.dataGridViewPortfolios_InitialBalanceColumn.FillWeight = 15F;
             this.dataGridViewPortfolios_InitialBalanceColumn.HeaderText = "Initial balance";
             this.dataGridViewPortfolios_InitialBalanceColumn.Name = "dataGridViewPortfolios_InitialBalanceColumn";
             this.dataGridViewPortfolios_InitialBalanceColumn.ReadOnly = true;
-            this.dataGridViewPortfolios_InitialBalanceColumn.Width = 75;
+            // 
+            // dataGridViewPortfolios_TotalCostsColumn
+            // 
+            this.dataGridViewPortfolios_TotalCostsColumn.DataPropertyName = "TotalCosts";
+            this.dataGridViewPortfolios_TotalCostsColumn.FillWeight = 15F;
+            this.dataGridViewPortfolios_TotalCostsColumn.HeaderText = "Costs";
+            this.dataGridViewPortfolios_TotalCostsColumn.Name = "dataGridViewPortfolios_TotalCostsColumn";
+            // 
+            // dataGridViewPortfolios_MarketValueColumn
+            // 
+            this.dataGridViewPortfolios_MarketValueColumn.DataPropertyName = "MarketValue";
+            this.dataGridViewPortfolios_MarketValueColumn.FillWeight = 15F;
+            this.dataGridViewPortfolios_MarketValueColumn.HeaderText = "Mkt Value";
+            this.dataGridViewPortfolios_MarketValueColumn.Name = "dataGridViewPortfolios_MarketValueColumn";
+            // 
+            // dataGridViewPortfolios_TotalCashColumn
+            // 
+            this.dataGridViewPortfolios_TotalCashColumn.DataPropertyName = "Cash";
+            this.dataGridViewPortfolios_TotalCashColumn.FillWeight = 15F;
+            this.dataGridViewPortfolios_TotalCashColumn.HeaderText = "Cash";
+            this.dataGridViewPortfolios_TotalCashColumn.Name = "dataGridViewPortfolios_TotalCashColumn";
+            this.dataGridViewPortfolios_TotalCashColumn.ReadOnly = true;
             // 
             // PortfolioPlannerForm
             // 
@@ -155,7 +172,9 @@
         private System.Windows.Forms.DataGridView dataGridViewPortfolios;
         private UserControls.PortfolioSummaryUserControl portfolioSummaryUserControl1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_NameColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_TotalCashColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_InitialBalanceColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_TotalCostsColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_MarketValueColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewPortfolios_TotalCashColumn;
     }
 }
