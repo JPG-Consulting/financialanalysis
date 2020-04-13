@@ -146,6 +146,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         {
             List<AssetAllocation> aas = AssetAllocations.Where(aa => aa.PortfolioId == portfolio.Id).ToList();
             AssetAllocations.RemoveRange(aas);
+            SaveChanges();
         }
         #endregion
     }

@@ -157,6 +157,7 @@ namespace FinancialAnalyst.Portfolios
                         { 
                             Ticker = t.Symbol,
                             Costs = 0,
+                            Quantity = 0,
                             PortfolioId = portfolio.Id,
                         };
                         groups.Add(t.Symbol, assetAllocation);

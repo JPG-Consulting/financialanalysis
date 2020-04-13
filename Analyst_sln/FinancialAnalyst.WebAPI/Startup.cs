@@ -13,7 +13,7 @@ using FinancialAnalyst.DataAccess.EdgarSEC.Repositories;
 using FinancialAnalyst.DataAccess.EdgarSEC.Repositories.BulkRepositories;
 using FinancialAnalyst.DataAccess.Portfolios;
 using FinancialAnalyst.DataSources;
-using FinancialAnalyst.DataSources.Nasdaq;
+using FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq;
 using FinancialAnalyst.DataSources.Reuters;
 using FinancialAnalyst.DataSources.USTreasury;
 using FinancialAnalyst.DataSources.Yahoo;
@@ -64,6 +64,7 @@ namespace FinancialAnalyst.WebAPI
             services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
             services.AddTransient<IFinancialDataSource, ReutersDataSource>();
             services.AddTransient<IRiskFreeRatesDataSource, USTreasuryDataSource>();
+            services.AddTransient<ILastPriceDataSource, NasdaqDataSource>();
 
             services.AddTransient<IEdgarService, EdgarService>();
             services.AddTransient<IEdgarDatasetParser, EdgarDatasetParser>();

@@ -1,22 +1,54 @@
-﻿using Newtonsoft.Json;
+﻿using FinancialAnalyst.Common.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 
-namespace FinancialAnalyst.DataSources.Nasdaq
+namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
 {
     internal class NasdaqApiCaller
     {
         private static readonly HttpClient httpClient = new HttpClient() { BaseAddress = new Uri("https://api.nasdaq.com/api/") };
 
-        internal static bool GetOptionChain(string ticker,DateTime from, DateTime to, out string jsonResponse, out string errorMessage)
+        internal static bool GetStockSummary(string ticker, Exchange? exchange, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out string message)
         {
-            //https://api.nasdaq.com/api/quote/GM/option-chain?assetclass=stocks&todate=2020-03-31&fromdate=2020-03-01&limit=0
+            //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
+            string uri = $"{httpClient.BaseAddress}quote/{ticker}/info?assetclass=stocks";
+            HttpResponseMessage responseMessage = httpClient.GetAsync(uri).Result;
+            string originalContent = responseMessage.Content.ReadAsStringAsync().Result;
+            string content = originalContent;
+            statusCode = responseMessage.StatusCode;
+            if (responseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                jsonResponse = content;
+                nasdaqResponse = JsonConvert.DeserializeObject<NasdaqResponse>(jsonResponse);
+                message = "OK";
+                return true;
+            }
+            else
+            {
+                dynamic error = new
+                {
+                    HttpStatusCode = responseMessage.StatusCode.ToString(),
+                    ReasonPhrase = responseMessage.ReasonPhrase,
+                    ContentResponse = content,
+                };
+                jsonResponse = JsonConvert.SerializeObject(error);
+                nasdaqResponse = null;
+                message = responseMessage.ReasonPhrase;
+                return false;
+            }
+        }
 
-            string strFrom = from.ToString("yyyy-MM-dd", null);
-            string strTo = to.ToString("yyyy-MM-dd", null);
-            string uri = $"{httpClient.BaseAddress}quote/{ticker}/option-chain?assetclass=stocks&todate={strTo}&fromdate={strFrom}&limit=0";
+        internal static bool GetFinancialData(string ticker, out string jsonResponse, out string errorMessage)
+        {
+            //https://api.nasdaq.com/api/company/GM/financials?frequency=1
+            //https://api.nasdaq.com/api/company/AMZN/financials?frequency=1
+            //https://api.nasdaq.com/api/company/AAPL/financials?frequency=1
+
+            string uri = $"{httpClient.BaseAddress}company/{ticker}/financials?frequency=1";
             HttpResponseMessage responseMessage = httpClient.GetAsync(uri).Result;
             string originalContent = responseMessage.Content.ReadAsStringAsync().Result;
             string content = originalContent;
@@ -40,13 +72,13 @@ namespace FinancialAnalyst.DataSources.Nasdaq
             }
         }
 
-        internal static bool GetFinancialData(string ticker, out string jsonResponse, out string errorMessage)
+        internal static bool GetOptionChain(string ticker,DateTime from, DateTime to, out string jsonResponse, out string errorMessage)
         {
-            //https://api.nasdaq.com/api/company/GM/financials?frequency=1
-            //https://api.nasdaq.com/api/company/AMZN/financials?frequency=1
-            //https://api.nasdaq.com/api/company/AAPL/financials?frequency=1
+            //https://api.nasdaq.com/api/quote/GM/option-chain?assetclass=stocks&todate=2020-03-31&fromdate=2020-03-01&limit=0
 
-            string uri = $"{httpClient.BaseAddress}company/{ticker}/financials?frequency=1";
+            string strFrom = from.ToString("yyyy-MM-dd", null);
+            string strTo = to.ToString("yyyy-MM-dd", null);
+            string uri = $"{httpClient.BaseAddress}quote/{ticker}/option-chain?assetclass=stocks&todate={strTo}&fromdate={strFrom}&limit=0";
             HttpResponseMessage responseMessage = httpClient.GetAsync(uri).Result;
             string originalContent = responseMessage.Content.ReadAsStringAsync().Result;
             string content = originalContent;

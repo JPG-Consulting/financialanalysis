@@ -31,6 +31,11 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
             throw new NotImplementedException();
         }
 
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionChain, out string errorMessage)
         {
             throw new NotImplementedException();

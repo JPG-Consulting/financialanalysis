@@ -30,6 +30,17 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         public decimal? Percentage { get; set; }
 
         public int PortfolioId { get; set; }
-        
+
+        /// <summary>
+        /// It updates the market value if there is quantity.
+        /// </summary>
+        /// <param name="price"></param>
+        public void CalculateMarketValue(decimal price)
+        {
+            if (Quantity.HasValue)
+            {
+                MarketValue = Quantity.Value * price;
+            }
+        }
     }
 }

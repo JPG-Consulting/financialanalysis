@@ -10,13 +10,19 @@ using System.Windows.Forms;
 using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Interfaces.UIInterfaces;
 using System.Runtime.InteropServices;
+using FinancialAnalyst.WebAPICallers;
+using FinancialAnalyst.Common.Entities.Prices;
 
 namespace FinancialAnalyst.UI.Windows.UserControls
 {
     public partial class PortfolioSummaryUserControl: UserControl
     {
-        private Portfolio portfolio;
-        private ICallerForm callerForm;
+        private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(typeof(PortfolioSummaryUserControl));
+
+        private Portfolio _portfolio;
+        private ICallerForm _callerForm;
+        private Task _updateTask;
+        private bool _runUpdateTask = false;
 
         public PortfolioSummaryUserControl()
         {
@@ -24,9 +30,21 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             dataGridViewAssets.AutoGenerateColumns = false;
         }
 
-        public void Set(ICallerForm callerForm,Portfolio portfolio)
+        public void Set(ICallerForm callerForm, Portfolio portfolio)
         {
-            this.callerForm = callerForm;
+            if (_portfolio != null)
+            { 
+                _runUpdateTask = false;
+                if (_updateTask != null)
+                    Task.WaitAll(new Task[] { _updateTask });
+            }
+
+            _callerForm = callerForm;
+            _portfolio = portfolio;
+
+            _runUpdateTask = true;
+            LaunchUpdateTask(_portfolio);
+
             dataGridViewAssets.AutoGenerateColumns = false;
 
             int indexPercentage = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_ProportionColumn.Name).Single().Index;
@@ -36,8 +54,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             int indexMktValue = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_MarketValueColumn.Name).Single().Index;
             dataGridViewAssets.Columns[indexMktValue].DefaultCellStyle.Format = "N2";
             dataGridViewAssets.Columns[indexMktValue].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-            this.portfolio = portfolio;
+            
             dataGridViewAssets.DataSource = portfolio.AssetAllocations;
             labelName.Text = portfolio.Name;
 
@@ -45,6 +62,54 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             dataGridViewAssets.Columns[indexCosts].Visible = portfolio.IsSimulated == false;
 
             CalculateTotals(portfolio);
+        }
+
+        private void LaunchUpdateTask(Portfolio portfolio)
+        {
+            _updateTask = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+
+                    //update market values
+                    int i = 0;
+                    AssetAllocation[] assetAllocations = portfolio.AssetAllocations.ToArray();
+                    while(_runUpdateTask && i < assetAllocations.Length)
+                    {
+                        AssetAllocation assetAllocation = assetAllocations[i];
+                        try
+                        {
+                            LastPrice price = DataSourcesAPICaller.GetLastPrice(assetAllocation.Ticker, assetAllocation.Exchange);
+                            if (price != null)
+                                assetAllocation.CalculateMarketValue(price.Price);
+
+                            Invoke(new Action(() => dataGridViewAssets.Refresh()));
+                        }
+                        catch(Exception ex)
+                        {
+                            _logger.Error($"LaunchUpdateTask failed for portfolio='{portfolio.Name}' (UserId='{portfolio.UserId}'), Ticker={assetAllocation.Ticker}: {ex.Message}", ex);
+                        }
+                        i++;
+                    }
+
+                    //TODO: pending to update percentages
+
+
+
+                    
+                }
+                catch(Exception ex)
+                {
+                    _logger.Error($"LaunchUpdateTask failed for portfolio='{portfolio.Name}' (UserId='{portfolio.UserId}'): {ex.Message}", ex);
+                    MessageBox.Show(ex.Message, "Prices update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    
+                    _runUpdateTask = false;
+                    _updateTask = null;
+                }
+            });
         }
 
         private void dataGridViewAssets_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -56,7 +121,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
 
             if(e.ColumnIndex == dataGridViewAssets_ProportionColumn.Index)
             {
-                CalculateTotals(portfolio);
+                CalculateTotals(_portfolio);
             }
         }
 
@@ -68,7 +133,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             if (e.ColumnIndex == dataGridViewAssets_ShowDetailColumn.Index)
             {
                 AssetAllocation assetAllocation = (AssetAllocation)dataGridViewAssets.Rows[e.RowIndex].DataBoundItem;
-                callerForm.Show(assetAllocation);
+                _callerForm.Show(assetAllocation);
             }
         }
 

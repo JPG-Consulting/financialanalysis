@@ -9,16 +9,20 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using log4net;
+using System.Globalization;
+using System.Net;
 
-namespace FinancialAnalyst.DataSources.Nasdaq
+namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
 {
-    public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource
+    public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource, ILastPriceDataSource
     {
-        private readonly ILog logger = log4net.LogManager.GetLogger(typeof(NasdaqDataSource));
+        private static readonly ILog logger = log4net.LogManager.GetLogger(typeof(NasdaqDataSource));
+        private static readonly CultureInfo enUsCultureInfo = new CultureInfo("en-us");
 
         public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
+            bool ok = NasdaqApiCaller.GetStockSummary(ticker, exchange, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out errorMessage);
             throw new NotImplementedException();
         }
 
@@ -27,6 +31,7 @@ namespace FinancialAnalyst.DataSources.Nasdaq
             //Example
             //https://api.nasdaq.com/api/company/AAPL/financials?frequency=1
             bool ok = NasdaqApiCaller.GetFinancialData(ticker, out string jsonResponse, out errorMessage);
+            dynamic rawdata = JsonConvert.DeserializeObject(jsonResponse);
             throw new NotImplementedException();
         }
 
@@ -92,6 +97,72 @@ namespace FinancialAnalyst.DataSources.Nasdaq
         public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, PriceList historicalPrices, out OptionsChain optionsChain, out string errorMessage)
         {
             throw new NotImplementedException();
+        }
+
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
+        {
+            //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
+            bool ok = NasdaqApiCaller.GetStockSummary(ticker, exchange, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out message);
+            if(statusCode == HttpStatusCode.OK)
+            {
+                if (nasdaqResponse.Status.Code == 200)
+                {
+                    dynamic rawdata = JsonConvert.DeserializeObject(jsonResponse);
+                    lastPrice = new LastPrice();
+                    string temp = rawdata.data.primaryData.lastSalePrice.ToString();
+                    lastPrice.Price = decimal.Parse(temp.Substring(1),enUsCultureInfo);
+                    temp = rawdata.data.primaryData.lastTradeTimestamp.ToString();
+                    lastPrice.TimeStamp = ParseDateTime(temp);
+                    temp = rawdata.data.keyStats.Volume.value.ToString();
+                    lastPrice.Volume = int.Parse(temp, NumberStyles.Integer | NumberStyles.AllowThousands, enUsCultureInfo);
+                    temp = rawdata.data.keyStats.PreviousClose.value.ToString();
+                    lastPrice.PreviousClose = decimal.Parse(temp.Substring(1), enUsCultureInfo);
+                    return true;
+                }
+                else if(nasdaqResponse.Status.Code == 400 && nasdaqResponse.Status.CodeMessage.Count > 0)
+                {
+                    var nasdaqMessage = nasdaqResponse.Status.CodeMessage[0];
+                    message = $"{nasdaqMessage.ErrorMessage} (Code={nasdaqMessage.Code})";
+                }
+            }
+            lastPrice = null;
+            return false;
+        }
+
+        private DateTime ParseDateTime(dynamic timestamp)
+        {
+            //https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+
+            string strTimeStamp = (string)timestamp;
+            strTimeStamp = strTimeStamp.Replace("DATA AS OF ","");
+            strTimeStamp = strTimeStamp.Replace(" - AFTER HOURS", "");
+            TimeZoneInfo timezone = null;
+            if (strTimeStamp.Contains(" ET"))
+            {
+                strTimeStamp = strTimeStamp.Replace(" ET", "");
+                timezone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            }
+
+            DateTime dt;
+            bool ok = DateTime.TryParseExact(strTimeStamp, "MMM dd, yyyy h:mm tt", enUsCultureInfo, DateTimeStyles.None, out DateTime result1);
+            if (ok)
+            {
+                if (timezone != null)
+                {
+                    DateTime utcTime = TimeZoneInfo.ConvertTimeToUtc(result1, timezone);
+                }
+                dt = result1;
+            }
+            else
+            {
+                ok = DateTime.TryParseExact(strTimeStamp, "MMM dd, yyyy", enUsCultureInfo, DateTimeStyles.None, out DateTime result2);
+                if (ok)
+                    dt = result2;
+                else
+                    dt = DateTime.MaxValue;
+                    
+            }
+            return dt;
         }
 
         private int GetLastDay(int month)

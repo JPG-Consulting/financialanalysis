@@ -20,8 +20,8 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
     public partial class PortfolioPlannerForm : Form, ICallerForm
     {
         private readonly List<AssetDetailForm> showAssetDetailForms = new List<AssetDetailForm>();
-        const string userName = "sgastia";
-
+        const string userName = "sgastia";//TODO: add login
+        private IEnumerable<Portfolio> _portfolios;
 
         public PortfolioPlannerForm()
         {
@@ -114,18 +114,20 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         {
             try
             {
-                IEnumerable<Portfolio> portfolios = PortfoliosAPICaller.GetPortfoliosByUser(userName);
-                dataGridViewPortfolios.DataSource = portfolios;
+                if(_portfolios == null)
+                    _portfolios = PortfoliosAPICaller.GetPortfoliosByUser(userName);
+                dataGridViewPortfolios.DataSource = _portfolios;
             }
             catch (Exception ex)
             {
+                _portfolios = null;
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void Show(Portfolio portfolio)
         {
-            portfolioSummaryUserControl1.Set(this,portfolio);
+            portfolioSummaryUserControl1.Set(this, portfolio);
         }
 
         public void Show(AssetAllocation alloc)

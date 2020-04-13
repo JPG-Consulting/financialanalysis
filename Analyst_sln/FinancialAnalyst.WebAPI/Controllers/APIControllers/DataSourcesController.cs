@@ -161,7 +161,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
             {
                 return new APIResponse<PriceList>()
                 {
-                    Content = (PriceList)prices,
+                    Content = prices,
                     Ok = true,
                     ErrorMessage = message,
                 };
@@ -176,6 +176,56 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 };
             }
 
+        }
+
+        [HttpGet("getlastprice")]
+        public APIResponse<LastPrice> GetLastPrice(string ticker, string exchange)
+        {
+            if (string.IsNullOrEmpty(ticker))
+            {
+                return new APIResponse<LastPrice>()
+                {
+                    Ok = false,
+                    ErrorMessage = Resources.UI_TickerNull,
+                };
+            }
+
+            Exchange? exch = null;
+            if (string.IsNullOrEmpty(exchange) == false)
+            {
+                if (Enum.TryParse<Exchange>(exchange, out Exchange exchangeValue))
+                {
+                    exch = exchangeValue;
+                }
+                else
+                {
+                    return new APIResponse<LastPrice>()
+                    {
+                        Content = null,
+                        Ok = false,
+                        ErrorMessage = $"Market {exchange} is not a valid market",
+                    };
+                }
+            }
+
+            if (dataSource.TryGetLastPrice(ticker, exch, out LastPrice price, out string message))
+            {
+                return new APIResponse<LastPrice>()
+                {
+                    Content = price,
+                    Ok = true,
+                    ErrorMessage = message,
+                };
+            }
+            else
+            {
+                return new APIResponse<LastPrice>()
+                {
+                    Content = null,
+                    Ok = false,
+                    ErrorMessage = message,
+                };
+            }
         }
     }
 }

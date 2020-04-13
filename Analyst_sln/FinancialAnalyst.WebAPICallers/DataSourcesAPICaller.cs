@@ -26,11 +26,11 @@ namespace FinancialAnalyst.WebAPICallers
             return JsonConvert.DeserializeObject<APIResponse<Stock>>(jsonResponse);
         }
 
-        public static APIResponse<PriceList> GetPrices(string ticker, Exchange? market, DateTime? from, DateTime? to, PriceInterval interval)
+        public static APIResponse<PriceList> GetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval)
         {
             string uri = $"api/DataSources/getprices?ticker={ticker}";
-            if (market.HasValue)
-                uri += $"&market={market.ToString()}";
+            if (exchange.HasValue)
+                uri += $"&market={exchange.ToString()}";
 
             if (from.HasValue)
                 uri += $"&from={from.Value.ToString("")}";
@@ -42,6 +42,20 @@ namespace FinancialAnalyst.WebAPICallers
             HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
             return JsonConvert.DeserializeObject<APIResponse<PriceList>>(jsonResponse);
 
+        }
+
+        public static LastPrice GetLastPrice(string ticker, Exchange? exchange)
+        {
+            string uri = $"api/DataSources/getlastprice?ticker={ticker}";
+            if (exchange.HasValue)
+                uri += $"&market={exchange.ToString()}";
+
+            HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
+            var response = JsonConvert.DeserializeObject<APIResponse<LastPrice>>(jsonResponse);
+            if (response.Ok)
+                return response.Content;
+            else
+                return null;
         }
     }
 }
