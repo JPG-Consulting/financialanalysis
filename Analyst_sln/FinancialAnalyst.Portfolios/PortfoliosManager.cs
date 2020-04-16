@@ -1,6 +1,8 @@
 ﻿using FinancialAnalyst.Common.Entities.Portfolios;
+using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Entities.Users;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using FinancialAnalyst.DataAccess.Portfolios;
 using System;
 using System.Collections.Generic;
@@ -13,9 +15,11 @@ namespace FinancialAnalyst.Portfolios
     public class PortfoliosManager : IPortfoliosManager
     {
         private readonly IPortfoliosContext portfoliosContext;
-        public PortfoliosManager(IPortfoliosContext portfoliosContext)
+        private readonly IPricesDataSource priceDataSource;
+        public PortfoliosManager(IPortfoliosContext portfoliosContext, IPricesDataSource priceDataSource)
         {
             this.portfoliosContext = portfoliosContext;
+            this.priceDataSource = priceDataSource;
         }
 
         public bool GetPortfoliosByUserName(string username, out IEnumerable<Portfolio> portfolios, out string message)
@@ -130,6 +134,45 @@ namespace FinancialAnalyst.Portfolios
 
             message = $"Portfilio '{portfolioname}' created successfuly.";
             return true;
+        }
+
+        public bool Update(int portfolioId, decimal marketValue)
+        {
+            /*
+            Portfolio portfolio = portfoliosContext.GetPortfolioById(portfolioId);
+            portfolio.MarketValue = marketValue;
+            portfoliosContext.Update(portfolio);
+            */
+            throw new NotImplementedException();
+        }
+
+        public bool Update(AssetAllocation assetAllocation, out decimal? marketValue)
+        {
+            if (priceDataSource.TryGetLastPrice(assetAllocation.Ticker, assetAllocation.Exchange, out LastPrice price, out string message))
+            {
+                if (price != null)
+                {
+                    marketValue = assetAllocation.UpdateMarketValue(price.Price, price.TimeStamp);
+                    if (marketValue.HasValue == false)
+                        marketValue = assetAllocation.Costs.Value;
+                }
+                else
+                {
+                    if (assetAllocation.Costs.HasValue)
+                        marketValue = assetAllocation.Costs.Value;
+                    else
+                        marketValue = null;
+                }
+                portfoliosContext.Update(assetAllocation);
+                return true;
+            }
+            else
+            {
+                marketValue = null;
+                return false;
+            }
+
+            
         }
 
         private void CalculateAssetAllocations(Portfolio portfolio)

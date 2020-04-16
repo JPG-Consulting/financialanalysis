@@ -17,9 +17,12 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         User GetUser(string userName);
         IEnumerable<Portfolio> GetPortfoliosByUserName(string username);
         Portfolio GetPortfoliosByUserNameAndPortfolioName(string userName, string portfolioname);
+        void Update(Portfolio portfolio);
+        void Update(AssetAllocation allocation);
         void DeleteAssetAllocations(Portfolio portfolio);
         void DeletePortfolio(Portfolio portfolio);
-        void Update(Portfolio portfolio);
+        
+        
     }
     public class PortfoliosContext : DbContext, IPortfoliosContext
     {
@@ -133,6 +136,16 @@ namespace FinancialAnalyst.DataAccess.Portfolios
 
         public void Update(Portfolio portfolio)
         {
+            Entry(portfolio).State = EntityState.Modified;
+            SaveChanges();
+        }
+
+        public void Update(AssetAllocation allocation)
+        {
+            //TODO: FALTA CAMPO FECHA DE ACTUALIZACION
+
+            AssetAllocations.Attach(allocation);
+            Entry(allocation).State = EntityState.Modified;
             SaveChanges();
         }
 

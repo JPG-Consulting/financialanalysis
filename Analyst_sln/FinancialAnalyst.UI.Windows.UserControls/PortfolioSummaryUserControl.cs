@@ -12,6 +12,7 @@ using FinancialAnalyst.Common.Interfaces.UIInterfaces;
 using System.Runtime.InteropServices;
 using FinancialAnalyst.WebAPICallers;
 using FinancialAnalyst.Common.Entities.Prices;
+using FinancialAnalyst.Common.Entities.RequestResponse;
 
 namespace FinancialAnalyst.UI.Windows.UserControls
 {
@@ -21,8 +22,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
 
         private Portfolio _portfolio;
         private ICallerForm _callerForm;
-        private Task _updateTask;
-        private bool _runUpdateTask = false;
+        private Task _updateTask = null;
 
         public PortfolioSummaryUserControl()
         {
@@ -34,16 +34,12 @@ namespace FinancialAnalyst.UI.Windows.UserControls
         {
             if (_portfolio != null)
             { 
-                _runUpdateTask = false;
                 if (_updateTask != null)
                     Task.WaitAll(new Task[] { _updateTask });
             }
 
             _callerForm = callerForm;
             _portfolio = portfolio;
-
-            _runUpdateTask = true;
-            LaunchUpdateTask(_portfolio);
 
             dataGridViewAssets.AutoGenerateColumns = false;
 
@@ -64,53 +60,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             CalculateTotals(portfolio);
         }
 
-        private void LaunchUpdateTask(Portfolio portfolio)
-        {
-            _updateTask = Task.Factory.StartNew(() =>
-            {
-                try
-                {
-
-                    //update market values
-                    int i = 0;
-                    AssetAllocation[] assetAllocations = portfolio.AssetAllocations.ToArray();
-                    while(_runUpdateTask && i < assetAllocations.Length)
-                    {
-                        AssetAllocation assetAllocation = assetAllocations[i];
-                        try
-                        {
-                            LastPrice price = DataSourcesAPICaller.GetLastPrice(assetAllocation.Ticker, assetAllocation.Exchange);
-                            if (price != null)
-                                assetAllocation.CalculateMarketValue(price.Price);
-
-                            Invoke(new Action(() => dataGridViewAssets.Refresh()));
-                        }
-                        catch(Exception ex)
-                        {
-                            _logger.Error($"LaunchUpdateTask failed for portfolio='{portfolio.Name}' (UserId='{portfolio.UserId}'), Ticker={assetAllocation.Ticker}: {ex.Message}", ex);
-                        }
-                        i++;
-                    }
-
-                    //TODO: pending to update percentages
-
-
-
-                    
-                }
-                catch(Exception ex)
-                {
-                    _logger.Error($"LaunchUpdateTask failed for portfolio='{portfolio.Name}' (UserId='{portfolio.UserId}'): {ex.Message}", ex);
-                    MessageBox.Show(ex.Message, "Prices update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    
-                    _runUpdateTask = false;
-                    _updateTask = null;
-                }
-            });
-        }
+        
 
         private void dataGridViewAssets_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -135,6 +85,33 @@ namespace FinancialAnalyst.UI.Windows.UserControls
                 AssetAllocation assetAllocation = (AssetAllocation)dataGridViewAssets.Rows[e.RowIndex].DataBoundItem;
                 _callerForm.Show(assetAllocation);
             }
+        }
+
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            LaunchUpdateTask(_portfolio);
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            decimal marketValue = -2;// decimal.Parse(labelMarketValue.Text);
+            bool ok = PortfoliosAPICaller.Save(_portfolio.Id, marketValue, out APIResponse<bool> response, out string message);
+            if(ok)
+            {
+                if(response.Ok)
+                {
+                    MessageBox.Show(response.ErrorMessage, "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void CalculateTotals(Portfolio portfolio)
@@ -206,11 +183,88 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             }
             else
                 labelCash.Text = "0.00 (0.00%)";
+
+            MessageBox.Show("Totals updated", "Update process", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void CalculateBeta()
+        private void LaunchUpdateTask(Portfolio portfolio)
         {
+            if(_updateTask != null)
+            {
+                MessageBox.Show("Task is already running", "Update proces", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
+            if(_portfolio == null)
+            {
+                MessageBox.Show("Must select a portfolio", "Update proces", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _updateTask = Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    //update market values
+                    int i = 0;
+                    decimal total = 0;
+                    while (i < portfolio.AssetAllocations.Count)
+                    {
+                        AssetAllocation assetAllocation = portfolio.AssetAllocations[i];
+                        try
+                        {
+                            bool ok = PortfoliosAPICaller.UpdateAssetAllocation(assetAllocation, out APIResponse<AssetAllocation> response ,out string message);
+                            decimal marketValue;
+                            if (ok)
+                            {
+                                marketValue = response.Content.MarketValue.Value;
+                                portfolio.AssetAllocations[i] = response.Content;
+                            }
+                            else
+                                marketValue = 0;
+                            
+                            total += marketValue;
+
+                            Invoke(new Action(() => dataGridViewAssets.Refresh()));
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.Error($"LaunchUpdateTask failed for portfolio='{portfolio.Name}' (UserId='{portfolio.UserId}'), Ticker={assetAllocation.Ticker}: {ex.Message}", ex);
+                        }
+                        i++;
+                    }
+
+                    //pending to update percentages
+                    foreach(AssetAllocation assetAllocation in portfolio.AssetAllocations)
+                    {
+                        if (assetAllocation.MarketValue.HasValue)
+                            assetAllocation.Percentage = assetAllocation.MarketValue.Value / total * 100;
+                        else
+                        {
+                            if (assetAllocation.Costs.HasValue)
+                                assetAllocation.Percentage = assetAllocation.Costs.Value / total * 100;
+                        }
+
+                        Invoke(new Action(() => dataGridViewAssets.Refresh()));
+                    }
+
+                    Invoke(new Action(() =>
+                    {
+                        CalculateTotals(portfolio);
+                    }));
+
+
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error($"LaunchUpdateTask failed for portfolio='{portfolio.Name}' (UserId='{portfolio.UserId}'): {ex.Message}", ex);
+                    MessageBox.Show(ex.Message, "Prices update failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    _updateTask = null;
+                }
+            });
         }
     }
 }

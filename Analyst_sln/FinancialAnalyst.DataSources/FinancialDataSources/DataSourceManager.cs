@@ -21,17 +21,15 @@ namespace FinancialAnalyst.DataSources
         private IOptionChainDataSource optionChainDataSource;
         private IFinancialDataSource financialDataSource;
         private IRiskFreeRatesDataSource riskFreeRatesDataSource;
-        private ILastPriceDataSource lastPriceDataSource;
         private ICacheManager cacheManager;
 
-        public DataSourceManager(IStockDataDataSource assetDataDataSource, IPricesDataSource pricesDataSouce, IOptionChainDataSource optionChainDataSource, IFinancialDataSource financialDataSource, IRiskFreeRatesDataSource riskFreeRatesDataSource, ILastPriceDataSource lastPriceDataSource, ICacheManager cacheManager)
+        public DataSourceManager(IStockDataDataSource assetDataDataSource, IPricesDataSource pricesDataSouce, IOptionChainDataSource optionChainDataSource, IFinancialDataSource financialDataSource, IRiskFreeRatesDataSource riskFreeRatesDataSource, ICacheManager cacheManager)
         {
             this.assetDataDataSource = assetDataDataSource;
             this.pricesDataSouce = pricesDataSouce;
             this.optionChainDataSource = optionChainDataSource;
             this.financialDataSource = financialDataSource;
             this.riskFreeRatesDataSource = riskFreeRatesDataSource;
-            this.lastPriceDataSource = lastPriceDataSource;
             this.cacheManager = cacheManager;
         }
 
@@ -142,7 +140,7 @@ namespace FinancialAnalyst.DataSources
 
         public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
         {
-            return lastPriceDataSource.TryGetLastPrice(ticker, exchange, out lastPrice, out message);
+            return pricesDataSouce.TryGetLastPrice(ticker, exchange, out lastPrice, out message);
         }
     }
 }

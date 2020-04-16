@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Portfolios;
+using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Entities.RequestResponse;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using FinancialAnalyst.DataAccess.Portfolios;
@@ -45,7 +46,30 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
             else
                 return StatusCode(StatusCodes.Status422UnprocessableEntity, response);
         }
-        
+
+        [HttpPost("addassetallocation")]
+        public ActionResult<APIResponse<Portfolio>> AddAssetAllocation(string username, int portfolioId, string symbol, decimal amount)
+        {
+            APIResponse<Portfolio> response = new APIResponse<Portfolio>()
+            {
+                Content = null,
+                Ok = false,
+                ErrorMessage = "Not implemented",
+            };
+            return StatusCode(StatusCodes.Status501NotImplemented, response);
+        }
+
+        [HttpPost("updateassetallocation")]
+        public ActionResult<APIResponse<AssetAllocation>> UpdateAssetAllocation([FromBody]AssetAllocation assetAllocation)
+        {
+            bool ok = portfoliosService.Update(assetAllocation, out decimal? marketValue);
+            return Ok(new APIResponse<AssetAllocation>()
+            {
+                Content = assetAllocation,
+                Ok = ok,
+                ErrorMessage = "<pending>",
+            });
+        }
 
         [HttpPost("createportfolio")]
         public ActionResult<APIResponse<Portfolio>> CreatePortfolio([FromForm]string username, [FromForm] string portfolioname, [FromForm] IFormFile transactions, [FromForm] bool firstRowIsInitalBalance=true)
@@ -69,16 +93,37 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 return StatusCode(StatusCodes.Status422UnprocessableEntity, response);
         }
 
-        [HttpGet("addassetallocation")]
-        public ActionResult<APIResponse<Portfolio>> AddAssetAllocation(string username, int portfolioId,string symbol, decimal amount)
+        [HttpPost("updateportfolio")]
+        public ActionResult<APIResponse<bool>> UpdatePortfolio([FromForm]string id, [FromForm]string portfolioMarketValue)
         {
-            APIResponse<Portfolio> response = new APIResponse<Portfolio>()
+            try
             {
-                Content = null,
-                Ok = false,
-                ErrorMessage = "Not implemented",
-            };
-            return StatusCode(StatusCodes.Status501NotImplemented, response);
+                int iId = int.Parse(id);
+                decimal dPortfolioMarketValue = decimal.Parse(portfolioMarketValue);
+                bool ok = portfoliosService.Update(iId,dPortfolioMarketValue);
+                APIResponse<bool> response = new APIResponse<bool>()
+                {
+                    Content = ok,
+                    Ok = ok,
+                    ErrorMessage = "ok",
+                };
+                if (ok)
+                    return StatusCode(StatusCodes.Status200OK, response);
+                else
+                    return StatusCode(StatusCodes.Status422UnprocessableEntity, response);
+            }
+            catch(Exception ex)
+            {
+                APIResponse<bool> response = new APIResponse<bool>()
+                {
+                    Content = false,
+                    Ok = false,
+                    ErrorMessage = ex.Message,
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
         }
+
+
     }
 }

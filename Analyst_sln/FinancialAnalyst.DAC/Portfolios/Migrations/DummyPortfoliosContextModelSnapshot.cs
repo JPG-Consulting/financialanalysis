@@ -32,17 +32,26 @@ namespace FinancialAnalyst.DataAccess.Migrations
                     b.Property<int?>("Exchange")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("MarketValue")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal?>("Percentage")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("PortfolioId")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("PriceDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("TheoricalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("TheoricalPriceDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Ticker")
                         .HasColumnType("nvarchar(max)");

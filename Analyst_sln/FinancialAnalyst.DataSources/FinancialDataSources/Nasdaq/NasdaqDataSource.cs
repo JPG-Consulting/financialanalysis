@@ -14,13 +14,14 @@ using System.Net;
 
 namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
 {
-    public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource, ILastPriceDataSource
+    public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource, IPricesDataSource
     {
         private static readonly ILog logger = log4net.LogManager.GetLogger(typeof(NasdaqDataSource));
         private static readonly CultureInfo enUsCultureInfo = new CultureInfo("en-us");
 
         public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
         {
+            //https://api.nasdaq.com/api/quote/TQQQ/info?assetclass=etf
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
             bool ok = NasdaqApiCaller.GetStockSummary(ticker, exchange, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out errorMessage);
             throw new NotImplementedException();
@@ -99,31 +100,58 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             throw new NotImplementedException();
         }
 
+        public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
+        {
+            //https://api.nasdaq.com/api/quote/AAPL/chart?assetclass=stocks&fromdate=2010-04-15&todate=2020-04-15
+            if (from.HasValue == false)
+                from = DateTime.Now;
+
+            if (to.HasValue == false)
+                to = DateTime.Now;
+
+            bool ok = NasdaqApiCaller.GetPrices(ticker, exchange, from.Value, to.Value, interval, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out errorMessage);
+            prices = new PriceList();
+            foreach(var nasdaqPrice in nasdaqResponse.Data.Prices)
+            {
+                Price price = new Price();
+                price.Close = nasdaqPrice.Price;
+                prices.Add(price);
+            }
+            return true;
+        }
+
         public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
         {
+            //https://api.nasdaq.com/api/quote/TQQQ/info?assetclass=etf
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
             bool ok = NasdaqApiCaller.GetStockSummary(ticker, exchange, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out message);
             if(statusCode == HttpStatusCode.OK)
             {
                 if (nasdaqResponse.Status.Code == 200)
                 {
-                    dynamic rawdata = JsonConvert.DeserializeObject(jsonResponse);
+                    string temp = nasdaqResponse.Data.PrimaryData.LastSalePriceAsString;
                     lastPrice = new LastPrice();
-                    string temp = rawdata.data.primaryData.lastSalePrice.ToString();
                     lastPrice.Price = decimal.Parse(temp.Substring(1),enUsCultureInfo);
-                    temp = rawdata.data.primaryData.lastTradeTimestamp.ToString();
+                    temp = nasdaqResponse.Data.PrimaryData.LastTradeTimestampAsString;
                     lastPrice.TimeStamp = ParseDateTime(temp);
+                    /*
                     temp = rawdata.data.keyStats.Volume.value.ToString();
                     lastPrice.Volume = int.Parse(temp, NumberStyles.Integer | NumberStyles.AllowThousands, enUsCultureInfo);
                     temp = rawdata.data.keyStats.PreviousClose.value.ToString();
                     lastPrice.PreviousClose = decimal.Parse(temp.Substring(1), enUsCultureInfo);
+                    */
+
                     return true;
                 }
                 else if(nasdaqResponse.Status.Code == 400 && nasdaqResponse.Status.CodeMessage.Count > 0)
                 {
+                    lastPrice = null;
                     var nasdaqMessage = nasdaqResponse.Status.CodeMessage[0];
                     message = $"{nasdaqMessage.ErrorMessage} (Code={nasdaqMessage.Code})";
+                    return false;
                 }
+
+                
             }
             lastPrice = null;
             return false;
@@ -188,5 +216,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
                     throw new NotImplementedException();
             }
         }
+
+        
     }
 }

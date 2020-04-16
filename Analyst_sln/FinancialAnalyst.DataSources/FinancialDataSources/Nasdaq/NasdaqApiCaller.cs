@@ -1,4 +1,5 @@
 ﻿using FinancialAnalyst.Common.Entities;
+using FinancialAnalyst.Common.Entities.Prices;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -98,6 +99,38 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
                 };
                 jsonResponse = JsonConvert.SerializeObject(error);
                 errorMessage = responseMessage.ReasonPhrase;
+                return false;
+            }
+        }
+
+        internal static bool GetPrices(string ticker, Exchange? exchange, DateTime from, DateTime to, PriceInterval interval, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out string message)
+        {
+            //https://api.nasdaq.com/api/quote/AAPL/chart?assetclass=stocks&fromdate=2010-04-15&todate=2020-04-15
+            string fromDate = from.ToString("yyyy-MM-dd");
+            string toDate = to.ToString("yyyy-MM-dd");
+            string uri = $"{httpClient.BaseAddress}quote/{ticker}/chart?assetclass=stocks&fromdate={fromDate}5&todate={toDate}";
+            HttpResponseMessage responseMessage = httpClient.GetAsync(uri).Result;
+            string originalContent = responseMessage.Content.ReadAsStringAsync().Result;
+            string content = originalContent;
+            statusCode = responseMessage.StatusCode;
+            if (responseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                jsonResponse = content;
+                nasdaqResponse = JsonConvert.DeserializeObject<NasdaqResponse>(jsonResponse);
+                message = "OK";
+                return true;
+            }
+            else
+            {
+                dynamic error = new
+                {
+                    HttpStatusCode = responseMessage.StatusCode.ToString(),
+                    ReasonPhrase = responseMessage.ReasonPhrase,
+                    ContentResponse = content,
+                };
+                jsonResponse = JsonConvert.SerializeObject(error);
+                nasdaqResponse = null;
+                message = responseMessage.ReasonPhrase;
                 return false;
             }
         }

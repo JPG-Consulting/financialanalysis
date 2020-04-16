@@ -10,5 +10,8 @@ namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces
     {
         bool GetPortfoliosByUserName(string username, out IEnumerable<Portfolio> portfolios, out string message);
         bool Create(string userName, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance, bool overrideIfExists, out Portfolio portfolio, out string message);
+
+        bool Update(int portfolioId, decimal marketValue);
+        bool Update(AssetAllocation allocation, out decimal? marketValue);
     }
 }

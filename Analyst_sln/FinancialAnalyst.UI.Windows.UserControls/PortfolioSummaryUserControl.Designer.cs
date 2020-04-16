@@ -50,6 +50,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.labelMarketValue = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.buttonUpdate = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -92,7 +94,7 @@
             this.dataGridViewAssets.Location = new System.Drawing.Point(12, 25);
             this.dataGridViewAssets.Name = "dataGridViewAssets";
             this.dataGridViewAssets.ShowEditingIcon = false;
-            this.dataGridViewAssets.Size = new System.Drawing.Size(385, 700);
+            this.dataGridViewAssets.Size = new System.Drawing.Size(381, 696);
             this.dataGridViewAssets.TabIndex = 2;
             this.dataGridViewAssets.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewAssets_CellContentClick);
             this.dataGridViewAssets.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewAssets_CellValueChanged);
@@ -182,12 +184,15 @@
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.buttonSave);
+            this.splitContainer1.Panel1.Controls.Add(this.buttonUpdate);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.labelName);
             this.splitContainer1.Panel1.Controls.Add(this.dataGridViewAssets);
@@ -270,6 +275,26 @@
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             // 
+            // buttonUpdate
+            // 
+            this.buttonUpdate.Location = new System.Drawing.Point(251, 1);
+            this.buttonUpdate.Name = "buttonUpdate";
+            this.buttonUpdate.Size = new System.Drawing.Size(75, 23);
+            this.buttonUpdate.TabIndex = 3;
+            this.buttonUpdate.Text = "Update";
+            this.buttonUpdate.UseVisualStyleBackColor = true;
+            this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(327, 1);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.TabIndex = 4;
+            this.buttonSave.Text = "Save";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
             // PortfolioSummaryUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -311,5 +336,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewAssets_MarketValueColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewAssets_ProportionColumn;
         private System.Windows.Forms.DataGridViewButtonColumn dataGridViewAssets_ShowDetailColumn;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button buttonUpdate;
     }
 }

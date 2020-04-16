@@ -99,9 +99,9 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
             if(t.Quantity == 0)
             {
                 if (t.Amount >= 0)
-                    t.CashflowType = CashflowTypes.Deposit;
+                    t.CashflowType = CashflowTypes.IncomingCashflow;
                 else
-                    t.CashflowType = CashflowTypes.Withdrawal;
+                    t.CashflowType = CashflowTypes.OutgoingCashflow;
             }
             else
             {

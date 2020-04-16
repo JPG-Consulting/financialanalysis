@@ -1,5 +1,7 @@
-﻿using log4net;
+﻿using FinancialAnalyst.Common.Entities.RequestResponse;
+using log4net;
 using log4net.Repository.Hierarchy;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +37,13 @@ namespace FinancialAnalyst.WebAPICallers
             }
         }
 
+        internal static HttpStatusCode Get(string uri, out string jsonResponse)
+        {
+            HttpResponseMessage responseMessage = httpClient.GetAsync(uri).Result;
+            jsonResponse = responseMessage.Content.ReadAsStringAsync().Result;
+            return responseMessage.StatusCode;
+        }
+
         internal static HttpStatusCode Post(string uri,Dictionary<string,string> parameters, Stream file, string name, string filename, out string jsonResponse)
         {
             byte[] byteContent;
@@ -55,11 +64,34 @@ namespace FinancialAnalyst.WebAPICallers
             return postResponse.StatusCode;
         }
 
-        internal static HttpStatusCode Get(string uri, out string jsonResponse)
+        internal static HttpStatusCode Post(string uri, Dictionary<string, string> parameters, out string jsonResponse, out string reasonPhrase)
         {
-            HttpResponseMessage responseMessage = httpClient.GetAsync(uri).Result;
-            jsonResponse = responseMessage.Content.ReadAsStringAsync().Result;
-            return responseMessage.StatusCode;
+            MultipartFormDataContent form = new MultipartFormDataContent();
+            foreach (var parameter in parameters)
+            {
+                form.Add(new StringContent(parameter.Value), parameter.Key);
+            }
+            HttpResponseMessage response = httpClient.PostAsync(uri, form).Result;
+            jsonResponse = response.Content.ReadAsStringAsync().Result;
+            reasonPhrase = response.ReasonPhrase;
+            return response.StatusCode;
+        }
+
+        internal static HttpStatusCode Post<T>(string uri, T assetAllocation, out string jsonResponse, out string reasonPhrase)
+        {
+            //https://www.tutorialsteacher.com/webapi/consuming-web-api-in-dotnet-using-httpclient
+            //HttpResponseMessage response = httpClient.PostAsJsonAsync<T>(uri, value).Result;
+
+            //https://stackoverflow.com/questions/19158378/httpclient-not-supporting-postasjsonasync-method-c-sharp
+            //string serializedObject = JsonConvert.SerializeObject(value);
+            //HttpResponseMessage response = httpClient.PostAsync(uri, new StringContent(serializedObject), Encoding.UTF8, "application/json");
+
+
+            HttpResponseMessage response = httpClient.PostAsJsonAsync<T>(uri, assetAllocation).Result;
+            jsonResponse = response.Content.ReadAsStringAsync().Result;
+            reasonPhrase = response.ReasonPhrase;
+            return response.StatusCode;
+
         }
     }
 }

@@ -59,12 +59,13 @@ namespace FinancialAnalyst.WebAPI
             services.AddTransient<ICacheManager, FileCacheManager>();
 
             services.AddTransient<IDataSource, DataSourceManager>();
-            services.AddTransient<IPricesDataSource, YahooDataSource>();
+            //services.AddTransient<IPricesDataSource, YahooDataSource>();
+            services.AddTransient<IPricesDataSource, NasdaqDataSource>();
             services.AddTransient<IStockDataDataSource, ReutersDataSource>();
             services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
             services.AddTransient<IFinancialDataSource, ReutersDataSource>();
             services.AddTransient<IRiskFreeRatesDataSource, USTreasuryDataSource>();
-            services.AddTransient<ILastPriceDataSource, NasdaqDataSource>();
+            
 
             services.AddTransient<IEdgarService, EdgarService>();
             services.AddTransient<IEdgarDatasetParser, EdgarDatasetParser>();

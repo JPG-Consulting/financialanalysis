@@ -58,6 +58,10 @@ namespace FinancialAnalyst.DataSources.Yahoo
             return true;
         }
 
-        
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

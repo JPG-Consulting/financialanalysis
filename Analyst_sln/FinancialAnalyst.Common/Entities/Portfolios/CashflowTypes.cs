@@ -8,8 +8,8 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
     {
         Bought = 1,
         Sell,
-        Deposit,
-        Withdrawal,
+        IncomingCashflow,
+        OutgoingCashflow,
         Unknown
     }
 }
