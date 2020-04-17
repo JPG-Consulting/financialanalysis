@@ -94,12 +94,12 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         }
 
         [HttpPost("updateportfolio")]
-        public ActionResult<APIResponse<bool>> UpdatePortfolio([FromForm]string id, [FromForm]string portfolioMarketValue)
+        public ActionResult<APIResponse<bool>> UpdatePortfolio([FromForm]string id, [FromForm]string marketValue)
         {
             try
             {
                 int iId = int.Parse(id);
-                decimal dPortfolioMarketValue = decimal.Parse(portfolioMarketValue);
+                decimal dPortfolioMarketValue = decimal.Parse(marketValue);
                 bool ok = portfoliosService.Update(iId,dPortfolioMarketValue);
                 APIResponse<bool> response = new APIResponse<bool>()
                 {
@@ -107,10 +107,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                     Ok = ok,
                     ErrorMessage = "ok",
                 };
-                if (ok)
-                    return StatusCode(StatusCodes.Status200OK, response);
-                else
-                    return StatusCode(StatusCodes.Status422UnprocessableEntity, response);
+                return StatusCode(StatusCodes.Status200OK, response);
             }
             catch(Exception ex)
             {

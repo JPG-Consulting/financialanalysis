@@ -15,6 +15,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         int Add(Transaction transaction);
         int Add(PortfolioBalance pb);
         User GetUser(string userName);
+        Portfolio GetPortfolioById(int portfolioId);
         IEnumerable<Portfolio> GetPortfoliosByUserName(string username);
         Portfolio GetPortfoliosByUserNameAndPortfolioName(string userName, string portfolioname);
         void Update(Portfolio portfolio);
@@ -114,6 +115,11 @@ namespace FinancialAnalyst.DataAccess.Portfolios
                 return users[0];
             else
                 return null;
+        }
+
+        public Portfolio GetPortfolioById(int portfolioId)
+        {
+            return Portfolios.Where(p => p.Id == portfolioId).SingleOrDefault();
         }
 
         public IEnumerable<Portfolio> GetPortfoliosByUserName(string username)

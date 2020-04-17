@@ -114,9 +114,9 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         {
             try
             {
-                if(_portfolios == null)
-                    _portfolios = PortfoliosAPICaller.GetPortfoliosByUser(userName);
+                _portfolios = PortfoliosAPICaller.GetPortfoliosByUser(userName);
                 dataGridViewPortfolios.DataSource = _portfolios;
+                portfolioSummaryUserControl1.Clear();
             }
             catch (Exception ex)
             {

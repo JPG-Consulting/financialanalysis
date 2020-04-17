@@ -20,7 +20,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
     {
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(typeof(PortfolioSummaryUserControl));
 
-        private Portfolio _portfolio;
+        private Portfolio _selectedPortfolio;
         private ICallerForm _callerForm;
         private Task _updateTask = null;
 
@@ -32,14 +32,14 @@ namespace FinancialAnalyst.UI.Windows.UserControls
 
         public void Set(ICallerForm callerForm, Portfolio portfolio)
         {
-            if (_portfolio != null)
+            if (_selectedPortfolio != null)
             { 
                 if (_updateTask != null)
                     Task.WaitAll(new Task[] { _updateTask });
             }
 
             _callerForm = callerForm;
-            _portfolio = portfolio;
+            _selectedPortfolio = portfolio;
 
             dataGridViewAssets.AutoGenerateColumns = false;
 
@@ -57,10 +57,14 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             int indexCosts = dataGridViewAssets.Columns.Cast<DataGridViewColumn>().Where(c => c.Name == dataGridViewAssets_CostsColumn.Name).Single().Index;
             dataGridViewAssets.Columns[indexCosts].Visible = portfolio.IsSimulated == false;
 
-            CalculateTotals(portfolio);
+            CalculateTotals(portfolio, false);
         }
 
-        
+        public void Clear()
+        {
+            _selectedPortfolio = null;
+            dataGridViewAssets.DataSource = null;
+        }
 
         private void dataGridViewAssets_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -71,7 +75,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
 
             if(e.ColumnIndex == dataGridViewAssets_ProportionColumn.Index)
             {
-                CalculateTotals(_portfolio);
+                CalculateTotals(_selectedPortfolio, false);
             }
         }
 
@@ -89,32 +93,10 @@ namespace FinancialAnalyst.UI.Windows.UserControls
 
         private void buttonUpdate_Click(object sender, EventArgs e)
         {
-            LaunchUpdateTask(_portfolio);
+            LaunchUpdateTask(_selectedPortfolio);
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            decimal marketValue = -2;// decimal.Parse(labelMarketValue.Text);
-            bool ok = PortfoliosAPICaller.Save(_portfolio.Id, marketValue, out APIResponse<bool> response, out string message);
-            if(ok)
-            {
-                if(response.Ok)
-                {
-                    MessageBox.Show(response.ErrorMessage, "Saved", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else
-                {
-                    MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            else
-            {
-                MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-        }
-
-        private void CalculateTotals(Portfolio portfolio)
+        private void CalculateTotals(Portfolio portfolio, bool savePortfolio)
         {
             int indexPercentage = dataGridViewAssets_ProportionColumn.Index;
             int indexCosts = dataGridViewAssets_CostsColumn.Index;
@@ -184,7 +166,29 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             else
                 labelCash.Text = "0.00 (0.00%)";
 
-            MessageBox.Show("Totals updated", "Update process", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if(savePortfolio)
+                UpdatePortfolio(portfolio, totalValue);
+
+        }
+
+        private void UpdatePortfolio(Portfolio portfolio, decimal marketValue)
+        {
+            bool ok = PortfoliosAPICaller.Save(portfolio.Id, marketValue, out APIResponse<bool> response, out string message);
+            if (ok)
+            {
+                if (response.Ok)
+                {
+                    MessageBox.Show(response.ErrorMessage, "Update process", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(response.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LaunchUpdateTask(Portfolio portfolio)
@@ -195,7 +199,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
                 return;
             }
 
-            if(_portfolio == null)
+            if(_selectedPortfolio == null)
             {
                 MessageBox.Show("Must select a portfolio", "Update proces", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -250,7 +254,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
 
                     Invoke(new Action(() =>
                     {
-                        CalculateTotals(portfolio);
+                        CalculateTotals(portfolio, true);
                     }));
 
 

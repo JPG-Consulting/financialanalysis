@@ -138,12 +138,11 @@ namespace FinancialAnalyst.Portfolios
 
         public bool Update(int portfolioId, decimal marketValue)
         {
-            /*
+            
             Portfolio portfolio = portfoliosContext.GetPortfolioById(portfolioId);
             portfolio.MarketValue = marketValue;
             portfoliosContext.Update(portfolio);
-            */
-            throw new NotImplementedException();
+            return true;
         }
 
         public bool Update(AssetAllocation assetAllocation, out decimal? marketValue)

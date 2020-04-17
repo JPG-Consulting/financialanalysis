@@ -42,22 +42,19 @@ namespace FinancialAnalyst.WebAPICallers
             parameters.Add("id", id.ToString());
             parameters.Add("marketValue", marketValue.ToString());
 
-            throw new NotImplementedException();
-            /*
-            HttpStatusCode httpStatusCode = HttpClientWebAPI.Post(uri, parameters, out string jsonResponse); ;
+            HttpStatusCode httpStatusCode = HttpClientWebAPI.Post(uri, parameters, out string jsonResponse, out string reasonPhrase); ;
+            response = JsonConvert.DeserializeObject<APIResponse<bool>>(jsonResponse);
             if (httpStatusCode == HttpStatusCode.OK)
             {
-                response = JsonConvert.DeserializeObject<APIResponse<bool>>(jsonResponse);
+                
                 message = response.ErrorMessage;
                 return response.Ok;
             }
             else
             {
-                response = null;
-                message = reasonPhrase;
+                message = $"{reasonPhrase} - {response.ErrorMessage}";
                 return false;
             }
-            */
         }
 
         public static bool UpdateAssetAllocation(AssetAllocation assetAllocation, out APIResponse<AssetAllocation> response, out string message)
