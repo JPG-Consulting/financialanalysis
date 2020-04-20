@@ -11,10 +11,11 @@ using System.Text;
 using log4net;
 using System.Globalization;
 using System.Net;
+using FinancialAnalyst.Common.Entities.Markets;
 
 namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
 {
-    public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource, IPricesDataSource
+    public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource, IPricesDataSource, IIndexesDataSource
     {
         private static readonly ILog logger = log4net.LogManager.GetLogger(typeof(NasdaqDataSource));
         private static readonly CultureInfo enUsCultureInfo = new CultureInfo("en-us");
@@ -155,6 +156,21 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             }
             lastPrice = null;
             return false;
+        }
+
+        public bool TryGetIndexData(MarketIndex index, out Dictionary<string, decimal> tickersProportions, out string message)
+        {
+            /*
+             * Nasdaq 100
+             *      Webs
+             *      https://www.nasdaq.com/market-activity/quotes/nasdaq-ndx-index
+             *      
+             *      Data
+             *      https://api.nasdaq.com/api/quote/list-type/nasdaq100
+             * 
+             */
+
+            throw new NotImplementedException();
         }
 
         private DateTime ParseDateTime(dynamic timestamp)

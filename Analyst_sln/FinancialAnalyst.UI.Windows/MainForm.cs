@@ -43,7 +43,7 @@ namespace FinancialAnalyst.UI.Windows
 
         private void toolStripMenuItemSP500_Click(object sender, EventArgs e)
         {
-            StandardAndPoorsForm form = new StandardAndPoorsForm();
+            IndexesForm form = new IndexesForm();
             form.MdiParent = this;
             form.Show();
         }

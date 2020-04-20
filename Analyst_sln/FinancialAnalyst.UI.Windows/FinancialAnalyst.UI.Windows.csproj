@@ -88,11 +88,11 @@
     <Compile Include="ChildForms\AssetDetailForm.Designer.cs">
       <DependentUpon>AssetDetailForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChildForms\StandardAndPoorsForm.cs">
+    <Compile Include="ChildForms\IndexesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ChildForms\StandardAndPoorsForm.Designer.cs">
-      <DependentUpon>StandardAndPoorsForm.cs</DependentUpon>
+    <Compile Include="ChildForms\IndexesForm.Designer.cs">
+      <DependentUpon>IndexesForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -108,8 +108,8 @@
     <EmbeddedResource Include="ChildForms\AssetDetailForm.resx">
       <DependentUpon>AssetDetailForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ChildForms\StandardAndPoorsForm.resx">
-      <DependentUpon>StandardAndPoorsForm.cs</DependentUpon>
+    <EmbeddedResource Include="ChildForms\IndexesForm.resx">
+      <DependentUpon>IndexesForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
