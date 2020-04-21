@@ -19,6 +19,9 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         public string Ticker { get; set; }
 
         [JsonProperty]
+        public AssetType? AssetType { get; set; }
+
+        [JsonProperty]
         public Exchange? Exchange { get; set; }
         
         [JsonProperty]

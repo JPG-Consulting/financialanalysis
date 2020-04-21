@@ -15,11 +15,15 @@ namespace FinancialAnalyst.WebAPICallers
 {
     public class DataSourcesAPICaller
     {
-        public static APIResponse<Stock> GetCompleteStockData(string ticker, Exchange? market, bool includeOptionChain, bool includeFinancialData)
+        public static APIResponse<Stock> GetCompleteStockData(string ticker, Exchange? market, AssetType? assetType, bool includeOptionChain, bool includeFinancialData)
         {
             string uri = $"api/DataSources/getcompletestockdata?ticker={ticker}";
             if (market.HasValue)
                 uri += $"&market={market.ToString()}";
+            if(assetType.HasValue)
+                uri += $"&assetType={assetType.ToString()}";
+            else
+                uri += $"&assetType={AssetType.Unknown.ToString()}";
             uri += $"&includeOptionChain={includeOptionChain}";
             uri += $"&includeFinancialData={includeFinancialData}";
             HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
@@ -44,11 +48,15 @@ namespace FinancialAnalyst.WebAPICallers
 
         }
 
-        public static LastPrice GetLastPrice(string ticker, Exchange? exchange)
+        public static LastPrice GetLastPrice(string ticker, Exchange? exchange, AssetType? assetType)
         {
             string uri = $"api/DataSources/getlastprice?ticker={ticker}";
             if (exchange.HasValue)
                 uri += $"&market={exchange.ToString()}";
+            if (assetType.HasValue)
+                uri += $"&assetType={assetType.ToString()}";
+            else
+                uri += $"&assetType={AssetType.Unknown.ToString()}";
 
             HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
             var response = JsonConvert.DeserializeObject<APIResponse<LastPrice>>(jsonResponse);

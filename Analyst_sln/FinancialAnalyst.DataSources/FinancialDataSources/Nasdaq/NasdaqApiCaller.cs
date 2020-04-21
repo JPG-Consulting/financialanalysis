@@ -1,4 +1,5 @@
 ﻿using FinancialAnalyst.Common.Entities;
+using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Prices;
 using Newtonsoft.Json;
 using System;
@@ -13,13 +14,17 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
     {
         private static readonly HttpClient httpClient = new HttpClient() { BaseAddress = new Uri("https://api.nasdaq.com/api/") };
 
-        internal static bool GetStockSummary(string ticker, Exchange? exchange, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out string message)
+        internal static bool GetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out string message)
         {
+            //https://api.nasdaq.com/api/quote/TQQQ/info?assetclass=etf
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
-            string uri = $"{httpClient.BaseAddress}quote/{ticker}/info?assetclass=stocks";
+            string uri = $"{httpClient.BaseAddress}quote/{ticker}/info";
+            if(assetType == AssetType.Stock)
+                uri += "?assetclass=stocks";
+            else if(assetType == AssetType.ETF)
+                uri += "?assetclass=etf";
             HttpResponseMessage responseMessage = httpClient.GetAsync(uri).Result;
-            string originalContent = responseMessage.Content.ReadAsStringAsync().Result;
-            string content = originalContent;
+            string content = responseMessage.Content.ReadAsStringAsync().Result;
             statusCode = responseMessage.StatusCode;
             if (responseMessage.StatusCode == HttpStatusCode.OK)
             {

@@ -1,4 +1,5 @@
-﻿using FinancialAnalyst.Common.Entities.Portfolios;
+﻿using FinancialAnalyst.Common.Entities.Assets;
+using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Entities.Users;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
@@ -16,10 +17,12 @@ namespace FinancialAnalyst.Portfolios
     {
         private readonly IPortfoliosContext portfoliosContext;
         private readonly IPricesDataSource priceDataSource;
-        public PortfoliosManager(IPortfoliosContext portfoliosContext, IPricesDataSource priceDataSource)
+        private readonly IAssetTypeDataSource assetTypeDataSource;
+        public PortfoliosManager(IPortfoliosContext portfoliosContext, IPricesDataSource priceDataSource, IAssetTypeDataSource assetTypeDataSource)
         {
             this.portfoliosContext = portfoliosContext;
             this.priceDataSource = priceDataSource;
+            this.assetTypeDataSource = assetTypeDataSource;
         }
 
         public bool GetPortfoliosByUserName(string username, out IEnumerable<Portfolio> portfolios, out string message)
@@ -116,11 +119,14 @@ namespace FinancialAnalyst.Portfolios
                     string[] fields = line.Split(',');
                     transactionsList.Add(fields);
                     Transaction newTransaction = Transaction.From(portfolioId, fields);
-                    
                     if (newTransaction != null && portfolio.Transactions.Where(t => t.TransactionCode == newTransaction.TransactionCode).Any() == false)
                     {
                         newTransaction.UserId = user.Id;
                         newTransaction.PortfolioId = portfolioId;
+                        if (TryGetAssetType(newTransaction.Symbol, out AssetType assetType))
+                            newTransaction.AssetType = assetType;
+                        else
+                            newTransaction.AssetType = null;
                         portfoliosContext.Add(newTransaction);//And it also adds the transaction to the transactions collection of the portfolio
                     }
                     else
@@ -136,6 +142,33 @@ namespace FinancialAnalyst.Portfolios
             return true;
         }
 
+        private bool TryGetAssetType(string symbol, out AssetType assetType)
+        {
+            if(string.IsNullOrEmpty(symbol))
+            {
+                assetType = AssetType.Cash;
+                return true;
+            }
+
+            string[] parts = symbol.ToLower().Split(' ');
+            if(parts.Length > 1)
+            {
+                if (parts.Contains("call"))
+                {
+                    assetType = AssetType.Option_Call;
+                    return true;
+                }
+
+                if (parts.Contains("put"))
+                {
+                    assetType = AssetType.Option_Put;
+                    return true;
+                }
+            }
+
+            return assetTypeDataSource.TryGetAssetType(symbol, out assetType);
+        }
+
         public bool Update(int portfolioId, decimal marketValue)
         {
             
@@ -147,7 +180,7 @@ namespace FinancialAnalyst.Portfolios
 
         public bool Update(AssetAllocation assetAllocation, out decimal? marketValue)
         {
-            if (priceDataSource.TryGetLastPrice(assetAllocation.Ticker, assetAllocation.Exchange, out LastPrice price, out string message))
+            if (priceDataSource.TryGetLastPrice(assetAllocation.Ticker, assetAllocation.Exchange, assetAllocation.AssetType.Value, out LastPrice price, out string message))
             {
                 if (price != null)
                 {
@@ -198,6 +231,7 @@ namespace FinancialAnalyst.Portfolios
                         assetAllocation = new AssetAllocation() 
                         { 
                             Ticker = t.Symbol,
+                            AssetType = t.AssetType,
                             Costs = 0,
                             Quantity = 0,
                             PortfolioId = portfolio.Id,

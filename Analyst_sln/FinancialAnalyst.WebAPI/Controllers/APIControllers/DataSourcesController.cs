@@ -35,7 +35,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         }
 
         [HttpGet("getcompletestockdata")]
-        public APIResponse<Stock> GetCompleteStockData(string ticker,string exchange, bool? includeOptionChain, bool? includeFinancialStatements )
+        public APIResponse<Stock> GetCompleteStockData(string ticker,string exchange,string assetType, bool? includeOptionChain, bool? includeFinancialStatements )
         {
 
             try
@@ -67,13 +67,32 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                     }
                 }
 
+                AssetType assetTypeValue = AssetType.Unknown;
+                if (string.IsNullOrEmpty(assetType) == false)
+                {
+                    if (Enum.TryParse<Exchange>(assetType, out Exchange temp))
+                    {
+                        exch = temp;
+                    }
+                    else
+                    {
+                        return new APIResponse<Stock>()
+                        {
+                            Content = null,
+                            Ok = false,
+                            ErrorMessage = $"Asset type {assetType} is not a asset type",
+                        };
+                    }
+                }
+
+
                 if (includeOptionChain == null)
                     includeOptionChain = false;
 
                 if (includeFinancialStatements == null)
                     includeFinancialStatements = false;
 
-                if (dataSource.TryGetCompleteStockData(ticker, exch, includeOptionChain.Value, includeFinancialStatements.Value, out Stock stock, out string message))
+                if (dataSource.TryGetCompleteStockData(ticker, exch, assetTypeValue, includeOptionChain.Value, includeFinancialStatements.Value, out Stock stock, out string message))
                 {
                     return new APIResponse<Stock>()
                     {
@@ -179,7 +198,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         }
 
         [HttpGet("getlastprice")]
-        public APIResponse<LastPrice> GetLastPrice(string ticker, string exchange)
+        public APIResponse<LastPrice> GetLastPrice(string ticker, string exchange, string assetType)
         {
             if (string.IsNullOrEmpty(ticker))
             {
@@ -208,7 +227,25 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 }
             }
 
-            if (dataSource.TryGetLastPrice(ticker, exch, out LastPrice price, out string message))
+            AssetType assetTypeValue = AssetType.Unknown;
+            if (string.IsNullOrEmpty(assetType) == false)
+            {
+                if (Enum.TryParse<Exchange>(assetType, out Exchange temp))
+                {
+                    exch = temp;
+                }
+                else
+                {
+                    return new APIResponse<LastPrice>()
+                    {
+                        Content = null,
+                        Ok = false,
+                        ErrorMessage = $"Asset type {assetType} is not a asset type",
+                    };
+                }
+            }
+
+            if (dataSource.TryGetLastPrice(ticker, exch, assetTypeValue, out LastPrice price, out string message))
             {
                 return new APIResponse<LastPrice>()
                 {

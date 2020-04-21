@@ -4,14 +4,16 @@ using FinancialAnalyst.DataAccess.Portfolios;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FinancialAnalyst.DataAccess.Migrations
 {
     [DbContext(typeof(PortfoliosContext))]
-    partial class DummyPortfoliosContextModelSnapshot : ModelSnapshot
+    [Migration("20200421011641_AddAssetType")]
+    partial class AddAssetType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

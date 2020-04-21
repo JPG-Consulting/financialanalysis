@@ -3,8 +3,8 @@ using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq;
+using FinancialAnalyst.DataSources.FinancialDataSources.Yahoo;
 using FinancialAnalyst.DataSources.Reuters;
-using FinancialAnalyst.DataSources.Yahoo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
@@ -21,10 +21,13 @@ namespace FinancialAnalyst.DataSources.Tests
             IOptionChainDataSource optionChainDataSource = new NasdaqDataSource();
             IFinancialDataSource financialDataSource = new NasdaqDataSource();
             IRiskFreeRatesDataSource riskFreeRatesDataSource = null;
+            IAssetTypeDataSource assetTypeDataSource = null;
+            IStatisticsDataSource statisticsDataSource = null;
+            IIndexesDataSource indexesDataSource = null;
             ICacheManager cacheManager = new FileCacheManager();
 
-            IDataSource dataSource = new DataSourceManager(stockDataDataSource, pricesDataSource, optionChainDataSource, financialDataSource, riskFreeRatesDataSource, cacheManager);
-            bool ok = dataSource.TryGetCompleteStockData("AAPL", Common.Entities.Exchange.NASDAQ, true, true, out Stock stock, out string message);
+            IDataSource dataSource = new DataSourceDispatcher(stockDataDataSource, pricesDataSource, optionChainDataSource, financialDataSource, riskFreeRatesDataSource, assetTypeDataSource, statisticsDataSource, indexesDataSource, cacheManager);
+            bool ok = dataSource.TryGetCompleteStockData("AAPL", Common.Entities.Exchange.NASDAQ,AssetType.Stock, true, true, out Stock stock, out string message);
             Assert.IsTrue(ok);
             string json = JsonConvert.SerializeObject(stock);
             Stock s = JsonConvert.DeserializeObject<Stock>(json);

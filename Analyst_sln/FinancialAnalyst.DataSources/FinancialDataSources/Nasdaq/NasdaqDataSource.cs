@@ -20,11 +20,11 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
         private static readonly ILog logger = log4net.LogManager.GetLogger(typeof(NasdaqDataSource));
         private static readonly CultureInfo enUsCultureInfo = new CultureInfo("en-us");
 
-        public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock asset, out string errorMessage)
         {
             //https://api.nasdaq.com/api/quote/TQQQ/info?assetclass=etf
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
-            bool ok = NasdaqApiCaller.GetStockSummary(ticker, exchange, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out errorMessage);
+            bool ok = NasdaqApiCaller.GetStockSummary(ticker, exchange, assetType, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out errorMessage);
             throw new NotImplementedException();
         }
 
@@ -121,11 +121,11 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             return true;
         }
 
-        public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetType assetType, out LastPrice lastPrice, out string message)
         {
             //https://api.nasdaq.com/api/quote/TQQQ/info?assetclass=etf
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
-            bool ok = NasdaqApiCaller.GetStockSummary(ticker, exchange, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out message);
+            bool ok = NasdaqApiCaller.GetStockSummary(ticker, exchange, assetType, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out message);
             if(statusCode == HttpStatusCode.OK)
             {
                 if (nasdaqResponse.Status.Code == 200)
@@ -170,6 +170,11 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
              * 
              */
 
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetIndexesData(out string message)
+        {
             throw new NotImplementedException();
         }
 
@@ -233,6 +238,6 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             }
         }
 
-        
+
     }
 }

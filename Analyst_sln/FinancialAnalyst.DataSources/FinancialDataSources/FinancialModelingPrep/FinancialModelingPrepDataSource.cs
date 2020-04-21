@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
+using FinancialAnalyst.Common.Entities.Markets;
 
 namespace FinancialAnalyst.DataSources.FinancialModelingPrep
 {
@@ -15,7 +16,17 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
     /// </summary>
     public class FinancialModelingPrepDataSource : IDataSource
     {
+        public bool TryGetAssetType(string symbol, out AssetType assetType)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool TryGetCompleteStockData(string ticker, Exchange? exchange, bool includeOptionChain, bool includeFinancialData, out Stock stock, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, AssetType assetType, bool includeOptionChain, bool includeFinancialStatements, out Stock stock, out string errorMessage)
         {
             throw new NotImplementedException();
         }
@@ -31,7 +42,22 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
             throw new NotImplementedException();
         }
 
+        public bool TryGetIndexData(MarketIndex index, out Dictionary<string, decimal> tickersProportions, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetIndexesData(out string message)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetType assetType, out LastPrice lastPrice, out string message)
         {
             throw new NotImplementedException();
         }
@@ -56,7 +82,17 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
             throw new NotImplementedException();
         }
 
+        public bool TryGetStatistics(string ticker, Exchange? exchange, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock stock, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock stock, out string errorMessage)
         {
             throw new NotImplementedException();
         }

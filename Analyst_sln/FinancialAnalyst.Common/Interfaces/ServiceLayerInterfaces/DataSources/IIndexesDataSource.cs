@@ -8,5 +8,6 @@ namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources
     public interface IIndexesDataSource
     {
         bool TryGetIndexData(MarketIndex index, out Dictionary<string, decimal> tickersProportions, out string message);
+        bool TryGetIndexesData(out string message);
     }
 }

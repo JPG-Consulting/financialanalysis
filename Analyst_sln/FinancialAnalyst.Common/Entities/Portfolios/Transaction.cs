@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FinancialAnalyst.Common.Entities.Assets;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,6 +29,9 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
 
         [JsonProperty]
         public string Symbol { get; set; }
+
+        [JsonProperty]
+        public AssetType? AssetType { get; set; }
 
         [JsonProperty]
         public decimal Price { get; set; }
@@ -73,8 +77,10 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
             else
                 t.Quantity = int.Parse(fields[3]);
 
-            if(string.IsNullOrEmpty(fields[4]) == false)
+            if (string.IsNullOrEmpty(fields[4]) == false)
+            {
                 t.Symbol = fields[4];
+            }
 
             if (string.IsNullOrEmpty(fields[5]))
                 t.Price = 0;

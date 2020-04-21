@@ -14,9 +14,9 @@ using FinancialAnalyst.DataAccess.EdgarSEC.Repositories.BulkRepositories;
 using FinancialAnalyst.DataAccess.Portfolios;
 using FinancialAnalyst.DataSources;
 using FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq;
+using FinancialAnalyst.DataSources.FinancialDataSources.Yahoo;
 using FinancialAnalyst.DataSources.Reuters;
 using FinancialAnalyst.DataSources.USTreasury;
-using FinancialAnalyst.DataSources.Yahoo;
 using FinancialAnalyst.Portfolios;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -58,14 +58,17 @@ namespace FinancialAnalyst.WebAPI
             #region Financial Analyst services/managers/parsers
             services.AddTransient<ICacheManager, FileCacheManager>();
 
-            services.AddTransient<IDataSource, DataSourceManager>();
+            services.AddTransient<IDataSource, DataSourceDispatcher>();
             //services.AddTransient<IPricesDataSource, YahooDataSource>();
             services.AddTransient<IPricesDataSource, NasdaqDataSource>();
             services.AddTransient<IStockDataDataSource, ReutersDataSource>();
             services.AddTransient<IOptionChainDataSource, NasdaqDataSource>();
             services.AddTransient<IFinancialDataSource, ReutersDataSource>();
             services.AddTransient<IRiskFreeRatesDataSource, USTreasuryDataSource>();
-            
+            services.AddTransient<IAssetTypeDataSource, YahooDataSource>();
+            services.AddTransient<IStatisticsDataSource, YahooDataSource>();
+            services.AddTransient<IIndexesDataSource, YahooDataSource>();
+
 
             services.AddTransient<IEdgarService, EdgarService>();
             services.AddTransient<IEdgarDatasetParser, EdgarDatasetParser>();

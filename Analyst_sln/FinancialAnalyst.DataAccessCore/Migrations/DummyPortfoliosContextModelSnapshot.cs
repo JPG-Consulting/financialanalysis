@@ -26,6 +26,9 @@ namespace FinancialAnalyst.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AssetType")
+                        .HasColumnType("int");
+
                     b.Property<decimal?>("Costs")
                         .HasColumnType("decimal(18,2)");
 
@@ -133,6 +136,9 @@ namespace FinancialAnalyst.DataAccess.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("AssetType")
+                        .HasColumnType("int");
 
                     b.Property<int>("CashflowType")
                         .HasColumnType("int");

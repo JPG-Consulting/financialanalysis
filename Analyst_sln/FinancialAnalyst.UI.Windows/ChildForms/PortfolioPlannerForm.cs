@@ -133,7 +133,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         public void Show(AssetAllocation alloc)
         {
             //I create a form for every request because maybe the user want to see several asset details at the same time
-            APIResponse<Stock> response = DataSourcesAPICaller.GetCompleteStockData(alloc.Ticker, alloc.Exchange, true ,true );
+            APIResponse<Stock> response = DataSourcesAPICaller.GetCompleteStockData(alloc.Ticker, alloc.Exchange, alloc.AssetType, true ,true );
             AssetDetailForm showAssetDetailForm = new AssetDetailForm(response);
             showAssetDetailForms.Add(showAssetDetailForm);
             //showAssetDetailForm.MdiParent = this.ParentForm;

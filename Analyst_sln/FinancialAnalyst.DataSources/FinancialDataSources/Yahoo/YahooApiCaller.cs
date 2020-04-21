@@ -1,12 +1,14 @@
 ﻿using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Prices;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 
-namespace FinancialAnalyst.DataSources.Yahoo
+namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
 {
     internal class YahooApiCaller
     {
@@ -16,18 +18,18 @@ namespace FinancialAnalyst.DataSources.Yahoo
             Timeout = TimeSpan.FromMinutes(5),
         };
 
+        private static readonly HttpClient httpClientQuote = new HttpClient()
+        {
+            BaseAddress = new Uri("https://query2.finance.yahoo.com/v7/finance/quote"),
+            Timeout = TimeSpan.FromMinutes(5),
+        };
+
         /*
         private static readonly HttpClient httpClientSummary = new HttpClient() { BaseAddress = new Uri("https://query1.finance.yahoo.com/v10/finance/quoteSummary") };
-
-        private static readonly HttpClient httpClientBasicData = new HttpClient() { BaseAddress = new Uri("https://query2.finance.yahoo.com/v7/finance/quote") };
         
         private static readonly HttpClient httpClientFundamentals = new HttpClient() { BaseAddress = new Uri("https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/") };
         */
-        internal static dynamic GetBasicData(string ticker,Exchange market)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         internal static string GetPrices(string ticker, double from, double to, PriceInterval priceInterval)
         {
             //daily
@@ -58,6 +60,40 @@ namespace FinancialAnalyst.DataSources.Yahoo
             }
         }
 
+        internal static bool GetQuoteData(string ticker, out HttpStatusCode statusCode, out YahooResponse yahooResponse, out string jsonResponse, out string message)
+        {
+            //Example 1
+            //https://query2.finance.yahoo.com/v7/finance/quote?formatted=true&lang=en-US&region=US&symbols=AAPL
+
+            //Example 2
+            //https://query2.finance.yahoo.com/v7/finance/quote?formatted=true&lang=en-US&region=US&symbols=TQQQ
+
+            string uri = $"{httpClientQuote.BaseAddress}?formatted=true&lang=en-US&region=US&symbols={ticker}";
+            HttpResponseMessage responseMessage = httpClientQuote.GetAsync(uri).Result;
+            string content = responseMessage.Content.ReadAsStringAsync().Result;
+            statusCode = responseMessage.StatusCode;
+            if (responseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                jsonResponse = content;
+                yahooResponse = JsonConvert.DeserializeObject<YahooResponse>(jsonResponse);
+                message = "OK";
+                return true;
+            }
+            else
+            {
+                dynamic error = new
+                {
+                    HttpStatusCode = responseMessage.StatusCode.ToString(),
+                    ReasonPhrase = responseMessage.ReasonPhrase,
+                    ContentResponse = content,
+                };
+                jsonResponse = JsonConvert.SerializeObject(error);
+                yahooResponse = null;
+                message = responseMessage.ReasonPhrase;
+                return false;
+            }
+        }
+
         private static string Translate(PriceInterval priceInterval)
         {
             switch (priceInterval)
@@ -68,5 +104,7 @@ namespace FinancialAnalyst.DataSources.Yahoo
                     throw new NotImplementedException($"There is no interval configured for value={priceInterval.ToString()}");
             }
         }
+
+
     }
 }

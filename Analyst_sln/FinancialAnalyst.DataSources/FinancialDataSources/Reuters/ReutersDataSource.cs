@@ -15,7 +15,7 @@ namespace FinancialAnalyst.DataSources.Reuters
 {
     public class ReutersDataSource : IStockDataDataSource, IFinancialDataSource
 	{
-		public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+		public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock asset, out string errorMessage)
 		{
 			bool ok = false;
 			string jsonResponse = "{}";

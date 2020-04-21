@@ -6,11 +6,14 @@ namespace FinancialAnalyst.Common.Entities.Assets
 {
     public enum AssetType
     {
+        Cash=1,
         Stock,
         Bond,
         ETF,
-        Option,
+        Option_Call,
+        Option_Put,
         Fund,
-
+        Unknown,
+        
     }
 }

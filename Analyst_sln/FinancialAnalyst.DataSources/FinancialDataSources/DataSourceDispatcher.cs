@@ -6,36 +6,46 @@ using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Interfaces;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using FinancialAnalyst.DataSources.Reuters;
-using FinancialAnalyst.DataSources.Yahoo;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces;
+using FinancialAnalyst.Common.Entities.Markets;
 
 namespace FinancialAnalyst.DataSources
 {
-    public class DataSourceManager : IDataSource
+    public class DataSourceDispatcher : IDataSource
     {
         private IStockDataDataSource assetDataDataSource;
         private IPricesDataSource pricesDataSouce;
         private IOptionChainDataSource optionChainDataSource;
         private IFinancialDataSource financialDataSource;
         private IRiskFreeRatesDataSource riskFreeRatesDataSource;
+        private IAssetTypeDataSource assetTypeDataSource;
+        private IStatisticsDataSource statisticsDataSource;
+        private IIndexesDataSource indexesDataSource;
         private ICacheManager cacheManager;
 
-        public DataSourceManager(IStockDataDataSource assetDataDataSource, IPricesDataSource pricesDataSouce, IOptionChainDataSource optionChainDataSource, IFinancialDataSource financialDataSource, IRiskFreeRatesDataSource riskFreeRatesDataSource, ICacheManager cacheManager)
+        public DataSourceDispatcher(
+            IStockDataDataSource assetDataDataSource, IPricesDataSource pricesDataSouce, IOptionChainDataSource optionChainDataSource, 
+            IFinancialDataSource financialDataSource, IRiskFreeRatesDataSource riskFreeRatesDataSource, 
+            IAssetTypeDataSource assetTypeDataSource, IStatisticsDataSource statisticsDataSource, IIndexesDataSource indexesDataSource, 
+            ICacheManager cacheManager)
         {
             this.assetDataDataSource = assetDataDataSource;
             this.pricesDataSouce = pricesDataSouce;
             this.optionChainDataSource = optionChainDataSource;
             this.financialDataSource = financialDataSource;
             this.riskFreeRatesDataSource = riskFreeRatesDataSource;
+            this.assetTypeDataSource = assetTypeDataSource;
+            this.statisticsDataSource = statisticsDataSource;
+            this.indexesDataSource = indexesDataSource;
             this.cacheManager = cacheManager;
         }
 
-        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, bool includeOptionChain, bool includeFinancialStatements, out Stock stock, out string errorMessage)
+        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, AssetType assetType, bool includeOptionChain, bool includeFinancialStatements, out Stock stock, out string errorMessage)
         {
-            if (assetDataDataSource.TryGetStockSummary(ticker, exchange, out stock, out errorMessage) == false)
+            if (assetDataDataSource.TryGetStockSummary(ticker, exchange, assetType, out stock, out errorMessage) == false)
                 return false;
 
             if (includeOptionChain && stock.Price_Last.HasValue)
@@ -56,9 +66,9 @@ namespace FinancialAnalyst.DataSources
             return true;
         }
         
-        public bool TryGetStockSummary(string ticker, Exchange? exchange, out Stock asset, out string errorMessage)
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock asset, out string errorMessage)
         {
-            return assetDataDataSource.TryGetStockSummary(ticker, exchange, out asset, out errorMessage);
+            return assetDataDataSource.TryGetStockSummary(ticker, exchange, assetType, out asset, out errorMessage);
         }
 
         public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
@@ -138,9 +148,29 @@ namespace FinancialAnalyst.DataSources
             throw new NotImplementedException();
         }
 
-        public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetType assetType, out LastPrice lastPrice, out string message)
         {
-            return pricesDataSouce.TryGetLastPrice(ticker, exchange, out lastPrice, out message);
+            return pricesDataSouce.TryGetLastPrice(ticker, exchange, assetType, out lastPrice, out message);
+        }
+
+        public bool TryGetAssetType(string symbol, out AssetType assetType)
+        {
+            return assetTypeDataSource.TryGetAssetType(symbol, out assetType);
+        }
+
+        public bool TryGetStatistics(string ticker, Exchange? exchange, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetIndexData(MarketIndex index, out Dictionary<string, decimal> tickersProportions, out string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetIndexesData(out string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }
