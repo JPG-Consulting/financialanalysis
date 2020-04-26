@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FinancialAnalyst.DataSources.FinancialDataSources.DataHubo_IO
+namespace FinancialAnalyst.DataSources.FinancialDataSources.DataHubIO
 {
     class DatahubIODataSource
     {
