@@ -87,5 +87,19 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
         {
             Process.Start("https://en.wikipedia.org/wiki/NASDAQ_Composite");
         }
+
+        private void linkLabel9_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://datahub.io/core/s-and-p-500-companies#data");
+            Process.Start("https://pkgstore.datahub.io/core/s-and-p-500-companies/constituents_json/data/64dd3e9582b936b0352fdd826ecd3c95/constituents_json.json");
+        }
+
+        private void linkLabel10_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://datahub.io/collections/stock-market-data");
+            Process.Start("https://datahub.io/collections/economic-data");
+            Process.Start("https://datahub.io/collections/property-prices");
+            Process.Start("https://datahub.io/collections/inflation");
+        }
     }
 }
