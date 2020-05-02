@@ -7,6 +7,7 @@ using FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources;
 using FinancialAnalyst.DataAccess.Portfolios;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -15,14 +16,14 @@ namespace FinancialAnalyst.Portfolios
 {
     public class PortfoliosManager : IPortfoliosManager
     {
+        private static readonly IFormatProvider FORMAT_PROVIDER = CultureInfo.GetCultureInfo("en-us");
+
         private readonly IPortfoliosContext portfoliosContext;
-        private readonly IPricesDataSource priceDataSource;
-        private readonly IAssetTypeDataSource assetTypeDataSource;
-        public PortfoliosManager(IPortfoliosContext portfoliosContext, IPricesDataSource priceDataSource, IAssetTypeDataSource assetTypeDataSource)
+        private readonly IDataSource dataSource;
+        public PortfoliosManager(IPortfoliosContext portfoliosContext, IDataSource dataSource)
         {
             this.portfoliosContext = portfoliosContext;
-            this.priceDataSource = priceDataSource;
-            this.assetTypeDataSource = assetTypeDataSource;
+            this.dataSource = dataSource;
         }
 
         public bool GetPortfoliosByUserName(string username, out IEnumerable<Portfolio> portfolios, out string message)
@@ -35,6 +36,7 @@ namespace FinancialAnalyst.Portfolios
                     //recalculate asset allocations
                     portfoliosContext.DeleteAssetAllocations(portfolio);
                     CalculateAssetAllocations(portfolio);
+                    portfoliosContext.Update(portfolio);
                 }
             }
             message = "";
@@ -49,7 +51,7 @@ namespace FinancialAnalyst.Portfolios
         /// <param name="portfolioname"></param>
         /// <param name="fileStream">It expects a CSV file. First line has to be the initial balance</param>
         /// <returns></returns>
-        public bool Create(string userName, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance, bool overrideIfExists, out Portfolio portfolio, out string message)
+        public bool CreatePortfolio(string userName, string portfolioname, Stream fileStream, bool firstRowIsInitalBalance, bool overrideIfExists, out Portfolio portfolio, out string message)
         {
             List<string[]> transactionsList = new List<string[]>();
 
@@ -71,12 +73,8 @@ namespace FinancialAnalyst.Portfolios
             
             if (portfolio == null)
             {
-                portfolio = new Portfolio()
-                {
-                    UserId = user.Id,
-                    Name = portfolioname,
-                };
-                portfolioId = portfoliosContext.Add(portfolio);
+                portfolio = portfoliosContext.CreatePortfolio(user, portfolioname);
+                portfolioId = portfolio.Id;
             }
             else
             {
@@ -102,7 +100,7 @@ namespace FinancialAnalyst.Portfolios
                         if (portfolio.Balances.Where(b => b.TransactionCode == pb.TransactionCode).Any() == false)
                         {
                             pb.PortfolioId = portfolioId;
-                            portfoliosContext.Add(pb);//And it also adds the balance to the balances collection of the portfolio
+                            portfoliosContext.AddBalance(pb);//And it also adds the balance to the balances collection of the portfolio
                             portfolio.InitialBalance = pb.NetCashBalance;
                         }
                     }
@@ -118,16 +116,21 @@ namespace FinancialAnalyst.Portfolios
                     string line = reader.ReadLine();
                     string[] fields = line.Split(',');
                     transactionsList.Add(fields);
-                    Transaction newTransaction = Transaction.From(portfolioId, fields);
+                    Transaction newTransaction = Transaction.From(fields);
                     if (newTransaction != null && portfolio.Transactions.Where(t => t.TransactionCode == newTransaction.TransactionCode).Any() == false)
                     {
                         newTransaction.UserId = user.Id;
                         newTransaction.PortfolioId = portfolioId;
-                        if (TryGetAssetType(newTransaction.Symbol, out AssetType assetType))
-                            newTransaction.AssetType = assetType;
+                        if (TryGetAsset(newTransaction.Symbol, out AssetBase asset))
+                        {
+                            if (string.IsNullOrEmpty(newTransaction.Symbol))
+                                newTransaction.Symbol = asset.Ticker;
+                            newTransaction.Asset = asset;
+                        }
                         else
-                            newTransaction.AssetType = null;
-                        portfoliosContext.Add(newTransaction);//And it also adds the transaction to the transactions collection of the portfolio
+                            newTransaction.Asset = null;
+                        portfolio.Transactions.Add(newTransaction);
+                        //portfoliosContext.AddTransaction(newTransaction);//And it also adds the transaction to the transactions collection of the portfolio
                     }
                     else
                     {
@@ -137,36 +140,10 @@ namespace FinancialAnalyst.Portfolios
             }
 
             CalculateAssetAllocations(portfolio);
+            portfoliosContext.Update(portfolio);
 
             message = $"Portfilio '{portfolioname}' created successfuly.";
             return true;
-        }
-
-        private bool TryGetAssetType(string symbol, out AssetType assetType)
-        {
-            if(string.IsNullOrEmpty(symbol))
-            {
-                assetType = AssetType.Cash;
-                return true;
-            }
-
-            string[] parts = symbol.ToLower().Split(' ');
-            if(parts.Length > 1)
-            {
-                if (parts.Contains("call"))
-                {
-                    assetType = AssetType.Option_Call;
-                    return true;
-                }
-
-                if (parts.Contains("put"))
-                {
-                    assetType = AssetType.Option_Put;
-                    return true;
-                }
-            }
-
-            return assetTypeDataSource.TryGetAssetType(symbol, out assetType);
         }
 
         public bool Update(int portfolioId, decimal marketValue)
@@ -180,30 +157,50 @@ namespace FinancialAnalyst.Portfolios
 
         public bool Update(AssetAllocation assetAllocation, out decimal? marketValue)
         {
-            if (priceDataSource.TryGetLastPrice(assetAllocation.Ticker, assetAllocation.Exchange, assetAllocation.AssetType.Value, out LastPrice price, out string message))
+            if (assetAllocation.Asset.AssetClass == AssetClass.Stock || assetAllocation.Asset.AssetClass == AssetClass.ETF)
             {
-                if (price != null)
+                if (dataSource.TryGetLastPrice(assetAllocation.Asset.Ticker, assetAllocation.Asset.Exchange, assetAllocation.Asset.AssetClass, out HistoricalPrice price, out string message))
                 {
-                    marketValue = assetAllocation.UpdateMarketValue(price.Price, price.TimeStamp);
-                    if (marketValue.HasValue == false)
-                        marketValue = assetAllocation.Costs.Value;
+                    if (price != null)
+                    {
+                        marketValue = assetAllocation.UpdateMarketValue(price.Close, price.Date);
+                        if (marketValue.HasValue == false)
+                            marketValue = assetAllocation.Costs.Value;
+                    }
+                    else
+                    {
+                        if (assetAllocation.Costs.HasValue)
+                            marketValue = assetAllocation.Costs.Value;
+                        else
+                            marketValue = null;
+                    }
+                    portfoliosContext.Update(assetAllocation);
+                    return true;
                 }
                 else
                 {
-                    if (assetAllocation.Costs.HasValue)
-                        marketValue = assetAllocation.Costs.Value;
-                    else
-                        marketValue = null;
+                    marketValue = null;
+                    return false;
                 }
-                portfoliosContext.Update(assetAllocation);
-                return true;
+            }
+            else if(assetAllocation.Asset.AssetClass == AssetClass.Option)
+            {
+                bool ok = dataSource.TryGetCompleteAssetData(assetAllocation.Asset.Ticker, assetAllocation.Asset.Exchange, assetAllocation.Asset.AssetClass, true, false, out AssetBase asset, out string errorMessage);
+                if(ok)
+                {
+                    //OptionsChain chain = stock.OptionsChain.Where(kv => kv.Key == assetAllocation.Asset.As<Option>().MaturityDate)
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+
             }
             else
             {
-                marketValue = null;
-                return false;
+                throw new NotImplementedException($"It can't get last price for ticker '{assetAllocation.Asset.Ticker}' (Type='{assetAllocation.Asset.AssetClass}')");
             }
-
             
         }
 
@@ -230,8 +227,7 @@ namespace FinancialAnalyst.Portfolios
                     {
                         assetAllocation = new AssetAllocation() 
                         { 
-                            Ticker = t.Symbol,
-                            AssetType = t.AssetType,
+                            Asset = t.Asset,
                             Costs = 0,
                             Quantity = 0,
                             PortfolioId = portfolio.Id,
@@ -298,7 +294,74 @@ namespace FinancialAnalyst.Portfolios
             portfolio.TotalCosts = totalCosts;
             portfolio.MarketValue = totalCosts;//TODO: Pending to calculate
             portfolio.IsSimulated = false;
-            portfoliosContext.Update(portfolio);
+            
         }
+
+        private bool TryGetAsset(string symbol, out AssetBase asset)
+        {
+            if (string.IsNullOrEmpty(symbol))
+            {
+                asset = portfoliosContext.GetAssetyBy(AssetClass.Cash, "USD");
+                if (asset == null)
+                {
+                    asset = portfoliosContext.CreateAsset(AssetClass.Cash, "USD");
+                }
+                return true;
+            }
+
+            bool ok = TryGetAssetType(symbol, out AssetClass assetClass, out OptionClass? optionClass, out string underlyingTicker, out DateTime? expiration, out double? strike);
+            if (ok)
+            {
+                asset = portfoliosContext.GetAssetyBy(assetClass, symbol);
+                if (asset == null)
+                {
+                    asset = portfoliosContext.CreateAsset(assetClass, symbol, optionClass, underlyingTicker, expiration, strike);
+                }
+                return true;
+            }
+            else
+            {
+                throw new Exception($"It failed to get asset class from symbol '{symbol}'");
+            }
+        }
+
+        private bool TryGetAssetType(string symbol, out AssetClass assetClass, out OptionClass? optionClass, out string underlyingTicker, out DateTime? expiration, out double? strike)
+        {
+            optionClass = null;
+            underlyingTicker = null;
+            expiration = null;
+            strike = null;
+
+
+
+            string[] parts = symbol.ToLower().Split(' ');
+            if (parts.Length > 1)
+            {
+                if (parts.Contains("call"))
+                {
+                    assetClass = AssetClass.Option;
+                    optionClass = OptionClass.Call;
+                    underlyingTicker = parts[0];
+                    expiration = DateTime.ParseExact($"{parts[1]} {parts[2]} {parts[3]}", "MMM dd yyyy", FORMAT_PROVIDER);
+                    strike = double.Parse(parts[4], FORMAT_PROVIDER);
+                    return true;
+                }
+
+                if (parts.Contains("put"))
+                {
+                    assetClass = AssetClass.Option;
+                    optionClass = OptionClass.Put;
+                    underlyingTicker = parts[0];
+                    expiration = DateTime.ParseExact($"{parts[1]} {parts[2]} {parts[3]}", "MMM dd yyyy", FORMAT_PROVIDER);
+                    strike = double.Parse(parts[4], FORMAT_PROVIDER);
+                    return true;
+                }
+            }
+
+            return dataSource.TryGetAssetType(symbol, out assetClass);
+            
+        }
+
+        
     }
 }

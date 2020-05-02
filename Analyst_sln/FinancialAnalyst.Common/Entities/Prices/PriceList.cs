@@ -4,9 +4,9 @@ using System.Text;
 
 namespace FinancialAnalyst.Common.Entities.Prices
 {
-    public class PriceList:List<Price>
+    public class PriceList:List<HistoricalPrice>
     {
-        public double CalculateVolatility()
+        public double CalculateStandardDeviation()
         {
             //Volatility is a measure of stock price fluctuation. 
             //Mathematically, volatility is the annualized standard deviation of a stock's daily price changes.

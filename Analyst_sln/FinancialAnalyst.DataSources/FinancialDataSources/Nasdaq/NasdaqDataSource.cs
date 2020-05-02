@@ -20,7 +20,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
         private static readonly ILog logger = log4net.LogManager.GetLogger(typeof(NasdaqDataSource));
         private static readonly CultureInfo enUsCultureInfo = new CultureInfo("en-us");
 
-        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock asset, out string errorMessage)
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetClass assetType, out Stock asset, out string errorMessage)
         {
             //https://api.nasdaq.com/api/quote/TQQQ/info?assetclass=etf
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
@@ -48,11 +48,38 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             
             foreach (var optionRow in rawdata.data.optionChainList.rows)
             {
-                if(optionRow.call != null)
+                /*
                 {
-                    CallOption o = new CallOption()
+                  "call": {
+                    "symbol": "@AXP   200320C00070000",
+                    "last": "6.00",
+                    "change": "-10.40",
+                    "bid": "4.05",
+                    "ask": "7.95",
+                    "volume": 5,
+                    "openinterest": 10,
+                    "strike": 70.0,
+                    "expiryDate": "03/20/2020",
+                    "colour": true
+                  },
+                  "put": {
+                    "symbol": "@AXP   200320P00070000",
+                    "last": "2.46",
+                    "change": "1.96",
+                    "bid": "0.50",
+                    "ask": "3.30",
+                    "volume": 80,
+                    "openinterest": 77,
+                    "strike": 70.0,
+                    "expiryDate": "03/20/2020",
+                    "colour": false
+                  }
+                },
+                */
+                if (optionRow.call != null)
+                {
+                    var o = new Option(OptionClass.Call, optionRow.put.symbol)
                     {
-                        Symbol = optionRow.call.symbol,
                         Strike = optionRow.call.strike,
                         ExpirationDate = optionRow.call.expiryDate,
                     };
@@ -69,19 +96,18 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
 
                 if (optionRow.put != null)
                 {
-                    PutOption o = new PutOption()
-                    {
-                        Symbol = optionRow.put.symbol,
-                        Last = optionRow.put.last,
+                    var o = new Option(OptionClass.Put, optionRow.put.symbol)
+                    { 
+                        LastPrice = optionRow.put.last,
                         Strike = optionRow.put.strike,
                         ExpirationDate = optionRow.put.expiryDate,
                     };
-                    o.SetLast(optionRow.call.last);
-                    o.SetChange(optionRow.call.change);
-                    o.SetBid(optionRow.call.bid);
-                    o.SetAsk(optionRow.call.ask);
-                    o.SetVolume(optionRow.call.volume);
-                    o.SetOpenInterest(optionRow.call.openinterest);
+                    o.SetLast(optionRow.put.last);
+                    o.SetChange(optionRow.put.change);
+                    o.SetBid(optionRow.put.bid);
+                    o.SetAsk(optionRow.put.ask);
+                    o.SetVolume(optionRow.put.volume);
+                    o.SetOpenInterest(optionRow.put.openinterest);
 
                     optionChain.Add(o);
                 }
@@ -101,7 +127,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             throw new NotImplementedException();
         }
 
-        public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
+        public bool TryGetHistoricalPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
         {
             //https://api.nasdaq.com/api/quote/AAPL/chart?assetclass=stocks&fromdate=2010-04-15&todate=2020-04-15
             if (from.HasValue == false)
@@ -114,14 +140,14 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             prices = new PriceList();
             foreach(var nasdaqPrice in nasdaqResponse.Data.Prices)
             {
-                Price price = new Price();
+                HistoricalPrice price = new HistoricalPrice();
                 price.Close = nasdaqPrice.Price;
                 prices.Add(price);
             }
             return true;
         }
 
-        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetType assetType, out LastPrice lastPrice, out string message)
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetClass assetType, out HistoricalPrice lastPrice, out string message)
         {
             //https://api.nasdaq.com/api/quote/TQQQ/info?assetclass=etf
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
@@ -131,10 +157,10 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
                 if (nasdaqResponse.Status.Code == 200)
                 {
                     string temp = nasdaqResponse.Data.PrimaryData.LastSalePriceAsString;
-                    lastPrice = new LastPrice();
-                    lastPrice.Price = decimal.Parse(temp.Substring(1),enUsCultureInfo);
+                    lastPrice = new HistoricalPrice();
+                    lastPrice.Close = decimal.Parse(temp.Substring(1),enUsCultureInfo);
                     temp = nasdaqResponse.Data.PrimaryData.LastTradeTimestampAsString;
-                    lastPrice.TimeStamp = ParseDateTime(temp);
+                    lastPrice.Date = ParseDateTime(temp);
                     /*
                     temp = rawdata.data.keyStats.Volume.value.ToString();
                     lastPrice.Volume = int.Parse(temp, NumberStyles.Integer | NumberStyles.AllowThousands, enUsCultureInfo);

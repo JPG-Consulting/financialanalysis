@@ -38,13 +38,13 @@ namespace FinancialAnalyst.Common.Entities.Assets.Options
 
             foreach (var options in optionChain)
             {
-                foreach (OptionBase option in options.Value)
+                foreach (Option option in options.Value)
                 {
-                    if (option is CallOption)
+                    if (option.IsCall)
                     {
                         option.TheoricalValue = CalculateCall(lastPrice, volatility, option, riskFreeRates.TwoYears);
                     }
-                    else if (option is PutOption)
+                    else if (option.IsPut)
                     {
                         option.TheoricalValue = CalculatePut(lastPrice, volatility, option, riskFreeRates.TwoYears);
                     }
@@ -86,7 +86,7 @@ namespace FinancialAnalyst.Common.Entities.Assets.Options
         ///     Seciontion: 14.8 - Black-Scholes-Merton pricing formulas (page 313)
         /// </summary>
         /// <returns></returns>
-        public static double CalculateCall(double lastPrice,double volatility, OptionBase option, double riskFreeRate)
+        public static double CalculateCall(double lastPrice,double volatility, Option option, double riskFreeRate)
         {
             double s0 = lastPrice;
             double σ = volatility;
@@ -127,7 +127,7 @@ namespace FinancialAnalyst.Common.Entities.Assets.Options
         ///     Seciontion: 14.8 - Black-Scholes-Merton pricing formulas (page 313)
         /// </summary>
         /// <returns></returns>
-        public static double CalculatePut(double lastPrice, double volatility, OptionBase option, double riskFreeRate)
+        public static double CalculatePut(double lastPrice, double volatility, Option option, double riskFreeRate)
         {
             double s0 = lastPrice;
             double σ = volatility;
@@ -159,15 +159,15 @@ namespace FinancialAnalyst.Common.Entities.Assets.Options
             double meanOf_u = 0;
             for (int i = 0; i < prices.Count; i++)
             {
-                meanOf_u += prices[i].Close;
+                meanOf_u += (double)prices[i].Close;
             }
             meanOf_u = meanOf_u / prices.Count;
 
             double sumOf_U_and_meanOfU_squared = 0;
-            double s_prevoius = prices[0].Close;
+            double s_prevoius = (double)prices[0].Close;
             for(int i = 1; i <prices.Count; i++)
             {
-                double s = prices[i].Close;
+                double s = (double)prices[i].Close;
                 double u_i = Math.Log(s / s_prevoius);
                 sumOf_U_and_meanOfU_squared += Math.Pow(u_i - meanOf_u, 2);
                 s_prevoius = s;

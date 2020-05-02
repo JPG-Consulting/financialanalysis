@@ -19,17 +19,17 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
 {
     public class YahooDataSource : IStockDataDataSource, IPricesDataSource, IAssetTypeDataSource, IStatisticsDataSource, IIndexesDataSource
     {
-        private static DateTime FIRST_DATE = new DateTime(1927, 12, 30, 0, 0, 0);
-        private static DateTime DATE_1970 = new DateTime(1970, 1, 1, 0, 0, 0);
+        private static readonly DateTime FIRST_DATE = new DateTime(1927, 12, 30, 0, 0, 0);
+        internal static readonly DateTime DATE_1970 = new DateTime(1970, 1, 1, 0, 0, 0);
 
-        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock asset, out string errorMessage)
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetClass assetClass, out Stock asset, out string errorMessage)
         {
             //https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true&crumb=.hu5lEQsLEy&lang=en-US&region=US&modules=assetProfile%2CsecFilings&corsDomain=finance.yahoo.com
             //https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?formatted=true&lang=en-US&region=US&modules=assetProfile%2CsecFilings&corsDomain=finance.yahoo.com
             throw new NotImplementedException();
         }
 
-        public bool TryGetAssetType(string ticker, out AssetType assetType)
+        public bool TryGetAssetType(string ticker, out AssetClass assetType)
         {
             //Example 1
             //https://query2.finance.yahoo.com/v7/finance/quote?formatted=true&lang=en-US&region=US&symbols=AAPL
@@ -68,42 +68,72 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
             }
             */
 
-            bool ok = YahooApiCaller.GetQuoteData(ticker, out HttpStatusCode statusCode, out YahooResponse yahooResponse, out string jsonResponse, out string message);
+            bool ok = YahooApiCaller.GetQuoteData(ticker, out HttpStatusCode statusCode, out YahooQuoteResponse yahooResponse, out string jsonResponse, out string message);
             if(ok)
             {
                 var result = yahooResponse.quoteResponse.result.Where(r => r.symbol == ticker).SingleOrDefault();
                 if(result == null)
                 {
-                    assetType = AssetType.Unknown;
+                    assetType = AssetClass.Unknown;
                     return false;
                 }
 
                 if(result.quoteType == "ETF")
                 {
-                    assetType = AssetType.ETF;
+                    assetType = AssetClass.ETF;
                     return true;
                 }
                 else if (result.quoteType == "EQUITY")
                 {
-                    assetType = AssetType.Stock;
+                    assetType = AssetClass.Stock;
                     return true;
                 }
                 else
                 {
-                    assetType = AssetType.Unknown;
+                    assetType = AssetClass.Unknown;
                     return false;
                 }
             }
             else
             {
-                assetType = AssetType.Unknown;
+                assetType = AssetClass.Unknown;
                 return false;
             }
 
 
         }
 
-        public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval priceInterval, out PriceList prices, out string errorMessage)
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetClass assetType, out HistoricalPrice lastPrice, out string message)
+        {
+            //Last two months???
+            //https://query1.finance.yahoo.com/v8/finance/chart/AAPL?region=US&lang=en-US&includePrePost=false&interval=2m&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance
+
+            //Daily, last day
+            //https://query1.finance.yahoo.com/v8/finance/chart/AAPL?lang=en-US&includePrePost=false&interval=1d&range=1d
+
+            //Daily, last 5 days
+            //https://query1.finance.yahoo.com/v8/finance/chart/AAPL?lang=en-US&includePrePost=false&interval=1d&range=5d
+
+            int days = 1;
+            YahooChartInterval interval = YahooChartInterval.TwoMinutes;
+            bool ok = YahooApiCaller.GetDailyPrices(ticker, interval,  days, out HttpStatusCode statusCode, out YahooChartResponse yahooResponse, out string jsonResponse, out message);
+
+            int length = yahooResponse.Chart.Result[0].TimeStampsAsLong.Length;
+            int i = length - 1;
+            long seconds = yahooResponse.Chart.Result[0].TimeStampsAsLong[i];
+            DateTime dt = DATE_1970.AddSeconds(seconds);
+            decimal price = yahooResponse.Chart.Result[0].Indicators.Quote[0].Close[i];
+            ulong volume = yahooResponse.Chart.Result[0].Indicators.Quote[0].Volume[i];
+            lastPrice = new HistoricalPrice()
+            {
+                Date = dt,
+                Close = price,
+                Volume = volume,
+            };
+            return true;
+        }
+
+        public bool TryGetHistoricalPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval priceInterval, out PriceList prices, out string errorMessage)
         {
 
             double fromValue;
@@ -127,22 +157,19 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
             }
 
 
-            string content = YahooApiCaller.GetPrices(ticker, fromValue, toValue, priceInterval);
+            string content = YahooApiCaller.GetHistoricalPrices(ticker, fromValue, toValue, priceInterval);
             string[] lines = content.Split('\n');
             prices = new PriceList();
             for (int i = 1; i < lines.Length; i++)
             {
-                Price p = Price.From(lines[i]);
+                HistoricalPrice p = HistoricalPrice.From(lines[i]);
                 prices.Add(p);
             }
             errorMessage = "ok";
             return true;
         }
 
-        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetType assetType, out LastPrice lastPrice, out string message)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public bool TryGetStatistics(string ticker, Exchange? exchange, out string message)
         {

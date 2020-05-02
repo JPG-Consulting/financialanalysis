@@ -16,7 +16,7 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
     /// </summary>
     public class FinancialModelingPrepDataSource : IDataSource
     {
-        public bool TryGetAssetType(string symbol, out AssetType assetType)
+        public bool TryGetAssetType(string symbol, out AssetClass assetType)
         {
             throw new NotImplementedException();
         }
@@ -26,7 +26,7 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
             throw new NotImplementedException();
         }
 
-        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, AssetType assetType, bool includeOptionChain, bool includeFinancialStatements, out Stock stock, out string errorMessage)
+        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, AssetClass assetType, bool includeOptionChain, bool includeFinancialStatements, out Stock stock, out string errorMessage)
         {
             throw new NotImplementedException();
         }
@@ -52,12 +52,12 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
             throw new NotImplementedException();
         }
 
-        public bool TryGetLastPrice(string ticker, Exchange? exchange, out LastPrice lastPrice, out string message)
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, out HistoricalPrice lastPrice, out string message)
         {
             throw new NotImplementedException();
         }
 
-        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetType assetType, out LastPrice lastPrice, out string message)
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetClass assetType, out HistoricalPrice lastPrice, out string message)
         {
             throw new NotImplementedException();
         }
@@ -77,7 +77,7 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
             throw new NotImplementedException();
         }
 
-        public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
+        public bool TryGetHistoricalPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
         {
             throw new NotImplementedException();
         }
@@ -92,7 +92,12 @@ namespace FinancialAnalyst.DataSources.FinancialModelingPrep
             throw new NotImplementedException();
         }
 
-        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock stock, out string errorMessage)
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetClass assetType, out Stock stock, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetCompleteAssetData(string ticker, Exchange? exchange, AssetClass assetClass, bool includeOptionChain, bool includeFinancialStatements, out AssetBase asset, out string errorMessage)
         {
             throw new NotImplementedException();
         }

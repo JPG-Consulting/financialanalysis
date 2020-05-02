@@ -7,6 +7,15 @@ namespace FinancialAnalyst.Common.Entities.Assets
     [Serializable]
     public class ETF : AssetBase
     {
-        public override AssetType AssetType { get { return AssetType.ETF; } }
+        public override AssetClass AssetClass 
+        { 
+            get { return AssetClass.ETF; } 
+            protected set { } 
+        }
+
+        public ETF(string ticker) : base(ticker)
+        {
+
+        }
     }
 }

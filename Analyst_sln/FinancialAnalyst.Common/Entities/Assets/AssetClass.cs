@@ -4,16 +4,23 @@ using System.Text;
 
 namespace FinancialAnalyst.Common.Entities.Assets
 {
-    public enum AssetType
+    public enum AssetClass
     {
         Cash=1,
         Stock,
         Bond,
         ETF,
-        Option_Call,
-        Option_Put,
+        Option,
         Fund,
+        Futures,
         Unknown,
         
+    }
+
+    public enum OptionClass
+    {
+        Call=1, 
+        Put,
+        Exotic,
     }
 }

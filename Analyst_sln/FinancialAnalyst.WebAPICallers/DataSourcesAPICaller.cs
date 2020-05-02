@@ -15,7 +15,7 @@ namespace FinancialAnalyst.WebAPICallers
 {
     public class DataSourcesAPICaller
     {
-        public static APIResponse<Stock> GetCompleteStockData(string ticker, Exchange? market, AssetType? assetType, bool includeOptionChain, bool includeFinancialData)
+        public static APIResponse<Stock> GetCompleteStockData(string ticker, Exchange? market, AssetClass? assetType, bool includeOptionChain, bool includeFinancialData)
         {
             string uri = $"api/DataSources/getcompletestockdata?ticker={ticker}";
             if (market.HasValue)
@@ -23,7 +23,7 @@ namespace FinancialAnalyst.WebAPICallers
             if(assetType.HasValue)
                 uri += $"&assetType={assetType.ToString()}";
             else
-                uri += $"&assetType={AssetType.Unknown.ToString()}";
+                uri += $"&assetType={AssetClass.Unknown.ToString()}";
             uri += $"&includeOptionChain={includeOptionChain}";
             uri += $"&includeFinancialData={includeFinancialData}";
             HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
@@ -48,7 +48,7 @@ namespace FinancialAnalyst.WebAPICallers
 
         }
 
-        public static LastPrice GetLastPrice(string ticker, Exchange? exchange, AssetType? assetType)
+        public static HistoricalPrice GetLastPrice(string ticker, Exchange? exchange, AssetClass? assetType)
         {
             string uri = $"api/DataSources/getlastprice?ticker={ticker}";
             if (exchange.HasValue)
@@ -56,10 +56,10 @@ namespace FinancialAnalyst.WebAPICallers
             if (assetType.HasValue)
                 uri += $"&assetType={assetType.ToString()}";
             else
-                uri += $"&assetType={AssetType.Unknown.ToString()}";
+                uri += $"&assetType={AssetClass.Unknown.ToString()}";
 
             HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
-            var response = JsonConvert.DeserializeObject<APIResponse<LastPrice>>(jsonResponse);
+            var response = JsonConvert.DeserializeObject<APIResponse<HistoricalPrice>>(jsonResponse);
             if (response.Ok)
                 return response.Content;
             else

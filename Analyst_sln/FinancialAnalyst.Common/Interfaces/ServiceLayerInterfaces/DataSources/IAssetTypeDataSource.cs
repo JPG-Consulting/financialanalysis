@@ -7,6 +7,6 @@ namespace FinancialAnalyst.Common.Interfaces.ServiceLayerInterfaces.DataSources
 {
     public interface IAssetTypeDataSource
     {
-        bool TryGetAssetType(string symbol, out AssetType assetType);
+        bool TryGetAssetType(string symbol, out AssetClass assetClass);
     }
 }

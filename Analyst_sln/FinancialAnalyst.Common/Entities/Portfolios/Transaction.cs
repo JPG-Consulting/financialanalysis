@@ -16,24 +16,26 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         public int Id { get; set; }
 
         [JsonProperty]
+        [Required]
+        public string Symbol { get; set; }
+
+        [JsonProperty]
+        [Required]
         public DateTime Date { get; set; }
 
         [JsonProperty]
         public string TransactionCode { get; set; }
 
         [JsonProperty]
+        [Required]
         public string Description { get; set; }
 
         [JsonProperty]
+        [Required]
         public int Quantity { get; set; }
 
         [JsonProperty]
-        public string Symbol { get; set; }
-
-        [JsonProperty]
-        public AssetType? AssetType { get; set; }
-
-        [JsonProperty]
+        [Required]
         public decimal Price { get; set; }
 
         [JsonProperty]
@@ -44,10 +46,10 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         public decimal Amount { get; set; }
 
         [JsonProperty]
-        public decimal NetCashBalance { get; set; }
+        public decimal? NetCashBalance { get; set; }
 
         [JsonProperty]
-        public decimal RegFee { get; set; }
+        public decimal? RegFee { get; set; }
 
         [JsonIgnore]
         [Required]
@@ -60,7 +62,15 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         [Required]
         public CashflowTypes CashflowType { get; private set; }
 
-        public static Transaction From(int portfolioId, string[] fields)
+        [JsonIgnore]
+        [Required]
+        public int AssetId { get; set; }
+
+        [JsonProperty]
+        [Required]
+        public AssetBase Asset { get; set; }
+
+        public static Transaction From(string[] fields)
         {
             if (fields == null || fields.Length < 10)
                 return null;

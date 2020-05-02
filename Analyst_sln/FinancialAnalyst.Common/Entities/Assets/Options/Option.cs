@@ -1,61 +1,58 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace FinancialAnalyst.Common.Entities.Assets
 {
     [Serializable]
-    public abstract class OptionBase : AssetBase
+    public class Option : AssetBase
     {
-        /*
+        public override AssetClass AssetClass
         {
-          "call": {
-            "symbol": "@AXP   200320C00070000",
-            "last": "6.00",
-            "change": "-10.40",
-            "bid": "4.05",
-            "ask": "7.95",
-            "volume": 5,
-            "openinterest": 10,
-            "strike": 70.0,
-            "expiryDate": "03/20/2020",
-            "colour": true
-          },
-          "put": {
-            "symbol": "@AXP   200320P00070000",
-            "last": "2.46",
-            "change": "1.96",
-            "bid": "0.50",
-            "ask": "3.30",
-            "volume": 80,
-            "openinterest": 77,
-            "strike": 70.0,
-            "expiryDate": "03/20/2020",
-            "colour": false
-          }
-        },
-        */
+            get { return AssetClass.Option; }
+            protected set { }
+        }
 
+        [Required]
         public AssetBase UnderlyingAsset { get; set; }
-        public string Symbol { get; set; }
-        public double? Last { get; set; }
         public double? Change { get; set; }
         public double? Bid { get; set; }
         public double? Ask { get; set; }
         public int? Volume { get; set; }
         public int? OpenInterest { get; set; }
+
+        [Required]
         public double Strike { get; set; }
+        [Required]
         public DateTime ExpirationDate { get; set; }
-        public double TheoricalValue { get; set; }
+        public double? TheoricalValue { get; set; }
+
+        [NotMapped]
+        public bool IsCall { get { return _optionClass == OptionClass.Call; } }
+        [NotMapped]
+        public bool IsPut { get { return _optionClass == OptionClass.Put; } }
+
+        public OptionClass OptionClass { get { return _optionClass; } }
+
+        
+
+        private readonly OptionClass _optionClass;
+
+        public Option(OptionClass optionClass, string ticker):base(ticker)
+        {
+            _optionClass = optionClass;
+        }
 
         public void SetLast(dynamic last)
         {
             string str = last;
-            if (double.TryParse(str, out double result))
-                Last = result;
+            if (decimal.TryParse(str, out decimal result))
+                LastPrice = result;
             else
-                Last = null;
+                LastPrice = null;
         }
 
         public void SetChange(dynamic value)

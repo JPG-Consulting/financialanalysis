@@ -35,7 +35,7 @@ namespace FinancialAnalyst.DataSources
                     string[] lines = File.ReadAllLines(file);
                     for (int i = 1; i < lines.Length; i++)
                     {
-                        Price p = Price.From(lines[i]);
+                        HistoricalPrice p = HistoricalPrice.From(lines[i]);
                         prices.Add(p);
                     }
                     return true;

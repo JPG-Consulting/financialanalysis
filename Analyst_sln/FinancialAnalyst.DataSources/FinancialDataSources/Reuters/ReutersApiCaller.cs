@@ -22,6 +22,7 @@ namespace FinancialAnalyst.DataSources.Reuters
 
         internal static bool GetSummary(string ticker, out string jsonResponse, out string errorMessage)
         {
+            //https://www.reuters.com/companies/api/getFetchCompanyProfile/AAPL.oq
             string uri = $"{httpClientSummary.BaseAddress}{ticker}";
             return Get(httpClientSummary, uri, out jsonResponse, out errorMessage);
             

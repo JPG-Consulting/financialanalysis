@@ -38,7 +38,7 @@ namespace FinancialAnalyst.UI.Windows.ChildForms
 
             Series priceSeries = this.chartSP.Series.Add("Prices");
             priceSeries.ChartType = SeriesChartType.Spline;
-            foreach(Price p in pricesResponse.Content)
+            foreach(HistoricalPrice p in pricesResponse.Content)
             {
                 priceSeries.Points.AddXY(p.Date, p.Close);
             }

@@ -35,14 +35,14 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         }
 
         [HttpGet("getcompletestockdata")]
-        public APIResponse<Stock> GetCompleteStockData(string ticker,string exchange,string assetType, bool? includeOptionChain, bool? includeFinancialStatements )
+        public APIResponse<AssetBase> GetCompleteStockData(string ticker,string exchange,string assetType, bool? includeOptionChain, bool? includeFinancialStatements )
         {
 
             try
             {
                 if (string.IsNullOrEmpty(ticker))
                 {
-                    return new APIResponse<Stock>()
+                    return new APIResponse<AssetBase>()
                     {
                         Ok = false,
                         ErrorMessage = Resources.UI_TickerNull,
@@ -58,7 +58,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                     }
                     else
                     {
-                        return new APIResponse<Stock>()
+                        return new APIResponse<AssetBase>()
                         {
                             Content = null,
                             Ok = false,
@@ -67,7 +67,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                     }
                 }
 
-                AssetType assetTypeValue = AssetType.Unknown;
+                AssetClass assetTypeValue = AssetClass.Unknown;
                 if (string.IsNullOrEmpty(assetType) == false)
                 {
                     if (Enum.TryParse<Exchange>(assetType, out Exchange temp))
@@ -76,7 +76,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                     }
                     else
                     {
-                        return new APIResponse<Stock>()
+                        return new APIResponse<AssetBase>()
                         {
                             Content = null,
                             Ok = false,
@@ -92,18 +92,18 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 if (includeFinancialStatements == null)
                     includeFinancialStatements = false;
 
-                if (dataSource.TryGetCompleteStockData(ticker, exch, assetTypeValue, includeOptionChain.Value, includeFinancialStatements.Value, out Stock stock, out string message))
+                if (dataSource.TryGetCompleteAssetData(ticker, exch, assetTypeValue, includeOptionChain.Value, includeFinancialStatements.Value, out AssetBase asset, out string message))
                 {
-                    return new APIResponse<Stock>()
+                    return new APIResponse<AssetBase>()
                     {
-                        Content = stock,
+                        Content = asset,
                         Ok = true,
                         ErrorMessage = message,
                     };
                 }
                 else
                 {
-                    return new APIResponse<Stock>()
+                    return new APIResponse<AssetBase>()
                     {
                         Content = null,
                         Ok = false,
@@ -113,7 +113,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
             }
             catch(Exception ex)
             {
-                return new APIResponse<Stock>()
+                return new APIResponse<AssetBase>()
                 {
                     Content = null,
                     Ok = false,
@@ -176,7 +176,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 };
             }
 
-            if (dataSource.TryGetPrices(ticker, exch,fromDate,toDate, priceInterval, out PriceList prices, out string message))
+            if (dataSource.TryGetHistoricalPrices(ticker, exch,fromDate,toDate, priceInterval, out PriceList prices, out string message))
             {
                 return new APIResponse<PriceList>()
                 {
@@ -198,11 +198,11 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         }
 
         [HttpGet("getlastprice")]
-        public APIResponse<LastPrice> GetLastPrice(string ticker, string exchange, string assetType)
+        public APIResponse<HistoricalPrice> GetLastPrice(string ticker, string exchange, string assetType)
         {
             if (string.IsNullOrEmpty(ticker))
             {
-                return new APIResponse<LastPrice>()
+                return new APIResponse<HistoricalPrice>()
                 {
                     Ok = false,
                     ErrorMessage = Resources.UI_TickerNull,
@@ -218,7 +218,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 }
                 else
                 {
-                    return new APIResponse<LastPrice>()
+                    return new APIResponse<HistoricalPrice>()
                     {
                         Content = null,
                         Ok = false,
@@ -227,7 +227,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 }
             }
 
-            AssetType assetTypeValue = AssetType.Unknown;
+            AssetClass assetTypeValue = AssetClass.Unknown;
             if (string.IsNullOrEmpty(assetType) == false)
             {
                 if (Enum.TryParse<Exchange>(assetType, out Exchange temp))
@@ -236,7 +236,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 }
                 else
                 {
-                    return new APIResponse<LastPrice>()
+                    return new APIResponse<HistoricalPrice>()
                     {
                         Content = null,
                         Ok = false,
@@ -245,9 +245,9 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
                 }
             }
 
-            if (dataSource.TryGetLastPrice(ticker, exch, assetTypeValue, out LastPrice price, out string message))
+            if (dataSource.TryGetLastPrice(ticker, exch, assetTypeValue, out HistoricalPrice price, out string message))
             {
-                return new APIResponse<LastPrice>()
+                return new APIResponse<HistoricalPrice>()
                 {
                     Content = price,
                     Ok = true,
@@ -256,7 +256,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
             }
             else
             {
-                return new APIResponse<LastPrice>()
+                return new APIResponse<HistoricalPrice>()
                 {
                     Content = null,
                     Ok = false,

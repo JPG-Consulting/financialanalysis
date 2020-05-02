@@ -3,6 +3,7 @@ using FinancialAnalyst.Common.Entities.Prices;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -15,14 +16,13 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         [JsonProperty]
         public int Id { get; set; }
 
-        [JsonProperty]
-        public string Ticker { get; set; }
+        [JsonIgnore]
+        [Required]
+        public int AssetId { get; set; }
 
         [JsonProperty]
-        public AssetType? AssetType { get; set; }
-
-        [JsonProperty]
-        public Exchange? Exchange { get; set; }
+        [Required]
+        public AssetBase Asset { get; set; }
         
         [JsonProperty]
         public int? Quantity { get; set; }

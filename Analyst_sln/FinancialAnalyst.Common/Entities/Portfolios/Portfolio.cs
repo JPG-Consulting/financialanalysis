@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace FinancialAnalyst.Common.Entities.Portfolios
@@ -65,6 +66,7 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
 
         
         [JsonProperty]
+        [Required]
         public string Name { get; set; }
 
         [JsonProperty]
@@ -103,22 +105,5 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         [JsonProperty]
         public bool IsSimulated { get; set; }
 
-
-        public static Portfolio From(string name, string[] tickers)
-        {
-            Portfolio p = new Portfolio()
-            {
-                Name = name,
-                AssetAllocations = new List<AssetAllocation>(),
-            };
-            foreach(string ticker in tickers)
-            {
-                p.AssetAllocations.Add(new AssetAllocation()
-                {
-                    Ticker=ticker,
-                });
-            }
-            return p;
-        }
     }
 }

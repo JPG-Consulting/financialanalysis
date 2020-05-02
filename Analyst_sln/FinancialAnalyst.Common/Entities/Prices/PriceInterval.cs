@@ -9,5 +9,6 @@ namespace FinancialAnalyst.Common.Entities.Prices
         Daily,
         Weekly,
         Monthly,
+        Yearly,
     }
 }

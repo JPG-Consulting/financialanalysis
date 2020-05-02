@@ -27,10 +27,10 @@ namespace FinancialAnalyst.DataSources.Tests
             ICacheManager cacheManager = new FileCacheManager();
 
             IDataSource dataSource = new DataSourceDispatcher(stockDataDataSource, pricesDataSource, optionChainDataSource, financialDataSource, riskFreeRatesDataSource, assetTypeDataSource, statisticsDataSource, indexesDataSource, cacheManager);
-            bool ok = dataSource.TryGetCompleteStockData("AAPL", Common.Entities.Exchange.NASDAQ,AssetType.Stock, true, true, out Stock stock, out string message);
+            bool ok = dataSource.TryGetCompleteAssetData("AAPL", Common.Entities.Exchange.NASDAQ,AssetClass.Stock, true, true, out AssetBase asset, out string message);
             Assert.IsTrue(ok);
-            string json = JsonConvert.SerializeObject(stock);
-            Stock s = JsonConvert.DeserializeObject<Stock>(json);
+            string json = JsonConvert.SerializeObject(asset);
+            AssetBase a = JsonConvert.DeserializeObject<AssetBase>(json);
         }
     }
 }

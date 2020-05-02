@@ -14,14 +14,14 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
     {
         private static readonly HttpClient httpClient = new HttpClient() { BaseAddress = new Uri("https://api.nasdaq.com/api/") };
 
-        internal static bool GetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out string message)
+        internal static bool GetStockSummary(string ticker, Exchange? exchange, AssetClass assetType, out HttpStatusCode statusCode, out NasdaqResponse nasdaqResponse, out string jsonResponse, out string message)
         {
             //https://api.nasdaq.com/api/quote/TQQQ/info?assetclass=etf
             //https://api.nasdaq.com/api/quote/AAPL/info?assetclass=stocks
             string uri = $"{httpClient.BaseAddress}quote/{ticker}/info";
-            if(assetType == AssetType.Stock)
+            if(assetType == AssetClass.Stock)
                 uri += "?assetclass=stocks";
-            else if(assetType == AssetType.ETF)
+            else if(assetType == AssetClass.ETF)
                 uri += "?assetclass=etf";
             HttpResponseMessage responseMessage = httpClient.GetAsync(uri).Result;
             string content = responseMessage.Content.ReadAsStringAsync().Result;

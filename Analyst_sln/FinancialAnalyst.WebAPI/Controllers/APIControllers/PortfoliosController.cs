@@ -80,7 +80,7 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
 
             MemoryStream target = new MemoryStream();
             transactions.CopyTo(target);
-            bool ok = portfoliosService.Create(username, portfolioname,target, firstRowIsInitalBalance, overrideIfExist, out Portfolio portfolio, out string message);
+            bool ok = portfoliosService.CreatePortfolio(username, portfolioname,target, firstRowIsInitalBalance, overrideIfExist, out Portfolio portfolio, out string message);
             APIResponse<Portfolio> response = new APIResponse<Portfolio>()
             {
                 Content = portfolio,

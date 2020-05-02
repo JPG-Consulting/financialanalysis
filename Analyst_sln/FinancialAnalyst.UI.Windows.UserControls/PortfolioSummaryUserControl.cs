@@ -233,7 +233,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
                         }
                         catch (Exception ex)
                         {
-                            _logger.Error($"LaunchUpdateTask failed for portfolio='{portfolio.Name}' (UserId='{portfolio.UserId}'), Ticker={assetAllocation.Ticker}: {ex.Message}", ex);
+                            _logger.Error($"LaunchUpdateTask failed for portfolio='{portfolio.Name}' (UserId='{portfolio.UserId}'), Ticker={assetAllocation.Asset.Ticker}: {ex.Message}", ex);
                         }
                         i++;
                     }

@@ -7,7 +7,15 @@ namespace FinancialAnalyst.Common.Entities.Assets
     [Serializable]
     public class Bond:AssetBase
     {
-        public override AssetType AssetType { get { return AssetType.Bond; } }
+        public override AssetClass AssetClass 
+        { 
+            get { return AssetClass.Bond; } 
+            protected set { } 
+        }
 
+        public Bond(string ticker) : base(ticker)
+        {
+
+        }
     }
 }

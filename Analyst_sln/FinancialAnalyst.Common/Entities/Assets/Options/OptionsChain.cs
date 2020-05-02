@@ -8,17 +8,17 @@ using System.Text;
 namespace FinancialAnalyst.Common.Entities.Assets
 {
     [JsonDictionary]
-    public class OptionsChain: Dictionary<DateTime, List<OptionBase>>
+    public class OptionsChain: Dictionary<DateTime, List<Option>>
     {
         public double HistoricalVolatility { get; set; }
         public PriceList Prices { get; internal set; }
         public RiskFreeRates RiskFreeRates { get; internal set; }
 
-        public void Add(OptionBase o)
+        public void Add(Option o)
         {
             if(this.ContainsKey(o.ExpirationDate) == false)
             {
-                this.Add(o.ExpirationDate, new List<OptionBase>());
+                this.Add(o.ExpirationDate, new List<Option>());
             }
 
             this[o.ExpirationDate].Add(o);

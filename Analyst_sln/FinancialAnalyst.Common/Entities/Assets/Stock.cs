@@ -2,6 +2,7 @@
 using FinancialAnalyst.Common.Entities.Users;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace FinancialAnalyst.Common.Entities.Assets
@@ -9,19 +10,41 @@ namespace FinancialAnalyst.Common.Entities.Assets
     [Serializable]
     public class Stock : AssetBase
     {
-        public override AssetType AssetType { get { return AssetType.Stock; } }
-
-#pragma warning disable CA2235 // Mark all non-serializable fields
-
+        public override AssetClass AssetClass 
+        { 
+            get { return AssetClass.Stock; }
+            protected set { }
+        }
         public string CompanyName { get; set; }
         public string Description { get; set; }
+
         public string WebSite { get; set; }
-        public string WebSite_Source { get; set; }
+
+        public double? Volatility { get; set; }
+
+        [NotMapped]//TODO: Fix this mapping!!!
+        public OptionsChain OptionsChain { get; set; }
+
+        [NotMapped]//TODO: Fix this mapping!!!
+        public FinancialStatements FinancialStatements { get; set; }
+
+        [NotMapped]//TODO: Fix this mapping!!!
+        public StockRelatedData StockRelatedData { get; set; }
+
+        public Stock(string ticker) : base(ticker)
+        {
+
+        }
+    }
+
+    public class StockRelatedData
+    { 
+        
+        public string WebSite_DataSource { get; set; }
         public string Sector { get; set; }
         public string Industry { get; set; }
         public string Country { get; set; }
-        public double? Price_Last { get; set; }
-        public DateTime? Price_Last_Time { get; set; }
+        
         public double? Price_FiftyTwoWeekHigh { get; set; }
         public double? Price_FiftyTwoWeekLow { get; set; }
         public double? Beta { get; set; }
@@ -42,10 +65,7 @@ namespace FinancialAnalyst.Common.Entities.Assets
         public double? ROI_TTM { get; set; }
         public List<News> NewsList { get; set; }
         public List<Officer> Officers { get; set; }
-        public double? Volatility { get; set; }
-
-        public OptionsChain OptionsChain { get; set; }
-        public FinancialStatements FinancialStatements { get; set; }
+        
 
 #pragma warning restore CA2235 // Mark all non-serializable fields
     }

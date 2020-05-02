@@ -166,7 +166,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
         public long Day { get; set; }
 
         [JsonProperty("y")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
     }
 
     [JsonObject]

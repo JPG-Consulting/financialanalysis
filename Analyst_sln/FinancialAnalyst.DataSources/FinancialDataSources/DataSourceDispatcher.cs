@@ -14,6 +14,19 @@ using FinancialAnalyst.Common.Entities.Markets;
 
 namespace FinancialAnalyst.DataSources
 {
+    public enum DataSource
+    {
+        DataHubIO=1,
+        EdgarSEC,
+        FinancialModelingPrep,
+        Google,
+        Nasdaq,
+        Reuters,
+        USTreasury,
+        Yahoo,
+    }
+
+
     public class DataSourceDispatcher : IDataSource
     {
         private IStockDataDataSource assetDataDataSource;
@@ -32,6 +45,9 @@ namespace FinancialAnalyst.DataSources
             IAssetTypeDataSource assetTypeDataSource, IStatisticsDataSource statisticsDataSource, IIndexesDataSource indexesDataSource, 
             ICacheManager cacheManager)
         {
+            //TODO: Implementar un data source builder para poder elegir. Por ejemplo: se puede usar Yahoo, Nasdaq y Reuters para traer los balances
+            //
+
             this.assetDataDataSource = assetDataDataSource;
             this.pricesDataSouce = pricesDataSouce;
             this.optionChainDataSource = optionChainDataSource;
@@ -43,14 +59,24 @@ namespace FinancialAnalyst.DataSources
             this.cacheManager = cacheManager;
         }
 
-        public bool TryGetCompleteStockData(string ticker, Exchange? exchange, AssetType assetType, bool includeOptionChain, bool includeFinancialStatements, out Stock stock, out string errorMessage)
+        public bool TryGetCompleteAssetData(string ticker, Exchange? exchange, AssetClass assetClass, bool includeOptionChain, bool includeFinancialStatements, out AssetBase asset, out string errorMessage)
         {
-            if (assetDataDataSource.TryGetStockSummary(ticker, exchange, assetType, out stock, out errorMessage) == false)
-                return false;
-
-            if (includeOptionChain && stock.Price_Last.HasValue)
+            if(assetClass != AssetClass.Stock)
             {
-                if (TryGetOptionsChainWithTheoricalValue(ticker, exchange, stock.Price_Last.Value, out OptionsChain optionsChain, out errorMessage) == false)
+                throw new NotImplementedException();
+            }
+
+            if (assetDataDataSource.TryGetStockSummary(ticker, exchange, assetClass, out Stock stock, out errorMessage) == false)
+            {
+                asset = stock;
+                return false;
+            }
+
+            asset = stock;
+            if (includeOptionChain && stock.LastPrice.HasValue)
+            {
+                double lastPrice = (double)stock.LastPrice.Value;
+                if (TryGetOptionsChainWithTheoricalValue(ticker, exchange, lastPrice, out OptionsChain optionsChain, out errorMessage) == false)
                     return false;
                 stock.OptionsChain = optionsChain;
                 stock.Volatility = optionsChain.HistoricalVolatility;
@@ -66,19 +92,19 @@ namespace FinancialAnalyst.DataSources
             return true;
         }
         
-        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock asset, out string errorMessage)
+        public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetClass assetType, out Stock asset, out string errorMessage)
         {
             return assetDataDataSource.TryGetStockSummary(ticker, exchange, assetType, out asset, out errorMessage);
         }
 
-        public bool TryGetPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
+        public bool TryGetHistoricalPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval interval, out PriceList prices, out string errorMessage)
         {
             if(cacheManager.TryGetFromCache(ticker, exchange, from, to, interval, out prices))
             {
                 errorMessage = "Obtained from cache";
                 return true;
             }
-            return pricesDataSouce.TryGetPrices(ticker, exchange,from,to, interval,out prices, out errorMessage);
+            return pricesDataSouce.TryGetHistoricalPrices(ticker, exchange,from,to, interval,out prices, out errorMessage);
         }
 
         public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionChain, out string errorMessage)
@@ -90,7 +116,7 @@ namespace FinancialAnalyst.DataSources
         {
             DateTime? from = DateTime.Now.AddYears(-1).AddDays(-1);
             DateTime? to = DateTime.Now;
-            if (TryGetPrices(ticker, exchange, from, to, PriceInterval.Daily, out PriceList prices, out errorMessage) == false)
+            if (TryGetHistoricalPrices(ticker, exchange, from, to, PriceInterval.Daily, out PriceList prices, out errorMessage) == false)
             {
                 optionsChain = null;
                 return false;
@@ -148,12 +174,12 @@ namespace FinancialAnalyst.DataSources
             throw new NotImplementedException();
         }
 
-        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetType assetType, out LastPrice lastPrice, out string message)
+        public bool TryGetLastPrice(string ticker, Exchange? exchange, AssetClass assetType, out HistoricalPrice lastPrice, out string message)
         {
             return pricesDataSouce.TryGetLastPrice(ticker, exchange, assetType, out lastPrice, out message);
         }
 
-        public bool TryGetAssetType(string symbol, out AssetType assetType)
+        public bool TryGetAssetType(string symbol, out AssetClass assetType)
         {
             return assetTypeDataSource.TryGetAssetType(symbol, out assetType);
         }

@@ -15,7 +15,7 @@ namespace FinancialAnalyst.DataSources.Reuters
 {
     public class ReutersDataSource : IStockDataDataSource, IFinancialDataSource
 	{
-		public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetType assetType, out Stock asset, out string errorMessage)
+		public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetClass assetType, out Stock asset, out string errorMessage)
 		{
 			bool ok = false;
 			string jsonResponse = "{}";
@@ -47,35 +47,36 @@ namespace FinancialAnalyst.DataSources.Reuters
 			{
                 #region Data transformation
                 dynamic summary = JsonConvert.DeserializeObject(jsonResponse);
-				Stock s = new Stock();
+				Stock s = new Stock(ticker);
 				s.CompanyName = summary.market_data.company_name;
 				s.Description = summary.market_data.about;
 				s.WebSite = summary.market_data.website;
-				s.WebSite_Source = $"https://www.reuters.com/companies/{internalTicker}";
-				s.Sector = summary.market_data.sector;
-				s.Industry = summary.market_data.industry;
-				s.Country = summary.country;
-				s.Price_Last = summary.market_data.last;
-				s.Price_Last_Time = summary.market_data.last_time;
-				s.Price_FiftyTwoWeekHigh = summary.market_data.fiftytwo_wk_high;
-				s.Price_FiftyTwoWeekLow = summary.market_data.fiftytwo_wk_low;
-				s.Beta = summary.market_data.beta;
-				s.EarningsPerShare_ExcludingExtraItems_TTM = summary.market_data.eps_excl_extra_ttm;
-				s.PriceEarnings_ExcludingExtraITems_TTM = summary.market_data.pe_excl_extra_ttm;
-				s.PriceSales_Annual = summary.market_data.ps_annual;
-				s.PriceSales_TTM = summary.market_data.ps_ttm;
-				s.PriceToCashFlow_PerShare_TTM = summary.market_data.pcf_share_ttm;
-				s.PriceBook_Annual = summary.market_data.pb_annual;
-				s.PriceBook_Quarterly = summary.market_data.pb_quarterly;
-				s.DividendYield = summary.market_data.dividend_yield_indicated_annual;
-				s.LongTermDebtToEquity_Annual = summary.market_data.lt_debt_equity_annual;
-				s.TotalDebtToEquity_Annual = summary.market_data.total_debt_equity_annual;
-				s.LongTermDebtToEquity_Quarterly = summary.market_data.lt_debt_equity_quarterly;
-				s.TotalDebtToEquity_Quarterly = summary.market_data.total_debt_equity_quarterly;
-				s.SharesOut = summary.market_data.shares_out;
-				s.ROE_TTM = summary.market_data.roe_ttm;
-				s.ROI_TTM = summary.market_data.roi_ttm;
-				s.NewsList = new List<News>();
+				s.LastPrice = summary.market_data.last;
+				s.LastPrice_Date = summary.market_data.last_time;
+				s.StockRelatedData = new StockRelatedData();
+				s.StockRelatedData.WebSite_DataSource = $"https://www.reuters.com/companies/{internalTicker}";
+				s.StockRelatedData.Sector = summary.market_data.sector;
+				s.StockRelatedData.Industry = summary.market_data.industry;
+				s.StockRelatedData.Country = summary.country;
+				s.StockRelatedData.Price_FiftyTwoWeekHigh = summary.market_data.fiftytwo_wk_high;
+				s.StockRelatedData.Price_FiftyTwoWeekLow = summary.market_data.fiftytwo_wk_low;
+				s.StockRelatedData.Beta = summary.market_data.beta;
+				s.StockRelatedData.EarningsPerShare_ExcludingExtraItems_TTM = summary.market_data.eps_excl_extra_ttm;
+				s.StockRelatedData.PriceEarnings_ExcludingExtraITems_TTM = summary.market_data.pe_excl_extra_ttm;
+				s.StockRelatedData.PriceSales_Annual = summary.market_data.ps_annual;
+				s.StockRelatedData.PriceSales_TTM = summary.market_data.ps_ttm;
+				s.StockRelatedData.PriceToCashFlow_PerShare_TTM = summary.market_data.pcf_share_ttm;
+				s.StockRelatedData.PriceBook_Annual = summary.market_data.pb_annual;
+				s.StockRelatedData.PriceBook_Quarterly = summary.market_data.pb_quarterly;
+				s.StockRelatedData.DividendYield = summary.market_data.dividend_yield_indicated_annual;
+				s.StockRelatedData.LongTermDebtToEquity_Annual = summary.market_data.lt_debt_equity_annual;
+				s.StockRelatedData.TotalDebtToEquity_Annual = summary.market_data.total_debt_equity_annual;
+				s.StockRelatedData.LongTermDebtToEquity_Quarterly = summary.market_data.lt_debt_equity_quarterly;
+				s.StockRelatedData.TotalDebtToEquity_Quarterly = summary.market_data.total_debt_equity_quarterly;
+				s.StockRelatedData.SharesOut = summary.market_data.shares_out;
+				s.StockRelatedData.ROE_TTM = summary.market_data.roe_ttm;
+				s.StockRelatedData.ROI_TTM = summary.market_data.roi_ttm;
+				s.StockRelatedData.NewsList = new List<News>();
 				if (summary.market_data.sig_devs != null)
 				{
 					foreach (var news in summary.market_data.sig_devs)
@@ -84,10 +85,10 @@ namespace FinancialAnalyst.DataSources.Reuters
 						n.DateTime = news.last_update;
 						n.Title = news.headline;
 						n.Content = news.description;
-						s.NewsList.Add(n);
+						s.StockRelatedData.NewsList.Add(n);
 					}
 				}
-				s.Officers = new List<Officer>();
+				s.StockRelatedData.Officers = new List<Officer>();
 				if (summary.market_data.officers != null)
 				{
 					foreach (var officer in summary.market_data.officers)
@@ -96,7 +97,7 @@ namespace FinancialAnalyst.DataSources.Reuters
 						o.Name = officer.name;
 						o.Rank = officer.rank;
 						o.Title = officer.title;
-						s.Officers.Add(o);
+						s.StockRelatedData.Officers.Add(o);
 					}
 				}
 				/*
