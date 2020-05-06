@@ -15,12 +15,13 @@ namespace FinancialAnalyst.WebAPICallers
 {
     public class PortfoliosAPICaller
     {
+        private static readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings() { Converters = { new AssetsJsonConverter() } };
+
         public static IEnumerable<Portfolio> GetPortfoliosByUser(string username)
         {
             string uri = $"api/Portfolios/getportfoliosbyuser?username={username}";
             HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
-            JsonConverter[] converters = { new AssetsJsonConverter() };
-            APIResponse<IEnumerable<Portfolio>> response = JsonConvert.DeserializeObject<APIResponse<IEnumerable<Portfolio>>>(jsonResponse, new JsonSerializerSettings() { Converters = converters });
+            APIResponse<IEnumerable<Portfolio>> response = JsonConvert.DeserializeObject<APIResponse<IEnumerable<Portfolio>>>(jsonResponse, jsonSerializerSettings);
             return response.Content;
         }
 
@@ -33,7 +34,7 @@ namespace FinancialAnalyst.WebAPICallers
             string name = "transactions";
             string filename = name + ".csv";
             HttpStatusCode statusCode = HttpClientWebAPI.Post(uri, parameters, file,name, filename, out string jsonResponse);
-            APIResponse<Portfolio> response = JsonConvert.DeserializeObject<APIResponse<Portfolio>>(jsonResponse);
+            APIResponse<Portfolio> response = JsonConvert.DeserializeObject<APIResponse<Portfolio>>(jsonResponse, jsonSerializerSettings);
             return response;
         }
 
@@ -65,7 +66,7 @@ namespace FinancialAnalyst.WebAPICallers
             HttpStatusCode httpStatusCode = HttpClientWebAPI.Post<int>(uri, assetAllocation.Id, out string jsonResponse, out string reasonPhrase);
             if (httpStatusCode == HttpStatusCode.OK)
             {
-                response = JsonConvert.DeserializeObject<APIResponse<AssetAllocation>>(jsonResponse);
+                response = JsonConvert.DeserializeObject<APIResponse<AssetAllocation>>(jsonResponse, jsonSerializerSettings);
                 message = response.ErrorMessage;
                 return response.Ok;
             }
