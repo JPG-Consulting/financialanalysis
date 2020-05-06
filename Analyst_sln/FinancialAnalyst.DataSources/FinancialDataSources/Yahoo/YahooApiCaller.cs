@@ -91,7 +91,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
             //Daily, every 15 minutes
             //https://query1.finance.yahoo.com/v8/finance/chart/AAPL?region=US&lang=en-US&includePrePost=false&interval=15m&range=1d
 
-            string uri = $"{httpClientChartPrices.BaseAddress}{ticker}?lang=en-US&includePrePost=false&interval={interval}&range={days}d";
+            string uri = $"{httpClientChartPrices.BaseAddress}/{ticker}?lang=en-US&includePrePost=false&interval={interval}&range={days}d";
             HttpResponseMessage responseMessage = httpClientChartPrices.GetAsync(uri).Result;
             string content = responseMessage.Content.ReadAsStringAsync().Result;
             statusCode = responseMessage.StatusCode;

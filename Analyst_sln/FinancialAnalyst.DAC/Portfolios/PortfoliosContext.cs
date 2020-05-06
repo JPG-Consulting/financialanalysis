@@ -23,6 +23,7 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         IEnumerable<Portfolio> GetPortfoliosByUserName(string username);
         Portfolio GetPortfoliosByUserNameAndPortfolioName(string userName, string portfolioname);
         AssetBase GetAssetyBy(AssetClass assetClass, string symbol);
+        AssetAllocation GetAssetAllocationBy(int assetAllocationId);
         void Update(Portfolio portfolio);
         void Update(AssetAllocation allocation);
         void DeleteAssetAllocations(Portfolio portfolio);
@@ -273,6 +274,11 @@ namespace FinancialAnalyst.DataAccess.Portfolios
             return dbset.Where(a => a.Ticker.ToUpper() == symbol.ToUpper()).SingleOrDefault();
         }
         
+        public AssetAllocation GetAssetAllocationBy(int assetAllocationId)
+        {
+            return AssetAllocations.Include(aa=> aa.Asset).Where(aa => aa.Id == assetAllocationId).SingleOrDefault();
+        }
+
         public void Update(Portfolio portfolio)
         {
             Entry(portfolio).State = EntityState.Modified;

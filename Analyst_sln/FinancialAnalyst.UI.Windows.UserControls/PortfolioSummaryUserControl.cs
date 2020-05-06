@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using FinancialAnalyst.WebAPICallers;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Entities.RequestResponse;
+using FinancialAnalyst.Common.Entities.Assets;
 
 namespace FinancialAnalyst.UI.Windows.UserControls
 {
@@ -28,6 +29,7 @@ namespace FinancialAnalyst.UI.Windows.UserControls
         {
             InitializeComponent();
             dataGridViewAssets.AutoGenerateColumns = false;
+            dataGridViewAssets.DataBindingComplete += DataGridViewAssets_DataBindingComplete;
         }
 
         public void Set(ICallerForm callerForm, Portfolio portfolio)
@@ -88,6 +90,15 @@ namespace FinancialAnalyst.UI.Windows.UserControls
             {
                 AssetAllocation assetAllocation = (AssetAllocation)dataGridViewAssets.Rows[e.RowIndex].DataBoundItem;
                 _callerForm.Show(assetAllocation);
+            }
+        }
+
+        private void DataGridViewAssets_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridViewAssets.Rows)
+            {
+                string ticker = ((AssetAllocation)row.DataBoundItem).Asset.Ticker;
+                row.Cells[dataGridViewAssets_TickerColumn.Index].Value = ticker;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using FinancialAnalyst.Common.Entities.Assets;
+﻿using FinancialAnalyst.Common.Entities;
+using FinancialAnalyst.Common.Entities.Assets;
 using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Entities.Users;
@@ -155,37 +156,31 @@ namespace FinancialAnalyst.Portfolios
             return true;
         }
 
-        public bool Update(AssetAllocation assetAllocation, out decimal? marketValue)
+        public bool Update(int assetAllocationId, out AssetAllocation assetAllocation)
         {
-            if (assetAllocation.Asset.AssetClass == AssetClass.Stock || assetAllocation.Asset.AssetClass == AssetClass.ETF)
+            assetAllocation = portfoliosContext.GetAssetAllocationBy(assetAllocationId);
+            AssetClass assetClass = assetAllocation.Asset.AssetClass;
+            string ticker = assetAllocation.Asset.Ticker;
+            Exchange? exchange = assetAllocation.Asset.Exchange;
+            decimal? costs = assetAllocation.Costs.Value;
+
+            if (assetClass == AssetClass.Stock || assetClass == AssetClass.ETF)
             {
-                if (dataSource.TryGetLastPrice(assetAllocation.Asset.Ticker, assetAllocation.Asset.Exchange, assetAllocation.Asset.AssetClass, out HistoricalPrice price, out string message))
+                if (dataSource.TryGetLastPrice(ticker, exchange, assetClass, out HistoricalPrice price, out string message))
                 {
-                    if (price != null)
-                    {
-                        marketValue = assetAllocation.UpdateMarketValue(price.Close, price.Date);
-                        if (marketValue.HasValue == false)
-                            marketValue = assetAllocation.Costs.Value;
-                    }
-                    else
-                    {
-                        if (assetAllocation.Costs.HasValue)
-                            marketValue = assetAllocation.Costs.Value;
-                        else
-                            marketValue = null;
-                    }
+
+                    decimal? marketValue = assetAllocation.UpdateMarketValue(price, costs);
                     portfoliosContext.Update(assetAllocation);
                     return true;
                 }
                 else
                 {
-                    marketValue = null;
                     return false;
                 }
             }
-            else if(assetAllocation.Asset.AssetClass == AssetClass.Option)
+            else if(assetClass == AssetClass.Option)
             {
-                bool ok = dataSource.TryGetCompleteAssetData(assetAllocation.Asset.Ticker, assetAllocation.Asset.Exchange, assetAllocation.Asset.AssetClass, true, false, out AssetBase asset, out string errorMessage);
+                bool ok = dataSource.TryGetCompleteAssetData(ticker, exchange, assetClass, true, false, out AssetBase asset, out string errorMessage);
                 if(ok)
                 {
                     //OptionsChain chain = stock.OptionsChain.Where(kv => kv.Key == assetAllocation.Asset.As<Option>().MaturityDate)

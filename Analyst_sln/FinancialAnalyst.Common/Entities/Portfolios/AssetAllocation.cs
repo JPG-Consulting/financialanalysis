@@ -80,11 +80,19 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         /// It updates the market value if there is quantity.
         /// </summary>
         /// <param name="price"></param>
-        public decimal? UpdateMarketValue(decimal price, DateTime priceDate)
+        public decimal? UpdateMarketValue(HistoricalPrice price, decimal? defaultValue)
         {
-            Price = price;
-            PriceDate = priceDate;
-            return MarketValue;
+            if (price == null)
+            {
+                return defaultValue;
+            }
+            else
+            {
+                Price = price.Close;
+                PriceDate = price.Date;
+                return MarketValue;
+            }
+            
         }
     }
 }

@@ -28,17 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.label1 = new System.Windows.Forms.Label();
             this.labelName = new System.Windows.Forms.Label();
             this.dataGridViewAssets = new System.Windows.Forms.DataGridView();
-            this.dataGridViewAssets_TickerColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewAssets_CostsColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewAssets_MarketValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewAssets_ProportionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewAssets_ShowDetailColumn = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.labelTotalCosts = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -51,6 +46,11 @@
             this.label3 = new System.Windows.Forms.Label();
             this.labelMarketValue = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.dataGridViewAssets_TickerColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewAssets_CostsColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewAssets_MarketValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewAssets_ProportionColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewAssets_ShowDetailColumn = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAssets)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -97,52 +97,6 @@
             this.dataGridViewAssets.TabIndex = 2;
             this.dataGridViewAssets.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewAssets_CellContentClick);
             this.dataGridViewAssets.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewAssets_CellValueChanged);
-            // 
-            // dataGridViewAssets_TickerColumn
-            // 
-            this.dataGridViewAssets_TickerColumn.DataPropertyName = "Ticker";
-            this.dataGridViewAssets_TickerColumn.FillWeight = 40F;
-            this.dataGridViewAssets_TickerColumn.HeaderText = "Ticker";
-            this.dataGridViewAssets_TickerColumn.MaxInputLength = 10;
-            this.dataGridViewAssets_TickerColumn.Name = "dataGridViewAssets_TickerColumn";
-            this.dataGridViewAssets_TickerColumn.ReadOnly = true;
-            this.dataGridViewAssets_TickerColumn.Width = 120;
-            // 
-            // dataGridViewAssets_CostsColumn
-            // 
-            this.dataGridViewAssets_CostsColumn.DataPropertyName = "Costs";
-            this.dataGridViewAssets_CostsColumn.FillWeight = 20F;
-            this.dataGridViewAssets_CostsColumn.HeaderText = "Costs";
-            this.dataGridViewAssets_CostsColumn.Name = "dataGridViewAssets_CostsColumn";
-            this.dataGridViewAssets_CostsColumn.ReadOnly = true;
-            this.dataGridViewAssets_CostsColumn.Width = 60;
-            // 
-            // dataGridViewAssets_MarketValueColumn
-            // 
-            this.dataGridViewAssets_MarketValueColumn.DataPropertyName = "MarketValue";
-            this.dataGridViewAssets_MarketValueColumn.FillWeight = 20F;
-            this.dataGridViewAssets_MarketValueColumn.HeaderText = "Mkt Value";
-            this.dataGridViewAssets_MarketValueColumn.Name = "dataGridViewAssets_MarketValueColumn";
-            this.dataGridViewAssets_MarketValueColumn.Width = 60;
-            // 
-            // dataGridViewAssets_ProportionColumn
-            // 
-            this.dataGridViewAssets_ProportionColumn.DataPropertyName = "Percentage";
-            this.dataGridViewAssets_ProportionColumn.FillWeight = 10F;
-            this.dataGridViewAssets_ProportionColumn.HeaderText = "%";
-            this.dataGridViewAssets_ProportionColumn.MaxInputLength = 5;
-            this.dataGridViewAssets_ProportionColumn.Name = "dataGridViewAssets_ProportionColumn";
-            this.dataGridViewAssets_ProportionColumn.Width = 50;
-            // 
-            // dataGridViewAssets_ShowDetailColumn
-            // 
-            this.dataGridViewAssets_ShowDetailColumn.FillWeight = 10F;
-            this.dataGridViewAssets_ShowDetailColumn.HeaderText = "Detail";
-            this.dataGridViewAssets_ShowDetailColumn.Name = "dataGridViewAssets_ShowDetailColumn";
-            this.dataGridViewAssets_ShowDetailColumn.ReadOnly = true;
-            this.dataGridViewAssets_ShowDetailColumn.Text = "Detail";
-            this.dataGridViewAssets_ShowDetailColumn.UseColumnTextForButtonValue = true;
-            this.dataGridViewAssets_ShowDetailColumn.Width = 50;
             // 
             // label2
             // 
@@ -269,19 +223,64 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea3.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart1.Legends.Add(legend3);
             this.chart1.Location = new System.Drawing.Point(403, 252);
             this.chart1.Name = "chart1";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart1.Series.Add(series1);
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.chart1.Series.Add(series3);
             this.chart1.Size = new System.Drawing.Size(300, 300);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
+            // 
+            // dataGridViewAssets_TickerColumn
+            // 
+            this.dataGridViewAssets_TickerColumn.FillWeight = 40F;
+            this.dataGridViewAssets_TickerColumn.HeaderText = "Ticker";
+            this.dataGridViewAssets_TickerColumn.MaxInputLength = 10;
+            this.dataGridViewAssets_TickerColumn.Name = "dataGridViewAssets_TickerColumn";
+            this.dataGridViewAssets_TickerColumn.ReadOnly = true;
+            this.dataGridViewAssets_TickerColumn.Width = 120;
+            // 
+            // dataGridViewAssets_CostsColumn
+            // 
+            this.dataGridViewAssets_CostsColumn.DataPropertyName = "Costs";
+            this.dataGridViewAssets_CostsColumn.FillWeight = 20F;
+            this.dataGridViewAssets_CostsColumn.HeaderText = "Costs";
+            this.dataGridViewAssets_CostsColumn.Name = "dataGridViewAssets_CostsColumn";
+            this.dataGridViewAssets_CostsColumn.ReadOnly = true;
+            this.dataGridViewAssets_CostsColumn.Width = 60;
+            // 
+            // dataGridViewAssets_MarketValueColumn
+            // 
+            this.dataGridViewAssets_MarketValueColumn.DataPropertyName = "Price";
+            this.dataGridViewAssets_MarketValueColumn.FillWeight = 20F;
+            this.dataGridViewAssets_MarketValueColumn.HeaderText = "Mkt Value";
+            this.dataGridViewAssets_MarketValueColumn.Name = "dataGridViewAssets_MarketValueColumn";
+            this.dataGridViewAssets_MarketValueColumn.Width = 60;
+            // 
+            // dataGridViewAssets_ProportionColumn
+            // 
+            this.dataGridViewAssets_ProportionColumn.DataPropertyName = "Percentage";
+            this.dataGridViewAssets_ProportionColumn.FillWeight = 10F;
+            this.dataGridViewAssets_ProportionColumn.HeaderText = "%";
+            this.dataGridViewAssets_ProportionColumn.MaxInputLength = 5;
+            this.dataGridViewAssets_ProportionColumn.Name = "dataGridViewAssets_ProportionColumn";
+            this.dataGridViewAssets_ProportionColumn.Width = 50;
+            // 
+            // dataGridViewAssets_ShowDetailColumn
+            // 
+            this.dataGridViewAssets_ShowDetailColumn.FillWeight = 10F;
+            this.dataGridViewAssets_ShowDetailColumn.HeaderText = "Detail";
+            this.dataGridViewAssets_ShowDetailColumn.Name = "dataGridViewAssets_ShowDetailColumn";
+            this.dataGridViewAssets_ShowDetailColumn.ReadOnly = true;
+            this.dataGridViewAssets_ShowDetailColumn.Text = "Detail";
+            this.dataGridViewAssets_ShowDetailColumn.UseColumnTextForButtonValue = true;
+            this.dataGridViewAssets_ShowDetailColumn.Width = 50;
             // 
             // PortfolioSummaryUserControl
             // 
@@ -319,11 +318,11 @@
         private System.Windows.Forms.Label labelCash;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label labelMarketValue;
+        private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewAssets_TickerColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewAssets_CostsColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewAssets_MarketValueColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewAssets_ProportionColumn;
         private System.Windows.Forms.DataGridViewButtonColumn dataGridViewAssets_ShowDetailColumn;
-        private System.Windows.Forms.Button buttonUpdate;
     }
 }

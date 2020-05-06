@@ -1,6 +1,7 @@
 ﻿using FinancialAnalyst.Common.Entities;
 using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Entities.RequestResponse;
+using FinancialAnalyst.Common.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace FinancialAnalyst.WebAPICallers
         {
             string uri = $"api/Portfolios/getportfoliosbyuser?username={username}";
             HttpStatusCode statusCode = HttpClientWebAPI.Get(uri, out string jsonResponse);
-            APIResponse<IEnumerable<Portfolio>> response = JsonConvert.DeserializeObject<APIResponse<IEnumerable<Portfolio>>>(jsonResponse);
+            JsonConverter[] converters = { new AssetsJsonConverter() };
+            APIResponse<IEnumerable<Portfolio>> response = JsonConvert.DeserializeObject<APIResponse<IEnumerable<Portfolio>>>(jsonResponse, new JsonSerializerSettings() { Converters = converters });
             return response.Content;
         }
 
@@ -60,7 +62,7 @@ namespace FinancialAnalyst.WebAPICallers
         public static bool UpdateAssetAllocation(AssetAllocation assetAllocation, out APIResponse<AssetAllocation> response, out string message)
         {
             string uri = $"api/Portfolios/updateassetallocation";
-            HttpStatusCode httpStatusCode = HttpClientWebAPI.Post<AssetAllocation>(uri, assetAllocation, out string jsonResponse, out string reasonPhrase);
+            HttpStatusCode httpStatusCode = HttpClientWebAPI.Post<int>(uri, assetAllocation.Id, out string jsonResponse, out string reasonPhrase);
             if (httpStatusCode == HttpStatusCode.OK)
             {
                 response = JsonConvert.DeserializeObject<APIResponse<AssetAllocation>>(jsonResponse);

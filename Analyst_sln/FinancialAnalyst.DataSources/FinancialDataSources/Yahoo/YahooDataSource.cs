@@ -115,22 +115,40 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
             //https://query1.finance.yahoo.com/v8/finance/chart/AAPL?lang=en-US&includePrePost=false&interval=1d&range=5d
 
             int days = 1;
-            YahooChartInterval interval = YahooChartInterval.TwoMinutes;
+            YahooChartInterval interval = YahooChartInterval.OneHour;
             bool ok = YahooApiCaller.GetDailyPrices(ticker, interval,  days, out HttpStatusCode statusCode, out YahooChartResponse yahooResponse, out string jsonResponse, out message);
 
-            int length = yahooResponse.Chart.Result[0].TimeStampsAsLong.Length;
-            int i = length - 1;
-            long seconds = yahooResponse.Chart.Result[0].TimeStampsAsLong[i];
-            DateTime dt = DATE_1970.AddSeconds(seconds);
-            decimal price = yahooResponse.Chart.Result[0].Indicators.Quote[0].Close[i];
-            ulong volume = yahooResponse.Chart.Result[0].Indicators.Quote[0].Volume[i];
-            lastPrice = new HistoricalPrice()
+            if (ok && statusCode == HttpStatusCode.OK && yahooResponse != null && yahooResponse.Chart != null && yahooResponse.Chart.Result != null && yahooResponse.Chart.Result.Length > 0)
             {
-                Date = dt,
-                Close = price,
-                Volume = volume,
-            };
-            return true;
+                var result = yahooResponse.Chart.Result.Last();
+                int length = result.TimeStampsAsLong.Length;
+                decimal? close = null;
+                int i = length - 1;
+                while(close ==null && i > 0)
+                {
+                    if (result.Indicators.Quote[0].Close[i].HasValue)
+                        close = result.Indicators.Quote[0].Close[i].Value;
+                    else
+                        i--;
+                }
+                int index = i;
+                long seconds = result.TimeStampsAsLong[index];
+                DateTime dt = DATE_1970.AddSeconds(seconds);
+                decimal price = result.Indicators.Quote[0].Close[index].Value;
+                ulong volume = result.Indicators.Quote[0].Volume[index].Value;
+                lastPrice = new HistoricalPrice()
+                {
+                    Date = dt,
+                    Close = price,
+                    Volume = volume,
+                };
+                return true;
+            }
+            else
+            {
+                lastPrice = null;
+                return false;
+            }
         }
 
         public bool TryGetHistoricalPrices(string ticker, Exchange? exchange, DateTime? from, DateTime? to, PriceInterval priceInterval, out PriceList prices, out string errorMessage)

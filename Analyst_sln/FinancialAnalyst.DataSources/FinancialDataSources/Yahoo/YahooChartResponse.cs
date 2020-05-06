@@ -50,19 +50,19 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
     public partial class Quote
     {
         [JsonProperty("open")]
-        public decimal[] Open { get; set; }
+        public decimal?[] Open { get; set; }
 
         [JsonProperty("high")]
-        public decimal[] High { get; set; }
+        public decimal?[] High { get; set; }
 
         [JsonProperty("low")]
-        public decimal[] Low { get; set; }
+        public decimal?[] Low { get; set; }
 
         [JsonProperty("volume")]
-        public ulong[] Volume { get; set; }
+        public ulong?[] Volume { get; set; }
 
         [JsonProperty("close")]
-        public decimal[] Close { get; set; }
+        public decimal?[] Close { get; set; }
     }
 
     public partial class Meta

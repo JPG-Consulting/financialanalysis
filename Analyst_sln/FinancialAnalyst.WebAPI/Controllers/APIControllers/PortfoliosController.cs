@@ -60,9 +60,9 @@ namespace FinancialAnalyst.WebAPI.Controllers.APIControllers
         }
 
         [HttpPost("updateassetallocation")]
-        public ActionResult<APIResponse<AssetAllocation>> UpdateAssetAllocation([FromBody]AssetAllocation assetAllocation)
+        public ActionResult<APIResponse<AssetAllocation>> UpdateAssetAllocation([FromBody]int assetAllocationId)
         {
-            bool ok = portfoliosService.Update(assetAllocation, out decimal? marketValue);
+            bool ok = portfoliosService.Update(assetAllocationId, out AssetAllocation assetAllocation);
             return Ok(new APIResponse<AssetAllocation>()
             {
                 Content = assetAllocation,
