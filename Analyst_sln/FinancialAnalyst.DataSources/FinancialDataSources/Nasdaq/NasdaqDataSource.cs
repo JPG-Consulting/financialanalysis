@@ -18,7 +18,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
     public class NasdaqDataSource : IStockDataDataSource, IFinancialDataSource, IOptionChainDataSource, IPricesDataSource, IIndexesDataSource
     {
         private static readonly ILog logger = log4net.LogManager.GetLogger(typeof(NasdaqDataSource));
-        private static readonly CultureInfo enUsCultureInfo = new CultureInfo("en-us");
+        
 
         public bool TryGetStockSummary(string ticker, Exchange? exchange, AssetClass assetType, out Stock asset, out string errorMessage)
         {
@@ -40,74 +40,51 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
         public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionChain, out string errorMessage)
         {
             DateTime from = new DateTime(DateTime.Now.Year,DateTime.Now.Month,1);
-            DateTime to = new DateTime(DateTime.Now.Year, DateTime.Now.Month, GetLastDay(DateTime.Now.Month));
+            DateTime to = new DateTime(DateTime.Now.Year, DateTime.Now.Month, GetLastDay(DateTime.Now.Month)).AddYears(3);
             bool ok = NasdaqApiCaller.GetOptionChain(ticker, from, to, out string jsonResponse, out errorMessage);
 
             optionChain = new OptionsChain();
-            dynamic rawdata = JsonConvert.DeserializeObject(jsonResponse);
+            NasdaqResponse nasdaqResponse = JsonConvert.DeserializeObject<NasdaqResponse>(jsonResponse);
             
-            foreach (var optionRow in rawdata.data.optionChainList.rows)
+            foreach (var optionRow in nasdaqResponse.Data.OptionChainList.Rows)
             {
-                /*
+ 
+                if (optionRow.Call != null)
                 {
-                  "call": {
-                    "symbol": "@AXP   200320C00070000",
-                    "last": "6.00",
-                    "change": "-10.40",
-                    "bid": "4.05",
-                    "ask": "7.95",
-                    "volume": 5,
-                    "openinterest": 10,
-                    "strike": 70.0,
-                    "expiryDate": "03/20/2020",
-                    "colour": true
-                  },
-                  "put": {
-                    "symbol": "@AXP   200320P00070000",
-                    "last": "2.46",
-                    "change": "1.96",
-                    "bid": "0.50",
-                    "ask": "3.30",
-                    "volume": 80,
-                    "openinterest": 77,
-                    "strike": 70.0,
-                    "expiryDate": "03/20/2020",
-                    "colour": false
-                  }
-                },
-                */
-                if (optionRow.call != null)
-                {
-                    var o = new Option(OptionClass.Call, optionRow.put.symbol)
+                    var call = optionRow.Call;
+                    Option o = new Option(OptionClass.Call, call.Symbol)
                     {
-                        Strike = optionRow.call.strike,
-                        ExpirationDate = optionRow.call.expiryDate,
+                        LastPrice = call.Last.ToNullableDecimal(),
+                        Strike = call.Strike.ToDouble(-1),
+                        ExpirationDate = call.ExpiryDate.ToDateTime(),
                     };
-                    o.SetLast(optionRow.call.last);
-                    o.SetChange(optionRow.call.change);
-                    o.SetBid(optionRow.call.bid);
-                    o.SetAsk(optionRow.call.ask);
-                    o.SetVolume(optionRow.call.volume);
-                    o.SetOpenInterest(optionRow.call.openinterest);
+
+                    o.LastPrice = call.Last.ToNullableDecimal();
+                    o.Change = call.Change.ToNullableDouble();
+                    o.Bid = call.Bid.ToNullableDouble();
+                    o.Ask = call.Ask.ToNullableDouble();
+                    o.Volume = call.Volume.ToNullableInt();
+                    o.OpenInterest = call.Openinterest.ToNullableInt();
 
                     optionChain.Add(o);
                     
                 }
 
-                if (optionRow.put != null)
+                if (optionRow.Put != null)
                 {
-                    var o = new Option(OptionClass.Put, optionRow.put.symbol)
+                    var put = optionRow.Put;
+                    Option o = new Option(OptionClass.Put, put.Symbol)
                     { 
-                        LastPrice = optionRow.put.last,
-                        Strike = optionRow.put.strike,
-                        ExpirationDate = optionRow.put.expiryDate,
+                        LastPrice = put.Last.ToNullableDecimal(),
+                        Strike = put.Strike.ToDouble(-1),
+                        ExpirationDate = put.ExpiryDate.ToDateTime(),
                     };
-                    o.SetLast(optionRow.put.last);
-                    o.SetChange(optionRow.put.change);
-                    o.SetBid(optionRow.put.bid);
-                    o.SetAsk(optionRow.put.ask);
-                    o.SetVolume(optionRow.put.volume);
-                    o.SetOpenInterest(optionRow.put.openinterest);
+                    o.LastPrice = put.Last.ToNullableDecimal();
+                    o.Change = put.Change.ToNullableDouble();
+                    o.Bid = put.Bid.ToNullableDouble();
+                    o.Ask = put.Ask.ToNullableDouble();
+                    o.Volume = put.Volume.ToNullableInt();
+                    o.OpenInterest = put.Openinterest.ToNullableInt();
 
                     optionChain.Add(o);
                 }
@@ -158,7 +135,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
                 {
                     string temp = nasdaqResponse.Data.PrimaryData.LastSalePriceAsString;
                     lastPrice = new HistoricalPrice();
-                    lastPrice.Close = decimal.Parse(temp.Substring(1),enUsCultureInfo);
+                    lastPrice.Close = decimal.Parse(temp.Substring(1), ConvertionsExtensions.EnUs_CultureInfo);
                     temp = nasdaqResponse.Data.PrimaryData.LastTradeTimestampAsString;
                     lastPrice.Date = ParseDateTime(temp);
                     /*
@@ -219,7 +196,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             }
 
             DateTime dt;
-            bool ok = DateTime.TryParseExact(strTimeStamp, "MMM dd, yyyy h:mm tt", enUsCultureInfo, DateTimeStyles.None, out DateTime result1);
+            bool ok = DateTime.TryParseExact(strTimeStamp, "MMM dd, yyyy h:mm tt", ConvertionsExtensions.EnUs_CultureInfo, DateTimeStyles.None, out DateTime result1);
             if (ok)
             {
                 if (timezone != null)
@@ -230,7 +207,7 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
             }
             else
             {
-                ok = DateTime.TryParseExact(strTimeStamp, "MMM dd, yyyy", enUsCultureInfo, DateTimeStyles.None, out DateTime result2);
+                ok = DateTime.TryParseExact(strTimeStamp, "MMM dd, yyyy", ConvertionsExtensions.EnUs_CultureInfo, DateTimeStyles.None, out DateTime result2);
                 if (ok)
                     dt = result2;
                 else

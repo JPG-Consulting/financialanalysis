@@ -5,8 +5,13 @@ using System.Text;
 namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
 {
     /// <summary>
-    /// Thanks to
-    /// http://json2csharp.com/
+    /// Thanks to: 
+    /// http://json2csharp.com/ 
+    /// But it doesn't exist anymore
+    /// 
+    /// Use:
+    /// https://quicktype.io/csharp/
+    /// https://app.quicktype.io/?l=csharp
     /// </summary>
     public class YahooQuoteResponse
     {

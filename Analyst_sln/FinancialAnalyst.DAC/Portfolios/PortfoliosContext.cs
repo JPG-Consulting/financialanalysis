@@ -4,6 +4,7 @@ using FinancialAnalyst.Common.Entities.Portfolios;
 using FinancialAnalyst.Common.Entities.Prices;
 using FinancialAnalyst.Common.Entities.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -276,7 +277,11 @@ namespace FinancialAnalyst.DataAccess.Portfolios
         
         public AssetAllocation GetAssetAllocationBy(int assetAllocationId)
         {
-            return AssetAllocations.Include(aa=> aa.Asset).Where(aa => aa.Id == assetAllocationId).SingleOrDefault();
+            return AssetAllocations
+                .Include(aa=> aa.Asset)
+                .ThenInclude( asset => ((Option)asset).UnderlyingAsset)
+                .Where(aa => aa.Id == assetAllocationId)
+                .SingleOrDefault();
         }
 
         public void Update(Portfolio portfolio)

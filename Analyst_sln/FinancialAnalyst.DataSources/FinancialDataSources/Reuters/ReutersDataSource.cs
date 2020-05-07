@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using FinancialAnalyst.Common.Entities.Users;
+using FinancialAnalyst.DataSources.FinancialDataSources.Reuters;
 
 namespace FinancialAnalyst.DataSources.Reuters
 {
@@ -45,58 +46,58 @@ namespace FinancialAnalyst.DataSources.Reuters
 
 			if (ok)
 			{
-                #region Data transformation
-                dynamic summary = JsonConvert.DeserializeObject(jsonResponse);
+				#region Data transformation
+				ReutersResponse summary = JsonConvert.DeserializeObject< ReutersResponse>(jsonResponse);
 				Stock s = new Stock(ticker);
-				s.CompanyName = summary.market_data.company_name;
-				s.Description = summary.market_data.about;
-				s.WebSite = summary.market_data.website;
-				s.LastPrice = summary.market_data.last;
-				s.LastPrice_Date = summary.market_data.last_time;
+				s.CompanyName = summary.MarketData.CompanyName;
+				s.Description = summary.MarketData.About;
+				s.WebSite = (string)summary.MarketData.Website;
+				s.LastPrice = summary.MarketData.Last.ToNullableDecimal();
+				s.LastPrice_Date = summary.MarketData.LastTime.ToDateTime("yyyy-MM-dd HH:mm:ss");
 				s.StockRelatedData = new StockRelatedData();
 				s.StockRelatedData.WebSite_DataSource = $"https://www.reuters.com/companies/{internalTicker}";
-				s.StockRelatedData.Sector = summary.market_data.sector;
-				s.StockRelatedData.Industry = summary.market_data.industry;
-				s.StockRelatedData.Country = summary.country;
-				s.StockRelatedData.Price_FiftyTwoWeekHigh = summary.market_data.fiftytwo_wk_high;
-				s.StockRelatedData.Price_FiftyTwoWeekLow = summary.market_data.fiftytwo_wk_low;
-				s.StockRelatedData.Beta = summary.market_data.beta;
-				s.StockRelatedData.EarningsPerShare_ExcludingExtraItems_TTM = summary.market_data.eps_excl_extra_ttm;
-				s.StockRelatedData.PriceEarnings_ExcludingExtraITems_TTM = summary.market_data.pe_excl_extra_ttm;
-				s.StockRelatedData.PriceSales_Annual = summary.market_data.ps_annual;
-				s.StockRelatedData.PriceSales_TTM = summary.market_data.ps_ttm;
-				s.StockRelatedData.PriceToCashFlow_PerShare_TTM = summary.market_data.pcf_share_ttm;
-				s.StockRelatedData.PriceBook_Annual = summary.market_data.pb_annual;
-				s.StockRelatedData.PriceBook_Quarterly = summary.market_data.pb_quarterly;
-				s.StockRelatedData.DividendYield = summary.market_data.dividend_yield_indicated_annual;
-				s.StockRelatedData.LongTermDebtToEquity_Annual = summary.market_data.lt_debt_equity_annual;
-				s.StockRelatedData.TotalDebtToEquity_Annual = summary.market_data.total_debt_equity_annual;
-				s.StockRelatedData.LongTermDebtToEquity_Quarterly = summary.market_data.lt_debt_equity_quarterly;
-				s.StockRelatedData.TotalDebtToEquity_Quarterly = summary.market_data.total_debt_equity_quarterly;
-				s.StockRelatedData.SharesOut = summary.market_data.shares_out;
-				s.StockRelatedData.ROE_TTM = summary.market_data.roe_ttm;
-				s.StockRelatedData.ROI_TTM = summary.market_data.roi_ttm;
+				s.StockRelatedData.Sector = summary.MarketData.Sector;
+				s.StockRelatedData.Industry = summary.MarketData.Industry;
+				s.StockRelatedData.Country = summary.MarketData.Country;
+				s.StockRelatedData.Price_FiftyTwoWeekHigh = summary.MarketData.FiftytwoWkHigh.ToNullableDouble();
+				s.StockRelatedData.Price_FiftyTwoWeekLow = summary.MarketData.FiftytwoWkLow.ToNullableDouble();
+				s.StockRelatedData.Beta = summary.MarketData.Beta.ToNullableDouble();
+				s.StockRelatedData.EarningsPerShare_ExcludingExtraItems_TTM = summary.MarketData.EpsExclExtraTtm.ToNullableDouble();
+				s.StockRelatedData.PriceEarnings_ExcludingExtraITems_TTM = summary.MarketData.PeExclExtraTtm.ToNullableDouble();
+				s.StockRelatedData.PriceSales_Annual = summary.MarketData.PsAnnual.ToNullableDouble();
+				s.StockRelatedData.PriceSales_TTM = summary.MarketData.PsTtm.ToNullableDouble();
+				s.StockRelatedData.PriceToCashFlow_PerShare_TTM = summary.MarketData.PcfShareTtm.ToNullableDouble();
+				s.StockRelatedData.PriceBook_Annual = summary.MarketData.PbAnnual.ToNullableDouble();
+				s.StockRelatedData.PriceBook_Quarterly = summary.MarketData.PbQuarterly.ToNullableDouble();
+				s.StockRelatedData.DividendYield = summary.MarketData.DividendYieldIndicatedAnnual.ToNullableDouble();
+				s.StockRelatedData.LongTermDebtToEquity_Annual = summary.MarketData.LtDebtEquityAnnual.ToNullableDouble();
+				s.StockRelatedData.TotalDebtToEquity_Annual = summary.MarketData.TotalDebtEquityAnnual.ToNullableDouble();
+				s.StockRelatedData.LongTermDebtToEquity_Quarterly = summary.MarketData.LtDebtEquityQuarterly.ToNullableDouble();
+				s.StockRelatedData.TotalDebtToEquity_Quarterly = summary.MarketData.TotalDebtEquityQuarterly.ToNullableDouble();
+				s.StockRelatedData.SharesOut = summary.MarketData.SharesOut.ToNullableDouble();
+				s.StockRelatedData.ROE_TTM = summary.MarketData.RoeTtm.ToNullableDouble();
+				s.StockRelatedData.ROI_TTM = summary.MarketData.RoiTtm.ToNullableDouble();
 				s.StockRelatedData.NewsList = new List<News>();
-				if (summary.market_data.sig_devs != null)
+				if (summary.MarketData.SigDevs != null)
 				{
-					foreach (var news in summary.market_data.sig_devs)
+					foreach (var news in summary.MarketData.SigDevs)
 					{
 						News n = new News();
-						n.DateTime = news.last_update;
-						n.Title = news.headline;
-						n.Content = news.description;
+						n.DateTime = news.LastUpdate.ToDateTime();
+						n.Title = news.Headline;
+						n.Content = news.Description;
 						s.StockRelatedData.NewsList.Add(n);
 					}
 				}
 				s.StockRelatedData.Officers = new List<Officer>();
-				if (summary.market_data.officers != null)
+				if (summary.MarketData.Officers != null)
 				{
-					foreach (var officer in summary.market_data.officers)
+					foreach (var officer in summary.MarketData.Officers)
 					{
 						Officer o = new Officer();
-						o.Name = officer.name;
-						o.Rank = officer.rank;
-						o.Title = officer.title;
+						o.Name = officer.Name;
+						o.Rank = officer.Rank;
+						o.Title = officer.Title;
 						s.StockRelatedData.Officers.Add(o);
 					}
 				}

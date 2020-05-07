@@ -73,20 +73,28 @@ namespace FinancialAnalyst.DataSources
             }
 
             asset = stock;
-            if (includeOptionChain && stock.LastPrice.HasValue)
+            if (includeOptionChain)
             {
-                double lastPrice = (double)stock.LastPrice.Value;
-                if (TryGetOptionsChainWithTheoricalValue(ticker, exchange, lastPrice, out OptionsChain optionsChain, out errorMessage) == false)
-                    return false;
-                stock.OptionsChain = optionsChain;
-                stock.Volatility = optionsChain.HistoricalVolatility;
+                if (stock.LastPrice.HasValue)
+                {
+                    double lastPrice = (double)stock.LastPrice.Value;
+                    if (TryGetOptionsChainWithTheoricalValue(ticker, exchange, lastPrice, out OptionsChain optionsChain, out errorMessage))
+                    {
+                        stock.OptionsChain = optionsChain;
+                        stock.Volatility = optionsChain.HistoricalVolatility;
+                    }
+                }
+                else
+                {
+                    if(TryGetOptionsChain(ticker, exchange, out OptionsChain optionsChain, out errorMessage))
+                        stock.OptionsChain = optionsChain;
+                }
             }
 
             if (includeFinancialStatements)
             {
                 if (TryGetFinancialData(ticker, exchange, out FinancialStatements financialData, out errorMessage) == false)
-                    return false;
-                stock.FinancialStatements = financialData;
+                    stock.FinancialStatements = financialData;
             }
 
             return true;

@@ -1,10 +1,17 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
 {
+    /// <summary>
+    /// Thanks to:
+    /// https://quicktype.io/csharp/
+    /// https://app.quicktype.io/?l=csharp
+    /// </summary>
+
     [JsonObject]
     [Serializable]
     internal class NasdaqResponse
@@ -78,7 +85,6 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
         public string AssetClass { get; set; }
         #endregion
 
-
         #region Data for prices
         [JsonProperty("company")]
         public string Company { get; set; }
@@ -104,6 +110,20 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
         [JsonProperty("chart")]
         public List<NasdaqResponse_Price> Prices { get; set; }
 
+        #endregion
+
+        #region Data for option chain
+        [JsonProperty("totalRecord")]
+        public long TotalRecord { get; set; }
+
+        [JsonProperty("lastTrade")]
+        public string LastTrade { get; set; }
+
+        [JsonProperty("optionChainList")]
+        public NasdaqResponse_OptionChainList OptionChainList { get; set; }
+
+        [JsonProperty("monthFilter")]
+        public NasdaqResponse_MonthFilter[] MonthFilter { get; set; }
         #endregion
     }
 
@@ -191,4 +211,115 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Nasdaq
         [JsonProperty("errorMessage")]
         public string ErrorMessage { get; set; }
     }
+
+
+    #region Data for option chain
+    public class NasdaqResponse_MonthFilter
+    {
+        [JsonProperty("month")]
+        public string Month { get; set; }
+
+        [JsonProperty("dates")]
+        public NasdaqResponse_Date[] Dates { get; set; }
+    }
+
+    public class NasdaqResponse_Date
+    {
+        [JsonProperty("label")]
+        public string Label { get; set; }
+
+        [JsonProperty("value")]
+        public DateTimeOffset Value { get; set; }
+    }
+
+    public class NasdaqResponse_OptionChainList
+    {
+        [JsonProperty("headers")]
+        public NasdaqResponse_Headers Headers { get; set; }
+
+        [JsonProperty("rows")]
+        public NasdaqResponse_Row[] Rows { get; set; }
+    }
+    public class NasdaqResponse_Headers
+    {
+        [JsonProperty("call")]
+        public NasdaqResponse_HeadersOptions Call { get; set; }
+
+        [JsonProperty("put")]
+        public NasdaqResponse_HeadersOptions Put { get; set; }
+
+        [JsonProperty("otherOrCommon")]
+        public NasdaqResponse_OtherOrCommon OtherOrCommon { get; set; }
+    }
+
+    public class NasdaqResponse_HeadersOptions
+    {
+        [JsonProperty("last")]
+        public string Last { get; set; }
+
+        [JsonProperty("change")]
+        public string Change { get; set; }
+
+        [JsonProperty("bid")]
+        public string Bid { get; set; }
+
+        [JsonProperty("ask")]
+        public string Ask { get; set; }
+
+        [JsonProperty("volume")]
+        public string Volume { get; set; }
+
+        [JsonProperty("openinterest")]
+        public string Openinterest { get; set; }
+    }
+
+    public class NasdaqResponse_OtherOrCommon
+    {
+        [JsonProperty("strike")]
+        public string Strike { get; set; }
+    }
+
+    public class NasdaqResponse_Row
+    {
+        [JsonProperty("call")]
+        public NasdaqResponse_OptionRow Call { get; set; }
+
+        [JsonProperty("put")]
+        public NasdaqResponse_OptionRow Put { get; set; }
+    }
+
+    public class NasdaqResponse_OptionRow
+    {
+        [JsonProperty("symbol")]
+        public string Symbol { get; set; }
+
+        [JsonProperty("last")]
+        public string Last { get; set; }
+
+        [JsonProperty("change")]
+        public string Change { get; set; }
+
+        [JsonProperty("bid")]
+        public string Bid { get; set; }
+
+        [JsonProperty("ask")]
+        public string Ask { get; set; }
+
+        [JsonProperty("volume")]
+        public string Volume { get; set; }
+
+        [JsonProperty("openinterest")]
+        //[JsonConverter(typeof(ParseStringConverter))]
+        public string Openinterest { get; set; }
+
+        [JsonProperty("strike")]
+        public string Strike { get; set; }
+
+        [JsonProperty("expiryDate")]
+        public string ExpiryDate { get; set; }
+
+        [JsonProperty("colour")]
+        public bool Colour { get; set; }
+    }
+    #endregion
 }

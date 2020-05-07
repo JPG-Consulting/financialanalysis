@@ -180,11 +180,34 @@ namespace FinancialAnalyst.Portfolios
             }
             else if(assetClass == AssetClass.Option)
             {
+                Option option = (Option)assetAllocation.Asset;
+                ticker = option.UnderlyingAsset.Ticker;
+                assetClass = option.UnderlyingAsset.AssetClass;
+                exchange = option.UnderlyingAsset.Exchange;
                 bool ok = dataSource.TryGetCompleteAssetData(ticker, exchange, assetClass, true, false, out AssetBase asset, out string errorMessage);
                 if(ok)
                 {
-                    //OptionsChain chain = stock.OptionsChain.Where(kv => kv.Key == assetAllocation.Asset.As<Option>().MaturityDate)
-                    throw new NotImplementedException();
+                    Stock stock = (Stock)asset;
+                    if(stock.OptionsChain.ContainsKey(option.ExpirationDate))
+                    {
+                        var option2 = stock.OptionsChain[option.ExpirationDate].Where(o => o.Strike == option.Strike && o.OptionClass == option.OptionClass).SingleOrDefault();
+                        if(option2 != null)
+                        {
+                            if (option2.LastPrice_Date.HasValue == false)
+                                option2.LastPrice_Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+                            decimal? marketValue = assetAllocation.UpdateMarketValue(option2.LastPrice * 100, option2.LastPrice_Date, costs);
+                            portfoliosContext.Update(assetAllocation);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {

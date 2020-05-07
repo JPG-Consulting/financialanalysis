@@ -82,14 +82,19 @@ namespace FinancialAnalyst.Common.Entities.Portfolios
         /// <param name="price"></param>
         public decimal? UpdateMarketValue(HistoricalPrice price, decimal? defaultValue)
         {
+            return UpdateMarketValue(price.Close, price.Date, defaultValue);
+        }
+
+        public decimal? UpdateMarketValue(Decimal? price, DateTime? date, decimal? defaultValue)
+        { 
             if (price == null)
             {
                 return defaultValue;
             }
             else
             {
-                Price = price.Close;
-                PriceDate = price.Date;
+                Price = price;
+                PriceDate = date;
                 return MarketValue;
             }
             
