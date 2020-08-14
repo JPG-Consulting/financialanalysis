@@ -17,7 +17,7 @@ using System.Xml.Linq;
 
 namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
 {
-    public class YahooDataSource : IStockDataDataSource, IPricesDataSource, IAssetTypeDataSource, IStatisticsDataSource, IIndexesDataSource
+    public class YahooDataSource : IStockDataDataSource, IPricesDataSource, IAssetTypeDataSource, IStatisticsDataSource, IIndexesDataSource, IOptionChainDataSource
     {
         private static readonly DateTime FIRST_DATE = new DateTime(1927, 12, 30, 0, 0, 0);
         internal static readonly DateTime DATE_1970 = new DateTime(1970, 1, 1, 0, 0, 0);
@@ -203,6 +203,42 @@ namespace FinancialAnalyst.DataSources.FinancialDataSources.Yahoo
         public bool TryGetIndexesData(out string message)
         {
             //https://finance.yahoo.com/_finance_doubledown/api/resource/finance.market-summary;fields=shortName%2CregularMarketPrice%2CregularMarketChange%2CregularMarketChangePercent?bkt=%5B%22fd-exp-wilson%22%2C%22fd-jarvis-strm%22%2C%22fdw-ssvrm-test1%22%5D&device=desktop&feature=adsMigration%2CcanvassOffnet%2CccOnMute%2Cdebouncesearch100%2CdeferDarla%2CecmaModern%2CemptyServiceWorker%2CenableCMP%2CenableConsentData%2CenableTheming%2CenableNavFeatureCue%2CenableFeatureTours%2CenableFreeFinRichSearch%2CenableGuceJs%2CenableGuceJsOverlay%2CenableNewResearchInsights%2CenablePremiumSingleCTA%2CenablePremiumScreeners%2CenablePrivacyUpdate%2CenableVideoURL%2CenableYahooSans%2CnewContentAttribution%2CnewLogo%2CoathPlayer%2CrelatedVideoFeature%2CthreeAmigos%2CwaferHeader%2CvideoNativePlaylist%2CenableCCPAFooter%2Clivecoverage%2CdarlaFirstRenderingVisible%2CenableTradeit%2CenableFeatureBar%2CenableSearchEnhancement%2CenableUserSentiment%2CenableBankrateWidget%2CncpHpStream%2Cload6Items%2CcanvassReplies%2CresearchFilter%2CenableSingleRail%2CenablePremiumFinancials%2CenhanceAddToWL%2CsponsoredAds%2CenableStageAds%2CenableTradeItLinkBrokerSecondaryPromo%2CpremiumPromoHeader%2CenableQspPremiumPromoSmall%2CclientDelayNone%2CthreeAmigosMabEnabled%2CthreeAmigosAdsEnabledAndStreamIndex0%2CstreamBucketIdWilson%2CserverSideVRM&intl=us&lang=en-US&partner=none&prid=70919d5f5pp0i&region=US&site=finance&tz=America%2FLos_Angeles&ver=0.102.3297&returnMeta=true
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetOptionsChain(string ticker, Exchange? exchange, out OptionsChain optionChain, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, out OptionsChain optionsChain, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetOptionsChainWithTheoricalValue(string ticker, Exchange? exchange, double lastPrice, PriceList historicalPrices, out OptionsChain optionsChain, out string errorMessage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetOptionData(string underlyingTicker, ushort year, ushort month, ushort day, out Option option)
+        {
+            /*
+             * Examples
+             * 
+             * JPM Jan 2022 95.000 call
+             * https://finance.yahoo.com/quote/JPM220121C00095000/
+             * 
+             * JPM Jan 2022 80.000 call
+             * https://finance.yahoo.com/quote/JPM220121C00080000/
+             * 
+             * AMD Jan 21 2022 90 Call	
+             * https://finance.yahoo.com/quote/AMD220121C00090000/
+             * https://query1.finance.yahoo.com/v8/finance/chart/AMD220121C00090000?region=US&lang=en-US&includePrePost=false&interval=2m&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance
+             * 
+             * Obvously, it will work until expiration
+             */
+
             throw new NotImplementedException();
         }
     }
